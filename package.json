@@ -1,0 +1,34 @@
+{
+  "name": "sp_project_be",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js --legacy-watch"
+  },
+  "author": "SoftServe ITA",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.3.0",
+    "mocha": "^9.1.3",
+    "nodemon": "^2.0.15",
+    "prettier": "2.5.1",
+    "sinon": "^12.0.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "module-alias": "^2.2.2",
+    "mongodb": "^4.2.2",
+    "mongoose": "^6.1.2",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.3.0"
+  },
+  "_moduleAliases": {
+    "~": "."
+  }
+}

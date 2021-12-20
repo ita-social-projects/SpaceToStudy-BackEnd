@@ -1,0 +1,99 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /example:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Example
+      summary: Returns example items
+      description: Returns example items
+      produces:
+        - application/json
+      parameters: []
+      responses:
+        200:
+          description: Array with items
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/examples'
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Example
+      summary: Add new example item
+      description: Add new example item
+      produces:
+        - application/json
+      parameters:
+        - name: example
+          in: body
+          required: true
+          description: The item of the example to save
+          schema:
+            $ref: '#/definitions/example-post'
+      responses:
+        201:
+          description: Stored item
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/example'
+  /example/{exampleId}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Example
+      summary: Find example by ID
+      description: Find example by ID
+      produces:
+        - application/json
+      parameters:
+        - name: exampleId
+          in: path
+          required: true
+          description: Example ID
+          type: string
+      responses:
+        200:
+          description: Array with items
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/example'
+    delete:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Example
+      summary: Find and delete example by ID
+      description: Find and delete example by ID
+      produces:
+        - application/json
+      parameters:
+        - name: exampleId
+          in: path
+          required: true
+          description: Example ID
+          type: string
+      responses:
+        200:
+          description: Message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Example deleted.

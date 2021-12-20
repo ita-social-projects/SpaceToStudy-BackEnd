@@ -1,0 +1,30 @@
+definitions:
+  examples:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            title:
+              type: string
+              example: John Doe
+  example-post:
+    type: object
+    properties:
+      title:
+        type: string
+        example: John Doe
+  example:
+    type: object
+    properties:
+      item:
+        type: object
+        properties:
+          title:
+            type: string
+            example: John Doe
+          id:
+            type: string
+            example: '61be628f3fc28b1b62225a31'

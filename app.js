@@ -28,7 +28,7 @@ const swaggerSettings = swaggerJsDoc(swaggerOptions)
 app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
 
 app.use('/example', example)
-app.use(authRoutes)
+app.use(authRoutes) // localhost:8080/...
 
 mongoose
   .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@teachma.693y8.mongodb.net/test`)

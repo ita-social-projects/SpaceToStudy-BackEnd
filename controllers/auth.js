@@ -1,5 +1,6 @@
 const User = require('~/models/User')
 
+// will be moved to separate file
 const handleErrors = (err) => {
   console.log(err.errors)
   let errors = { email: '', password: '' }
@@ -19,7 +20,7 @@ const handleErrors = (err) => {
 
 exports.getSignup = async (req, res) => {
   try {
-    res.send('getSignup')
+    res.status(200).send('getSignup')
   } catch (err) {
     const errors = handleErrors(err)
     res.status(400).json({errors})
@@ -40,7 +41,7 @@ exports.postSignup = async (req, res) => {
 
 exports.getLogin = async (req, res) => {
   try {
-    res.send('getLogin')
+    res.status(200).send('getLogin')
   } catch (err) {
     const errors = handleErrors(err)
     res.status(400).json({errors})
@@ -49,7 +50,7 @@ exports.getLogin = async (req, res) => {
 
 exports.postLogin = async (req, res) => {
   try {
-    res.send('posLogin')
+    res.status(200).send('posLogin')
   } catch (err) {
     const errors = handleErrors(err)
     res.status(400).json({errors})

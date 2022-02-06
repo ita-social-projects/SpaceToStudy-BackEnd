@@ -13,10 +13,14 @@ const userSchema = new Schema(
     },
     role: {
         type: String,
-        enum: [USER, TEACHER, ADMIN, SUPERADMIN],
-        default: USER,
+        required: true,
+        default: 'user'
     },
     email: {
+        type: String,
+        required: true
+    },
+    password: {
         type: String,
         required: true
     },

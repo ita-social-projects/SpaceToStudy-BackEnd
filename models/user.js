@@ -1,28 +1,37 @@
 const mongoose = require('mongoose')
+const { roles: { STUDENT, MENTOR, ADMIN } } = require('~/consts/auth')
+const { errorCodes: {ROLE_NOT_SUPPORTED} } = require('~/consts/errors')
+
 const Schema = mongoose.Schema
 
 const userSchema = new Schema(
   {
+    role: {
+      type: String,
+      enum: {
+        values: [STUDENT, MENTOR, ADMIN],
+        message: ROLE_NOT_SUPPORTED
+      },
+      required: true,
+      default: STUDENT
+    },
     firstName: {
       type: String,
-      required: true
+      required: true,
     },
     lastName: {
-        type: String,
-        required: true
-    },
-    role: {
-        type: String,
-        enum: [USER, TEACHER, ADMIN, SUPERADMIN],
-        default: USER,
+      type: String,
+      required: true,
     },
     email: {
-        type: String,
-        required: true
+      type: String,
+      required: [true, 'Please enter an email'],
+      unique: true,
+      lowercase: true,
     },
-    phoneNumber: {
-        type: String,
-        required: false
+    password: {
+      type: String,
+      required: [true, 'Please enter a password'],
     }
   }
 )

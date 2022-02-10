@@ -1,30 +1,13 @@
 const User = require('~/models/User')
+const jwt = require('jsonwebtoken')
+const { handleErrors } = require('~/utils/errorHandler')
 
-// will be moved to separate file
-const handleErrors = (err) => {
-  console.log(err.errors)
-  let errors = { email: '', password: '' }
+const maxAge = 3 * 24 * 60 * 60
 
-  if (err.code === 11000) {
-    errors.email = 'SOME MESSAGE THAT HANDLES ALREADY REGISTERED EMAIL ERROR'
-    return errors
-  }
-  if (err.message.toLowerCase().includes('user validation failed')) {
-    Object.values(err.errors).forEach(({properties}) => {
-      errors[properties.path] = properties.message
-    })
-  }
-
-  return (errors)
-}
-
-exports.getSignup = async (req, res) => {
-  try {
-    res.status(200).send('getSignup')
-  } catch (err) {
-    const errors = handleErrors(err)
-    res.status(400).json({errors})
-  }
+const createToken = (id) => {
+  return jwt.sign({id}, 'SOME SECRET STRING', {
+    expiresIn: maxAge
+  })
 }
 
 exports.postSignup = async (req, res) => {
@@ -32,16 +15,8 @@ exports.postSignup = async (req, res) => {
 
   try {
     const user = await User.create({ email, password })
-    res.status(201).json(user)
-  } catch (err) {
-    const errors = handleErrors(err)
-    res.status(400).json({errors})
-  }
-}
-
-exports.getLogin = async (req, res) => {
-  try {
-    res.status(200).send('getLogin')
+    const token = createToken(user._id)
+    res.status(201).json({token})
   } catch (err) {
     const errors = handleErrors(err)
     res.status(400).json({errors})

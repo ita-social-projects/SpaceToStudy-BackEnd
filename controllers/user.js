@@ -1,5 +1,6 @@
 const User = require('~/models/user');
 const { errors: { USER_NOT_FOUND } } = require('../consts/index');
+const { encryptPasword } = require('../utils/password-encrypter');
 
 exports.getUsers = async (req, res) => {
   try {
@@ -41,7 +42,7 @@ exports.postUser = async (req, res) => {
   const user = new User({
     role: role,
     email: email,
-    password: password,
+    password: encryptPasword(password),
     phoneNumber: phoneNumber
   })
   

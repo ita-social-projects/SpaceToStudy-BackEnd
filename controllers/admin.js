@@ -1,6 +1,5 @@
 const User = require('~/models/user')
-const { roles: { ADMIN } } = require('../consts/index');
-const { errors: { ADMIN_NOT_FOUND } } = require('../consts/index');
+const { roles: { ADMIN }, errors: { ADMIN_NOT_FOUND } } = require('../consts/index');
 
 exports.getAdmins = async (req, res) => {
   try {

@@ -11,6 +11,7 @@ const swaggerUI = require('swagger-ui-express')
 
 const swaggerOptions = require('~/swagger-settings')
 const example = require('~/routes/example')
+const admin = require('~/routes/admin')
 const auth = require('~/routes/auth')
 const user = require('~/routes/user')
 const { createError, handleError } = require('~/utils/errors')
@@ -32,6 +33,7 @@ app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
 app.use('/example', example)
 app.use('/auth', auth)
 app.use('/user', user)
+app.use('/admin', admin)
 
 app.use((req, res, next) => {
   const err = createError(404, 'NOT_FOUND', 'Wrong path')

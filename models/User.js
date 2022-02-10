@@ -1,3 +1,4 @@
+// will be replaced with Nelia's model
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 

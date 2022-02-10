@@ -1,14 +1,6 @@
 const User = require('~/models/User')
-const jwt = require('jsonwebtoken')
 const { handleErrors } = require('~/utils/errorHandler')
-
-const maxAge = 3 * 24 * 60 * 60
-
-const createToken = (id) => {
-  return jwt.sign({id}, 'SOME SECRET STRING', {
-    expiresIn: maxAge
-  })
-}
+const { createToken } = require('~/utils/auth')
 
 exports.postSignup = async (req, res) => {
   const { email, password } = req.body

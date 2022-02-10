@@ -1,20 +1,14 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const { roles: { STUDENT, TEACHER, ADMIN } } = require('../consts/index');
 
 const userSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: true
-    },
-    lastName: {
-        type: String,
-        required: true
-    },
     role: {
         type: String,
+        enum: [STUDENT, TEACHER, ADMIN],
         required: true,
-        default: 'user'
+        default: STUDENT
     },
     email: {
         type: String,

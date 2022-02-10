@@ -1,8 +1,12 @@
-const User = require('~/models/user')
+const User = require('~/models/user');
+const { errors: { USER_NOT_FOUND } } = require('../consts/index');
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find()
+    const users = await User.find().lean();
+
+    users.forEach(user => delete user.password);
+
     res.status(200).json({
         users: users
     })
@@ -14,13 +18,15 @@ exports.getUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
     const userId = req.params.userId
   try {
-    const user = await User.findById(userId)
+    const user = await User.findById(userId).lean();
     
     if (!user) {
-      const error = new Error('Could not find user.')
+      const error = new Error(USER_NOT_FOUND)
       error.statusCode = 404
       throw error
     }
+
+    delete user.password;
 
     res.status(200).json({
         user: user
@@ -31,10 +37,8 @@ exports.getUser = async (req, res) => {
   }
 
 exports.postUser = async (req, res) => {
-  const { firstName, lastName, role, email, password, phoneNumber } = req.body
+  const { role, email, password, phoneNumber } = req.body
   const user = new User({
-    firstName: firstName,
-    lastName: lastName,
     role: role,
     email: email,
     password: password,
@@ -57,7 +61,7 @@ exports.deleteUser = async (req, res) => {
     const user = await User.findById(userId)
     
     if (!user) {
-      const error = new Error('Could not find user.')
+      const error = new Error(USER_NOT_FOUND)
       error.statusCode = 404
       throw error
     }

@@ -12,6 +12,7 @@ const swaggerUI = require('swagger-ui-express')
 const swaggerOptions = require('~/swagger-settings')
 const example = require('~/routes/example')
 const user = require('~/routes/user')
+const admin = require('~/routes/admin')
 
 const app = express()
 
@@ -29,6 +30,7 @@ app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
 
 app.use('/example', example)
 app.use('/user', user)
+app.use('/admin', admin)
 
 mongoose
   .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@teachma.693y8.mongodb.net/test`)

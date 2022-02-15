@@ -5,10 +5,17 @@ exports.getUsers = async (req, res) => {
   try {
     const users = await User.find().lean();
 
-    users.forEach(user => delete user.password);
+    const usersResponse = users.map(user => { 
+        return {
+            _id: user._id,
+            role: user.role,
+            email: user.email,
+            phoneNumber: user.phoneNumber
+        }
+    });
 
     res.status(200).json({
-        users: users
+        users: usersResponse
     })
   } catch (err) {
     console.log(err)
@@ -26,10 +33,10 @@ exports.getUser = async (req, res) => {
       throw error
     }
 
-    delete user.password;
+    const { password, __v, ...userResponse } = user;
 
     res.status(200).json({
-        user: user
+        user: userResponse
     })
   } catch (e) {
     console.log(e)
@@ -46,9 +53,12 @@ exports.postUser = async (req, res) => {
   })
   
   try {
-    const savedUser = await user.save()
+    const savedUser = await user.save();
+
+    const { password, __v, ...savedUserResponse } = savedUser._doc;
+
     res.status(201).json({
-      item: savedUser
+      user: savedUserResponse
     })
   } catch (err) {
     console.log(err)

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const { roles: { STUDENT, TEACHER, ADMIN } } = require('../consts/index');
+const { 
+    roles: { STUDENT, TEACHER, ADMIN }, 
+    errors: {TO_SHORT_PASSWORD, ROLE_NOT_SUPPORTED} 
+} = require('../consts/index');
+const { numberRegExp } = require('../consts/index');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -8,17 +12,22 @@ const userSchema = new Schema(
   {
     role: {
         type: String,
-        enum: [STUDENT, TEACHER, ADMIN],
+        enum: {
+            values: [STUDENT, TEACHER, ADMIN],
+            message: ROLE_NOT_SUPPORTED
+        },
         required: true,
         default: STUDENT
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        min: [8, TO_SHORT_PASSWORD]
     },
     phoneNumber: {
         type: String,

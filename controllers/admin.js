@@ -3,14 +3,21 @@ const { roles: { ADMIN }, errors: { ADMIN_NOT_FOUND } } = require('../consts/ind
 
 exports.getAdmins = async (req, res) => {
   try {
-    const users = await User.find().lean();
+    const admins = await User.find({
+        "role": ADMIN
+    }).lean();
 
-    const admins = users?.filter(user => user.role === ADMIN);
-
-    admins.forEach(admin => delete admin.password);
+    const adminsResponse = admins.map(admin => { 
+        return {
+            _id: admin._id,
+            role: admin.role,
+            email: admin.email,
+            phoneNumber: admin.phoneNumber
+        }
+    });
 
     res.status(200).json({
-        users: admins
+        users: adminsResponse
     })
   } catch (err) {
     console.log(err)
@@ -20,18 +27,21 @@ exports.getAdmins = async (req, res) => {
 exports.getAdmin = async (req, res) => {
     const userId = req.params.userId
   try {
-    const admin = await User.findById(userId).lean();
+    const admin = await User.findOne({
+        "_id": userId,
+        "role": ADMIN
+    }).lean();
     
-    if (!admin || admin.role !== ADMIN) {
+    if (!admin) {
       const error = new Error(ADMIN_NOT_FOUND)
       error.statusCode = 404
       throw error
     }
 
-    delete admin.password;
+    const { password, __v, ...adminResponse } = admin;
 
     res.status(200).json({
-        user: admin
+        user: adminResponse
     })
   } catch (e) {
     console.log(e)

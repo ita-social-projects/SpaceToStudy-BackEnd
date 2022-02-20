@@ -1,21 +1,25 @@
 const User = require('~/models/User')
 const { handleErrors } = require('~/utils/errorHandler')
-const { createToken } = require('~/utils/auth')
+const bcrypt = require('bcrypt')
 
-exports.postSignup = async (req, res) => {
-  const { email, password } = req.body
+// const { createToken } = require('~/utils/auth')
+
+exports.signup = async (req, res) => {
+  const { role, firstName, lastName, email, password } = req.body
 
   try {
-    const user = await User.create({ email, password })
-    const token = createToken(user._id)
-    res.status(201).json({token})
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+    const user = await User.create({ role, firstName, lastName, email, password: hashedPassword })
+    res.status(201).json({ user: { firstName, lastName, email, id: user._id } })
   } catch (err) {
     const errors = handleErrors(err)
-    res.status(400).json({errors})
+    res.status(400).json({ errors })
   }
+
 }
 
-exports.postLogin = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     res.status(200).send('posLogin')
   } catch (err) {

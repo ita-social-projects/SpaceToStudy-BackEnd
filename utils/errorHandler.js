@@ -1,6 +1,6 @@
 exports.handleErrors = (err) => {
   console.log(err.errors)
-  let errors = { email: '', password: '' }
+  let errors = {}
 
   if (err.code === 11000) {
     errors.email = 'SOME MESSAGE THAT HANDLES ALREADY REGISTERED EMAIL ERROR'

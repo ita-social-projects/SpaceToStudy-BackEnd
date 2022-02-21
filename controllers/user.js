@@ -8,6 +8,8 @@ exports.getUsers = async (req, res) => {
     const usersResponse = users.map(user => { 
         return {
             _id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
             role: user.role,
             email: user.email,
             phoneNumber: user.phoneNumber
@@ -44,8 +46,10 @@ exports.getUser = async (req, res) => {
   }
 
 exports.postUser = async (req, res) => {
-  const { role, email, password, phoneNumber } = req.body
+  const { firstName, lastName, role, email, password, phoneNumber } = req.body
   const user = new User({
+    firstName: firstName,
+    lastName: lastName,
     role: role,
     email: email,
     password: password,

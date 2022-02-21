@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const { 
-    roles: { STUDENT, TEACHER, ADMIN }, 
+    roles: { STUDENT, MENTHOR, ADMIN }, 
     errors: {TO_SHORT_PASSWORD, ROLE_NOT_SUPPORTED} 
 } = require('../consts/index');
 const { numberRegExp } = require('../consts/regexp');
@@ -10,10 +10,18 @@ const saltRounds = 10;
 
 const userSchema = new Schema(
   {
+    firstName: {
+        type: String,
+        required: true,
+    },
+    lastName: {
+        type: String,
+        required: true,
+    },
     role: {
         type: String,
         enum: {
-            values: [STUDENT, TEACHER, ADMIN],
+            values: [STUDENT, MENTHOR, ADMIN],
             message: ROLE_NOT_SUPPORTED
         },
         required: true,

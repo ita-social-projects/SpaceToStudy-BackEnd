@@ -4,7 +4,7 @@ const {
     roles: { STUDENT, TEACHER, ADMIN }, 
     errors: {TO_SHORT_PASSWORD, ROLE_NOT_SUPPORTED} 
 } = require('../consts/index');
-const { numberRegExp } = require('../consts/index');
+const { numberRegExp } = require('../consts/regexp');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -22,7 +22,8 @@ const userSchema = new Schema(
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true
     },
     password: {
         type: String,
@@ -31,7 +32,13 @@ const userSchema = new Schema(
     },
     phoneNumber: {
         type: String,
-        required: false
+        required: false,
+        validate: {
+            validator: function(v) {
+              return numberRegExp.test(v);
+            },
+            message: props => `${props.value} is not a valid phone number!`
+          },
     }
   }
 )

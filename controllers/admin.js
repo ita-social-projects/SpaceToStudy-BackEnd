@@ -10,6 +10,8 @@ exports.getAdmins = async (req, res) => {
     const adminsResponse = admins.map(admin => { 
         return {
             _id: admin._id,
+            firstName: admin.firstName,
+            lastName: admin.lastName,
             role: admin.role,
             email: admin.email,
             phoneNumber: admin.phoneNumber

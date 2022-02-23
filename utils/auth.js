@@ -1,10 +1,9 @@
 const jwt = require('jsonwebtoken')
 
-const JWT_MAX_AGE = '24h'
-const JWT_SECRET = 'SOME SECRET STRING'
+const { JWT } = require('~/consts/auth')
 
 exports.createToken = (id) => {
-  return jwt.sign({id}, JWT_SECRET, {
-    expiresIn: JWT_MAX_AGE
+  return jwt.sign({id}, JWT.SECRET, {
+    expiresIn: JWT.MAX_AGE
   })
 }

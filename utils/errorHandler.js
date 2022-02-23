@@ -1,9 +1,16 @@
+const { errorMessages } = require('~/consts/auth')
+
 exports.handleErrors = (err) => {
-  console.log(err.errors)
+  console.log('err.errors', err.errors)
+  console.log('err.message', err.message)
   let errors = {}
 
+  if (err.message === errorMessages.INCORRECT_CREDENTIALS) {
+    errors.login = 'incorrect email or password'
+    return errors
+  }
   if (err.code === 11000) {
-    errors.email = 'SOME MESSAGE THAT HANDLES ALREADY REGISTERED EMAIL ERROR'
+    errors.email = 'email is already registered'
     return errors
   }
   if (err.message.toLowerCase().includes('user validation failed')) {

@@ -1,8 +1,10 @@
-exports.errorMessages = {
-  INCORRECT_CREDENTIALS: 'incorrect email or password',
+exports.roles = {
+  STUDENT: 'student',
+  MENTOR: 'mentor',
+  ADMIN: 'admin'
 }
 
 exports.JWT = {
   MAX_AGE: '24h',
-  SECRET: 'SOME SECRET STRING',
+  SECRET: 'PUTIN HUILO',
 }

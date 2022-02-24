@@ -1,6 +1,6 @@
-// will be replaced with Nelia's model
 const mongoose = require('mongoose')
-// const bcrypt = require('bcrypt')
+const { roles: { STUDENT, MENTOR, ADMIN } } = require('~/consts/auth')
+const { authErr: {ROLE_NOT_SUPPORTED} } = require('~/consts/errors')
 
 const Schema = mongoose.Schema
 
@@ -8,7 +8,12 @@ const userSchema = new Schema(
   {
     role: {
       type: String,
+      enum: {
+        values: [STUDENT, MENTOR, ADMIN],
+        message: ROLE_NOT_SUPPORTED
+      },
       required: true,
+      default: STUDENT
     },
     firstName: {
       type: String,
@@ -30,11 +35,5 @@ const userSchema = new Schema(
     }
   }
 )
-
-// userSchema.pre('save', async function (next) {
-//   const salt = await bcrypt.genSalt()
-//   this.password = await bcrypt.hash(this.password, salt)
-//   next()
-// }) 
 
 module.exports = mongoose.model('User', userSchema)

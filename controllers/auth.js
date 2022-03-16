@@ -14,7 +14,7 @@ exports.signup = async (req, res) => {
     res.status(201).json({ user: { firstName, lastName, email, id: user._id } })
   } catch (err) {
     const errors = handleErrors(err)
-    res.status(400).json({ errors })
+    res.status(401).json({ errors }) // 422 Unprocessable Entity
   }
 }
 
@@ -33,6 +33,6 @@ exports.login = async (req, res) => {
     res.status(200).json({ user: { firstName: user.firstName, lastName: user.lastName, email, id: user._id } })
   } catch (err) {
     const errors = handleErrors(err)
-    res.status(400).json({errors})
+    res.status(401).json({errors})
   }
 }

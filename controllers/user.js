@@ -7,7 +7,7 @@ exports.getUsers = async (req, res) => {
 
     const usersResponse = users.map(user => { 
         return {
-            _id: user._id,
+            id: user._id,
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
@@ -35,7 +35,14 @@ exports.getUser = async (req, res) => {
       throw error
     }
 
-    const { password, __v, ...userResponse } = user;
+    const userResponse = {
+            id: user._id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+            email: user.email,
+            phoneNumber: user.phoneNumber
+        };
 
     res.status(200).json({
         user: userResponse
@@ -59,7 +66,14 @@ exports.postUser = async (req, res) => {
   try {
     const savedUser = await user.save();
 
-    const { password, __v, ...savedUserResponse } = savedUser._doc;
+    const savedUserResponse = {
+        id: savedUser._doc._id,
+        firstName: savedUser._doc.firstName,
+        lastName: savedUser._doc.lastName,
+        role: savedUser._doc.role,
+        email: savedUser._doc.email,
+        phoneNumber: savedUser._doc.phoneNumber
+    };
 
     res.status(201).json({
       user: savedUserResponse

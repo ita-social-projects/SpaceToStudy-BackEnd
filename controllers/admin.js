@@ -9,7 +9,7 @@ exports.getAdmins = async (req, res) => {
 
     const adminsResponse = admins.map(admin => { 
         return {
-            _id: admin._id,
+            id: admin._id,
             firstName: admin.firstName,
             lastName: admin.lastName,
             role: admin.role,
@@ -39,8 +39,15 @@ exports.getAdmin = async (req, res) => {
       error.statusCode = 404
       throw error
     }
-
-    const { password, __v, ...adminResponse } = admin;
+    
+    const adminResponse = {
+            id: admin._id,
+            firstName: admin.firstName,
+            lastName: admin.lastName,
+            role: admin.role,
+            email: admin.email,
+            phoneNumber: admin.phoneNumber
+        };
 
     res.status(200).json({
         user: adminResponse

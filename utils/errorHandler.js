@@ -1,27 +1,18 @@
 const { authErr } = require('~/consts/errors')
 
-exports.handleErrors = (err) => {
-  console.log('err.errors', err.errors)
-  console.log('err.message', err.message)
-  let errors = {}
+exports.handleErrors = (err, req, res, next) => {
+  console.log(err)
 
-  if (err.message === authErr.INCORRECT_CREDENTIALS) {
-    errors.login = authErr.INCORRECT_CREDENTIALS
-    return errors
-  }
-  if (err.message === authErr.PASS_LENGTH) {
-    errors.password = authErr.PASS_LENGTH
-    return errors
-  }
-  if (err.code === 11000) {
-    errors.email = authErr.ALREADY_REGISTERED
-    return errors
-  }
   if (err.message.toLowerCase().includes('user validation failed')) {
+    let errors = {}
     Object.values(err.errors).forEach(({properties}) => {
       errors[properties.path] = properties.message
     })
+    res.status(422).json({ message: 'Mongo validation error', errors})
   }
-
-  return (errors)
+  if (err.message === authErr.ALREADY_REGISTERED) res.status(409).json( { message: authErr.ALREADY_REGISTERED } )
+  if (err.message === authErr.PASS_LENGTH) res.status(422).json( { message: authErr.PASS_LENGTH } )
+  if (err.message === authErr.INCORRECT_CREDENTIALS) res.status(401).json( { message: authErr.INCORRECT_CREDENTIALS } )
+  
+  res.status(500).json( { message: 'UNHANDLED_ERROR, process it!' } )
 }

@@ -12,6 +12,7 @@ const swaggerUI = require('swagger-ui-express')
 const swaggerOptions = require('~/swagger-settings')
 const example = require('~/routes/example')
 const auth = require('~/routes/auth')
+const {handleErrors} = require('~/utils/errorHandler')
 
 const app = express()
 
@@ -29,6 +30,8 @@ app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
 
 app.use('/example', example)
 app.use('/auth', auth)
+
+app.use(handleErrors)
 
 mongoose
   .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@teachma.693y8.mongodb.net/test`)

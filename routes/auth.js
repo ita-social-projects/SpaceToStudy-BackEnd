@@ -4,7 +4,9 @@ const auth = require('~/controllers/auth')
 
 const router = express.Router()
 
-router.post('/signup', auth.signup)
-router.post('/login', auth.login)
+const use = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next)
+
+router.post('/signup', use(auth.signup))
+router.post('/login', use(auth.login))
 
 module.exports = router

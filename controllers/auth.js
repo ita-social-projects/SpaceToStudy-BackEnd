@@ -2,7 +2,7 @@ const User = require('~/models/User')
 const { createToken, hashPassword, comparePasswords } = require('~/controllers/utils/auth')
 const { authErr } = require('~/consts/errors')
 
-exports.signup = async (req, res) => {
+const signup = async (req, res) => {
   const { role, firstName, lastName, email, password } = req.body
 
   try {
@@ -20,7 +20,7 @@ exports.signup = async (req, res) => {
   }
 }
 
-exports.login = async (req, res) => {
+const login = async (req, res) => {
   const { email, password } = req.body
 
   try {
@@ -36,4 +36,9 @@ exports.login = async (req, res) => {
   } catch (err) {
     console.error(err)
   }
+}
+
+module.exports = {
+  signup,
+  login
 }

@@ -1,6 +1,10 @@
-exports.authErr = {
+const authErr = {
   INCORRECT_CREDENTIALS: 'INCORRECT_CREDENTIALS',
   ROLE_NOT_SUPPORTED: 'ROLE_NOT_SUPPORTED',
   PASS_LENGTH: 'PASS_LENGTH',
   ALREADY_REGISTERED: 'ALREADY_REGISTERED',
+}
+
+module.exports = {
+  authErr,
 }

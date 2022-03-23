@@ -1,20 +1,27 @@
 const User = require('~/models/User')
 const { createToken, hashPassword, comparePasswords } = require('~/controllers/utils/auth')
 const { ApiError } = require('~/utils/errors')
-const { authErr: {
-  ALREADY_REGISTERED,
-  PASS_LENGTH,
-  INCORRECT_CREDENTIALS
-} } = require('~/consts/errors')
+const { 
+  authErr: {
+    ALREADY_REGISTERED,
+    PASS_LENGTH,
+    INCORRECT_CREDENTIALS
+  }, 
+  statusCodes: {
+    UNAUTHORIZED,
+    CONFLICT,
+    UNPROCESSABLE,
+  } 
+} = require('~/consts/errors')
 
 const signup = async (req, res, next) => {
   const { role, firstName, lastName, email, password } = req.body
 
   try {
     const candidate = await User.findOne({ email })
-    if (candidate) throw new ApiError (409, ALREADY_REGISTERED)
+    if (candidate) throw new ApiError (CONFLICT, ALREADY_REGISTERED)
 
-    if (password.length < 8 || password.length > 25) throw new ApiError (422, PASS_LENGTH)
+    if (password.length < 8 || password.length > 25) throw new ApiError (UNPROCESSABLE, PASS_LENGTH)
     
     const hashedPassword = await hashPassword(password)
     const user = await User.create({ role, firstName, lastName, email, password: hashedPassword })
@@ -30,7 +37,7 @@ const login = async (req, res, next) => {
 
   try {
     const user = await User.findOne({ email })
-    if (!user) throw new ApiError (401, INCORRECT_CREDENTIALS)
+    if (!user) throw new ApiError (UNAUTHORIZED, INCORRECT_CREDENTIALS)
 
     const auth = await comparePasswords(password, user.password)
     if (!auth) throw new ApiError (401, INCORRECT_CREDENTIALS)

@@ -12,6 +12,7 @@ const swaggerUI = require('swagger-ui-express')
 const swaggerOptions = require('~/swagger-settings')
 const example = require('~/routes/example')
 const auth = require('~/routes/auth')
+const { handleError } = require('~/utils/errors')
 
 const app = express()
 
@@ -29,6 +30,23 @@ app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
 
 app.use('/example', example)
 app.use('/auth', auth)
+
+app.use((req, res, next) => {
+  const err = new Error('NOT_FOUND')
+  err.statusCode = 404
+  next(err)
+})
+
+app.use(handleError)
+// app.use((err, req, res, next) => {
+//   console.log('err', err.message)
+//   console.log('statusCode', err.statusCode)
+//   const { statusCode=500, message } = err
+//   res.status(statusCode).json({
+//     statusCode, 
+//     message
+//   })
+// })
 
 mongoose
   .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@teachma.693y8.mongodb.net/test`)

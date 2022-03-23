@@ -11,6 +11,8 @@ const {
     UNAUTHORIZED,
     CONFLICT,
     UNPROCESSABLE,
+    OK,
+    CREATED,
   } 
 } = require('~/consts/errors')
 
@@ -26,7 +28,7 @@ const signup = async (req, res, next) => {
     const hashedPassword = await hashPassword(password)
     const user = await User.create({ role, firstName, lastName, email, password: hashedPassword })
 
-    res.status(201).json({ user: { firstName, lastName, email, id: user._id } })
+    res.status(CREATED).json({ user: { firstName, lastName, email, id: user._id } })
   } catch (err) {
     next(err)
   }
@@ -40,11 +42,11 @@ const login = async (req, res, next) => {
     if (!user) throw new ApiError (UNAUTHORIZED, INCORRECT_CREDENTIALS)
 
     const auth = await comparePasswords(password, user.password)
-    if (!auth) throw new ApiError (401, INCORRECT_CREDENTIALS)
+    if (!auth) throw new ApiError (UNAUTHORIZED, INCORRECT_CREDENTIALS)
 
     const token = createToken(user._id)
 
-    res.status(200).json({ user: { firstName: user.firstName, lastName: user.lastName, email, id: user._id } })
+    res.status(OK).json({ user: { firstName: user.firstName, lastName: user.lastName, email, id: user._id } })
   } catch (err) {
     next(err)
   }

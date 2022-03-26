@@ -12,7 +12,7 @@ const swaggerUI = require('swagger-ui-express')
 const swaggerOptions = require('~/swagger-settings')
 const example = require('~/routes/example')
 const auth = require('~/routes/auth')
-const { handleError } = require('~/utils/errors')
+const { createError, handleError } = require('~/utils/errors')
 
 const app = express()
 
@@ -32,8 +32,7 @@ app.use('/example', example)
 app.use('/auth', auth)
 
 app.use((req, res, next) => {
-  const err = new Error('NOT_FOUND')
-  err.statusCode = 404
+  const err = createError(404, 'NOT_FOUND')
   next(err)
 })
 

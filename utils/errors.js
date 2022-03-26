@@ -1,12 +1,10 @@
-class ApiError extends Error {
-  constructor(statusCode, message) {
-    super()
-    this.statusCode = statusCode
-    this.message = message
-  }
+const createError = (statusCode, message) => {
+  const err = new Error(message)
+  err.statusCode = statusCode
+  return err
 }
 
-const handleError = (err, req,  res, next) => {
+const handleError = (err, req, res, next) => {
   const { statusCode, message } = err
   res.status(statusCode).json({
     statusCode, 
@@ -15,6 +13,6 @@ const handleError = (err, req,  res, next) => {
 }
 
 module.exports = {
-  ApiError,
-  handleError
+  createError,
+  handleError,
 }

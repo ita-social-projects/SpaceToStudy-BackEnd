@@ -5,17 +5,6 @@ const authErr = {
   ALREADY_REGISTERED: 'ALREADY_REGISTERED',
 }
 
-const statusCodes = {
-  OK: 200,
-  CREATED: 201,
-  UNAUTHORIZED: 401,
-  NOT_FOUND: 404,
-  CONFLICT: 409,
-  UNPROCESSABLE: 422,
-  INTERNAL: 500,
-}
-
 module.exports = {
   authErr,
-  statusCodes,
 }

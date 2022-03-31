@@ -1,14 +1,17 @@
-const createError = (statusCode, message) => {
-  const err = new Error(message)
-  err.statusCode = statusCode
+const createError = (status, errorCode, message) => {
+  const err = new Error(status)
+  err.status = status
+  err.errorCode = errorCode
+  err.message = message
   return err
 }
 
 const handleError = (err, req, res, next) => {
-  const { statusCode, message } = err
-  res.status(statusCode).json({
-    statusCode, 
-    message
+  const { status, errorCode, message } = err
+  res.status(status).json({
+    status, 
+    errorCode, 
+    message,
   })
 }
 

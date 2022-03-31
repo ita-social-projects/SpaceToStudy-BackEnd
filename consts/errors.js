@@ -1,10 +1,18 @@
-const authErr = {
+const errorCodes = {
   INCORRECT_CREDENTIALS: 'INCORRECT_CREDENTIALS',
   ROLE_NOT_SUPPORTED: 'ROLE_NOT_SUPPORTED',
-  PASS_LENGTH: 'PASS_LENGTH',
+  VALIDATION_FAILED: 'VALIDATION_FAILED',
   ALREADY_REGISTERED: 'ALREADY_REGISTERED',
 }
 
+const errorMessages = {
+  userRegistered: 'User already exists.',
+  userNotRegistered: 'User is not registered.',
+  emailLength: 'email: Input value is less than 8 or more than 25 characters.',
+  passMismatch: 'Passwords do not match.',
+}
+
 module.exports = {
-  authErr,
+  errorCodes,
+  errorMessages,
 }

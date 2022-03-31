@@ -32,7 +32,7 @@ app.use('/example', example)
 app.use('/auth', auth)
 
 app.use((req, res, next) => {
-  const err = createError(404, 'NOT_FOUND')
+  const err = createError(404, 'NOT_FOUND', 'Wrong path')
   next(err)
 })
 

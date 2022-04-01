@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const { roles: { STUDENT, MENTOR, ADMIN } } = require('~/consts/auth')
-const { authErr: {ROLE_NOT_SUPPORTED} } = require('~/consts/errors')
+const { errorCodes: {ROLE_NOT_SUPPORTED} } = require('~/consts/errors')
 
 const Schema = mongoose.Schema
 

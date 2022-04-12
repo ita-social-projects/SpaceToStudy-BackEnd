@@ -1,4 +1,49 @@
 definitions:
+  user:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          firstName:
+            type: string
+            example: John
+          lastName:
+            type: string    
+            example: Doe
+          email:
+            type: string    
+            example: johndoe@gmail.com
+          id:
+            type: string
+            example: 6255bc080a75adf9223df100
+  login:
+    type: object
+    properties:
+      email:
+        type: string    
+        example: johndoe@gmail.com
+      password:
+        type: string
+        example: qwer1234
+  signup:
+    type: object
+    properties:
+      role:
+        type: string #enum?
+        example: student
+      firstName:
+        type: string
+        example: John
+      lastName:
+        type: string
+        example: Doe
+      email:
+        type: string
+        example: johndoe@gmail.com
+      password:
+        type: string
+        example: qwer1234
   examples:
     type: object
     properties:

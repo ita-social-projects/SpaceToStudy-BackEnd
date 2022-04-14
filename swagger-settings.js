@@ -12,7 +12,7 @@ const swagger = {
       }
     ]
   },
-  apis: ['./docs/*.yaml']
+  apis: ['./docs/**/*.yaml']
 }
 
 module.exports = swagger

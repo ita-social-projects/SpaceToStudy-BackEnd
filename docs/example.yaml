@@ -7,46 +7,6 @@ components:
 security:
   - bearerAuth: []
 paths:
-  /auth/login:
-    post:
-      tags:
-        - Auth
-      summary: login 
-      description: login
-      produces:
-        - application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/login'
-      responses:
-        200:
-          description: Successfully logged in
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/user'
-  /auth/signup:
-    post:
-      tags:
-        - Auth
-      summary: signup 
-      description: signup
-      produces:
-        - application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/signup'
-      responses:
-        201:
-          description: Successfully created
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/user'
   /example:
     get:
       security:

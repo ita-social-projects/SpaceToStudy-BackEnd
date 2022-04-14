@@ -17,32 +17,30 @@ definitions:
           id:
             type: string
             example: 6255bc080a75adf9223df100
-  examples:
+  login:
     type: object
     properties:
-      items:
-        type: array
-        items:
-          type: object
-          properties:
-            title:
-              type: string
-              example: John Doe
-  example-post:
-    type: object
-    properties:
-      title:
+      email:
+        type: string    
+        example: johndoe@gmail.com
+      password:
         type: string
-        example: John Doe
-  example:
+        example: qwer1234
+  signup:
     type: object
     properties:
-      item:
-        type: object
-        properties:
-          title:
-            type: string
-            example: John Doe
-          id:
-            type: string
-            example: '61be628f3fc28b1b62225a31'
+      role:
+        type: string #enum?
+        example: student
+      firstName:
+        type: string
+        example: John
+      lastName:
+        type: string
+        example: Doe
+      email:
+        type: string
+        example: johndoe@gmail.com
+      password:
+        type: string
+        example: qwer1234

@@ -2,9 +2,9 @@ const swagger = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Express API for TeachMA',
+      title: 'Express API for space2study',
       version: '1.0.0',
-      description: 'TeachMA REST API'
+      description: 'space2study REST API'
     },
     servers: [
       {

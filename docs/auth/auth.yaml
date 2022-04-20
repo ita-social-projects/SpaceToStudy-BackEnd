@@ -1,0 +1,49 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: returns the user object
+      description: Creates JWT token and returns the user object in case that user provides the correct email and password.
+      produces:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/login'
+      responses:
+        200:
+          description: A user object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/user'
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: 
+      description: Stores new user in the database. Returns user information.
+      produces:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/signup'
+      responses:
+        201:
+          description: User information
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/user'

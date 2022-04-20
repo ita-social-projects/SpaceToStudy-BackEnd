@@ -25,7 +25,7 @@ const signup = async (req, res, next) => {
     if (password.length < 8 || password.length > 25) throw createError(422, VALIDATION_FAILED, emailLength)
     
     const hashedPassword = await hashPassword(password)
-    const user = await User.create({ role, firstName, lastName, email, password: hashedPassword }).exec()
+    const user = await User.create({ role, firstName, lastName, email, password: hashedPassword })
 
     res.status(201).json({ user: { firstName, lastName, email, id: user._id } })
   } catch (err) {

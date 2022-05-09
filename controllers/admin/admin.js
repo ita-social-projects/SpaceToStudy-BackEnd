@@ -1,11 +1,12 @@
 const User = require('~/models/user')
-const { roles: { ADMIN }, errors: { ADMIN_NOT_FOUND } } = require('../consts/index');
+const { roles: { ADMIN } } = require('~/consts/auth')
+const { errors: { NOT_FOUND } } = require('~/consts/errors')
 
-exports.getAdmins = async (req, res) => {
+const getAdmins = async (req, res) => {
   try {
     const admins = await User.find({
         "role": ADMIN
-    }).lean();
+    }).lean()
 
     const adminsResponse = admins.map(admin => { 
         return {
@@ -14,9 +15,9 @@ exports.getAdmins = async (req, res) => {
             lastName: admin.lastName,
             role: admin.role,
             email: admin.email,
-            phoneNumber: admin.phoneNumber
+            phoneNumber: admin.phoneNumber // ??
         }
-    });
+    })
 
     res.status(200).json({
         users: adminsResponse
@@ -26,16 +27,16 @@ exports.getAdmins = async (req, res) => {
   }
 }
 
-exports.getAdmin = async (req, res) => {
+const getAdmin = async (req, res) => {
     const userId = req.params.userId
   try {
     const admin = await User.findOne({
         "_id": userId,
         "role": ADMIN
-    }).lean();
+    }).lean()
     
     if (!admin) {
-      const error = new Error(ADMIN_NOT_FOUND)
+      const error = new Error(NOT_FOUND)
       error.statusCode = 404
       throw error
     }
@@ -46,8 +47,8 @@ exports.getAdmin = async (req, res) => {
             lastName: admin.lastName,
             role: admin.role,
             email: admin.email,
-            phoneNumber: admin.phoneNumber
-        };
+            phoneNumber: admin.phoneNumber // ??
+        }
 
     res.status(200).json({
         user: adminResponse
@@ -55,4 +56,9 @@ exports.getAdmin = async (req, res) => {
   } catch (e) {
     console.log(e)
   }
+}
+
+module.exports = {
+  getAdmin,
+  getAdmins
 }

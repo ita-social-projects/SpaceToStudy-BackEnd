@@ -1,7 +1,17 @@
-const User = require('~/models/user');
-const { errors: { USER_NOT_FOUND } } = require('../consts/index');
+const User = require('~/models/user')
+const { hashPassword } = require('~/controllers/utils/auth')
+const { createError } = require('~/utils/errors')
 
-exports.getUsers = async (req, res) => {
+const { 
+  errorCodes: {
+    NOT_FOUND
+  },
+  errorMessages: {
+    userNotRegistered,
+  }
+} = require('~/consts/errors')
+
+const getUsers = async (req, res) => {
   try {
     const users = await User.find().lean();
 
@@ -12,9 +22,9 @@ exports.getUsers = async (req, res) => {
             lastName: user.lastName,
             role: user.role,
             email: user.email,
-            phoneNumber: user.phoneNumber
+            phoneNumber: user.phoneNumber // ??
         }
-    });
+    })
 
     res.status(200).json({
         users: usersResponse
@@ -24,16 +34,13 @@ exports.getUsers = async (req, res) => {
   }
 }
 
-exports.getUser = async (req, res) => {
-    const userId = req.params.userId
+const getUser = async (req, res) => {
+  const userId = req.params.userId
+
   try {
     const user = await User.findById(userId).lean();
     
-    if (!user) {
-      const error = new Error(USER_NOT_FOUND)
-      error.statusCode = 404
-      throw error
-    }
+    if (!user) throw createError(404, NOT_FOUND, userNotRegistered)
 
     const userResponse = {
             id: user._id,
@@ -41,26 +48,28 @@ exports.getUser = async (req, res) => {
             lastName: user.lastName,
             role: user.role,
             email: user.email,
-            phoneNumber: user.phoneNumber
-        };
+            phoneNumber: user.phoneNumber // ??
+        }
 
     res.status(200).json({
         user: userResponse
     })
-  } catch (e) {
-    console.log(e)
+  } catch (err) {
+    next(err)
   }
-  }
+}
 
-exports.postUser = async (req, res) => {
+const postUser = async (req, res) => {
   const { firstName, lastName, role, email, password, phoneNumber } = req.body
+  const hashedPassword = await hashPassword(password)
+
   const user = new User({
     firstName: firstName,
     lastName: lastName,
     role: role,
     email: email,
-    password: password,
-    phoneNumber: phoneNumber
+    password: hashedPassword,
+    phoneNumber: phoneNumber // ??
   })
   
   try {
@@ -72,8 +81,8 @@ exports.postUser = async (req, res) => {
         lastName: savedUser._doc.lastName,
         role: savedUser._doc.role,
         email: savedUser._doc.email,
-        phoneNumber: savedUser._doc.phoneNumber
-    };
+        phoneNumber: savedUser._doc.phoneNumber // ??
+    }
 
     res.status(201).json({
       user: savedUserResponse
@@ -83,21 +92,24 @@ exports.postUser = async (req, res) => {
   }
 }
 
-exports.deleteUser = async (req, res) => {
+const deleteUser = async (req, res) => {
   const userId = req.params.userId
   try {
     const user = await User.findById(userId)
     
-    if (!user) {
-      const error = new Error(USER_NOT_FOUND)
-      error.statusCode = 404
-      throw error
-    }
+    if (!user) throw createError(404, NOT_FOUND, userNotRegistered)
 
     await User.findByIdAndRemove(userId)
 
     res.status(200).json({ message: 'User deleted.' })
-  } catch (e) {
-    console.log(e)
+  } catch (err) {
+    next(err)
   }
+}
+
+module.exports = {
+  getUsers,
+  getUser,
+  postUser,
+  deleteUser
 }

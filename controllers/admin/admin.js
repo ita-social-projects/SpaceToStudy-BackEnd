@@ -1,6 +1,7 @@
 const User = require('~/models/user')
 const { roles: { ADMIN } } = require('~/consts/auth')
-const { errorCodes: { NOT_FOUND } } = require('~/consts/errors')
+const { errorCodes: { NOT_FOUND }, errorMessages: { userNotRegistered } } = require('~/consts/errors')
+const { createError } = require('~/utils/errors')
 
 const getAdmins = async (req, res) => {
   try {
@@ -34,11 +35,7 @@ const getAdmin = async (req, res) => {
       'role': ADMIN
     }).lean()
 
-    if (!admin) {
-      const error = new Error(NOT_FOUND)
-      error.statusCode = 404
-      throw error
-    }
+    if (!admin) throw createError(404, NOT_FOUND, userNotRegistered)
 
     const adminResponse = {
       id: admin._id,
@@ -51,8 +48,8 @@ const getAdmin = async (req, res) => {
     res.status(200).json({
       user: adminResponse
     })
-  } catch (e) {
-    console.log(e)
+  } catch (err) {
+    next(err)
   }
 }
 

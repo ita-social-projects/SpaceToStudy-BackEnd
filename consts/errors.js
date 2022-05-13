@@ -13,13 +13,6 @@ const errorMessages = {
   passMismatch: 'Passwords do not match.',
 }
 
-const errorMessages = {
-  userRegistered: 'User already exists.',
-  userNotRegistered: 'User is not registered.',
-  emailLength: 'email: Input value is less than 8 or more than 25 characters.',
-  passMismatch: 'Passwords do not match.',
-}
-
 module.exports = {
   errorCodes,
   errorMessages,

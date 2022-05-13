@@ -1,4 +1,4 @@
-const User = require('~/models/User')
+const User = require('~/models/user')
 const { createToken, hashPassword, comparePasswords } = require('~/controllers/utils/auth')
 const { createError } = require('~/utils/errors')
 const { 

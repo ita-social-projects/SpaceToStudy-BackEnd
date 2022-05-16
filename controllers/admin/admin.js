@@ -23,7 +23,7 @@ const getAdmins = async (req, res) => {
       users: adminsResponse
     })
   } catch (err) {
-    console.log(err)
+    next(err)
   }
 }
 

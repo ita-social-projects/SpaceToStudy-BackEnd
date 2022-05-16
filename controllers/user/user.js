@@ -28,7 +28,7 @@ const getUsers = async (req, res) => {
       users: usersResponse
     })
   } catch (err) {
-    console.log(err)
+    next(err)
   }
 }
 

@@ -14,7 +14,7 @@ const getAdmins = async (req, res) => {
         id: admin._id,
         firstName: admin.firstName,
         lastName: admin.lastName,
-        role: admin.role,
+        role: admin.role, // ?
         email: admin.email,
       }
     })

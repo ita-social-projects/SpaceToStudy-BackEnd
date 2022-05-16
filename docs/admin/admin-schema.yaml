@@ -1,0 +1,45 @@
+definitions:
+  admins:
+    type: object
+    properties:
+      users:
+        type: array
+        items:
+          type: object
+          properties:
+            role: # ?
+              type: string
+              example: admin
+            firstName:
+              type: string
+              example: John
+            lastName:
+              type: string    
+              example: Doe
+            email:
+              type: string    
+              example: johndoe@gmail.com
+            id:
+              type: string
+              example: 6255bc080a75adf9223df100
+  admin:
+    type: object
+    properties:
+      user:
+        type: object
+        properties:
+          role: # ?
+            type: string
+            example: admin
+          firstName:
+            type: string
+            example: John
+          lastName:
+            type: string    
+            example: Doe
+          email:
+            type: string    
+            example: johndoe@gmail.com
+          id:
+            type: string
+            example: 6255bc080a75adf9223df100

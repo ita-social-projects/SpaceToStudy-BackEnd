@@ -33,8 +33,8 @@ app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
 
 app.use('/example', example)
 app.use('/auth', auth)
-app.use('/user', user)
-app.use('/admin', admin)
+app.use('/users', user)
+app.use('/admins', admin)
 
 app.use((req, res, next) => {
   const err = createError(404, 'NOT_FOUND', 'Wrong path')

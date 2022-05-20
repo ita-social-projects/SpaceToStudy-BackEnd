@@ -1,0 +1,45 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /admins:
+    get:
+      tags:
+        - Admins
+      summary: returns a list of admins
+      description: Returns a list of user objects with "admin" role.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/admins'
+  /admins/{userId}:
+    get:
+      tags:
+        - Admins
+      summary: returns an admin by Id
+      description: Finds and returns a user object with admin role by specified Id.
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: User Id
+          type: string
+      responses:
+        200:
+          description: Admin information
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/admin'

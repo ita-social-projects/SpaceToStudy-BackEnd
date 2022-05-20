@@ -7,9 +7,6 @@ definitions:
         items:
           type: object
           properties:
-            role: # ?
-              type: string
-              example: admin
             firstName:
               type: string
               example: John
@@ -28,9 +25,6 @@ definitions:
       user:
         type: object
         properties:
-          role: # ?
-            type: string
-            example: admin
           firstName:
             type: string
             example: John

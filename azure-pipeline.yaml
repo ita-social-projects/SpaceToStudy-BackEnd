@@ -1,0 +1,64 @@
+trigger:
+  - develop
+  - devops
+  - main
+
+pr:
+  - develop
+  - devops
+  - main
+  
+variables:
+  agentOS: ubuntu-latest
+
+stages:
+
+  # - stage: Env
+  #   displayName: Download and set latest .env
+  #   jobs:
+  #     - job: Env 
+  #       pool:
+  #         vmImage: $(agentOS)
+  #       steps:
+  #       - task: DownloadSecureFile@1
+  #         name: envStage
+  #         condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+  #         inputs:
+  #           secureFile: 'env-back-stage'
+  #       - task: Bash@3
+  #         name: setEnvStage
+  #         inputs:
+  #           targetType: 'inline'
+  #           script: 'mv $(envStage.secureFilePath) .env'
+
+  - stage: Build
+    displayName: Build and push docker image
+    jobs: 
+      - job: Build
+        pool:
+         vmImage: $(agentOS)
+        steps:
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'S2sStage-Registry'
+            repository: 'back-stage'
+            command: 'buildAndPush'
+            Dockerfile: '**/Dockerfile'
+            tags: '$(Build.BuildId)'
+
+  - stage: Deploy
+    displayName: Deploy image to app service
+    jobs:
+     - job: Deploy
+       pool:
+         vmImage: $(agentOS)
+       steps:
+         - task: AzureRmWebAppDeployment@4
+           inputs:
+             ConnectionType: 'AzureRM'
+             azureSubscription: 'S2s-Service'
+             appType: 'webAppContainer'
+             WebAppName: 's2s-back-stage'
+             DockerNamespace: 's2sstage.azurecr.io'
+             DockerRepository: 'back-stage'
+             DockerImageTag: '$(Build.BuildId)'

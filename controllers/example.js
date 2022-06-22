@@ -16,7 +16,7 @@ exports.postExample = async (req, res) => {
   const example = new Example({
     title: title
   })
-  
+
   try {
     const savedExample = await example.save()
     res.status(201).json({
@@ -31,7 +31,7 @@ exports.deleteExample = async (req, res) => {
   const exampleId = req.params.exampleId
   try {
     const example = await Example.findById(exampleId)
-    
+
     if (!example) {
       const error = new Error('Could not find example.')
       error.statusCode = 404
@@ -42,6 +42,6 @@ exports.deleteExample = async (req, res) => {
 
     res.status(200).json({ message: 'Example deleted.' })
   } catch (e) {
-    console.log(e)
+    res.status(e.statusCode).json(e.message)
   }
 }

@@ -6,7 +6,9 @@
   "scripts": {
     "test": "nyc --reporter=html --reporter=lcov --reporter=text-summary mocha test/helper 'test/unit/**/*.spec.js' --require module-aliases.js",
     "start": "nodemon app.js --legacy-watch",
-    "lint": "eslint . --fix"
+    "lint": "eslint . --fix",
+    "prepare": "husky install",
+    "pre-commit": "lint-staged"
   },
   "author": "SoftServe ITA",
   "license": "ISC",
@@ -14,7 +16,8 @@
     "chai": "^4.3.4",
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.3.0",
-    "husky": "^8.0.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.0.2",
     "mocha": "^10.0.0",
     "nodemon": "^2.0.15",
     "nyc": "^15.1.0",
@@ -38,12 +41,6 @@
     "all": true,
     "report-dir": "test/coverage",
     "temp-directory": "test/coverage/.nyc_output"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm run test"
-    }
   },
   "lint-staged": {
     "*.{js}": [

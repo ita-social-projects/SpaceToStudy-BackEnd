@@ -7,7 +7,7 @@ const signup = async (req, res, next) => {
 
     const userData = await authService.signup(role, firstName, lastName, email, password)
 
-    return res.status(201).json(userData)
+    res.status(201).json(userData)
   } catch (err) {
     next(err)
   }
@@ -39,7 +39,7 @@ const logout = async (req, res, next) => {
     const token = await authService.logout(refreshToken)
     res.clearCookie('refreshToken')
 
-    return res.status(200).json(token)
+    res.status(200).json(token)
   } catch (err) {
     next(err)
   }
@@ -50,7 +50,7 @@ const activate = async (req, res, next) => {
     const activationLink = req.params.link
     await authService.activate(activationLink)
 
-    return res.redirect(process.env.CLIENT_URL)
+    res.redirect(process.env.CLIENT_URL)
   } catch (err) {
     next(err)
   }
@@ -68,7 +68,7 @@ const refresh = async (req, res, next) => {
 
     delete userData.refreshToken
 
-    return res.status(200).json(userData)
+    res.status(200).json(userData)
   } catch (err) {
     next(err)
   }

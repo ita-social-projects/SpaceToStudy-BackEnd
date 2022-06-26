@@ -12,7 +12,7 @@ const errorMiddleware = (err, _req, res, _next) => {
       message
     })
   }
-  return res.status(status).json({
+  res.status(status).json({
     status,
     errorCode,
     message

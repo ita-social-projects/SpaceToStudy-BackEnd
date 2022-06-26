@@ -1,10 +1,12 @@
-const { Schema, model } = require('mongoose')
+const mongoose = require('mongoose')
 const {
   roles: { STUDENT, MENTOR, ADMIN }
 } = require('~/consts/auth')
 const {
   errorCodes: { ROLE_NOT_SUPPORTED }
 } = require('~/consts/errors')
+
+const Schema = mongoose.Schema
 
 const userSchema = new Schema({
   role: {
@@ -33,14 +35,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: [true, 'Please enter a password']
-  },
-  isActivated: {
-    type: Boolean,
-    default: false
-  },
-  activationLink: {
-    type: String
   }
 })
 
-module.exports = model('User', userSchema)
+module.exports = mongoose.model('User', userSchema)

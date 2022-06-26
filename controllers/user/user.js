@@ -1,26 +1,22 @@
 const User = require('~/models/user')
-const { createError } = require('~/utils/errors')
+const { createError } = require('~/utils/errorsHelper')
 
 const {
-  errorCodes: {
-    NOT_FOUND
-  },
-  errorMessages: {
-    userNotRegistered,
-  }
+  errorCodes: { NOT_FOUND },
+  errorMessages: { userNotRegistered }
 } = require('~/consts/errors')
 
-const getUsers = async (req, res) => {
+const getUsers = async (_req, res, next) => {
   try {
     const users = await User.find().lean()
 
-    const usersResponse = users.map(user => {
+    const usersResponse = users.map((user) => {
       return {
         id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
         role: user.role,
-        email: user.email,
+        email: user.email
       }
     })
 
@@ -32,7 +28,7 @@ const getUsers = async (req, res) => {
   }
 }
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
   const userId = req.params.userId
 
   try {
@@ -45,7 +41,7 @@ const getUser = async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,
-      email: user.email,
+      email: user.email
     }
 
     res.status(200).json({
@@ -56,7 +52,7 @@ const getUser = async (req, res) => {
   }
 }
 
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   const userId = req.params.userId
   try {
     const user = await User.findById(userId)

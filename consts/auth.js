@@ -4,12 +4,9 @@ const roles = {
   ADMIN: 'admin'
 }
 
-const JWT = {
-  MAX_AGE: '24h',
-  SECRET: 'PUTIN HUILO',
-}
+const oneDayInMs = 86400000
 
 module.exports = {
   roles,
-  JWT
+  oneDayInMs
 }

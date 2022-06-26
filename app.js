@@ -4,7 +4,9 @@ require('dotenv').config()
 
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUI = require('swagger-ui-express')
@@ -15,13 +17,22 @@ const example = require('~/routes/example')
 const admin = require('~/routes/admin')
 const auth = require('~/routes/auth')
 const user = require('~/routes/user')
-const { createError, handleError } = require('~/utils/errors')
+
+const { createNotFoundError } = require('~/utils/errorsHelper')
+const errorMiddleware = require('~/middlewares/error')
 
 const app = express()
 
 app.use(bodyParser.json())
+app.use(cookieParser())
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+  })
+)
 
-app.use((req, res, next) => {
+app.use((_req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
@@ -29,25 +40,27 @@ app.use((req, res, next) => {
 })
 
 const swaggerSettings = swaggerJsDoc(swaggerOptions)
-app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSettings))
 
 app.use('/example', example)
 app.use('/auth', auth)
 app.use('/users', user)
 app.use('/admins', admin)
 
-app.use((req, res, next) => {
-  const err = createError(404, 'NOT_FOUND', 'Wrong path')
+app.use((_req, _res, next) => {
+  const err = createNotFoundError()
   next(err)
 })
 
-app.use(handleError)
+app.use(errorMiddleware)
 
 mongoose
-  .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@teachma.693y8.mongodb.net/test`)
+  .connect(
+    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@teachma.693y8.mongodb.net/test`
+  )
   .then(() => {
     app.listen(process.env.SERVER_PORT, () => {
       console.log(`Server is running on port ${process.env.SERVER_PORT}`)
     })
   })
-  .catch(err => console.log(err))
+  .catch((err) => console.log(err))

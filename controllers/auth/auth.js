@@ -1,51 +1,74 @@
-const User = require('~/models/user')
-const { createToken, hashPassword, comparePasswords } = require('~/controllers/utils/auth')
-const { createError } = require('~/utils/errors')
-const { 
-  errorCodes: {
-    ALREADY_REGISTERED,
-    VALIDATION_FAILED,
-    INCORRECT_CREDENTIALS
-  },
-  errorMessages: {
-    userRegistered,
-    userNotRegistered,
-    emailLength,
-    passMismatch,
-  }
-} = require('~/consts/errors')
+const authService = require('~/services/auth')
+const { oneDayInMs } = require('~/consts/auth')
 
 const signup = async (req, res, next) => {
-  const { role, firstName, lastName, email, password } = req.body
-
   try {
-    const candidate = await User.findOne({ email }).exec()
-    if (candidate) throw createError(409, ALREADY_REGISTERED, userRegistered)
+    const { role, firstName, lastName, email, password } = req.body
 
-    if (password.length < 8 || password.length > 25) throw createError(422, VALIDATION_FAILED, emailLength)
-    
-    const hashedPassword = await hashPassword(password)
-    const user = await User.create({ role, firstName, lastName, email, password: hashedPassword })
+    const userData = await authService.signup(role, firstName, lastName, email, password)
 
-    res.status(201).json({ user: { firstName, lastName, email, id: user._id } })
+    return res.status(201).json(userData)
   } catch (err) {
     next(err)
   }
 }
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body
-
   try {
-    const user = await User.findOne({ email }).exec()
-    if (!user) throw createError(401, INCORRECT_CREDENTIALS, userNotRegistered)
+    const { email, password } = req.body
 
-    const auth = await comparePasswords(password, user.password)
-    if (!auth) throw createError(401, INCORRECT_CREDENTIALS, passMismatch)
+    const userData = await authService.login(email, password)
 
-    const token = createToken(user._id)
+    res.cookie('refreshToken', userData.refreshToken, {
+      maxAge: oneDayInMs,
+      httpOnly: true
+    })
 
-    res.status(200).json({ user: { firstName: user.firstName, lastName: user.lastName, email, id: user._id } })
+    delete userData.refreshToken
+
+    res.status(200).json(userData)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const logout = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.cookies
+
+    const token = await authService.logout(refreshToken)
+    res.clearCookie('refreshToken')
+
+    return res.status(200).json(token)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const activate = async (req, res, next) => {
+  try {
+    const activationLink = req.params.link
+    await authService.activate(activationLink)
+
+    return res.redirect(process.env.CLIENT_URL)
+  } catch (err) {
+    next(err)
+  }
+}
+
+const refresh = async (req, res, next) => {
+  try {
+    const { refreshToken } = req.cookies
+
+    const userData = await authService.refresh(refreshToken)
+    res.cookie('refreshToken', userData.refreshToken, {
+      maxAge: oneDayInMs,
+      httpOnly: true
+    })
+
+    delete userData.refreshToken
+
+    return res.status(200).json(userData)
   } catch (err) {
     next(err)
   }
@@ -53,5 +76,8 @@ const login = async (req, res, next) => {
 
 module.exports = {
   signup,
-  login
+  login,
+  logout,
+  activate,
+  refresh
 }

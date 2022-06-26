@@ -1,13 +1,10 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+const { Schema, model } = require('mongoose')
 
-const exampleSchema = new Schema(
-  {
-    title: {
-      type: String,
-      required: true
-    }
+const exampleSchema = new Schema({
+  title: {
+    type: String,
+    required: true
   }
-)
+})
 
-module.exports = mongoose.model('Example', exampleSchema)
+module.exports = model('Example', exampleSchema)

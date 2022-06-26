@@ -28,6 +28,8 @@
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -35,7 +37,8 @@
     "mongodb": "^4.2.2",
     "mongoose": "^6.1.2",
     "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.3.0"
+    "swagger-ui-express": "^4.3.0",
+    "uuid": "^8.3.2"
   },
   "nyc": {
     "all": true,
@@ -47,5 +50,8 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "_moduleAliases": {
+    "~": "."
   }
 }

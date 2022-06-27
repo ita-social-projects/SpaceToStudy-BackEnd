@@ -67,9 +67,9 @@ const authService = {
   },
 
   logout: async (refreshToken) => {
-    const token = await tokenService.removeToken(refreshToken)
+    const deleteInfo = await tokenService.removeToken(refreshToken)
 
-    return token
+    return deleteInfo
   },
 
   activate: async (activationLink) => {

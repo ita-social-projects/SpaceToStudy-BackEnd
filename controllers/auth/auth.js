@@ -36,10 +36,10 @@ const logout = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies
 
-    const token = await authService.logout(refreshToken)
+    const logoutInfo = await authService.logout(refreshToken)
     res.clearCookie('refreshToken')
 
-    res.status(200).json(token)
+    res.status(200).json(logoutInfo)
   } catch (err) {
     next(err)
   }

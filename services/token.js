@@ -50,9 +50,9 @@ const tokenService = {
   },
 
   removeToken: async (refreshToken) => {
-    const tokenData = await Token.deleteOne({ refreshToken })
+    const deleteInfo = await Token.deleteOne({ refreshToken })
 
-    return tokenData
+    return deleteInfo
   },
 
   findToken: async (refreshToken) => {

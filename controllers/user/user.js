@@ -8,20 +8,10 @@ const {
 
 const getUsers = async (_req, res, next) => {
   try {
-    const users = await User.find().lean()
-
-    const usersResponse = users.map((user) => {
-      return {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role,
-        email: user.email
-      }
-    })
+    const users = await User.find().select('firstName lastName role email').lean()
 
     res.status(200).json({
-      users: usersResponse
+      users
     })
   } catch (err) {
     next(err)
@@ -32,20 +22,12 @@ const getUser = async (req, res, next) => {
   const userId = req.params.userId
 
   try {
-    const user = await User.findById(userId).lean()
+    const user = await User.findById(userId).select('firstName lastName role email').lean()
 
     if (!user) throw createError(404, NOT_FOUND, userNotRegistered)
 
-    const userResponse = {
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-      email: user.email
-    }
-
     res.status(200).json({
-      user: userResponse
+      user
     })
   } catch (err) {
     next(err)

@@ -1,4 +1,5 @@
 require('module-alias/register')
+require('./module-aliases')
 require('dotenv').config({ path: '.env.local' })
 require('dotenv').config()
 

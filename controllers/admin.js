@@ -12,12 +12,19 @@ const getAdmins = async (_req, res, next) => {
   try {
     const admins = await User.find({
       role: ADMIN
+    }).lean()
+
+    const adminsResponse = admins.map((admin) => {
+      return {
+        id: admin._id,
+        firstName: admin.firstName,
+        lastName: admin.lastName,
+        email: admin.email
+      }
     })
-      .select('firstName lastName email')
-      .lean()
 
     res.status(200).json({
-      admins
+      admins: adminsResponse
     })
   } catch (err) {
     next(err)
@@ -30,14 +37,19 @@ const getAdmin = async (req, res, next) => {
     const admin = await User.findOne({
       _id: userId,
       role: ADMIN
-    })
-      .select('firstName lastName email')
-      .lean()
+    }).lean()
 
     if (!admin) throw createError(404, NOT_FOUND, userNotRegistered)
 
+    const adminResponse = {
+      id: admin._id,
+      firstName: admin.firstName,
+      lastName: admin.lastName,
+      email: admin.email
+    }
+
     res.status(200).json({
-      admin
+      admin: adminResponse
     })
   } catch (err) {
     next(err)

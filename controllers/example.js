@@ -1,3 +1,4 @@
+const logger = require('~/logger/logger')
 const Example = require('~/models/example')
 
 exports.getExample = async (req, res) => {
@@ -7,7 +8,7 @@ exports.getExample = async (req, res) => {
       items: items
     })
   } catch (err) {
-    console.log(err)
+    logger.error(err)
   }
 }
 
@@ -23,7 +24,7 @@ exports.postExample = async (req, res) => {
       item: savedExample
     })
   } catch (err) {
-    console.log(err)
+    logger.error(err)
   }
 }
 

@@ -16,6 +16,7 @@ const admin = require('~/routes/admin')
 const auth = require('~/routes/auth')
 const user = require('~/routes/user')
 const { createError, handleError } = require('~/utils/errors')
+const logger = require('~/logger/logger')
 
 const app = express()
 
@@ -29,7 +30,7 @@ app.use((req, res, next) => {
 })
 
 const swaggerSettings = swaggerJsDoc(swaggerOptions)
-app.use('/api-docs',swaggerUI.serve,swaggerUI.setup(swaggerSettings))
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSettings))
 
 app.use('/example', example)
 app.use('/auth', auth)
@@ -44,10 +45,14 @@ app.use((req, res, next) => {
 app.use(handleError)
 
 mongoose
-  .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@teachma.693y8.mongodb.net/test`)
+  .connect(
+    process.env.MONGODB_URL,
+    { useNewUrlParser: true, useUnifiedTopology: true },
+    logger.info('Connected to MongoDB.')
+  )
   .then(() => {
     app.listen(process.env.SERVER_PORT, () => {
-      console.log(`Server is running on port ${process.env.SERVER_PORT}`)
+      logger.info(`Server is running on port ${process.env.SERVER_PORT}`)
     })
   })
-  .catch(err => console.log(err))
+  .catch((err) => logger.error(err))

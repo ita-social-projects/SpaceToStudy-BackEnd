@@ -4,6 +4,7 @@
 /node_modules
 /test/coverage
 /build
+package-lock.json
 
 # misc
 .DS_Store

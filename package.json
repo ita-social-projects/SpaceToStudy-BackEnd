@@ -49,8 +49,5 @@
       "eslint --fix",
       "prettier --write"
     ]
-  },
-  "_moduleAliases": {
-    "~": "."
   }
 }

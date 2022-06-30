@@ -14,11 +14,7 @@ const swaggerUI = require('swagger-ui-express')
 
 const swaggerOptions = require('~/swagger-settings')
 
-const example = require('~/routes/example')
-const admin = require('~/routes/admin')
-const auth = require('~/routes/auth')
-const user = require('~/routes/user')
-
+const router = require('~/routes')
 const { createNotFoundError } = require('~/utils/errorsHelper')
 const errorMiddleware = require('~/middlewares/error')
 
@@ -43,14 +39,10 @@ app.use((_req, res, next) => {
 const swaggerSettings = swaggerJsDoc(swaggerOptions)
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSettings))
 
-app.use('/example', example)
-app.use('/auth', auth)
-app.use('/users', user)
-app.use('/admins', admin)
+app.use('/', router)
 
 app.use((_req, _res, next) => {
-  const err = createNotFoundError()
-  next(err)
+  next(createNotFoundError())
 })
 
 app.use(errorMiddleware)

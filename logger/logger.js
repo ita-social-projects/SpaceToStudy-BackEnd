@@ -8,7 +8,7 @@ const logger = createLogger({
     // new transports.MongoDB({
     //   db: process.env.MONGODB_URL,
     //   options: { useUnifiedTopology: true },
-    //   expireAfterSeconds: 5,
+    //   expireAfterSeconds: 604800,
     //   handleExceptions: true
     // }),
     new transports.Console({

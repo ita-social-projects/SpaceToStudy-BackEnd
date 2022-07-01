@@ -35,7 +35,9 @@
     "mongodb": "^4.2.2",
     "mongoose": "^6.1.2",
     "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.3.0"
+    "swagger-ui-express": "^4.3.0",
+    "winston": "^3.8.0",
+    "winston-mongodb": "^5.0.7"
   },
   "nyc": {
     "all": true,

@@ -1,19 +1,39 @@
-const errorCodes = {
-  INCORRECT_CREDENTIALS: 'INCORRECT_CREDENTIALS',
-  ROLE_NOT_SUPPORTED: 'ROLE_NOT_SUPPORTED',
-  VALIDATION_FAILED: 'VALIDATION_FAILED',
-  ALREADY_REGISTERED: 'ALREADY_REGISTERED',
-  NOT_FOUND: 'NOT_FOUND',
+const errors = {
+  USER_NOT_REGISTERED: {
+    code: 'USER_NOT_REGISTERED',
+    message: 'User is not registered.'
+  },
+  INCORRECT_CREDENTIALS: {
+    code: 'INCORRECT_CREDENTIALS',
+    message: 'Wrong email or password.'
+  },
+  ROLE_NOT_SUPPORTED: {
+    code: 'ROLE_NOT_SUPPORTED',
+    message: 'User role is not supported.'
+  },
+  PASSWORD_LENGTH_VALIDATION_FAILED: {
+    code: 'PASSWORD_LENGTH_VALIDATION_FAILED',
+    message: 'password: Password cannot be shorter than 8 and longer than 25 characters.'
+  },
+  ALREADY_REGISTERED: {
+    code: 'ALREADY_REGISTERED',
+    message: 'User already exists.'
+  },
+  WRONG_PATH: {
+    code: 'WRONG_PATH',
+    message: 'Wrong url path.'
+  },
+  BAD_ACTIVATION_LINK: {
+    code: 'BAD_ACTIVATION_LINK',
+    message: 'User activation link is incorrect.'
+  },
+  UNAUTHORIZED: {
+    code: 'UNAUTHORIZED',
+    message: 'User is not authorized.'
+  },
+  INTERNAL_SERVER_ERROR: {
+    code: 'INTERNAL_SERVER_ERROR'
+  }
 }
 
-const errorMessages = {
-  userRegistered: 'User already exists.',
-  userNotRegistered: 'User is not registered.',
-  emailLength: 'email: Input value is less than 8 or more than 25 characters.',
-  passMismatch: 'Passwords do not match.',
-}
-
-module.exports = {
-  errorCodes,
-  errorMessages,
-}
+module.exports = errors

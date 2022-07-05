@@ -15,6 +15,22 @@ const errors = {
     code: 'PASSWORD_LENGTH_VALIDATION_FAILED',
     message: 'password: Password cannot be shorter than 8 and longer than 25 characters.'
   },
+  BODY_IS_NOT_DEFINED: {
+    code: 'BODY_IS_NOT_DEFINED',
+    message: 'request body should not be null or undefined'
+  },
+  FIELD_IS_NOT_DEFINED: (field) => ({
+    code: 'FIELD_IS_NOT_DEFINED',
+    message: `${field} should not be null or undefined`
+  }),
+  FIELD_IS_NOT_OF_PROPER_TYPE: (field, type) => ({
+    code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
+    message: `${field} should be of type ${type}`
+  }),
+  FIELD_IS_NOT_OF_PROPER_LENGTH: (field, length) => ({
+    code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
+    message: `${field} cannot be shorter than ${length.min} and longer than ${length.max} characters.`
+  }),
   ALREADY_REGISTERED: {
     code: 'ALREADY_REGISTERED',
     message: 'User already exists.'

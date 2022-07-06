@@ -1,4 +1,4 @@
-const { UNAUTHORIZED, WRONG_PATH } = require('~/consts/errors')
+const { UNAUTHORIZED, NOT_FOUND } = require('~/consts/errors')
 
 const createError = (status, errorInfo) => {
   const err = new Error(errorInfo.message)
@@ -13,7 +13,7 @@ const createUnauthorizedError = () => {
 }
 
 const createNotFoundError = () => {
-  return createError(404, WRONG_PATH)
+  return createError(404, NOT_FOUND)
 }
 
 module.exports = {

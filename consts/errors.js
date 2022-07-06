@@ -19,9 +19,9 @@ const errors = {
     code: 'ALREADY_REGISTERED',
     message: 'User already exists.'
   },
-  WRONG_PATH: {
-    code: 'WRONG_PATH',
-    message: 'Wrong url path.'
+  NOT_FOUND: {
+    code: 'NOT_FOUND',
+    message: 'The requested URL was not found.'
   },
   BAD_ACTIVATION_LINK: {
     code: 'BAD_ACTIVATION_LINK',

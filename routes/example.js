@@ -9,4 +9,6 @@ router.get('/', asyncWrapper(exampleController.getExample))
 
 router.post('/', asyncWrapper(exampleController.postExample))
 
+router.delete('/:exampleId', asyncWrapper(exampleController.deleteExample))
+
 module.exports = router

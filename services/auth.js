@@ -33,12 +33,7 @@ const authService = {
     //await mailService.sendActivationMail(email, `${process.env.SERVER_URL}/api/activate/${activationLink}`)
 
     return {
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        id: user._id
-      }
+      userEmail: user.email
     }
   },
 
@@ -58,15 +53,7 @@ const authService = {
     const tokens = tokenService.generateTokens({ id: user._id, role: user.role })
     await tokenService.saveToken(user._id, tokens.refreshToken)
 
-    return {
-      ...tokens,
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        id: user._id
-      }
-    }
+    return tokens
   },
 
   logout: async (refreshToken) => {
@@ -101,15 +88,7 @@ const authService = {
     const tokens = tokenService.generateTokens({ id: user._id, role: user.role })
     await tokenService.saveToken(user._id, tokens.refreshToken)
 
-    return {
-      ...tokens,
-      user: {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        id: user._id
-      }
-    }
+    return tokens
   }
 }
 

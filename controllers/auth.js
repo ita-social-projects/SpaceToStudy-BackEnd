@@ -17,16 +17,16 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body
 
-    const userData = await authService.login(email, password)
+    const tokens = await authService.login(email, password)
 
-    res.cookie('refreshToken', userData.refreshToken, {
+    res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: oneDayInMs,
       httpOnly: true
     })
 
-    delete userData.refreshToken
+    delete tokens.refreshToken
 
-    res.status(200).json(userData)
+    res.status(200).json(tokens)
   } catch (err) {
     next(err)
   }
@@ -60,15 +60,15 @@ const refresh = async (req, res, next) => {
   try {
     const { refreshToken } = req.cookies
 
-    const userData = await authService.refresh(refreshToken)
-    res.cookie('refreshToken', userData.refreshToken, {
+    const tokens = await authService.refresh(refreshToken)
+    res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: oneDayInMs,
       httpOnly: true
     })
 
-    delete userData.refreshToken
+    delete tokens.refreshToken
 
-    res.status(200).json(userData)
+    res.status(200).json(tokens)
   } catch (err) {
     next(err)
   }

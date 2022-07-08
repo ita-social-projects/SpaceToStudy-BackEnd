@@ -37,19 +37,24 @@ stages:
         pool:
          vmImage: $(agentOS)
         steps:
-        - task: Docker@2
+        - task: Docker@0
           inputs:
-            containerRegistry: 'S2sStage-Registry'
-            repository: 'back-stage'
-            command: 'build'
-            Dockerfile: '**/Dockerfile'
-            arguments: 'MONGODB_URL=$(MONGODB_URL)'
-        - task: Docker@2
+            containerregistrytype: 'Azure Container Registry'
+            azureSubscription: 'S2s-Service'
+            azureContainerRegistry: '{"loginServer":"s2sstage.azurecr.io", "id" : "/subscriptions/734fc759-c3a2-4e22-a478-301dc5b10496/resourceGroups/Space2Study/providers/Microsoft.ContainerRegistry/registries/S2sStage"}'
+            action: 'Build an image'
+            dockerFile: '**/Dockerfile'
+            buildArguments: 'MONGODB_URL=$(MONGODB_URL)'
+            imageName: 'back-stage:$(Build.BuildId)'
+       
+        - task: Docker@0
           inputs:
-            containerRegistry: 'S2sProd-Registry'
-            repository: 'back-end'
-            command: 'push'
-        
+            containerregistrytype: 'Azure Container Registry'
+            azureSubscription: 'S2s-Service'
+            azureContainerRegistry: '{"loginServer":"s2sstage.azurecr.io", "id" : "/subscriptions/734fc759-c3a2-4e22-a478-301dc5b10496/resourceGroups/Space2Study/providers/Microsoft.ContainerRegistry/registries/S2sStage"}'
+            action: 'Push an image'
+            imageName: 'back-stage:$(Build.BuildId)'
+
   - stage: Deploy
     displayName: Deploy image to app service
     jobs:

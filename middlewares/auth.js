@@ -2,7 +2,7 @@ const { createUnauthorizedError } = require('~/utils/errorsHelper')
 const tokenService = require('~/services/token')
 
 const authMiddleware = (req, _res, next) => {
-  const authorizationHeader = req.headers.Authorization
+  const authorizationHeader = req.headers.authorization
   if (!authorizationHeader) {
     throw createUnauthorizedError()
   }

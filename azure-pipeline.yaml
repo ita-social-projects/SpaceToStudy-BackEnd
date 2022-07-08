@@ -41,10 +41,15 @@ stages:
           inputs:
             containerRegistry: 'S2sStage-Registry'
             repository: 'back-stage'
-            command: 'buildAndPush'
+            command: 'build'
             Dockerfile: '**/Dockerfile'
-            tags: '$(Build.BuildId)'
-
+            arguments: 'MONGODB_URL=$(MONGODB_URL)'
+        - task: Docker@2
+          inputs:
+            containerRegistry: 'S2sProd-Registry'
+            repository: 'back-end'
+            command: 'push'
+        
   - stage: Deploy
     displayName: Deploy image to app service
     jobs:

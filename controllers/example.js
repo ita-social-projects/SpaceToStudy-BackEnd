@@ -1,15 +1,10 @@
-const logger = require('~/logger/logger')
 const Example = require('~/models/example')
 
 exports.getExample = async (req, res) => {
-  try {
-    const items = await Example.find()
-    res.status(200).json({
-      items: items
-    })
-  } catch (err) {
-    logger.error(err)
-  }
+  const items = await Example.find()
+  res.status(200).json({
+    items: items
+  })
 }
 
 exports.postExample = async (req, res) => {
@@ -18,14 +13,10 @@ exports.postExample = async (req, res) => {
     title: title
   })
 
-  try {
-    const savedExample = await example.save()
-    res.status(201).json({
-      item: savedExample
-    })
-  } catch (err) {
-    logger.error(err)
-  }
+  const savedExample = await example.save()
+  res.status(201).json({
+    item: savedExample
+  })
 }
 
 exports.deleteExample = async (req, res) => {

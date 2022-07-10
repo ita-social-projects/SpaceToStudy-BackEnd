@@ -12,14 +12,14 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body
 
-    const tokens = await authService.login(email, password)
+  const tokens = await authService.login(email, password)
 
-    res.cookie('refreshToken', tokens.refreshToken, {
-      maxAge: oneDayInMs,
-      httpOnly: true
-    })
+  res.cookie('refreshToken', tokens.refreshToken, {
+    maxAge: oneDayInMs,
+    httpOnly: true
+  })
 
-    delete tokens.refreshToken
+  delete tokens.refreshToken
 
   res.status(200).json(tokens)
 }
@@ -43,13 +43,13 @@ const activate = async (req, res) => {
 const refresh = async (req, res) => {
   const { refreshToken } = req.cookies
 
-    const tokens = await authService.refresh(refreshToken)
-    res.cookie('refreshToken', tokens.refreshToken, {
-      maxAge: oneDayInMs,
-      httpOnly: true
-    })
+  const tokens = await authService.refresh(refreshToken)
+  res.cookie('refreshToken', tokens.refreshToken, {
+    maxAge: oneDayInMs,
+    httpOnly: true
+  })
 
-    delete tokens.refreshToken
+  delete tokens.refreshToken
 
   res.status(200).json(tokens)
 }

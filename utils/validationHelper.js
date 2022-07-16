@@ -3,33 +3,34 @@ const { createError } = require('./errorsHelper')
 
 const validateRequired = (schemaField, field) => {
   const [schemaKey, schemaValue] = schemaField
-  if (schemaValue?.required) {
-    if (!field) {
-      throw createError(422, FIELD_IS_NOT_DEFINED(schemaKey))
-    }
+  if (schemaValue?.required && !field) {
+    throw createError(422, FIELD_IS_NOT_DEFINED(schemaKey))
   }
 }
 
 const validateType = (schemaField, field) => {
   const [schemaKey, schemaValue] = schemaField
-  if (schemaValue.type) {
-    if (schemaValue.type != typeof field) {
-      throw createError(422, FIELD_IS_NOT_OF_PROPER_TYPE(schemaKey, schemaValue.type))
-    }
+  if (schemaValue.type != typeof field) {
+    throw createError(422, FIELD_IS_NOT_OF_PROPER_TYPE(schemaKey, schemaValue.type))
   }
 }
 
 const validateLength = (schemaField, field) => {
   const [schemaKey, schemaValue] = schemaField
-  if (schemaValue.length) {
-    if (field.length < schemaValue.length.min || field.length > schemaValue.length.max) {
-      throw createError(422, FIELD_IS_NOT_OF_PROPER_LENGTH(schemaKey, schemaValue.length))
-    }
+  if (field.length < schemaValue.length.min || field.length > schemaValue.length.max) {
+    throw createError(422, FIELD_IS_NOT_OF_PROPER_LENGTH(schemaKey, schemaValue.length))
   }
+}
+
+const validateFunc = {
+  required: validateRequired,
+  type: validateType,
+  length: validateLength
 }
 
 module.exports = {
   validateRequired,
   validateType,
-  validateLength
+  validateLength,
+  validateFunc
 }

@@ -9,12 +9,12 @@ const validationMiddleware = (schema) => {
       throw createError(422, BODY_IS_NOT_DEFINED)
     }
 
-    Object.entries(schema).forEach((schemaField) => {
-      const reqBodyField = body[schemaField[0]]
-      validateRequired(schemaField, reqBodyField)
+    Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
+      const reqBodyField = body[schemaFieldKey]
+      validateRequired(schemaFieldKey, schemaFieldValue?.required, reqBodyField)
       if (reqBodyField) {
-        Object.entries(schemaField[1]).forEach((validationType) => {
-          validateFunc[validationType[0]](schemaField, reqBodyField)
+        Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
+          validateFunc[validationType](schemaFieldKey, validationValue, reqBodyField)
         })
       }
     })

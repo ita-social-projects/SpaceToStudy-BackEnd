@@ -12,7 +12,7 @@ const {
   PASSWORD_LENGTH_VALIDATION_FAILED
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
-const { sendMail } = require('~/utils/emailService')
+const { sendEmail } = require('~/utils/emailService')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password) => {
@@ -33,7 +33,7 @@ const authService = {
 
     //TODO
     //await mailService.sendActivationMail(email, `${process.env.SERVER_URL}/api/activate/${activationLink}`)
-    await sendMail(email, emailSubject.EMAIL_CONFIRMATION, { activationLink })
+    await sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { activationLink })
 
     return {
       userEmail: user.email

@@ -1,5 +1,5 @@
 const EmailTemplates = require('email-templates')
-const { createTransport } = require('~/utils/mailer')
+const { sendMail } = require('~/utils/mailer')
 const { templateList } = require('~/emails')
 const requiredCredentials = require('~/consts/gmailAuth')
 const { TEMPLATE_NOT_FOUND } = require('~/consts/errors')
@@ -8,14 +8,13 @@ const logger = require('~/logger/logger')
 
 const emailTemplates = new EmailTemplates()
 
-const sendMail = async (email, subject, text = {}) => {
+const sendEmail = async (email, subject, text = {}) => {
   try {
     const templateToSend = templateList[subject]
     if (!templateToSend) throw createError(404, TEMPLATE_NOT_FOUND)
 
     const html = await emailTemplates.render(templateToSend.template, text)
-    const transporter = await createTransport()
-    transporter.sendMail({
+    await sendMail({
       from: `Space2Study <${requiredCredentials.user}>`,
       to: email,
       subject: templateToSend.subject,
@@ -26,4 +25,4 @@ const sendMail = async (email, subject, text = {}) => {
   }
 }
 
-module.exports = { sendMail }
+module.exports = { sendEmail }

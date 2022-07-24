@@ -33,6 +33,10 @@ const errors = {
   },
   INTERNAL_SERVER_ERROR: {
     code: 'INTERNAL_SERVER_ERROR'
+  },
+  TEMPLATE_NOT_FOUND: {
+    code: 'TEMPLATE_NOT_FOUND',
+    message: 'The requested template was not found.'
   }
 }
 

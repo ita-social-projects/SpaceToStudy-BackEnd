@@ -1,60 +1,28 @@
-const nodemailer = require('nodemailer')
-const { google } = require('googleapis')
-const logger = require('~/logger/logger')
+const EmailTemplates = require('email-templates')
+const { sendMail } = require('~/utils/mailer')
+const { templateList } = require('~/emails')
 const requiredCredentials = require('~/consts/gmailAuth')
+const { TEMPLATE_NOT_FOUND } = require('~/consts/errors')
+const { createError } = require('~/utils/errorsHelper')
+const logger = require('~/logger/logger')
 
-const OAuth2 = google.auth.OAuth2
+const emailTemplates = new EmailTemplates()
 
-const getAccessToken = async () => {
+const sendEmail = async (email, subject, text = {}) => {
   try {
-    const oAuth2Client = new OAuth2(
-      requiredCredentials.clientId,
-      requiredCredentials.clientSecret,
-      requiredCredentials.redirectUri
-    )
+    const templateToSend = templateList[subject]
+    if (!templateToSend) throw createError(404, TEMPLATE_NOT_FOUND)
 
-    oAuth2Client.setCredentials({ refresh_token: requiredCredentials.refreshToken })
-    const accessToken = await oAuth2Client.getAccessToken()
-
-    return accessToken
-  } catch (err) {
-    logger.error(err)
-    throw err
-  }
-}
-
-const createTransport = async () => {
-  try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      secure: true,
-      auth: {
-        type: 'OAuth2',
-        user: requiredCredentials.user,
-        clientId: requiredCredentials.clientId,
-        clientSecret: requiredCredentials.clientSecret,
-        refreshToken: requiredCredentials.refreshToken,
-        accessToken: await getAccessToken()
-      }
+    const html = await emailTemplates.render(templateToSend.template, text)
+    await sendMail({
+      from: `Space2Study <${requiredCredentials.user}>`,
+      to: email,
+      subject: templateToSend.subject,
+      html
     })
-
-    return transporter
   } catch (err) {
     logger.error(err)
   }
 }
 
-const sendMail = async (mailOptions) => {
-  try {
-    const transporter = await createTransport()
-    await transporter.verify()
-    const result = await transporter.sendMail(mailOptions)
-    transporter.close()
-
-    return result
-  } catch (err) {
-    logger.error(err)
-  }
-}
-
-module.exports = { getAccessToken, createTransport, sendMail }
+module.exports = { sendEmail }

@@ -31,9 +31,7 @@ const authService = {
 
     const user = await User.create({ role, firstName, lastName, email, password: hashedPassword, activationLink })
 
-    //TODO
-    //await mailService.sendActivationMail(email, `${process.env.SERVER_URL}/api/activate/${activationLink}`)
-    await sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { activationLink })
+    await sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { activationLink, email, firstName })
 
     return {
       userEmail: user.email

@@ -6,9 +6,7 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
-const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
-
 const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUI = require('swagger-ui-express')
 
@@ -21,7 +19,8 @@ const errorMiddleware = require('~/middlewares/error')
 
 const app = express()
 
-app.use(bodyParser.json())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(
   cors({

@@ -12,7 +12,7 @@ router.post('/login', asyncWrapper(authController.login))
 router.post('/logout', asyncWrapper(authController.logout))
 router.get('/activate/:link', asyncWrapper(authController.activate))
 router.get('/refresh', asyncWrapper(authController.refresh))
-router.get('/reset-password-link', asyncWrapper(authController.sendResetPasswordEmail))
-router.post('/reset-password', asyncWrapper(authController.updatePassword))
+router.post('/forgot-password', asyncWrapper(authController.sendResetPasswordEmail))
+router.patch('/reset-password', asyncWrapper(authController.updatePassword))
 
 module.exports = router

@@ -103,10 +103,7 @@ const authService = {
       throw createUnauthorizedError()
     }
 
-    const resetLink = new URL(`${process.env.CLIENT_URL}/reset-password`)
-    resetLink.searchParams.append('token', refreshToken)
-
-    await sendEmail(email, emailSubject.RESET_PASSWORD, { resetLink })
+    await sendEmail(email, emailSubject.RESET_PASSWORD, { refreshToken })
   },
 
   updatePassword: async (refreshToken, password) => {

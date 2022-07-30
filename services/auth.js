@@ -2,14 +2,15 @@ const { v4: uuidv4 } = require('uuid')
 
 const User = require('~/models/user')
 const tokenService = require('~/services/token')
-const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
+const { hashPassword, comparePasswords, isPasswordValid } = require('~/utils/passwordHelper')
 const { createError, createUnauthorizedError } = require('~/utils/errorsHelper')
 const {
   ALREADY_REGISTERED,
   BAD_ACTIVATION_LINK,
   INCORRECT_CREDENTIALS,
   USER_NOT_REGISTERED,
-  PASSWORD_LENGTH_VALIDATION_FAILED
+  PASSWORD_LENGTH_VALIDATION_FAILED,
+  EMAIL_NOT_FOUND
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const { sendEmail } = require('~/utils/emailService')
@@ -22,7 +23,7 @@ const authService = {
       throw createError(409, ALREADY_REGISTERED)
     }
 
-    if (password.length < 8 || password.length > 25) {
+    if (!isPasswordValid(password)) {
       throw createError(422, PASSWORD_LENGTH_VALIDATION_FAILED)
     }
 
@@ -90,7 +91,44 @@ const authService = {
     await tokenService.saveToken(user._id, tokens.refreshToken)
 
     return tokens
-  }
+  },
+
+  sendResetPasswordEmail: async (email, refreshToken) => {
+    const user = await User.findOne({ email }).exec()
+    if (!user) {
+      throw createError(404, EMAIL_NOT_FOUND)
+    }
+
+    if (!refreshToken) {
+      throw createUnauthorizedError()
+    }
+
+    const resetLink = new URL(`${process.env.CLIENT_URL}/reset-password`)
+    resetLink.searchParams.append('token', refreshToken)
+
+    await sendEmail(email, emailSubject.RESET_PASSWORD, { resetLink })
+  },
+
+  updatePassword: async (refreshToken, password) => {
+    const tokenData = await tokenService.findToken(refreshToken)
+    if (!tokenData) {
+      throw createUnauthorizedError()
+    }
+
+    if (!isPasswordValid(password)) {
+      throw createError(422, PASSWORD_LENGTH_VALIDATION_FAILED)
+    }
+
+    const { user: userId } = tokenData
+    const hashedPassword = await hashPassword(password)
+
+    await User.updateOne(
+      { _id: userId },
+      { $set: { password: hashedPassword } },
+    ).exec()
+    
+    return { userId }
+  },
 }
 
 module.exports = authService

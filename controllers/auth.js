@@ -54,10 +54,30 @@ const refresh = async (req, res) => {
   res.status(200).json(tokens)
 }
 
+const sendResetPasswordEmail = async (req, res) => {
+  const { email } = req.body;
+  const { refreshToken } = req.cookies
+
+  await authService.sendResetPasswordEmail(email, refreshToken)
+
+  res.status(200).json({ email });
+}
+
+const updatePassword = async (req, res) => {
+  const { password } = req.body
+  const { refreshToken } = req.cookies
+
+  const user = await authService.updatePassword(refreshToken, password)
+
+  res.status(200).json(user)
+}
+
 module.exports = {
   signup,
   login,
   logout,
   activate,
-  refresh
+  refresh,
+  sendResetPasswordEmail,
+  updatePassword,
 }

@@ -53,7 +53,11 @@ const errors = {
   TEMPLATE_NOT_FOUND: {
     code: 'TEMPLATE_NOT_FOUND',
     message: 'The requested template was not found.'
-  }
+  },
+  EMAIL_NOT_FOUND: {
+    code: 'EMAIL_NOT_FOUND',
+    message: 'There\'s no user registered with that email'
+  },
 }
 
 module.exports = errors

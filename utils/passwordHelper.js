@@ -9,7 +9,12 @@ const comparePasswords = async (password, userPassword) => {
   return await bcrypt.compare(password, userPassword)
 }
 
+const isPasswordValid = (password) => {
+  return password.length > 8 && password.length < 25
+}
+
 module.exports = {
   hashPassword,
-  comparePasswords
+  comparePasswords,
+  isPasswordValid,
 }

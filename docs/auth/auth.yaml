@@ -47,3 +47,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/user'
+  /auth/forgot-password:
+    post:
+      tags:
+        - Auth
+      summary: sends an email with a reset link
+      description: Saves a generated reset token, sends an email with a reset link and returns the token
+      produces:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/user'
+      responses:
+        200:
+          description: Reset token
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/resetToken'
+  /auth/reset-password:
+    patch:
+      tags:
+        - Auth
+      summary: updates a password to a new one
+      description: Checks the reset token for validity, and updates the password
+      produces:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/definitions/resetToken'
+                - $ref: '#/definitions/resetPassword'
+      responses:
+        302:
+          description: Redirection to the main page

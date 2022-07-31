@@ -10,7 +10,8 @@ const {
   INCORRECT_CREDENTIALS,
   USER_NOT_REGISTERED,
   PASSWORD_LENGTH_VALIDATION_FAILED,
-  EMAIL_NOT_FOUND
+  EMAIL_NOT_FOUND,
+  BAD_RESET_TOKEN
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const { sendEmail } = require('~/utils/emailService')
@@ -115,7 +116,7 @@ const authService = {
     const tokenFromDB = await tokenService.findToken(resetToken, RESET_TOKEN)
     
     if (!tokenData || !tokenFromDB) {
-      throw createUnauthorizedError()
+      throw createError(401, BAD_RESET_TOKEN)
     }
 
     if (!isPasswordValid(password)) {
@@ -131,8 +132,6 @@ const authService = {
     ).exec()
     
     await tokenService.removeResetToken(userId)
-
-    return { userId }
   },
 }
 

@@ -57,9 +57,9 @@ const refresh = async (req, res) => {
 const sendResetPasswordEmail = async (req, res) => {
   const { email } = req.body;
 
-  const resetToken = await authService.sendResetPasswordEmail(email)
+  await authService.sendResetPasswordEmail(email)
 
-  res.status(200).json({ resetToken });
+  res.sendStatus(204)
 }
 
 const updatePassword = async (req, res) => {
@@ -67,7 +67,7 @@ const updatePassword = async (req, res) => {
 
   await authService.updatePassword(resetToken, password)
 
-  res.redirect(process.env.CLIENT_URL)
+  res.sendStatus(204)
 }
 
 module.exports = {

@@ -8,6 +8,11 @@ const tokenSchema = new Schema({
   refreshToken: {
     type: String,
     required: true
+  },
+  resetToken: {
+    type: String,
+    required: false,
+    default: null
   }
 })
 

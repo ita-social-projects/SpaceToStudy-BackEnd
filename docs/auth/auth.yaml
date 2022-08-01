@@ -59,7 +59,11 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/user'
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: test@gmail.com 
       responses:
         204:
           description: Email successfully sent

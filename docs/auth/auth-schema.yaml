@@ -44,3 +44,15 @@ definitions:
       password:
         type: string
         example: qwer1234
+  resetToken:
+    type: object
+    properties:
+      resetToken:
+        type: string
+        example: 348dasas9209a0d9asd09asd09asd09
+  resetPassword:
+    type: object
+    properties:
+      password:
+        type: string
+        example: smth12345

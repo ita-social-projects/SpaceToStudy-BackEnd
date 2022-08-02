@@ -1,0 +1,54 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /roles:
+    post:
+      tags:
+        - Roles
+      summary: Add a new role
+      description: Add a new role
+      produces:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/role'
+      responses:
+        201:
+          description: Role has been succesfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/roles'
+        409:
+          description: Role with such value already exists
+  /roles/{value}:
+    get:
+      tags:
+        - Roles
+      summary: Find a role by the value
+      description: Find a role with the specified value
+      produces:
+        - application/json
+      parameters:
+        - name: value
+          in: path
+          required: true
+          description: Role value
+          type: string
+      responses:
+        200:
+          description: Role information
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/roles'
+        404:
+          description: Role with such value was not found

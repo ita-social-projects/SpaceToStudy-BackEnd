@@ -1,0 +1,16 @@
+definitions:
+  roles:
+    type: object
+    properties:
+      _id:
+        type: string
+        example: 6255bc080a75adf9223df100
+      value:
+        type: string
+        example: student
+  role:
+    type: object
+    properties:
+      value:
+        type: string
+        example: student

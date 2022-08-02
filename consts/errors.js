@@ -11,6 +11,14 @@ const errors = {
     code: 'ROLE_NOT_SUPPORTED',
     message: 'User role is not supported.'
   },
+  ROLE_ALREADY_EXIST: {
+    code: 'ROLE_ALREADY_EXIST',
+    message: 'Role with such value already exists.'
+  },
+  ROLE_NOT_FOUND: {
+    code: 'ROLE_NOT_FOUND',
+    message: 'Role with such value was not found.'
+  },
   PASSWORD_LENGTH_VALIDATION_FAILED: {
     code: 'PASSWORD_LENGTH_VALIDATION_FAILED',
     message: 'password: Password cannot be shorter than 8 and longer than 25 characters.'
@@ -35,6 +43,10 @@ const errors = {
     code: 'ALREADY_REGISTERED',
     message: 'User already exists.'
   },
+  ALREADY_ACTIVATED: {
+    code: 'ALREADY_ACTIVATED',
+    message: 'User email has been already confirmed.'
+  },
   NOT_FOUND: {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'
@@ -56,12 +68,12 @@ const errors = {
   },
   EMAIL_NOT_FOUND: {
     code: 'EMAIL_NOT_FOUND',
-    message: 'There\'s no user registered with that email.'
+    message: "There's no user registered with that email."
   },
   BAD_RESET_TOKEN: {
     code: 'BAD_RESET_TOKEN',
     message: 'The reset token is either invalid or has expired.'
-  },
+  }
 }
 
 module.exports = errors

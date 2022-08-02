@@ -1,18 +1,10 @@
 const { Schema, model } = require('mongoose')
-const {
-  roles: { STUDENT, MENTOR, ADMIN }
-} = require('~/consts/auth')
-const { ROLE_NOT_SUPPORTED } = require('~/consts/errors')
 
 const userSchema = new Schema({
   role: {
     type: String,
-    enum: {
-      values: [STUDENT, MENTOR, ADMIN],
-      message: ROLE_NOT_SUPPORTED.code
-    },
-    required: true,
-    default: STUDENT
+    ref: 'Role',
+    required: true
   },
   firstName: {
     type: String,

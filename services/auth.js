@@ -36,7 +36,6 @@ const authService = {
 
     const hashedPassword = await hashPassword(password)
     const activationLink = uuidv4()
-
     const foundRole = await Role.findOne({ value: role }).exec()
 
     if (!foundRole) {

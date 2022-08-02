@@ -68,7 +68,7 @@ const errors = {
   },
   EMAIL_NOT_FOUND: {
     code: 'EMAIL_NOT_FOUND',
-    message: "There's no user registered with that email."
+    message: 'There is no user registered with that email.'
   },
   BAD_RESET_TOKEN: {
     code: 'BAD_RESET_TOKEN',

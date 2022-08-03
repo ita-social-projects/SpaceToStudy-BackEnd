@@ -11,5 +11,5 @@ const comparePasswords = async (password, userPassword) => {
 
 module.exports = {
   hashPassword,
-  comparePasswords,
+  comparePasswords
 }

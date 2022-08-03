@@ -15,7 +15,15 @@ router.post('/login', validationMiddleware(loginValidationSchema), asyncWrapper(
 router.post('/logout', asyncWrapper(authController.logout))
 router.get('/activate/:link', asyncWrapper(authController.activate))
 router.get('/refresh', asyncWrapper(authController.refresh))
-router.post('/forgot-password', validationMiddleware(forgotPasswordValidationSchema), asyncWrapper(authController.sendResetPasswordEmail))
-router.patch('/reset-password', validationMiddleware(resetPasswordValidationSchema), asyncWrapper(authController.updatePassword))
+router.post(
+  '/forgot-password',
+  validationMiddleware(forgotPasswordValidationSchema),
+  asyncWrapper(authController.sendResetPasswordEmail)
+)
+router.patch(
+  '/reset-password',
+  validationMiddleware(resetPasswordValidationSchema),
+  asyncWrapper(authController.updatePassword)
+)
 
 module.exports = router

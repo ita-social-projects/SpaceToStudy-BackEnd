@@ -14,7 +14,9 @@ const {
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const { sendEmail } = require('~/utils/emailService')
-const { tokenNames: { REFRESH_TOKEN, RESET_TOKEN } } = require('~/consts/auth')
+const {
+  tokenNames: { REFRESH_TOKEN, RESET_TOKEN }
+} = require('~/consts/auth')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password) => {
@@ -98,7 +100,7 @@ const authService = {
 
     const resetToken = tokenService.generateResetToken({ id: user._id })
     await tokenService.saveToken(user._id, resetToken, RESET_TOKEN)
-    
+
     const { firstName } = user
 
     await sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
@@ -109,7 +111,7 @@ const authService = {
   updatePassword: async (resetToken, password) => {
     const tokenData = tokenService.validateResetToken(resetToken)
     const tokenFromDB = await tokenService.findToken(resetToken, RESET_TOKEN)
-    
+
     if (!tokenData || !tokenFromDB) {
       throw createError(401, BAD_RESET_TOKEN)
     }
@@ -117,13 +119,10 @@ const authService = {
     const { id: userId } = tokenData
     const hashedPassword = await hashPassword(password)
 
-    await User.updateOne(
-      { _id: userId },
-      { $set: { password: hashedPassword } },
-    ).exec()
-    
+    await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } }).exec()
+
     await tokenService.removeResetToken(userId)
-  },
+  }
 }
 
 module.exports = authService

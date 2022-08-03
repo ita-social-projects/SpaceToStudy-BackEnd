@@ -1,31 +1,38 @@
 const {
-  passwords: { MIN_LENGTH, MAX_LENGTH }
-} = require('~/consts/utils')
+  lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
+  regex: { EMAIL_PATTERN, PASSWORD_PATTERN, NAME_PATTERN },
+  enums: { ROLE_ENUM }
+} = require('~/consts/validation')
 
 const signupValidationSchema = {
   firstName: {
     type: 'string',
-    required: true
+    required: true,
+    regex: NAME_PATTERN
   },
   lastName: {
     type: 'string',
-    required: true
+    required: true,
+    regex: NAME_PATTERN
   },
   email: {
     type: 'string',
-    required: true
+    required: true,
+    regex: EMAIL_PATTERN
   },
   role: {
     type: 'string',
-    required: true
+    required: true,
+    enum: ROLE_ENUM
   },
   password: {
     type: 'string',
     required: true,
     length: {
-      min: MIN_LENGTH,
-      max: MAX_LENGTH
-    }
+      min: MIN_PASSWORD_LENGTH,
+      max: MAX_PASSWORD_LENGTH
+    },
+    regex: PASSWORD_PATTERN
   }
 }
 

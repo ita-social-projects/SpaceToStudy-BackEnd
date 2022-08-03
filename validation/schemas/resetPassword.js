@@ -1,6 +1,7 @@
 const {
-  passwords: { MIN_LENGTH, MAX_LENGTH }
-} = require('~/consts/utils')
+  lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
+  regex: { PASSWORD_PATTERN }
+} = require('~/consts/validation')
 
 const resetPasswordValidationSchema = {
   resetToken: {
@@ -11,9 +12,10 @@ const resetPasswordValidationSchema = {
     type: 'string',
     required: true,
     length: {
-      min: MIN_LENGTH,
-      max: MAX_LENGTH
-    }
+      min: MIN_PASSWORD_LENGTH,
+      max: MAX_PASSWORD_LENGTH
+    },
+    regex: PASSWORD_PATTERN
   }
 }
 

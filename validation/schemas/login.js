@@ -1,19 +1,22 @@
 const {
-  passwords: { MIN_LENGTH, MAX_LENGTH }
-} = require('~/consts/utils')
+  lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
+  regex: { EMAIL_PATTERN, PASSWORD_PATTERN }
+} = require('~/consts/validation')
 
 const loginValidationSchema = {
   email: {
     type: 'string',
-    required: true
+    required: true,
+    regex: EMAIL_PATTERN
   },
   password: {
     type: 'string',
     required: true,
     length: {
-      min: MIN_LENGTH,
-      max: MAX_LENGTH
-    }
+      min: MIN_PASSWORD_LENGTH,
+      max: MAX_PASSWORD_LENGTH
+    },
+    regex: PASSWORD_PATTERN
   }
 }
 

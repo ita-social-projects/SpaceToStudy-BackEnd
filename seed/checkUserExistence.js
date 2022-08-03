@@ -11,7 +11,7 @@ const checkUserExistence = async () => {
   try {
     await checkRoleExistence()
 
-    const foundRole = await Role.findOne({ value: SUPERADMIN })
+    const foundRole = await Role.findOne({ value: SUPERADMIN }).exec()
     const userCount = await User.countDocuments({ role: foundRole._id }).exec()
 
     if (!userCount) {

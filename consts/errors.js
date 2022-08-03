@@ -11,10 +11,6 @@ const errors = {
     code: 'ROLE_NOT_SUPPORTED',
     message: 'User role is not supported.'
   },
-  PASSWORD_LENGTH_VALIDATION_FAILED: {
-    code: 'PASSWORD_LENGTH_VALIDATION_FAILED',
-    message: 'password: Password cannot be shorter than 8 and longer than 25 characters.'
-  },
   BODY_IS_NOT_DEFINED: {
     code: 'BODY_IS_NOT_DEFINED',
     message: 'request body should not be null or undefined'

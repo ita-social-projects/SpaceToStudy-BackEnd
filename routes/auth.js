@@ -4,15 +4,18 @@ const asyncWrapper = require('~/middlewares/asyncWrapper')
 const authController = require('~/controllers/auth')
 const validationMiddleware = require('~/middlewares/validation')
 const signupValidationSchema = require('~/validation/schemas/signup')
+const loginValidationSchema = require('~/validation/schemas/login')
+const resetPasswordValidationSchema = require('~/validation/schemas/resetPassword')
+const forgotPasswordValidationSchema = require('~/validation/schemas/forgotPassword')
 
 const router = express.Router()
 
 router.post('/signup', validationMiddleware(signupValidationSchema), asyncWrapper(authController.signup))
-router.post('/login', asyncWrapper(authController.login))
+router.post('/login', validationMiddleware(loginValidationSchema), asyncWrapper(authController.login))
 router.post('/logout', asyncWrapper(authController.logout))
 router.get('/activate/:link', asyncWrapper(authController.activate))
 router.get('/refresh', asyncWrapper(authController.refresh))
-router.post('/forgot-password', asyncWrapper(authController.sendResetPasswordEmail))
-router.patch('/reset-password', asyncWrapper(authController.updatePassword))
+router.post('/forgot-password', validationMiddleware(forgotPasswordValidationSchema), asyncWrapper(authController.sendResetPasswordEmail))
+router.patch('/reset-password', validationMiddleware(resetPasswordValidationSchema), asyncWrapper(authController.updatePassword))
 
 module.exports = router

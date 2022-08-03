@@ -2,20 +2,8 @@ const {
   passwords: { MIN_LENGTH, MAX_LENGTH }
 } = require('~/consts/utils')
 
-const signupValidationSchema = {
-  firstName: {
-    type: 'string',
-    required: true
-  },
-  lastName: {
-    type: 'string',
-    required: true
-  },
+const loginValidationSchema = {
   email: {
-    type: 'string',
-    required: true
-  },
-  role: {
     type: 'string',
     required: true
   },
@@ -29,4 +17,4 @@ const signupValidationSchema = {
   }
 }
 
-module.exports = signupValidationSchema
+module.exports = loginValidationSchema

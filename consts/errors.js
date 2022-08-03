@@ -11,14 +11,6 @@ const errors = {
     code: 'ROLE_NOT_SUPPORTED',
     message: 'User role is not supported.'
   },
-  ROLE_ALREADY_EXIST: {
-    code: 'ROLE_ALREADY_EXIST',
-    message: 'Role with such value already exists.'
-  },
-  ROLE_NOT_FOUND: {
-    code: 'ROLE_NOT_FOUND',
-    message: 'Role with such value was not found.'
-  },
   PASSWORD_LENGTH_VALIDATION_FAILED: {
     code: 'PASSWORD_LENGTH_VALIDATION_FAILED',
     message: 'password: Password cannot be shorter than 8 and longer than 25 characters.'

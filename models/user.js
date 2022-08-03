@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 
 const userSchema = new Schema({
   role: {
-    type: String,
+    type: Schema.Types.ObjectId,
     ref: 'Role',
     required: true
   },

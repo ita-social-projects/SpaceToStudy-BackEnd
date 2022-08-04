@@ -5,44 +5,30 @@ const {
 const logger = require('~/logger/logger')
 
 const SeedRole = {
-  createStudentRole: async () => {
+  createRole: async (role) => {
     try {
-      const studentRole = await Role.create({ value: STUDENT })
+      const roleToCreate = await Role.create({ value: role })
 
-      return studentRole
+      return roleToCreate
     } catch (err) {
       logger.error(err)
     }
+  },
+
+  createStudentRole: async () => {
+    return await SeedRole.createRole(STUDENT)
   },
 
   createMentorRole: async () => {
-    try {
-      const mentorRole = await Role.create({ value: MENTOR })
-
-      return mentorRole
-    } catch (err) {
-      logger.error(err)
-    }
+    return await SeedRole.createRole(MENTOR)
   },
 
   createAdminRole: async () => {
-    try {
-      const adminRole = await Role.create({ value: ADMIN })
-
-      return adminRole
-    } catch (err) {
-      logger.error(err)
-    }
+    return await SeedRole.createRole(ADMIN)
   },
 
   createSuperAdminRole: async () => {
-    try {
-      const superAdminRole = await Role.create({ value: SUPERADMIN })
-
-      return superAdminRole
-    } catch (err) {
-      logger.error(err)
-    }
+    return await SeedRole.createRole(SUPERADMIN)
   }
 }
 

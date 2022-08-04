@@ -32,7 +32,7 @@ const validateRegex = (schemaFieldKey, regex, field) => {
 }
 
 const validateEnum = (schemaFieldKey, enumSet, field) => {
-  const isEnumValue = enumSet.find((value) => value === field)
+  const isEnumValue = enumSet.some((value) => value === field)
   if (!isEnumValue) {
     throw createError(422, FIELD_IS_NOT_OF_PROPER_ENUM_VALUE(schemaFieldKey, enumSet))
   }

@@ -10,16 +10,13 @@ const { hashPassword } = require('~/utils/passwordHelper')
 const logger = require('~/logger/logger')
 
 const SeedSuperAdmin = {
-  createSuperAdminUser: async () => {
+  createSuperAdmin: async () => {
     try {
       const hashedPassword = await hashPassword(password)
-      const isActivated = true
-      const foundRole = await Role.findOne({ value: SUPERADMIN }).exec()
+      const role = await Role.findOne({ value: SUPERADMIN }).exec()
+      const superAdmin = { role, firstName, lastName, email, password: hashedPassword, isActivated: true }
 
-      const superAdminUser = { role: foundRole, firstName, lastName, email, password: hashedPassword, isActivated }
-      await User.create({ ...superAdminUser })
-
-      return superAdminUser
+      return User.create(superAdmin)
     } catch (err) {
       logger.error(err)
     }

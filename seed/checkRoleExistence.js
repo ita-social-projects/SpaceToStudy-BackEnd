@@ -1,35 +1,21 @@
 const Role = require('~/models/role')
-const {
-  roles: { STUDENT, MENTOR, ADMIN, SUPERADMIN }
-} = require('~/consts/auth')
+const { roles } = require('~/consts/auth')
 const SeedRole = require('~/seed/seedRole')
 const logger = require('~/logger/logger')
 
 const checkRoleExistence = async () => {
   try {
-    const studentCount = await Role.countDocuments({ value: STUDENT }).exec()
+    return Promise.all(
+      Object.values(roles).map(async (role) => {
+        const isRoleExist = await Role.countDocuments({ value: role }).exec()
 
-    if (!studentCount) {
-      await SeedRole.createStudentRole()
-    }
+        if (isRoleExist) {
+          return
+        }
 
-    const mentorCount = await Role.countDocuments({ value: MENTOR }).exec()
-
-    if (!mentorCount) {
-      await SeedRole.createMentorRole()
-    }
-
-    const adminCount = await Role.countDocuments({ value: ADMIN }).exec()
-
-    if (!adminCount) {
-      await SeedRole.createAdminRole()
-    }
-
-    const superAdminCount = await Role.countDocuments({ value: SUPERADMIN }).exec()
-
-    if (!superAdminCount) {
-      await SeedRole.createSuperAdminRole()
-    }
+        return SeedRole.createRole(role)
+      })
+    )
   } catch (err) {
     logger.error(err)
   }

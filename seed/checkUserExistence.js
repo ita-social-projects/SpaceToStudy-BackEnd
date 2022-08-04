@@ -12,7 +12,7 @@ const checkUserExistence = async () => {
     await checkRoleExistence()
 
     const foundRole = await Role.findOne({ value: SUPERADMIN }).exec()
-    const userCount = await User.countDocuments({ role: foundRole._id }).exec()
+    const userCount = await User.countDocuments({ role: foundRole }).exec()
 
     if (!userCount) {
       await SeedSuperAdmin.createSuperAdminUser()

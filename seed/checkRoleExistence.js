@@ -7,7 +7,7 @@ const checkRoleExistence = async () => {
   try {
     return Promise.all(
       Object.values(roles).map(async (role) => {
-        const isRoleExist = await Role.countDocuments({ value: role }).exec()
+        const isRoleExist = await Role.exists({ value: role })
 
         if (isRoleExist) {
           return

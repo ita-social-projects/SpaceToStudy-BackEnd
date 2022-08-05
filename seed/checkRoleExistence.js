@@ -5,7 +5,7 @@ const logger = require('~/logger/logger')
 
 const checkRoleExistence = async () => {
   try {
-    return Promise.all(
+    await Promise.all(
       Object.values(roles).map(async (role) => {
         const isRoleExist = await Role.exists({ value: role })
 
@@ -13,7 +13,7 @@ const checkRoleExistence = async () => {
           return
         }
 
-        return SeedRole.createRole(role)
+        return await SeedRole.createRole(role)
       })
     )
   } catch (err) {

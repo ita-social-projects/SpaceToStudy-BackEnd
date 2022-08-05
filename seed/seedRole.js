@@ -4,7 +4,7 @@ const logger = require('~/logger/logger')
 const SeedRole = {
   createRole: async (role) => {
     try {
-      return Role.create({ value: role })
+      return await Role.create({ value: role })
     } catch (err) {
       logger.error(err)
     }

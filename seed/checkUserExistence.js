@@ -14,11 +14,9 @@ const checkUserExistence = async () => {
     const foundRole = await Role.findOne({ value: SUPERADMIN }).exec()
     const isUserExist = await User.exists({ role: foundRole })
 
-    if (isUserExist) {
-      return
+    if (!isUserExist) {
+      return await SeedSuperAdmin.createSuperAdmin()
     }
-
-    return SeedSuperAdmin.createSuperAdmin()
   } catch (err) {
     logger.error(err)
   }

@@ -16,7 +16,7 @@ const SeedSuperAdmin = {
       const role = await Role.findOne({ value: SUPERADMIN }).exec()
       const superAdmin = { role, firstName, lastName, email, password: hashedPassword, isActivated: true }
 
-      return User.create(superAdmin)
+      return await User.create(superAdmin)
     } catch (err) {
       logger.error(err)
     }

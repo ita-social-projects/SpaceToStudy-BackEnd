@@ -55,7 +55,7 @@ const refresh = async (req, res) => {
 }
 
 const sendResetPasswordEmail = async (req, res) => {
-  const { email } = req.body;
+  const { email } = req.body
 
   await authService.sendResetPasswordEmail(email)
 
@@ -77,5 +77,5 @@ module.exports = {
   activate,
   refresh,
   sendResetPasswordEmail,
-  updatePassword,
+  updatePassword
 }

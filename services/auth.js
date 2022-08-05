@@ -2,20 +2,21 @@ const { v4: uuidv4 } = require('uuid')
 
 const User = require('~/models/user')
 const tokenService = require('~/services/token')
-const { hashPassword, comparePasswords, isPasswordValid } = require('~/utils/passwordHelper')
+const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError, createUnauthorizedError } = require('~/utils/errorsHelper')
 const {
   ALREADY_REGISTERED,
   BAD_ACTIVATION_LINK,
   INCORRECT_CREDENTIALS,
   USER_NOT_REGISTERED,
-  PASSWORD_LENGTH_VALIDATION_FAILED,
   EMAIL_NOT_FOUND,
   BAD_RESET_TOKEN
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const { sendEmail } = require('~/utils/emailService')
-const { tokenNames: { REFRESH_TOKEN, RESET_TOKEN } } = require('~/consts/auth')
+const {
+  tokenNames: { REFRESH_TOKEN, RESET_TOKEN }
+} = require('~/consts/auth')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password) => {
@@ -23,10 +24,6 @@ const authService = {
 
     if (candidate) {
       throw createError(409, ALREADY_REGISTERED)
-    }
-
-    if (!isPasswordValid(password)) {
-      throw createError(422, PASSWORD_LENGTH_VALIDATION_FAILED)
     }
 
     const hashedPassword = await hashPassword(password)
@@ -103,7 +100,7 @@ const authService = {
 
     const resetToken = tokenService.generateResetToken({ id: user._id })
     await tokenService.saveToken(user._id, resetToken, RESET_TOKEN)
-    
+
     const { firstName } = user
 
     await sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
@@ -114,25 +111,18 @@ const authService = {
   updatePassword: async (resetToken, password) => {
     const tokenData = tokenService.validateResetToken(resetToken)
     const tokenFromDB = await tokenService.findToken(resetToken, RESET_TOKEN)
-    
+
     if (!tokenData || !tokenFromDB) {
       throw createError(401, BAD_RESET_TOKEN)
-    }
-
-    if (!isPasswordValid(password)) {
-      throw createError(422, PASSWORD_LENGTH_VALIDATION_FAILED)
     }
 
     const { id: userId } = tokenData
     const hashedPassword = await hashPassword(password)
 
-    await User.updateOne(
-      { _id: userId },
-      { $set: { password: hashedPassword } },
-    ).exec()
-    
+    await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } }).exec()
+
     await tokenService.removeResetToken(userId)
-  },
+  }
 }
 
 module.exports = authService

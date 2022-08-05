@@ -11,6 +11,7 @@ const swaggerJsDoc = require('swagger-jsdoc')
 const swaggerUI = require('swagger-ui-express')
 
 const swaggerOptions = require('~/swagger-settings')
+const checkUserExistence = require('~/seed/checkUserExistence')
 
 const router = require('~/routes')
 const { createNotFoundError } = require('~/utils/errorsHelper')
@@ -52,6 +53,9 @@ mongoose
     { useNewUrlParser: true, useUnifiedTopology: true },
     logger.info('Connected to MongoDB.')
   )
+  .then(() => {
+    checkUserExistence()
+  })
   .then(() => {
     app.listen(process.env.SERVER_PORT, () => {
       logger.info(`Server is running on port ${process.env.SERVER_PORT}`)

@@ -40,6 +40,10 @@ const errors = {
     code: 'ALREADY_REGISTERED',
     message: 'User already exists.'
   },
+  ALREADY_ACTIVATED: {
+    code: 'ALREADY_ACTIVATED',
+    message: 'User email has been already confirmed.'
+  },
   NOT_FOUND: {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'
@@ -67,6 +71,7 @@ const errors = {
     code: 'BAD_RESET_TOKEN',
     message: 'The reset token is either invalid or has expired.'
   }
+
 }
 
 const validationErrors = {

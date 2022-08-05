@@ -11,10 +11,6 @@ const errors = {
     code: 'ROLE_NOT_SUPPORTED',
     message: 'User role is not supported.'
   },
-  PASSWORD_LENGTH_VALIDATION_FAILED: {
-    code: 'PASSWORD_LENGTH_VALIDATION_FAILED',
-    message: 'password: Password cannot be shorter than 8 and longer than 25 characters.'
-  },
   BODY_IS_NOT_DEFINED: {
     code: 'BODY_IS_NOT_DEFINED',
     message: 'request body should not be null or undefined'
@@ -30,6 +26,15 @@ const errors = {
   FIELD_IS_NOT_OF_PROPER_LENGTH: (field, length) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
     message: `${field} cannot be shorter than ${length.min} and longer than ${length.max} characters.`
+  }),
+  NAME_FIELD_IS_NOT_OF_PROPER_FORMAT: (field) => ({
+    code: 'NAME_NOT_VALID',
+    message: `${field} can contain alphabetic characters only.`
+  }),
+  FIELD_IS_NOT_OF_PROPER_FORMAT: (field) => validationErrors[field],
+  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE: (field, enumSet) => ({
+    code: 'FIELD_IS_NOT_OF_PROPER_ENUM_VALUE',
+    message: `${field} should be either one of the values: [${enumSet.join(', ')}]`
   }),
   ALREADY_REGISTERED: {
     code: 'ALREADY_REGISTERED',
@@ -66,6 +71,20 @@ const errors = {
     code: 'BAD_RESET_TOKEN',
     message: 'The reset token is either invalid or has expired.'
   }
+
+}
+
+const validationErrors = {
+  email: {
+    code: 'EMAIL_NOT_VALID',
+    message: 'Email should be of the following format: “local-part@domain.com”.'
+  },
+  password: {
+    code: 'PASSWORD_NOT_VALID',
+    message: 'Password must contain at least one alphabetic, one numeric and one special character.'
+  },
+  firstName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('firstName'),
+  lastName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('lastName')
 }
 
 module.exports = errors

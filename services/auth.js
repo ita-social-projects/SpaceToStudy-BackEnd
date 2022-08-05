@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid')
 const User = require('~/models/user')
 const Role = require('~/models/role')
 const tokenService = require('~/services/token')
-const { hashPassword, comparePasswords, isPasswordValid } = require('~/utils/passwordHelper')
+const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError, createUnauthorizedError } = require('~/utils/errorsHelper')
 const {
   ALREADY_REGISTERED,
@@ -11,7 +11,6 @@ const {
   BAD_ACTIVATION_LINK,
   INCORRECT_CREDENTIALS,
   USER_NOT_REGISTERED,
-  PASSWORD_LENGTH_VALIDATION_FAILED,
   EMAIL_NOT_FOUND,
   BAD_RESET_TOKEN,
   ROLE_NOT_SUPPORTED
@@ -28,10 +27,6 @@ const authService = {
 
     if (candidate) {
       throw createError(409, ALREADY_REGISTERED)
-    }
-
-    if (!isPasswordValid(password)) {
-      throw createError(422, PASSWORD_LENGTH_VALIDATION_FAILED)
     }
 
     const hashedPassword = await hashPassword(password)
@@ -135,10 +130,6 @@ const authService = {
 
     if (!tokenData || !tokenFromDB) {
       throw createError(401, BAD_RESET_TOKEN)
-    }
-
-    if (!isPasswordValid(password)) {
-      throw createError(422, PASSWORD_LENGTH_VALIDATION_FAILED)
     }
 
     const { id: userId } = tokenData

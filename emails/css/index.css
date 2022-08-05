@@ -3,6 +3,8 @@
 * {
   margin: 0 auto;
   text-align: center;
+  box-sizing:border-box;
+  margin:0 auto;
 }
   
 body {
@@ -13,7 +15,7 @@ body {
 header {
   background-color: #FAFAFA;
   margin-bottom: 64px;
-  padding: 65px 110px;
+  padding: 65px 0 ;
   color: #263238;
 }
 
@@ -21,6 +23,8 @@ header h1 {
   font-weight: 800;
   font-size: 48px;
   line-height: 56px;
+  margin-top:24px;
+  width:80%
 }
 
 header p {
@@ -40,12 +44,8 @@ header a {
   text-decoration: none;
 }
 
-.info {
-  padding: 0px 49px 0px 69px;
-}
-
 .info div {
-  width: 485px;
+  max-width: 485px;
   border: 1px solid #E2E8F0;
 }
 
@@ -54,6 +54,7 @@ header a {
   color: #455A64;
   font-size: 16px;
   line-height: 24px;
+  text-align: center;
 }
 
 .info p a {
@@ -67,12 +68,14 @@ p {
   font-size: 18px;
   line-height: 24px;
   text-decoration: none;
+  width: 80%;
 }
 
 footer {
   margin-top: 167px;
   background-color: #FAFAFA;
-  padding: 48px 150px;
+  padding: 48px 0;
   font-size: 16px;
-  line-height: 24px;
 }
+
+

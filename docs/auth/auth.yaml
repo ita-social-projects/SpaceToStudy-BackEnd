@@ -52,7 +52,7 @@ paths:
       tags:
         - Auth
       summary: sends an email with a reset link
-      description: Saves a generated reset token, sends an email with a reset link and returns the token
+      description: Saves a generated reset token and sends an email with a reset link
       produces:
         - application/json
       requestBody:

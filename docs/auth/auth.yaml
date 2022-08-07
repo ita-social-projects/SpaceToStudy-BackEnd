@@ -67,6 +67,17 @@ paths:
       responses:
         204:
           description: Email successfully sent
+        404:
+          description: The email was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'EMAIL_NOT_FOUND'
+                message: 'There is no user registered with that email.'
+        
   /auth/reset-password:
     patch:
       tags:
@@ -85,3 +96,13 @@ paths:
       responses:
         204:
           description: Successful completion of an update
+        401:
+          description: Reset token is invalid or expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'BAD_RESET_TOKEN'
+                message: 'The reset token is either invalid or has expired.'

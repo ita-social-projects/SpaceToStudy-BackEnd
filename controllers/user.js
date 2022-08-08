@@ -4,14 +4,14 @@ const { createError } = require('~/utils/errorsHelper')
 const { USER_NOT_REGISTERED } = require('~/consts/errors')
 
 const getUsers = async (_req, res) => {
-  const users = await User.find().lean()
+  const users = await User.find().populate('role').lean().exec()
 
   const usersResponse = users.map((user) => {
     return {
       id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
-      role: user.role,
+      role: user.role.value,
       email: user.email
     }
   })
@@ -24,7 +24,7 @@ const getUsers = async (_req, res) => {
 const getUser = async (req, res) => {
   const userId = req.params.userId
 
-  const user = await User.findById(userId).lean()
+  const user = await User.findById(userId).populate('role').lean().exec()
 
   if (!user) throw createError(404, USER_NOT_REGISTERED)
 
@@ -32,7 +32,7 @@ const getUser = async (req, res) => {
     id: user._id,
     firstName: user.firstName,
     lastName: user.lastName,
-    role: user.role,
+    role: user.role.value,
     email: user.email
   }
 
@@ -43,11 +43,11 @@ const getUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const userId = req.params.userId
-  const user = await User.findById(userId)
+  const user = await User.findById(userId).exec()
 
   if (!user) throw createError(404, USER_NOT_REGISTERED)
 
-  await User.findByIdAndRemove(userId)
+  await User.findByIdAndRemove(userId).exec()
 
   res.status(200).json({ message: 'User deleted.' })
 }

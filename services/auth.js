@@ -54,7 +54,7 @@ const authService = {
   },
 
   login: async (email, password) => {
-    const user = await User.findOne({ email }).exec()
+    const user = await User.findOne({ email }).populate('role').exec()
 
     if (!user) {
       throw createError(401, USER_NOT_REGISTERED)
@@ -66,7 +66,7 @@ const authService = {
       throw createError(401, INCORRECT_CREDENTIALS)
     }
 
-    const tokens = tokenService.generateTokens({ id: user._id, role: user.role })
+    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value })
     await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
 
     return tokens
@@ -102,9 +102,9 @@ const authService = {
       throw createUnauthorizedError()
     }
 
-    const user = await User.findById(userData.id)
+    const user = await User.findById(userData.id).populate('role').exec()
 
-    const tokens = tokenService.generateTokens({ id: user._id, role: user.role })
+    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value })
     await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
 
     return tokens

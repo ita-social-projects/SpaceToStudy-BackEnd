@@ -138,6 +138,17 @@ const authService = {
     await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } }).exec()
 
     await tokenService.removeResetToken(userId)
+  },
+
+  unsetFirstLogin: async (accessToken) => {
+    const tokenData = tokenService.validateAccessToken(accessToken)
+
+    if (!tokenData) {
+      throw createUnauthorizedError()
+    }
+
+    const { id: userId } = tokenData
+    await User.updateOne({ _id: userId }, { $set: { isFirstLogin: false } }).exec()
   }
 }
 

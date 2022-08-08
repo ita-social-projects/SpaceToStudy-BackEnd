@@ -77,5 +77,6 @@ module.exports = {
   activate,
   refresh,
   sendResetPasswordEmail,
-  updatePassword
+  updatePassword,
+  unsetFirstLogin
 }

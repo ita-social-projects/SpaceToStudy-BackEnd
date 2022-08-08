@@ -26,4 +26,6 @@ router.patch(
   asyncWrapper(authController.updatePassword)
 )
 
+router.patch('/login', asyncWrapper(authController.unsetFirstLogin))
+
 module.exports = router

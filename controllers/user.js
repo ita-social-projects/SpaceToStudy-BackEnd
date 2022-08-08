@@ -1,20 +1,7 @@
-const User = require('~/models/user')
-const { createError } = require('~/utils/errorsHelper')
-
-const { USER_NOT_REGISTERED } = require('~/consts/errors')
+const userService = require('~/services/user')
 
 const getUsers = async (_req, res) => {
-  const users = await User.find().populate('role').lean().exec()
-
-  const usersResponse = users.map((user) => {
-    return {
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role.value,
-      email: user.email
-    }
-  })
+  const usersResponse = await userService.getUsers()
 
   res.status(200).json({
     users: usersResponse
@@ -24,17 +11,7 @@ const getUsers = async (_req, res) => {
 const getUser = async (req, res) => {
   const userId = req.params.userId
 
-  const user = await User.findById(userId).populate('role').lean().exec()
-
-  if (!user) throw createError(404, USER_NOT_REGISTERED)
-
-  const userResponse = {
-    id: user._id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    role: user.role.value,
-    email: user.email
-  }
+  const userResponse = await userService.getUser(userId)
 
   res.status(200).json({
     user: userResponse
@@ -43,11 +20,8 @@ const getUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const userId = req.params.userId
-  const user = await User.findById(userId).exec()
 
-  if (!user) throw createError(404, USER_NOT_REGISTERED)
-
-  await User.findByIdAndRemove(userId).exec()
+  await userService.deleteUser(userId)
 
   res.status(200).json({ message: 'User deleted.' })
 }

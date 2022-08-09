@@ -25,7 +25,6 @@ router.patch(
   validationMiddleware(resetPasswordValidationSchema),
   asyncWrapper(authController.updatePassword)
 )
-
-router.patch('/login', asyncWrapper(authController.unsetFirstLogin))
+router.patch('/first-login', asyncWrapper(authController.unsetFirstLogin))
 
 module.exports = router

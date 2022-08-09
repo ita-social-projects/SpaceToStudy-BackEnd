@@ -106,7 +106,7 @@ paths:
                 status: 401
                 code: 'BAD_RESET_TOKEN'
                 message: 'The reset token is either invalid or has expired.'
-  /auth/login:
+  /auth/first-login:
     patch:
       tags:
         - Auth

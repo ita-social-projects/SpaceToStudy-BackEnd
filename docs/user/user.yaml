@@ -58,4 +58,4 @@ paths:
           type: string
       responses:
         204:
-          description: object with message
+          description: Deletion was successful

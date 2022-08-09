@@ -4,9 +4,9 @@ require('dotenv').config({ path: '.env.local' })
 require('dotenv').config()
 const express = require('express')
 
-const databaseInitialization = require('./initialization/database')
+const databaseInitialization = require('~/initialization/database')
 const checkUserExistence = require('~/seed/checkUserExistence')
-const initialization = require('./initialization/initialization')
+const initialization = require('~/initialization/initialization')
 const {
   config: { SERVER_PORT }
 } = require('~/configs/config')

@@ -8,7 +8,7 @@ const { createError } = require('~/utils/errorsHelper')
 
 const adminService = {
   getAdmins: async () => {
-    const role = await Role.findOne({ role: ADMIN }).exec()
+    const role = await Role.findOne({ role: ADMIN }).lean().exec()
     const admins = await User.find({
       role: role._id
     }).lean().exec()
@@ -24,7 +24,7 @@ const adminService = {
   },
 
   getAdmin: async (userId) => {
-    const role = await Role.findOne({ role: ADMIN }).exec()
+    const role = await Role.findOne({ role: ADMIN }).lean().exec()
     const admin = await User.findOne({
       _id: userId,
       role: role._id

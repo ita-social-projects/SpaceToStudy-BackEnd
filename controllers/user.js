@@ -1,21 +1,17 @@
 const userService = require('~/services/user')
 
 const getUsers = async (_req, res) => {
-  const usersResponse = await userService.getUsers()
+  const users = await userService.getUsers()
 
-  res.status(200).json({
-    users: usersResponse
-  })
+  res.status(200).json({ users })
 }
 
 const getUser = async (req, res) => {
   const userId = req.params.userId
 
-  const userResponse = await userService.getUser(userId)
+  const user = await userService.getUser(userId)
 
-  res.status(200).json({
-    user: userResponse
-  })
+  res.status(200).json({ user })
 }
 
 const deleteUser = async (req, res) => {

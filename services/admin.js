@@ -13,14 +13,12 @@ const adminService = {
       role: role._id
     }).lean().exec()
 
-    return admins.map((admin) => {
-      return {
-        id: admin._id,
-        firstName: admin.firstName,
-        lastName: admin.lastName,
-        email: admin.email
-      }
-    })
+    return admins.map(({ _id, firstName, lastName, email }) => ({
+      id: _id,
+      firstName,
+      lastName,
+      email
+    }))
   },
 
   getAdmin: async (userId) => {

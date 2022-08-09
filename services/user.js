@@ -7,15 +7,13 @@ const userService = {
   getUsers: async () => {
     const users = await User.find().populate('role').lean().exec()
 
-    return users.map((user) => {
-      return {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        role: user.role.value,
-        email: user.email
-      }
-    })
+    return users.map(({ _id, firstName, lastName, role, email }) => ({
+      id: _id,
+      firstName,
+      lastName,
+      role: role.value,
+      email
+    }))
   },
 
   getUser: async (userId) => {

@@ -19,7 +19,7 @@ const deleteUser = async (req, res) => {
 
   await userService.deleteUser(userId)
 
-  res.status(200).json({ message: 'User deleted.' })
+  res.status(204).json()
 }
 
 module.exports = {

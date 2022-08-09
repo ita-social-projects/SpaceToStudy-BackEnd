@@ -30,12 +30,8 @@ const adminService = {
 
     if (!admin) throw createError(404, USER_NOT_REGISTERED)
 
-    return {
-      id: admin._id,
-      firstName: admin.firstName,
-      lastName: admin.lastName,
-      email: admin.email
-    }
+    const { _id: id, firstName, lastName, email } = admin
+    return { id, firstName, lastName, email }
   }
 }
 

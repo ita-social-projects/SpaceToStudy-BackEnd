@@ -57,9 +57,5 @@ paths:
           description: User Id
           type: string
       responses:
-        200:
+        204:
           description: object with message
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/message'

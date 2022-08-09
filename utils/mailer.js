@@ -1,19 +1,17 @@
 const nodemailer = require('nodemailer')
 const { google } = require('googleapis')
 const logger = require('~/logger/logger')
-const requiredCredentials = require('~/consts/gmailAuth')
+const {
+  gmailCredentials: { user, clientId, clientSecret, refreshToken, redirectUri }
+} = require('~/configs/config')
 
 const OAuth2 = google.auth.OAuth2
 
 const getAccessToken = async () => {
   try {
-    const oAuth2Client = new OAuth2(
-      requiredCredentials.clientId,
-      requiredCredentials.clientSecret,
-      requiredCredentials.redirectUri
-    )
+    const oAuth2Client = new OAuth2(clientId, clientSecret, redirectUri)
 
-    oAuth2Client.setCredentials({ refresh_token: requiredCredentials.refreshToken })
+    oAuth2Client.setCredentials({ refresh_token: refreshToken })
     const accessToken = await oAuth2Client.getAccessToken()
 
     return accessToken
@@ -25,16 +23,17 @@ const getAccessToken = async () => {
 
 const createTransport = async () => {
   try {
+    const accessToken = await getAccessToken()
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       secure: true,
       auth: {
         type: 'OAuth2',
-        user: requiredCredentials.user,
-        clientId: requiredCredentials.clientId,
-        clientSecret: requiredCredentials.clientSecret,
-        refreshToken: requiredCredentials.refreshToken,
-        accessToken: await getAccessToken()
+        user,
+        clientId,
+        clientSecret,
+        refreshToken,
+        accessToken
       }
     })
 

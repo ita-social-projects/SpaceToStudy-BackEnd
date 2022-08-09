@@ -2,7 +2,7 @@ const User = require('~/models/user')
 const Role = require('~/models/role')
 const {
   superAdmin: { firstName, lastName, email, password }
-} = require('~/consts/seed')
+} = require('~/configs/config')
 const {
   roles: { SUPERADMIN }
 } = require('~/consts/auth')

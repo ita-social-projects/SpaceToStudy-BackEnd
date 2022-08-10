@@ -66,6 +66,10 @@ const authService = {
       throw createError(401, INCORRECT_CREDENTIALS)
     }
 
+    if (user.isFirstLogin) {
+      await User.updateOne({ _id: user._id }, { $set: { isFirstLogin: false } }).exec()
+    }
+
     const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })
     await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
 
@@ -138,10 +142,6 @@ const authService = {
     await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } }).exec()
 
     await tokenService.removeResetToken(userId)
-  },
-
-  unsetFirstLogin: async (userId) => {
-    await User.updateOne({ _id: userId }, { $set: { isFirstLogin: false } }).exec()
   }
 }
 

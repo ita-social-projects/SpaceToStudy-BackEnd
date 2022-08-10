@@ -7,7 +7,6 @@ const signupValidationSchema = require('~/validation/schemas/signup')
 const loginValidationSchema = require('~/validation/schemas/login')
 const resetPasswordValidationSchema = require('~/validation/schemas/resetPassword')
 const forgotPasswordValidationSchema = require('~/validation/schemas/forgotPassword')
-const authMiddleware = require('~/middlewares/auth')
 
 const router = express.Router()
 
@@ -26,6 +25,5 @@ router.patch(
   validationMiddleware(resetPasswordValidationSchema),
   asyncWrapper(authController.updatePassword)
 )
-router.patch('/first-login', authMiddleware, asyncWrapper(authController.unsetFirstLogin))
 
 module.exports = router

@@ -15,7 +15,7 @@ const checkLastLogin = async () => {
   users.forEach(async (user) => {
     const { email, firstName, lastLogin, _id } = user
     if (lastLogin) {
-      const differenceInDays = Math.floor(((dateNow.getTime() - lastLogin.getTime()) / oneDayInMs) * 24 * 60)
+      const differenceInDays = Math.floor((dateNow.getTime() - lastLogin.getTime()) / oneDayInMs)
       if (differenceInDays === daysToSendEmail) {
         await sendEmail(email, emailSubject.LONG_TIME_WITHOUT_LOGIN, { email, firstName })
       }

@@ -66,8 +66,12 @@ const authService = {
       throw createError(401, INCORRECT_CREDENTIALS)
     }
 
-    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value })
+    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })
     await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
+
+    if (user.isFirstLogin) {
+      await User.updateOne({ _id: user._id }, { $set: { isFirstLogin: false } }).exec()
+    }
 
     return tokens
   },
@@ -104,7 +108,7 @@ const authService = {
 
     const user = await User.findById(userData.id).populate('role').exec()
 
-    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value })
+    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })
     await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
 
     return tokens

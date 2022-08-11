@@ -30,6 +30,10 @@ const userSchema = new Schema({
   },
   activationLink: {
     type: String
+  },
+  isFirstLogin: {
+    type: Boolean,
+    default: true
   }
 })
 

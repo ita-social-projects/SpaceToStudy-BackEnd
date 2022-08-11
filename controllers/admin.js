@@ -1,48 +1,16 @@
-const User = require('~/models/user')
-const {
-  roles: { ADMIN }
-} = require('~/consts/auth')
-const { USER_NOT_REGISTERED } = require('~/consts/errors')
-const { createError } = require('~/utils/errorsHelper')
+const adminService = require('~/services/admin')
 
 const getAdmins = async (_req, res) => {
-  const admins = await User.find({
-    role: ADMIN
-  }).lean()
+  const admins = await adminService.getAdmins()
 
-  const adminsResponse = admins.map((admin) => {
-    return {
-      id: admin._id,
-      firstName: admin.firstName,
-      lastName: admin.lastName,
-      email: admin.email
-    }
-  })
-
-  res.status(200).json({
-    admins: adminsResponse
-  })
+  res.status(200).json({ admins })
 }
 
 const getAdmin = async (req, res) => {
   const userId = req.params.userId
-  const admin = await User.findOne({
-    _id: userId,
-    role: ADMIN
-  }).lean()
 
-  if (!admin) throw createError(404, USER_NOT_REGISTERED)
-
-  const adminResponse = {
-    id: admin._id,
-    firstName: admin.firstName,
-    lastName: admin.lastName,
-    email: admin.email
-  }
-
-  res.status(200).json({
-    admin: adminResponse
-  })
+  const admin = await adminService.getAdmin(userId)
+  res.status(200).json({ admin })
 }
 
 module.exports = {

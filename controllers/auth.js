@@ -59,7 +59,7 @@ const sendResetPasswordEmail = async (req, res) => {
 
   await authService.sendResetPasswordEmail(email)
 
-  res.sendStatus(204)
+  res.status(204).end()
 }
 
 const updatePassword = async (req, res) => {
@@ -67,7 +67,7 @@ const updatePassword = async (req, res) => {
 
   await authService.updatePassword(resetToken, password)
 
-  res.sendStatus(204)
+  res.status(204).end()
 }
 
 module.exports = {

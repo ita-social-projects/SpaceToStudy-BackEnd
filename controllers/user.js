@@ -1,55 +1,25 @@
-const User = require('~/models/user')
-const { createError } = require('~/utils/errorsHelper')
-
-const { USER_NOT_REGISTERED } = require('~/consts/errors')
+const userService = require('~/services/user')
 
 const getUsers = async (_req, res) => {
-  const users = await User.find().populate('role').lean().exec()
+  const users = await userService.getUsers()
 
-  const usersResponse = users.map((user) => {
-    return {
-      id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role.value,
-      email: user.email
-    }
-  })
-
-  res.status(200).json({
-    users: usersResponse
-  })
+  res.status(200).json({ users })
 }
 
 const getUser = async (req, res) => {
   const userId = req.params.userId
 
-  const user = await User.findById(userId).populate('role').lean().exec()
+  const user = await userService.getUser(userId)
 
-  if (!user) throw createError(404, USER_NOT_REGISTERED)
-
-  const userResponse = {
-    id: user._id,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    role: user.role.value,
-    email: user.email
-  }
-
-  res.status(200).json({
-    user: userResponse
-  })
+  res.status(200).json({ user })
 }
 
 const deleteUser = async (req, res) => {
   const userId = req.params.userId
-  const user = await User.findById(userId).exec()
 
-  if (!user) throw createError(404, USER_NOT_REGISTERED)
+  await userService.deleteUser(userId)
 
-  await User.findByIdAndRemove(userId).exec()
-
-  res.status(200).json({ message: 'User deleted.' })
+  res.status(204).end()
 }
 
 module.exports = {

@@ -57,9 +57,5 @@ paths:
           description: User Id
           type: string
       responses:
-        200:
-          description: object with message
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/message'
+        204:
+          description: Deletion was successful

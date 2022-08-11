@@ -73,6 +73,9 @@ const authService = {
       await User.updateOne({ _id: user._id }, { $set: { isFirstLogin: false } }).exec()
     }
 
+    user.lastLogin = new Date()
+    await user.save()
+
     return tokens
   },
 

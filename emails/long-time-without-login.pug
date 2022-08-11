@@ -1,0 +1,6 @@
+extends index
+block title
+    h1 Hi, #{firstName}
+block description
+    p You’ve been inactive for too long. If you don’t log in within 7 days your account will be deleted.<br/>You’ll not be able to access your account once it’s deleted.
+    a(href=`${process.env.CLIENT_URL}/#login`) Login 

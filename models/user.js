@@ -34,6 +34,10 @@ const userSchema = new Schema({
   isFirstLogin: {
     type: Boolean,
     default: true
+  },
+  lastLogin: {
+    type: Date,
+    default: null
   }
 })
 

@@ -5,6 +5,7 @@ require('dotenv').config()
 const express = require('express')
 
 const databaseInitialization = require('~/initialization/database')
+const checkUsersForLastLogin = require('~/utils/checkForLastLogin')
 const checkUserExistence = require('~/seed/checkUserExistence')
 const initialization = require('~/initialization/initialization')
 const {
@@ -21,7 +22,7 @@ const start = async () => {
     initialization(app)
 
     app.listen(SERVER_PORT, () => {
-      logger.info(`Server is running on port ${SERVER_PORT}`)
+      logger.info(`Server is running on port ${SERVER_PORT}`), checkUsersForLastLogin.start()
     })
   } catch (err) {
     logger.error(err)

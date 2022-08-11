@@ -1,14 +1,24 @@
 const jwt = require('jsonwebtoken')
 const Token = require('~/models/token')
+const {
+  config: {
+    JWT_ACCESS_SECRET,
+    JWT_ACCESS_EXPIRES_IN,
+    JWT_REFRESH_SECRET,
+    JWT_REFRESH_EXPIRES_IN,
+    JWT_RESET_SECRET,
+    JWT_RESET_EXPIRES_IN
+  }
+} = require('~/configs/config')
 
 const tokenService = {
   generateTokens: (payload) => {
-    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-      expiresIn: process.env.JWT_ACCESS_EXPIRES_IN
+    const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, {
+      expiresIn: JWT_ACCESS_EXPIRES_IN
     })
 
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
+    const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
+      expiresIn: JWT_REFRESH_EXPIRES_IN
     })
 
     return {
@@ -18,8 +28,8 @@ const tokenService = {
   },
 
   generateResetToken: (payload) => {
-    const resetToken = jwt.sign(payload, process.env.JWT_RESET_SECRET, {
-      expiresIn: process.env.JWT_RESET_EXPIRES_IN
+    const resetToken = jwt.sign(payload, JWT_RESET_SECRET, {
+      expiresIn: JWT_RESET_EXPIRES_IN
     })
     return resetToken
   },
@@ -35,15 +45,15 @@ const tokenService = {
   },
 
   validateAccessToken: (token) => {
-    return tokenService.validateToken(token, process.env.JWT_ACCESS_SECRET)
+    return tokenService.validateToken(token, JWT_ACCESS_SECRET)
   },
 
   validateRefreshToken: (token) => {
-    return tokenService.validateToken(token, process.env.JWT_REFRESH_SECRET)
+    return tokenService.validateToken(token, JWT_REFRESH_SECRET)
   },
 
   validateResetToken: (token) => {
-    return tokenService.validateToken(token, process.env.JWT_RESET_SECRET)
+    return tokenService.validateToken(token, JWT_RESET_SECRET)
   },
 
   saveToken: async (userId, tokenValue, tokenName) => {
@@ -57,7 +67,7 @@ const tokenService = {
 
     return token
   },
-  
+
   findToken: async (tokenValue, tokenName) => {
     const tokenData = await Token.findOne({ [tokenName]: tokenValue })
 
@@ -71,11 +81,8 @@ const tokenService = {
   },
 
   removeResetToken: async (userId) => {
-    await Token.updateOne(
-      { user: userId },
-      { $set: { resetToken: null } }
-    )
-  },
+    await Token.updateOne({ user: userId }, { $set: { resetToken: null } })
+  }
 }
 
 module.exports = tokenService

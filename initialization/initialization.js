@@ -18,16 +18,12 @@ const initialization = (app) => {
   app.use(cookieParser())
   app.use(
     cors({
+      origin: CLIENT_URL,
       credentials: true,
-      origin: CLIENT_URL
+      methods: 'GET, POST, PATCH, DELETE',
+      allowedHeaders: 'Content-Type, Authorization'
     })
   )
-
-  app.use((_req, res, next) => {
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
-    next()
-  })
 
   const swaggerSettings = swaggerJsDoc(swaggerOptions)
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSettings))

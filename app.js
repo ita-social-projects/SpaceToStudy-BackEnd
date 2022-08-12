@@ -5,7 +5,7 @@ require('dotenv').config()
 const express = require('express')
 
 const databaseInitialization = require('~/initialization/database')
-const checkUsersForLastLogin = require('~/utils/checkForLastLogin')
+const checkUsersForLastLogin = require('~/cron-jobs/checkForLastLogin')
 const checkUserExistence = require('~/seed/checkUserExistence')
 const initialization = require('~/initialization/initialization')
 const {

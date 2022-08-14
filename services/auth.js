@@ -1,14 +1,14 @@
-const { v4: uuidv4 } = require('uuid')
-
 const User = require('~/models/user')
 const Role = require('~/models/role')
 const tokenService = require('~/services/token')
+const userService = require('~/services/user')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError, createUnauthorizedError } = require('~/utils/errorsHelper')
 const {
   ALREADY_REGISTERED,
-  ALREADY_ACTIVATED,
-  BAD_ACTIVATION_LINK,
+  EMAIL_ALREADY_CONFIRMED,
+  EMAIL_NOT_CONFIRMED,
+  BAD_CONFIRM_TOKEN,
   INCORRECT_CREDENTIALS,
   USER_NOT_REGISTERED,
   EMAIL_NOT_FOUND,
@@ -18,7 +18,7 @@ const {
 const emailSubject = require('~/consts/emailSubject')
 const { sendEmail } = require('~/utils/emailService')
 const {
-  tokenNames: { REFRESH_TOKEN, RESET_TOKEN }
+  tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
 
 const authService = {
@@ -30,7 +30,6 @@ const authService = {
     }
 
     const hashedPassword = await hashPassword(password)
-    const activationLink = uuidv4()
     const foundRole = await Role.findOne({ value: role }).exec()
 
     if (!foundRole) {
@@ -42,11 +41,13 @@ const authService = {
       firstName,
       lastName,
       email,
-      password: hashedPassword,
-      activationLink
+      password: hashedPassword
     })
 
-    await sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { activationLink, email, firstName })
+    const confirmToken = tokenService.generateConfirmToken({ id: user._id, isEmailConfirmed: false })
+    await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
+
+    await sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { confirmToken, email, firstName })
 
     return {
       userEmail: user.email
@@ -58,6 +59,10 @@ const authService = {
 
     if (!user) {
       throw createError(401, USER_NOT_REGISTERED)
+    }
+
+    if (!user.isEmailConfirmed) {
+      throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
     const isPassEquals = await comparePasswords(password, user.password)
@@ -85,16 +90,26 @@ const authService = {
     return deleteInfo
   },
 
-  activate: async (activationLink) => {
-    const user = await User.findOne({ activationLink })
-    if (!user) {
-      throw createError(400, BAD_ACTIVATION_LINK)
+  confirmEmail: async (confirmToken) => {
+    if (!confirmToken) {
+      throw createUnauthorizedError()
     }
-    if (user.isActivated) {
-      throw createError(400, ALREADY_ACTIVATED)
+
+    const tokenData = tokenService.validateConfirmToken(confirmToken)
+    const tokenFromDB = await tokenService.findToken(confirmToken, CONFIRM_TOKEN)
+
+    if (!tokenFromDB || !tokenData) {
+      throw createError(401, BAD_CONFIRM_TOKEN)
     }
-    user.isActivated = true
-    await user.save()
+
+    const { id: userId } = tokenData
+    const user = await userService.getUser({ _id: userId })
+
+    if (user.isEmailConfirmed) {
+      throw createError(400, EMAIL_ALREADY_CONFIRMED)
+    }
+
+    await User.updateOne({ _id: userId }, { $set: { isEmailConfirmed: true } }).exec()
   },
 
   refresh: async (refreshToken) => {
@@ -102,14 +117,14 @@ const authService = {
       throw createUnauthorizedError()
     }
 
-    const userData = tokenService.validateRefreshToken(refreshToken)
-    const tokenFromDb = tokenService.findToken(refreshToken, REFRESH_TOKEN)
+    const tokenData = tokenService.validateRefreshToken(refreshToken)
+    const tokenFromDB = tokenService.findToken(refreshToken, REFRESH_TOKEN)
 
-    if (!userData || !tokenFromDb) {
+    if (!tokenData || !tokenFromDB) {
       throw createUnauthorizedError()
     }
 
-    const user = await User.findById(userData.id).populate('role').exec()
+    const user = await User.findById(tokenData.id).populate('role').exec()
 
     const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })
     await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)

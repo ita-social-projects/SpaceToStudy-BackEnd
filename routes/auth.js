@@ -13,7 +13,7 @@ const router = express.Router()
 router.post('/signup', validationMiddleware(signupValidationSchema), asyncWrapper(authController.signup))
 router.post('/login', validationMiddleware(loginValidationSchema), asyncWrapper(authController.login))
 router.post('/logout', asyncWrapper(authController.logout))
-router.get('/activate/:link', asyncWrapper(authController.activate))
+router.get('/confirm-email/:token', asyncWrapper(authController.confirmEmail))
 router.get('/refresh', asyncWrapper(authController.refresh))
 router.post(
   '/forgot-password',

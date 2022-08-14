@@ -7,7 +7,8 @@ const roles = {
 
 const tokenNames = {
   REFRESH_TOKEN: 'refreshToken',
-  RESET_TOKEN: 'resetToken'
+  RESET_TOKEN: 'resetToken',
+  CONFIRM_TOKEN: 'confirmToken'
 }
 
 const oneDayInMs = 86400000

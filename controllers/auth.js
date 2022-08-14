@@ -33,11 +33,12 @@ const logout = async (req, res) => {
   res.status(200).json(logoutInfo)
 }
 
-const activate = async (req, res) => {
-  const activationLink = req.params.link
-  await authService.activate(activationLink)
+const confirmEmail = async (req, res) => {
+  const confirmToken = req.params.token
 
-  res.redirect(process.env.CLIENT_URL)
+  await authService.confirmEmail(confirmToken)
+
+  res.status(204).end()
 }
 
 const refresh = async (req, res) => {
@@ -74,7 +75,7 @@ module.exports = {
   signup,
   login,
   logout,
-  activate,
+  confirmEmail,
   refresh,
   sendResetPasswordEmail,
   updatePassword

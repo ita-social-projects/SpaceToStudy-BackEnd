@@ -106,3 +106,47 @@ paths:
                 status: 401
                 code: 'BAD_RESET_TOKEN'
                 message: 'The reset token is either invalid or has expired.'
+  /auth/confirm-email/{token}:
+    get:
+      tags:
+        - Auth
+      summary: confirms user email
+      description: Receives a confirmation token, validates it and confirms user email
+      produces:
+        - application/json
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Confirmation Token
+          type: string
+      responses:
+        204:
+          description: User email has been successfully confirmed
+        400:
+          description: User email has been already confirmed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'EMAIL_ALREADY_CONFIRMED'
+                message: 'User email has been already confirmed.'
+        401:
+          description: Authorization information is missing or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              examples:
+                unauthorized:
+                  value:
+                    status: 401
+                    code: 'UNAUTHORIZED'
+                    message: 'User is not authorized.'
+                bad-confirm-token:
+                  value:
+                    status: 401
+                    code: 'BAD_CONFIRM_TOKEN'
+                    message: 'The confirm token is either invalid or has expired.'

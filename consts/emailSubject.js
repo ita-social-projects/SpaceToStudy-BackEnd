@@ -1,6 +1,7 @@
 const emailSubject = {
   EMAIL_CONFIRMATION: 'EMAIL_CONFIRMATION',
   RESET_PASSWORD: 'RESET_PASSWORD',
+  LONG_TIME_WITHOUT_LOGIN: 'LONG_TIME_WITHOUT_LOGIN'
 }
 
 module.exports = emailSubject

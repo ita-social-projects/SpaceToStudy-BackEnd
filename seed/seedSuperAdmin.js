@@ -14,7 +14,7 @@ const SeedSuperAdmin = {
     try {
       const hashedPassword = await hashPassword(password)
       const role = await Role.findOne({ value: SUPERADMIN }).exec()
-      const superAdmin = { role, firstName, lastName, email, password: hashedPassword, isActivated: true }
+      const superAdmin = { role, firstName, lastName, email, password: hashedPassword, isEmailConfirmed: true }
 
       return await User.create(superAdmin)
     } catch (err) {

@@ -7,7 +7,9 @@ const {
     JWT_REFRESH_SECRET,
     JWT_REFRESH_EXPIRES_IN,
     JWT_RESET_SECRET,
-    JWT_RESET_EXPIRES_IN
+    JWT_RESET_EXPIRES_IN,
+    JWT_CONFIRM_SECRET,
+    JWT_CONFIRM_EXPIRES_IN
   }
 } = require('~/configs/config')
 
@@ -34,6 +36,13 @@ const tokenService = {
     return resetToken
   },
 
+  generateConfirmToken: (payload) => {
+    const confirmToken = jwt.sign(payload, JWT_CONFIRM_SECRET, {
+      expiresIn: JWT_CONFIRM_EXPIRES_IN
+    })
+    return confirmToken
+  },
+
   validateToken: (token, secret) => {
     try {
       const data = jwt.verify(token, secret)
@@ -54,6 +63,10 @@ const tokenService = {
 
   validateResetToken: (token) => {
     return tokenService.validateToken(token, JWT_RESET_SECRET)
+  },
+
+  validateConfirmToken: (token) => {
+    return tokenService.validateToken(token, JWT_CONFIRM_SECRET)
   },
 
   saveToken: async (userId, tokenValue, tokenName) => {

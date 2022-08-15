@@ -7,12 +7,16 @@ const tokenSchema = new Schema({
   },
   refreshToken: {
     type: String,
-    required: true
+    required: false
   },
   resetToken: {
     type: String,
     required: false,
     default: null
+  },
+  confirmToken: {
+    type: String,
+    required: false
   }
 })
 

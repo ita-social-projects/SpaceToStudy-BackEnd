@@ -24,12 +24,9 @@ const userSchema = new Schema({
     type: String,
     required: [true, 'Please enter a password']
   },
-  isActivated: {
+  isEmailConfirmed: {
     type: Boolean,
     default: false
-  },
-  activationLink: {
-    type: String
   },
   isFirstLogin: {
     type: Boolean,

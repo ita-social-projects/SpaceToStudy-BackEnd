@@ -40,17 +40,21 @@ const errors = {
     code: 'ALREADY_REGISTERED',
     message: 'User already exists.'
   },
-  ALREADY_ACTIVATED: {
-    code: 'ALREADY_ACTIVATED',
+  EMAIL_ALREADY_CONFIRMED: {
+    code: 'EMAIL_ALREADY_CONFIRMED',
     message: 'User email has been already confirmed.'
+  },
+  EMAIL_NOT_CONFIRMED: {
+    code: 'EMAIL_NOT_CONFIRMED',
+    message: 'Please confirm your email to login.'
   },
   NOT_FOUND: {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'
   },
-  BAD_ACTIVATION_LINK: {
-    code: 'BAD_ACTIVATION_LINK',
-    message: 'User activation link is incorrect.'
+  BAD_CONFIRM_TOKEN: {
+    code: 'BAD_CONFIRM_TOKEN',
+    message: 'The confirm token is either invalid or has expired.'
   },
   UNAUTHORIZED: {
     code: 'UNAUTHORIZED',
@@ -71,7 +75,6 @@ const errors = {
     code: 'BAD_RESET_TOKEN',
     message: 'The reset token is either invalid or has expired.'
   }
-
 }
 
 const validationErrors = {

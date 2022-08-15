@@ -44,7 +44,7 @@ const authService = {
       password: hashedPassword
     })
 
-    const confirmToken = tokenService.generateConfirmToken({ id: user._id, isEmailConfirmed: false })
+    const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
 
     await sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { confirmToken, email, firstName })
@@ -91,19 +91,15 @@ const authService = {
   },
 
   confirmEmail: async (confirmToken) => {
-    if (!confirmToken) {
-      throw createUnauthorizedError()
-    }
-
     const tokenData = tokenService.validateConfirmToken(confirmToken)
     const tokenFromDB = await tokenService.findToken(confirmToken, CONFIRM_TOKEN)
 
     if (!tokenFromDB || !tokenData) {
-      throw createError(401, BAD_CONFIRM_TOKEN)
+      throw createError(400, BAD_CONFIRM_TOKEN)
     }
 
     const { id: userId } = tokenData
-    const user = await userService.getUser({ _id: userId })
+    const user = await userService.getUser(userId)
 
     if (user.isEmailConfirmed) {
       throw createError(400, EMAIL_ALREADY_CONFIRMED)
@@ -151,7 +147,7 @@ const authService = {
     const tokenFromDB = await tokenService.findToken(resetToken, RESET_TOKEN)
 
     if (!tokenData || !tokenFromDB) {
-      throw createError(401, BAD_RESET_TOKEN)
+      throw createError(400, BAD_RESET_TOKEN)
     }
 
     const { id: userId } = tokenData

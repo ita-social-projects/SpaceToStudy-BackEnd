@@ -74,6 +74,10 @@ const errors = {
   BAD_RESET_TOKEN: {
     code: 'BAD_RESET_TOKEN',
     message: 'The reset token is either invalid or has expired.'
+  },
+  INVALID_ID: {
+    code: 'INVALID_ID',
+    message: 'ID is invalid.'
   }
 }
 

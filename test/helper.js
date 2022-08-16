@@ -1,15 +1,22 @@
-const chai = require('chai')
-const sinonChai = require('sinon-chai')
+const response = () => {
+  const res = {
+    statusCode: undefined,
+    data: undefined,
+    status: (code) => {
+      res.statusCode = code
+      return res
+    },
+    json: (data) => {
+      res.data = data
+    },
+    restore: () => {
+      res.statusCode = undefined
+      res.data = undefined
+    }
+  }
+  return res
+}
 
-chai.use(sinonChai)
-
-global.expect = chai.expect
-
-const sinon = require('sinon')
-
-before(() => {
-  global.sandbox = sinon.createSandbox()
-})
-beforeEach(() => {
-  global.sandbox.restore()
-})
+module.exports = {
+  response,
+}

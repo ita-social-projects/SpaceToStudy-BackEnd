@@ -1,5 +1,8 @@
 const authService = require('~/services/auth')
 const { oneDayInMs } = require('~/consts/auth')
+const {
+  config: { COOKIE_DOMAIN, NODE_ENV }
+} = require('~/configs/config')
 
 const signup = async (req, res) => {
   const { role, firstName, lastName, email, password } = req.body
@@ -10,13 +13,17 @@ const signup = async (req, res) => {
 }
 
 const login = async (req, res) => {
+  const isProduction = NODE_ENV === 'production'
   const { email, password } = req.body
 
   const tokens = await authService.login(email, password)
 
   res.cookie('refreshToken', tokens.refreshToken, {
     maxAge: oneDayInMs,
-    httpOnly: true
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: 'none',
+    domain: COOKIE_DOMAIN
   })
 
   delete tokens.refreshToken

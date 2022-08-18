@@ -61,14 +61,14 @@ const authService = {
       throw createError(401, USER_NOT_REGISTERED)
     }
 
-    if (!user.isEmailConfirmed) {
-      throw createError(401, EMAIL_NOT_CONFIRMED)
-    }
-
     const isPassEquals = await comparePasswords(password, user.password)
 
     if (!isPassEquals) {
       throw createError(401, INCORRECT_CREDENTIALS)
+    }
+
+    if (!user.isEmailConfirmed) {
+      throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
     const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })

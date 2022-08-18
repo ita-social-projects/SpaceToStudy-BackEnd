@@ -1,22 +1,11 @@
-const response = () => {
-  const res = {
-    statusCode: undefined,
-    data: undefined,
-    status: (code) => {
-      res.statusCode = code
-      return res
-    },
-    json: (data) => {
-      res.data = data
-    },
-    restore: () => {
-      res.statusCode = undefined
-      res.data = undefined
-    }
-  }
-  return res
+const express = require('express')
+const request = require('supertest')
+const initialization = require('~/initialization/initialization')
+
+const serverInit = () => {
+  const app = express()
+  initialization(app)
+  return request(app)
 }
 
-module.exports = {
-  response,
-}
+module.exports = { serverInit }

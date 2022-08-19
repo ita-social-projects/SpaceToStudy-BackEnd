@@ -140,3 +140,41 @@ paths:
                     status: 400
                     code: 'EMAIL_ALREADY_CONFIRMED'
                     message: 'User email has been already confirmed.'
+  /auth/refresh:
+    get:
+      tags:
+        - Auth
+      summary: refresh access token
+      description: Takes refresh token from cookies and retrieve access token
+      produces:
+        - application/json
+      parameters:
+        - name: Cookie
+          in: header
+          required: true
+          description: Refresh Token
+          type: string
+      responses:
+        200:
+          description: Access token has been successfully refreshed
+          headers:
+            Set-Cookie:
+              schema: 
+                type: string
+                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.GUiOiJzdHVkZW50IiwiaXNatalXJzdExvZ2luIjpQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/accessToken'
+              example:
+                accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'BAD_REFRESH_TOKEN'
+                message: 'The refresh token is either invalid or has expired.'

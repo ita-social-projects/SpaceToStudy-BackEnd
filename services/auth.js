@@ -3,7 +3,7 @@ const Role = require('~/models/role')
 const tokenService = require('~/services/token')
 const userService = require('~/services/user')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
-const { createError, createUnauthorizedError } = require('~/utils/errorsHelper')
+const { createError } = require('~/utils/errorsHelper')
 const {
   ALREADY_REGISTERED,
   EMAIL_ALREADY_CONFIRMED,
@@ -13,7 +13,8 @@ const {
   USER_NOT_REGISTERED,
   EMAIL_NOT_FOUND,
   BAD_RESET_TOKEN,
-  ROLE_NOT_SUPPORTED
+  ROLE_NOT_SUPPORTED,
+  BAD_REFRESH_TOKEN
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const { sendEmail } = require('~/utils/emailService')
@@ -108,22 +109,18 @@ const authService = {
     await User.updateOne({ _id: userId }, { $set: { isEmailConfirmed: true } }).exec()
   },
 
-  refresh: async (refreshToken) => {
-    if (!refreshToken) {
-      throw createUnauthorizedError()
-    }
-
+  refreshAccessToken: async (refreshToken) => {
     const tokenData = tokenService.validateRefreshToken(refreshToken)
     const tokenFromDB = tokenService.findToken(refreshToken, REFRESH_TOKEN)
 
     if (!tokenData || !tokenFromDB) {
-      throw createUnauthorizedError()
+      throw createError(400, BAD_REFRESH_TOKEN)
     }
 
-    const user = await User.findById(tokenData.id).populate('role').exec()
+    const { id, role, isFirstLogin } = await userService.getUser(tokenData.id)
 
-    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })
-    await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
+    const tokens = tokenService.generateTokens({ id, role, isFirstLogin })
+    await tokenService.saveToken(id, tokens.refreshToken, REFRESH_TOKEN)
 
     return tokens
   },

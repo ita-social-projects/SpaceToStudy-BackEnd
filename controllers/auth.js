@@ -1,8 +1,19 @@
 const authService = require('~/services/auth')
 const { oneDayInMs } = require('~/consts/auth')
 const {
-  config: { COOKIE_DOMAIN, NODE_ENV }
+  config: { COOKIE_DOMAIN }
 } = require('~/configs/config')
+const {
+  tokenNames: { REFRESH_TOKEN }
+} = require('~/consts/auth')
+
+const COOKIE_OPTIONS = {
+  maxAge: oneDayInMs,
+  httpOnly: true,
+  secure: true,
+  sameSite: 'none',
+  domain: COOKIE_DOMAIN
+}
 
 const signup = async (req, res) => {
   const { role, firstName, lastName, email, password } = req.body
@@ -13,18 +24,11 @@ const signup = async (req, res) => {
 }
 
 const login = async (req, res) => {
-  const isProduction = NODE_ENV === 'production'
   const { email, password } = req.body
 
   const tokens = await authService.login(email, password)
 
-  res.cookie('refreshToken', tokens.refreshToken, {
-    maxAge: oneDayInMs,
-    httpOnly: true,
-    secure: isProduction,
-    sameSite: 'none',
-    domain: COOKIE_DOMAIN
-  })
+  res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
 
   delete tokens.refreshToken
 
@@ -35,7 +39,7 @@ const logout = async (req, res) => {
   const { refreshToken } = req.cookies
 
   const logoutInfo = await authService.logout(refreshToken)
-  res.clearCookie('refreshToken')
+  res.clearCookie(REFRESH_TOKEN)
 
   res.status(200).json(logoutInfo)
 }
@@ -48,14 +52,11 @@ const confirmEmail = async (req, res) => {
   res.status(204).end()
 }
 
-const refresh = async (req, res) => {
+const refreshAccessToken = async (req, res) => {
   const { refreshToken } = req.cookies
 
-  const tokens = await authService.refresh(refreshToken)
-  res.cookie('refreshToken', tokens.refreshToken, {
-    maxAge: oneDayInMs,
-    httpOnly: true
-  })
+  const tokens = await authService.refreshAccessToken(refreshToken)
+  res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
 
   delete tokens.refreshToken
 
@@ -83,7 +84,7 @@ module.exports = {
   login,
   logout,
   confirmEmail,
-  refresh,
+  refreshAccessToken,
   sendResetPasswordEmail,
   updatePassword
 }

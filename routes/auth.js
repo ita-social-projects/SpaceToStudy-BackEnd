@@ -14,7 +14,7 @@ router.post('/signup', validationMiddleware(signupValidationSchema), asyncWrappe
 router.post('/login', validationMiddleware(loginValidationSchema), asyncWrapper(authController.login))
 router.post('/logout', asyncWrapper(authController.logout))
 router.get('/confirm-email/:token', asyncWrapper(authController.confirmEmail))
-router.get('/refresh', asyncWrapper(authController.refresh))
+router.get('/refresh', asyncWrapper(authController.refreshAccessToken))
 router.post(
   '/forgot-password',
   validationMiddleware(forgotPasswordValidationSchema),

@@ -2,7 +2,6 @@ const config = {
   MONGODB_URL: process.env.MONGODB_URL,
   CLIENT_URL: process.env.CLIENT_URL,
   COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
-  NODE_ENV: process.env.NODE_ENV,
   SERVER_PORT: process.env.SERVER_PORT,
   JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
   JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN,

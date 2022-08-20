@@ -50,6 +50,12 @@ definitions:
       resetToken:
         type: string
         example: 348dasas9209a0d9asd09asd09asd09
+  accessToken:
+    type: object
+    properties:
+      accessToken:
+        type: string
+        example: eyJhbGciOiJIUz.eyJpZUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5MjgWomanzMjQ4M30.gn_hJqB9zVi5Ud8NXeDM
   resetPassword:
     type: object
     properties:

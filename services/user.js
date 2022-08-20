@@ -21,8 +21,8 @@ const userService = {
 
     if (!user) throw createError(404, USER_NOT_REGISTERED)
 
-    const { _id: id, firstName, lastName, role, email, isEmailConfirmed } = user
-    return { id, firstName, lastName, role: role.value, email, isEmailConfirmed }
+    const { _id: id, firstName, lastName, role, email, isEmailConfirmed, isFirstLogin } = user
+    return { id, firstName, lastName, role: role.value, email, isEmailConfirmed, isFirstLogin }
   },
 
   deleteUser: async (userId) => {

@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /test/coverage
+test-report.xml
 /build
 
 # misc

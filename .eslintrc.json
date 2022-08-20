@@ -3,11 +3,7 @@
     "node": true,
     "commonjs": true,
     "es2021": true,
-    "mocha": true
-  },
-  "globals": {
-    "expect": "writable",
-    "sandbox": "writable"
+    "jest": true
   },
   "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {

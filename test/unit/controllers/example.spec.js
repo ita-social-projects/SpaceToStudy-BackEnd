@@ -1,91 +1,61 @@
 const Example = require('~/models/example')
-const exampleController = require('~/controllers/example')
+const { serverInit } = require('~/test/helper')
 
 describe('Example controller', () => {
-  const res = {
-    statusCode: undefined,
-    data: undefined,
-    status: (code) => {
-      res.statusCode = code
-      return res
-    },
-    json: (data) => {
-      res.data = data
-    },
-    restore: () => {
-      res.statusCode = undefined
-      res.data = undefined
-    }
-  }
+  let app
 
-  afterEach(() => {
-    res.restore()
+  beforeAll(() => {
+    app = serverInit()
   })
 
-  it('getExample',async () => {
+  it('getExample', async () => {
     const items = ['items']
+    Example.find = jest.fn().mockResolvedValue(items)
 
-    sandbox.stub(Example, 'find')
-    Example.find.returns(items)
+    const response = await app.get('/example')
 
-    await exampleController.getExample({}, res)
-    expect(res.statusCode).to.be.equal(200)
-    expect(res.data).to.deep.equal({ items })
+    expect(response.statusCode).toBe(200)
+    expect(response.body).toEqual({ items })
   })
 
-  it('postExample',async () => {
-    const req = {
-      body: { title: 'test' }
-    }
+  it('postExample', async () => {
+    const item = { title: 'test' }
+    Example.prototype.save = jest.fn().mockResolvedValue(item)
 
-    const item = { example: 'example' }
+    const response = await app.post('/example').send(item)
 
-    sandbox.stub(Example.prototype, 'save')
-    Example.prototype.save.returns(item)
-
-    await exampleController.postExample(req, res)
-    expect(res.statusCode).to.be.equal(201)
-    expect(res.data).to.deep.equal({ item })
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toEqual({ item })
   })
 
   describe('deleteExample', () => {
-    const exampleId = 'exampleId'
+    const exampleId = '62fe9e7dc4d05eed02ee90a3'
 
-    const req = {
-      params: { exampleId }
-    }
+    it('found by id', async () => {
+      const item = { example: 'example' }
+      Example.findById = jest.fn().mockResolvedValue(item)
+      Example.findByIdAndRemove = jest.fn()
 
-    it('found by id',async () => {
-      const findById = sandbox.stub(Example, 'findById')
-      const findByIdAndRemove = sandbox.stub(Example, 'findByIdAndRemove')
+      const response = await app.delete(`/example/${exampleId}`)
 
-      Example.findById.returns({ example: 'example' })
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual({ message: 'Example deleted.' })
 
-      await exampleController.deleteExample(req, res)
-
-      expect(res.statusCode).to.be.equal(200)
-      expect(res.data).to.deep.equal({ message: 'Example deleted.' })
-
-      expect(findById).to.have.been.calledWith(exampleId)
-      expect(findByIdAndRemove).to.have.been.calledWith(exampleId)
-
-      Example.findById.restore()
-      Example.findByIdAndRemove.restore()
+      expect(Example.findById).toBeCalledWith(exampleId)
+      expect(Example.findByIdAndRemove).toBeCalledWith(exampleId)
     })
 
-    it('not found by id',async () => {
-      const findById = sandbox.stub(Example, 'findById')
-      const findByIdAndRemove = sandbox.stub(Example, 'findByIdAndRemove')
+    it('not found by id', async () => {
+      Example.findById = jest.fn().mockResolvedValue(undefined)
+      Example.findByIdAndRemove = jest.fn()
 
-      Example.findById.returns(undefined)
+      const response = await app.delete(`/example/${exampleId}`)
 
-      await exampleController.deleteExample(req, res)
+      expect(Example.findById).toBeCalledWith(exampleId)
+      expect(Example.findByIdAndRemove).not.toBeCalled()
 
-      expect(findById).to.have.been.calledWith(exampleId)
-      expect(findByIdAndRemove).to.have.not.been.called
-
-      expect(res.statusCode).to.be.equal(404)
-      expect(res.data).to.be.equal('Could not find example.')
+      expect(response.statusCode).toBe(404)
+      expect(response.body).toBe('Could not find example.')
     })
   })
 })

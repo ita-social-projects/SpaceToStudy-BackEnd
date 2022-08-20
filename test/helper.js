@@ -1,15 +1,11 @@
-const chai = require('chai')
-const sinonChai = require('sinon-chai')
+const express = require('express')
+const request = require('supertest')
+const initialization = require('~/initialization/initialization')
 
-chai.use(sinonChai)
+const serverInit = () => {
+  const app = express()
+  initialization(app)
+  return request(app)
+}
 
-global.expect = chai.expect
-
-const sinon = require('sinon')
-
-before(() => {
-  global.sandbox = sinon.createSandbox()
-})
-beforeEach(() => {
-  global.sandbox.restore()
-})
+module.exports = { serverInit }

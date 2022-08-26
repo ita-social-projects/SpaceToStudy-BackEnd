@@ -14,7 +14,7 @@ body {
 header {
   background-color: #FAFAFA;
   margin-bottom: 2rem;
-  padding: 65px 0 ;
+  padding: 2rem 0 ;
   color: #263238;
 }
 
@@ -74,7 +74,7 @@ p {
 footer {
   margin-top: 2rem;
   background-color: #FAFAFA;
-  padding: 48px 0;
+  padding: 3rem 0;
   font-size: 16px;
 }
 

@@ -1,7 +1,9 @@
+const { existsSync } = require('fs')
 const express = require('express')
 const mongoose = require('mongoose')
 const request = require('supertest')
-require('dotenv').config({ path: '.env.test.local' })
+require('~/initialization/envSetup')
+
 const serverSetup = require('~/initialization/serverSetup')
 
 const serverInit = async () => {
@@ -11,7 +13,9 @@ const serverInit = async () => {
 }
 
 const serverCleanup = async (server) => {
-  await dropAllCollections()
+  if (existsSync('.env.test.local')) {
+    await dropAllCollections()
+  }
   await mongoose.connection.close()
   await server.close()
 }

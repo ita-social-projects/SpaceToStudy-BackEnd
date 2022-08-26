@@ -7,13 +7,14 @@ module.exports = {
   testEnvironment: 'node',
   // collectCoverage: true,
   collectCoverageFrom: [
-    '!<rootDir>/node_modules/',
-    '!<rootDir>/test/',
-    '!<rootDir>/consts/',
-    '!<rootDir>/configs/',
-    '!<rootDir>/docs/',
-    '!<rootDir>/emails/',
-    '!<rootDir>/*.js'
+    '!<rootDir>/node_modules/*',
+    '!<rootDir>/test/**/*',
+    '!<rootDir>/consts/*',
+    '!<rootDir>/configs/*',
+    '!<rootDir>/docs/*',
+    '!<rootDir>/emails/*',
+    '!<rootDir>/*.json',
+    '!<rootDir>/*.yaml'
   ],
   coverageThreshold: {
     global: {
@@ -25,6 +26,7 @@ module.exports = {
   },
   coverageReporters: ['html', 'lcov'],
   coverageDirectory: '<rootDir>/test/coverage',
+  testTimeout: 12000,
   testMatch: ['<rootDir>/test/unit/**/*.spec.js'],
   testResultsProcessor: 'jest-sonar-reporter'
 }

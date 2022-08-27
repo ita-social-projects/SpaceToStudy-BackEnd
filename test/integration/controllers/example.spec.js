@@ -6,7 +6,7 @@ describe('Example controller', () => {
   const exampleItem = { title: 'test' }
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ({ app, server } = await serverInit())
   })
 
   afterAll(async () => {

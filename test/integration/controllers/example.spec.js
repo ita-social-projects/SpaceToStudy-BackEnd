@@ -1,4 +1,5 @@
 const { serverInit, serverCleanup } = require('~/test/setup')
+const { EXAMPLE_NOT_FOUND } = require('~/consts/errors')
 
 describe('Example controller', () => {
   let app, server
@@ -42,7 +43,7 @@ describe('Example controller', () => {
       const response = await app.delete(`/example/${savedItem._id}`)
 
       expect(response.statusCode).toBe(404)
-      expect(response.body).toBe('Could not find example.')
+      expect(response.body).toEqual({ ...EXAMPLE_NOT_FOUND, status: 404 })
     })
   })
 })

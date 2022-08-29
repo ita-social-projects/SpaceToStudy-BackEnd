@@ -82,6 +82,14 @@ const errors = {
   INVALID_ID: {
     code: 'INVALID_ID',
     message: 'ID is invalid.'
+  },
+  API_TOKEN_NOT_RETRIEVED: {
+    code: 'API_TOKEN_NOT_RETRIEVED',
+    message: 'The access token has not been retrieved.'
+  },
+  EMAIL_NOT_SEND: {
+    code: 'EMAIL_NOT_SEND',
+    message: 'Email has not been sent.'
   }
 }
 

@@ -1,6 +1,6 @@
 const CronJob = require('cron').CronJob
 const User = require('~/models/user')
-const { sendEmail } = require('~/utils/emailService')
+const emailService = require('~/services/email')
 const emailSubject = require('~/consts/emailSubject')
 const { oneDayInMs } = require('~/consts/auth')
 
@@ -17,7 +17,7 @@ const checkLastLogin = async () => {
     if (lastLogin) {
       const differenceInDays = Math.floor((dateNow.getTime() - lastLogin.getTime()) / oneDayInMs)
       if (differenceInDays === daysToSendEmail) {
-        await sendEmail(email, emailSubject.LONG_TIME_WITHOUT_LOGIN, { email, firstName })
+        await emailService.sendEmail(email, emailSubject.LONG_TIME_WITHOUT_LOGIN, { email, firstName })
       }
       if (differenceInDays >= daysToDeleteUser) {
         await User.deleteOne({ _id })

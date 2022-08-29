@@ -4,14 +4,13 @@ const { templateList } = require('~/emails')
 const {
   gmailCredentials: { user }
 } = require('~/configs/config')
-const { TEMPLATE_NOT_FOUND } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
-const logger = require('~/logger/logger')
+const { TEMPLATE_NOT_FOUND } = require('~/consts/errors')
 
 const emailTemplates = new EmailTemplates()
 
-const sendEmail = async (email, subject, text = {}) => {
-  try {
+const emailService = {
+  sendEmail: async (email, subject, text = {}) => {
     const templateToSend = templateList[subject]
 
     if (!templateToSend) {
@@ -26,9 +25,7 @@ const sendEmail = async (email, subject, text = {}) => {
       subject: templateToSend.subject,
       html
     })
-  } catch (err) {
-    logger.error(err)
   }
 }
 
-module.exports = { sendEmail }
+module.exports = emailService

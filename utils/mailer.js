@@ -4,6 +4,8 @@ const logger = require('~/logger/logger')
 const {
   gmailCredentials: { user, clientId, clientSecret, refreshToken, redirectUri }
 } = require('~/configs/config')
+const { createError } = require('~/utils/errorsHelper')
+const { API_TOKEN_NOT_RETRIEVED, EMAIL_NOT_SEND } = require('~/consts/errors')
 
 const OAuth2 = google.auth.OAuth2
 
@@ -17,7 +19,7 @@ const getAccessToken = async () => {
     return accessToken
   } catch (err) {
     logger.error(err)
-    throw err
+    throw createError(400, API_TOKEN_NOT_RETRIEVED)
   }
 }
 
@@ -53,6 +55,7 @@ const sendMail = async (mailOptions) => {
     return result
   } catch (err) {
     logger.error(err)
+    throw createError(400, EMAIL_NOT_SEND)
   }
 }
 

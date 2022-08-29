@@ -35,8 +35,7 @@ describe('Example controller', () => {
     it('found by id', async () => {
       const response = await app.delete(`/example/${savedItem._id}`)
 
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({ message: 'Example deleted.' })
+      expect(response.statusCode).toBe(204)
     })
 
     it('not found by id', async () => {

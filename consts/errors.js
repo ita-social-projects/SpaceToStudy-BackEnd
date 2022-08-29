@@ -90,6 +90,10 @@ const errors = {
   EMAIL_NOT_SEND: {
     code: 'EMAIL_NOT_SEND',
     message: 'Email has not been sent.'
+  },
+  EXAMPLE_NOT_FOUND: {
+    code: 'EXAMPLE_NOT_FOUND',
+    message: 'Example not found.'
   }
 }
 

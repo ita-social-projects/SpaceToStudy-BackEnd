@@ -1,4 +1,6 @@
 const Example = require('~/models/example')
+const { createError } = require('~/utils/errorsHelper')
+const { EXAMPLE_NOT_FOUND } = require('~/consts/errors')
 
 exports.getExample = async (req, res) => {
   const items = await Example.find()
@@ -21,19 +23,11 @@ exports.postExample = async (req, res) => {
 
 exports.deleteExample = async (req, res) => {
   const exampleId = req.params.exampleId
-  try {
-    const example = await Example.findById(exampleId)
 
-    if (!example) {
-      const error = new Error('Could not find example.')
-      error.statusCode = 404
-      throw error
-    }
-
-    await Example.findByIdAndRemove(exampleId)
-
-    res.status(200).json({ message: 'Example deleted.' })
-  } catch (e) {
-    res.status(e.statusCode).json(e.message)
+  const example = await Example.findByIdAndRemove(exampleId)
+  if (!example) {
+    throw createError(404, EXAMPLE_NOT_FOUND)
   }
+
+  res.status(204).end()
 }

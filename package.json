@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles",
+    "test": "jest",
     "start": "nodemon app.js --legacy-watch",
     "lint": "eslint . --fix",
     "prepare": "husky install",

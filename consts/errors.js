@@ -92,7 +92,7 @@ const validationErrors = {
   },
   password: {
     code: 'PASSWORD_NOT_VALID',
-    message: 'Password must contain at least one alphabetic, one numeric and one special character.'
+    message: 'Password must contain at least one alphabetic and one numeric character.'
   },
   firstName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('firstName'),
   lastName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('lastName')

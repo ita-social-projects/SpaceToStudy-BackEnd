@@ -2,6 +2,7 @@ const User = require('~/models/user')
 const Role = require('~/models/role')
 const tokenService = require('~/services/token')
 const userService = require('~/services/user')
+const emailService = require('~/services/email')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 const {
@@ -17,7 +18,6 @@ const {
   BAD_REFRESH_TOKEN
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
-const { sendEmail } = require('~/utils/emailService')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
@@ -48,7 +48,7 @@ const authService = {
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
 
-    await sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { confirmToken, email, firstName })
+    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { confirmToken, email, firstName })
 
     return {
       userEmail: user.email
@@ -136,7 +136,7 @@ const authService = {
 
     const { firstName } = user
 
-    await sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
+    await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
   },
 
   updatePassword: async (resetToken, password) => {

@@ -114,9 +114,11 @@ describe('Auth controller', () => {
     })
   })
 
+  let refreshToken
   describe('Login endpoint', () => {
     it('should login a user', async () => {
       const response = await app.post('/auth/login').send({ email: user.email, password: user.password })
+      refreshToken = response.header['set-cookie'][0].split(';')[0].split('=')[1]
 
       expect(response.statusCode).toBe(200)
     })
@@ -138,6 +140,15 @@ describe('Auth controller', () => {
       const response = await app.post('/auth/login').send({ email, password: user.password })
 
       expectError(401, errors.EMAIL_NOT_CONFIRMED, response)
+    })
+  })
+
+  describe('Logout endpoint', () => {
+    it('should logout user', async () => {
+      const response = await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual({ deletedCount: 1 })
     })
   })
 })

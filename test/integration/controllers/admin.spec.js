@@ -39,21 +39,24 @@ describe('Admin controller', () => {
 
       const response = await app.get(`/admins/${admin._id}`)
 
-      const { id, firstName, lastName, email } = response.body
+      const { id, firstName, lastName, email } = admin
 
       expect(response.statusCode).toBe(200)
-      expect(id).toBe(admin._id.toString())
-      expect(firstName).toBe(admin.firstName)
-      expect(lastName).toBe(admin.lastName)
-      expect(email).toBe(admin.email)
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id,
+          firstName,
+          lastName,
+          email
+        })
+      )
     })
 
     it('getAdmin not found', async () => {
       const id = '6301644cb3f6e97afe2706ae'
 
       const expectedBody = {
-        code: USER_NOT_REGISTERED.code,
-        message: USER_NOT_REGISTERED.message,
+        ...USER_NOT_REGISTERED,
         status: 404
       }
 

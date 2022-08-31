@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 14
 
+      - name: Run DB
+        run: docker-compose -f ./docker-compose.yaml up -d      
+
       # Install dependencies
       - name : Npm Install
         run: npm install
@@ -26,6 +29,7 @@ jobs:
       - name : Test
         run: npm run test
         env:
+          NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: ${{secrets.MONGODB_URL}}
           JWT_ACCESS_SECRET: ${{secrets.JWT_ACCESS_SECRET}}
           JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}

@@ -1,11 +1,11 @@
 version: "3.9"
+
 services:
-  backend:
-    build: ./
+  database:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: s2s-test
     ports:
-      - '8080:8080'
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    env_file: 
-      - ./.env.local
+      - '27017:27017'

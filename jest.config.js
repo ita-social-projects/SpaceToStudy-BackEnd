@@ -26,7 +26,7 @@ module.exports = {
   },
   coverageReporters: ['html', 'lcov'],
   coverageDirectory: '<rootDir>/test/coverage',
-  testTimeout: 15000,
+  testTimeout: 12000,
   testMatch: ['<rootDir>/test/integration/**/*.spec.js', '<rootDir>/test/unit/**/*.spec.js'],
   testResultsProcessor: 'jest-sonar-reporter'
 }

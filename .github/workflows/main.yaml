@@ -27,9 +27,8 @@ jobs:
         run: npm install
         
       - name : Test
-        run: npm run test --if-present
+        run: npm run test
         env:
-          CI: false
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: ${{secrets.MONGODB_URL}}
           JWT_ACCESS_SECRET: ${{secrets.JWT_ACCESS_SECRET}}

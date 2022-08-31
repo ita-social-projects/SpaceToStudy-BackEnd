@@ -19,9 +19,6 @@ jobs:
         with:
           node-version: 14
 
-      - name: Run DB
-        run: docker-compose -f ./docker-compose.yaml up -d      
-
       # Install dependencies
       - name : Npm Install
         run: npm install

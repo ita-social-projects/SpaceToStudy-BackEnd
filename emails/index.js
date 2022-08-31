@@ -10,7 +10,7 @@ const templateList = {
     template: 'reset-password'
   },
   [emailSubject.LONG_TIME_WITHOUT_LOGIN]: {
-    subject: 'You’ve been inactive for too long',
+    subject: 'You have been inactive for too long',
     template: 'long-time-without-login'
   }
 }

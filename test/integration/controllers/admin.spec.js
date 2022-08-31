@@ -5,6 +5,7 @@ const {
 const User = require('~/models/user')
 const Role = require('~/models/role')
 const { USER_NOT_REGISTERED } = require('~/consts/errors')
+const { expectError } = require('~/test/helpers')
 
 describe('Admin controller', () => {
   let app, server
@@ -55,15 +56,9 @@ describe('Admin controller', () => {
     it('getAdmin not found', async () => {
       const id = '6301644cb3f6e97afe2706ae'
 
-      const expectedBody = {
-        ...USER_NOT_REGISTERED,
-        status: 404
-      }
-
       const response = await app.get(`/admins/${id}`)
 
-      expect(response.statusCode).toBe(404)
-      expect(response.body).toEqual(expectedBody)
+      expectError(404, USER_NOT_REGISTERED, response)
     })
   })
 })

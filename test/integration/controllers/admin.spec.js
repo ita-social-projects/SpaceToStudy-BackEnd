@@ -18,15 +18,17 @@ describe('Admin controller', () => {
     await serverCleanup(server)
   })
 
-  it('getAdmins', async () => {
-    const response = await app.get('/admins')
+  describe('admins endpoint', () => {
+    it('should get admins', async () => {
+      const response = await app.get('/admins')
 
-    expect(response.statusCode).toBe(200)
-    expect(response.body).toEqual([])
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([])
+    })
   })
 
-  describe('get by id', () => {
-    it('found', async () => {
+  describe('admins/:id endpoint', () => {
+    it('should get admin by id', async () => {
       const role = await Role.findOne({ value: ADMIN }).lean().exec()
       let adminToSave = {
         role,
@@ -53,7 +55,7 @@ describe('Admin controller', () => {
       )
     })
 
-    it('getAdmin not found', async () => {
+    it('should throw USER_NOT_REGISTERED', async () => {
       const id = '6301644cb3f6e97afe2706ae'
 
       const response = await app.get(`/admins/${id}`)

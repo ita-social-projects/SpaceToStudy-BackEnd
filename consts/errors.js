@@ -7,10 +7,6 @@ const errors = {
     code: 'INCORRECT_CREDENTIALS',
     message: 'Wrong email or password.'
   },
-  ROLE_NOT_SUPPORTED: {
-    code: 'ROLE_NOT_SUPPORTED',
-    message: 'User role is not supported.'
-  },
   BODY_IS_NOT_DEFINED: {
     code: 'BODY_IS_NOT_DEFINED',
     message: 'request body should not be null or undefined'

@@ -14,7 +14,6 @@ const {
   USER_NOT_REGISTERED,
   EMAIL_NOT_FOUND,
   BAD_RESET_TOKEN,
-  ROLE_NOT_SUPPORTED,
   BAD_REFRESH_TOKEN
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
@@ -33,10 +32,6 @@ const authService = {
     const hashedPassword = await hashPassword(password)
     const foundRole = await Role.findOne({ value: role }).exec()
 
-    if (!foundRole) {
-      throw createError(404, ROLE_NOT_SUPPORTED)
-    }
-
     const user = await User.create({
       role: foundRole,
       firstName,
@@ -51,6 +46,7 @@ const authService = {
     await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { confirmToken, email, firstName })
 
     return {
+      userId: user._id,
       userEmail: user.email
     }
   },

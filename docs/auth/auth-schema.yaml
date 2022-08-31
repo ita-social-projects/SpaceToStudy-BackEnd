@@ -9,10 +9,10 @@ definitions:
             type: string
             example: John
           lastName:
-            type: string    
+            type: string
             example: Doe
           email:
-            type: string    
+            type: string
             example: johndoe@gmail.com
           id:
             type: string
@@ -21,7 +21,7 @@ definitions:
     type: object
     properties:
       email:
-        type: string    
+        type: string
         example: johndoe@gmail.com
       password:
         type: string
@@ -44,12 +44,6 @@ definitions:
       password:
         type: string
         example: qwer1234
-  resetToken:
-    type: object
-    properties:
-      resetToken:
-        type: string
-        example: 348dasas9209a0d9asd09asd09asd09
   accessToken:
     type: object
     properties:

@@ -4,10 +4,6 @@ const {
 } = require('~/consts/validation')
 
 const resetPasswordValidationSchema = {
-  resetToken: {
-    type: 'string',
-    required: true
-  },
   password: {
     type: 'string',
     required: true,

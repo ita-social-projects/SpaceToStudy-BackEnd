@@ -78,7 +78,7 @@ paths:
                 code: 'EMAIL_NOT_FOUND'
                 message: 'There is no user registered with that email.'
 
-  /auth/reset-password:
+  /auth/reset-password/{token}:
     patch:
       tags:
         - Auth
@@ -86,13 +86,17 @@ paths:
       description: Checks the reset token for validity, and updates the password
       produces:
         - application/json
+      parameters:
+        - name: token
+          in: path
+          required: true
+          description: Reset Token
+          type: string
       requestBody:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '#/definitions/resetToken'
-                - $ref: '#/definitions/resetPassword'
+              $ref: '#/definitions/resetPassword'
       responses:
         204:
           description: Successful completion of an update
@@ -159,7 +163,7 @@ paths:
           description: Access token has been successfully refreshed
           headers:
             Set-Cookie:
-              schema: 
+              schema:
                 type: string
                 example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.GUiOiJzdHVkZW50IiwiaXNatalXJzdExvZ2luIjpQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
           content:

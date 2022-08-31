@@ -13,6 +13,9 @@ jobs:
       # Checkout the Repo
       - uses: actions/checkout@v3
 
+      - name: Run DB
+        run: docker-compose -f docker-compose.yaml up -d
+
       # Install Node 14
       - name: Setup Node
         uses: actions/setup-node@v3

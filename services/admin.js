@@ -3,7 +3,7 @@ const Role = require('~/models/role')
 const {
   roles: { ADMIN }
 } = require('~/consts/auth')
-const { USER_NOT_REGISTERED } = require('~/consts/errors')
+const { USER_NOT_FOUND } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 
 const adminService = {
@@ -32,7 +32,9 @@ const adminService = {
       .lean()
       .exec()
 
-    if (!admin) throw createError(404, USER_NOT_REGISTERED)
+    if (!admin) {
+      throw createError(404, USER_NOT_FOUND)
+    }
 
     const { _id: id, firstName, lastName, email, isEmailConfirmed } = admin
     return { id, firstName, lastName, email, isEmailConfirmed }

@@ -21,7 +21,7 @@ router.post(
   asyncWrapper(authController.sendResetPasswordEmail)
 )
 router.patch(
-  '/reset-password',
+  '/reset-password/:token',
   validationMiddleware(resetPasswordValidationSchema),
   asyncWrapper(authController.updatePassword)
 )

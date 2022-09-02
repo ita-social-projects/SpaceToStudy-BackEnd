@@ -72,7 +72,8 @@ const sendResetPasswordEmail = async (req, res) => {
 }
 
 const updatePassword = async (req, res) => {
-  const { password, resetToken } = req.body
+  const { password } = req.body
+  const resetToken = req.params.token
 
   await authService.updatePassword(resetToken, password)
 

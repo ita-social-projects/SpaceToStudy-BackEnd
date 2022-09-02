@@ -2,21 +2,18 @@ definitions:
   user:
     type: object
     properties:
-      user:
-        type: object
-        properties:
-          firstName:
-            type: string
-            example: John
-          lastName:
-            type: string
-            example: Doe
-          email:
-            type: string
-            example: johndoe@gmail.com
-          id:
-            type: string
-            example: 6255bc080a75adf9223df100
+      firstName:
+        type: string
+        example: John
+      lastName:
+        type: string
+        example: Doe
+      email:
+        type: string
+        example: johndoe@gmail.com
+      id:
+        type: string
+        example: 6255bc080a75adf9223df100
   login:
     type: object
     properties:
@@ -44,6 +41,21 @@ definitions:
       password:
         type: string
         example: qwer1234
+  signupResponse:
+    type: object
+    properties:
+      id:
+        type: string
+        example: 6255bc080a75adf9223df100
+      email:
+        type: string
+        example: johndoe@gmail.com
+  resetToken:
+    type: object
+    properties:
+      resetToken:
+        type: string
+        example: 348dasas9209a0d9asd09asd09asd09
   accessToken:
     type: object
     properties:

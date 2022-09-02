@@ -7,26 +7,6 @@ components:
 security:
   - bearerAuth: []
 paths:
-  /auth/login:
-    post:
-      tags:
-        - Auth
-      summary: returns the user object
-      description: Creates JWT token and returns the user object in case that user provides the correct email and password.
-      produces:
-        - application/json
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/definitions/login'
-      responses:
-        200:
-          description: A user object.
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/user'
   /auth/signup:
     post:
       tags:
@@ -42,11 +22,65 @@ paths:
               $ref: '#/definitions/signup'
       responses:
         201:
-          description: User information
+          description: Created
           content:
             application/json:
               schema:
-                $ref: '#/definitions/user'
+                $ref: '#/definitions/signupResponse'
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 409
+                code: 'ALREADY_REGISTERED'
+                message: 'User already exists.'
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: returns the user object
+      description: Creates JWT token and returns the user object in case that user provides the correct email and password.
+      produces:
+        - application/json
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/login'
+      responses:
+        200:
+          description: OK
+          headers:
+            Set-Cookie:
+              schema:
+                type: string
+                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.GUiOiJzdHVkZW50IiwiaXNatalXJzdExvZ2luIjpQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/accessToken'
+              example:
+                accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM'
+        401:
+          description: 'Unauthorized'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              examples:
+                incorrect-credentials:
+                  value:
+                    status: 401
+                    code: 'INCORRECT_CREDENTIALS'
+                    message: 'Wrong email or password.'
+                email-not-confirmed:
+                  value:
+                    status: 401
+                    code: 'EMAIL_NOT_CONFIRMED'
+                    message: 'Please confirm your email to login.'
   /auth/forgot-password:
     post:
       tags:
@@ -77,7 +111,6 @@ paths:
                 status: 404
                 code: 'EMAIL_NOT_FOUND'
                 message: 'There is no user registered with that email.'
-
   /auth/reset-password/{token}:
     patch:
       tags:

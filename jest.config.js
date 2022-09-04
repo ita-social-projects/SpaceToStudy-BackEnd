@@ -5,7 +5,7 @@ module.exports = {
   },
   verbose: true,
   testEnvironment: 'node',
-  collectCoverage: true,
+  //collectCoverage: true,
   collectCoverageFrom: [
     '!<rootDir>/node_modules/*',
     '!<rootDir>/test/**/*',

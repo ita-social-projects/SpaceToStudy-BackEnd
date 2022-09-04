@@ -63,7 +63,7 @@ describe('Auth controller', () => {
       expectError(422, error, response)
     })
 
-    it("should throw validation errors for the password's length", async () => {
+    it('should throw validation errors for the password\'s length', async () => {
       const responseForMax = await app
         .post('/auth/signup')
         .send({ ...user, password: '1'.repeat(MAX_PASSWORD_LENGTH + 1) })
@@ -149,6 +149,52 @@ describe('Auth controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual({ deletedCount: 1 })
+    })
+  })
+
+  describe('RefreshAccessToken endpoint', () => {
+    it('should refresh access token', async () => {
+      const response = await app.get('/auth/refresh').set('Cookie', `refreshToken=${refreshToken}`)
+
+      expect(response.statusCode).toBe(200)
+    })
+    it('should throw BAD_REFRESH_TOKEN error', async () => {
+      const response = await app.get('/auth/refresh').set('Cookie', `refreshToken=${!refreshToken}`)
+
+      expectError(400, errors.BAD_REFRESH_TOKEN, response)
+    })
+  })
+
+  describe('SendResetPasswordEmail endpoint', () => {
+    it('should send reset password email', async () => {
+      const response = await app.post('/auth/forgot-password').send({ email: 'test@gmail.com' })
+
+      expect(response.statusCode).toBe(204)
+    })
+    it('should throw EMAIL_NOT_FOUND error', async () => {
+      const response = await app.post('/auth/forgot-password').send({ email: '123@gmail.com' })
+
+      expectError(404, errors.EMAIL_NOT_FOUND, response)
+    })
+  })
+
+  describe('UpdatePassword endpoint', () => {
+    let resetToken
+    beforeAll(() => {
+      resetToken = tokenService.generateResetToken({ id: user._id })
+      Token.findOne = jest.fn().mockResolvedValue({ resetToken })
+    })
+    afterAll(() => jest.resetAllMocks())
+
+    it('should update a password', async () => {
+      const response = await app.patch(`/auth/reset-password/${resetToken}`).send({ password: '123qwerty' })
+
+      expect(response.statusCode).toBe(204)
+    })
+    it('should throw BAD_RESET_TOKEN error', async () => {
+      const response = await app.patch(`/auth/reset-password/${!resetToken}`).send({ password: '123qwerty' })
+
+      expectError(400, errors.BAD_RESET_TOKEN, response)
     })
   })
 })

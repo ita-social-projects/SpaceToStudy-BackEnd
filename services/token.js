@@ -90,7 +90,7 @@ const tokenService = {
 
   findToken: async (tokenValue, tokenName) => {
     if (!Object.values(tokenNames).includes(tokenName)) {
-      return null
+      throw createError(404, INVALID_TOKEN_NAME)
     }
     const tokenData = await Token.findOne({ [tokenName]: tokenValue })
 

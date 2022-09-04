@@ -77,7 +77,7 @@ const errors = {
   },
   INVALID_TOKEN_NAME: {
     code: 'INVALID_TOKEN_NAME',
-    message: 'The token name you used is invalid'
+    message: 'The token name you used is invalid.'
   },
   INVALID_ID: {
     code: 'INVALID_ID',

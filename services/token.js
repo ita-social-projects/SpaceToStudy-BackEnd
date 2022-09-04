@@ -12,9 +12,9 @@ const {
     JWT_CONFIRM_EXPIRES_IN
   }
 } = require('~/configs/config')
+const { INVALID_TOKEN_NAME } = require('~/consts/errors')
 const { tokenNames } = require('~/consts/auth')
 const { createError } = require('~/utils/errorsHelper')
-const { INVALID_TOKEN_NAME } = require('~/consts/errors')
 
 const tokenService = {
   generateTokens: (payload) => {

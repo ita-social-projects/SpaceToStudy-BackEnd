@@ -121,6 +121,11 @@ describe('Auth controller', () => {
       refreshToken = response.header['set-cookie'][0].split(';')[0].split('=')[1]
 
       expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
     })
 
     it('should throw USER_NOT_REGISTERED error', async () => {
@@ -157,6 +162,11 @@ describe('Auth controller', () => {
       const response = await app.get('/auth/refresh').set('Cookie', `refreshToken=${refreshToken}`)
 
       expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
     })
     it('should throw BAD_REFRESH_TOKEN error', async () => {
       const response = await app.get('/auth/refresh').set('Cookie', `refreshToken=${!refreshToken}`)

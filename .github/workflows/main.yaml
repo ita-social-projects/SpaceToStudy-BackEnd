@@ -7,30 +7,42 @@ on:
     branches: [main, develop, devops]
 
 jobs:
-  tests:
+  Test_DEV:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the Repo
-      - uses: actions/checkout@v3
 
-      - name: Run DB
-        run: docker-compose -f docker-compose.yaml up -d
+      - name: 'Checkout the Repo'
+        uses: actions/checkout@v3
 
-      # Install Node 14
-      - name: Setup Node
+      - name: 'Start MongoDB'
+        uses: supercharge/mongodb-github-action@1.8.0
+        with:
+          mongodb-version: latest
+          mongodb-port: 27017
+          mongodb-username: ${{secrets.MONGODB_USER}}
+          mongodb-password: ${{secrets.MONGODB_PASS}}
+          mongodb-db: ${{secrets.MONGODB_DB}}
+      
+      - name: 'Wait for the database to start'
+        run: |
+          wget -qO- https://raw.githubusercontent.com/eficode/wait-for/$WAIT_FOR_VERSION/wait-for | 
+          sh -s -- localhost:27017 -- echo "Database is up"
+        env:
+          WAIT_FOR_VERSION: 4df3f9262d84cab0039c07bf861045fbb3c20ab7 # v2.2.3
+
+      - name: 'Install Node.js v.14'
         uses: actions/setup-node@v3
         with:
           node-version: 14
 
-      # Install dependencies
-      - name : Npm Install
+      - name : 'Install dependencies'
         run: npm install
         
-      - name : Test
+      - name : 'Run Tests'
         run: npm run test
         env:
           NODE_OPTIONS: --max_old_space_size=4096
-          MONGODB_URL: ${{secrets.MONGODB_URL}}
+          MONGODB_URL: mongodb://${{secrets.MONGODB_USER}}:${{secrets.MONGODB_PASS}}@localhost:27017/${{secrets.MONGODB_DB}}?authSource=admin
           JWT_ACCESS_SECRET: ${{secrets.JWT_ACCESS_SECRET}}
           JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}
           JWT_RESET_SECRET: ${{secrets.JWT_RESET_SECRET}}
@@ -57,3 +69,17 @@ jobs:
 #        env:
 #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
 #          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  Test_Docker:
+    runs-on: ubuntu-latest
+    steps:
+
+      #Checkout Repository
+      - uses: actions/checkout@v3
+      
+      # Docker Build
+      - uses: docker/build-push-action@v3
+        with:
+          push: false
+          file: ./Dockerfile
+          tags: back-stage:test

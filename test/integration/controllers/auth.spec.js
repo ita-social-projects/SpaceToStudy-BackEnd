@@ -169,7 +169,7 @@ describe('Auth controller', () => {
       )
     })
     it('should throw BAD_REFRESH_TOKEN error', async () => {
-      const response = await app.get('/auth/refresh').set('Cookie', `refreshToken=${!refreshToken}`)
+      const response = await app.get('/auth/refresh').set('Cookie', 'refreshToken=invalid-token')
 
       expectError(400, errors.BAD_REFRESH_TOKEN, response)
     })
@@ -182,7 +182,7 @@ describe('Auth controller', () => {
       expect(response.statusCode).toBe(204)
     })
     it('should throw EMAIL_NOT_FOUND error', async () => {
-      const response = await app.post('/auth/forgot-password').send({ email: '123@gmail.com' })
+      const response = await app.post('/auth/forgot-password').send({ email: 'invalid@gmail.com' })
 
       expectError(404, errors.EMAIL_NOT_FOUND, response)
     })
@@ -197,12 +197,12 @@ describe('Auth controller', () => {
     afterAll(() => jest.resetAllMocks())
 
     it('should update a password', async () => {
-      const response = await app.patch(`/auth/reset-password/${resetToken}`).send({ password: '123qwerty' })
+      const response = await app.patch(`/auth/reset-password/${resetToken}`).send({ password: 'valid_pass1' })
 
       expect(response.statusCode).toBe(204)
     })
     it('should throw BAD_RESET_TOKEN error', async () => {
-      const response = await app.patch(`/auth/reset-password/${!resetToken}`).send({ password: '123qwerty' })
+      const response = await app.patch('/auth/reset-password/invalid-token').send({ password: 'valid_pass1' })
 
       expectError(400, errors.BAD_RESET_TOKEN, response)
     })

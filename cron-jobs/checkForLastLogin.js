@@ -6,8 +6,9 @@ const { oneDayInMs } = require('~/consts/auth')
 
 const DAYS_TO_SEND_EMAILS = 173
 const DAYS_TO_DELETE_USER = 180
+const EVERY_DAY_AT_3AM = '00 00 03 * * *'
 
-const checkUsersForLastLogin = new CronJob('00 00 03 * * *', () => checkLastLogin())
+const checkUsersForLastLogin = new CronJob(EVERY_DAY_AT_3AM, () => checkLastLogin())
 
 const checkLastLogin = async () => {
   const users = await userService.getUsers()

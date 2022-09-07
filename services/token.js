@@ -12,6 +12,9 @@ const {
     JWT_CONFIRM_EXPIRES_IN
   }
 } = require('~/configs/config')
+const { INVALID_TOKEN_NAME } = require('~/consts/errors')
+const { tokenNames } = require('~/consts/auth')
+const { createError } = require('~/utils/errorsHelper')
 
 const tokenService = {
   generateTokens: (payload) => {
@@ -70,6 +73,10 @@ const tokenService = {
   },
 
   saveToken: async (userId, tokenValue, tokenName) => {
+    if (!Object.values(tokenNames).includes(tokenName)) {
+      throw createError(404, INVALID_TOKEN_NAME)
+    }
+
     const tokenData = await Token.findOne({ user: userId })
 
     if (tokenData) {
@@ -82,6 +89,9 @@ const tokenService = {
   },
 
   findToken: async (tokenValue, tokenName) => {
+    if (!Object.values(tokenNames).includes(tokenName)) {
+      throw createError(404, INVALID_TOKEN_NAME)
+    }
     const tokenData = await Token.findOne({ [tokenName]: tokenValue })
 
     return tokenData

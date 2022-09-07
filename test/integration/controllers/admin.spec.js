@@ -4,7 +4,7 @@ const {
 } = require('~/consts/auth')
 const User = require('~/models/user')
 const Role = require('~/models/role')
-const { USER_NOT_REGISTERED } = require('~/consts/errors')
+const { USER_NOT_FOUND } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 
 describe('Admin controller', () => {
@@ -55,12 +55,12 @@ describe('Admin controller', () => {
       )
     })
 
-    it('should throw USER_NOT_REGISTERED', async () => {
+    it('should throw USER_NOT_FOUND', async () => {
       const id = '6301644cb3f6e97afe2706ae'
 
       const response = await app.get(`/admins/${id}`)
 
-      expectError(404, USER_NOT_REGISTERED, response)
+      expectError(404, USER_NOT_FOUND, response)
     })
   })
 })

@@ -63,7 +63,7 @@ describe('Auth controller', () => {
       expectError(422, error, response)
     })
 
-    it('should throw validation errors for the password\'s length', async () => {
+    it("should throw validation errors for the password's length", async () => {
       const responseForMax = await app
         .post('/auth/signup')
         .send({ ...user, password: '1'.repeat(MAX_PASSWORD_LENGTH + 1) })
@@ -128,10 +128,10 @@ describe('Auth controller', () => {
       )
     })
 
-    it('should throw USER_NOT_REGISTERED error', async () => {
+    it('should throw INCORRECT_CREDENTIALS error', async () => {
       const response = await app.post('/auth/login').send({ email: 'invalid@gmail.com', password: 'invalid' })
 
-      expectError(401, errors.USER_NOT_REGISTERED, response)
+      expectError(401, errors.INCORRECT_CREDENTIALS, response)
     })
 
     it('should throw INCORRECT_CREDENTIALS error', async () => {

@@ -17,12 +17,15 @@ const emailService = {
       throw createError(404, TEMPLATE_NOT_FOUND)
     }
 
-    const html = await emailTemplates.render(templateToSend.template, text)
+    // provide a preffered lang check here later
+    const chosenLangTmpl = templateToSend.en
+
+    const html = await emailTemplates.render(chosenLangTmpl.template, text)
 
     await sendMail({
       from: `Space2Study <${user}>`,
       to: email,
-      subject: templateToSend.subject,
+      subject: chosenLangTmpl.subject,
       html
     })
   }

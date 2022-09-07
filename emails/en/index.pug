@@ -1,0 +1,21 @@
+doctype html
+html
+    head
+        meta(charset='UTF-8')
+        meta(name='viewport' content='width=device-width, initial-scale=1')
+        style
+            include ../css/index.css
+    body
+        header
+            img(src='https://space2studyb582.blob.core.windows.net/space-2-study/logo.png', alt="Space2Study Logo")
+            block title
+            block description
+        main
+            .info 
+                div
+                p This is an automated email. Do not reply to this. You received this email because you are registered with
+                    a #{email}
+                    |  at <br/> SpaceToStudy
+        footer
+            h3 SpaceToStudy
+            p &copy; 2022 SpaceToStudy. All rights reserved.

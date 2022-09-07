@@ -20,22 +20,20 @@ const userService = {
     const user = await User.findById(userId).populate('role').lean().exec()
 
     if (!user) {
-      return null
+      throw createError(404, USER_NOT_FOUND)
     }
 
-    user.role = user.role.value
+    const { _id, firstName, lastName, role, email, isEmailConfirmed, isFirstLogin } = user
 
-    return user
+    return { _id, firstName, lastName, role: role.value, email, isEmailConfirmed, isFirstLogin }
   },
 
-  getUserByParam: async (param) => {
-    const user = await User.findOne({ email: param }).populate('role').lean().exec()
+  getUserByEmail: async (email) => {
+    const user = await User.findOne({ email }).populate('role').lean().exec()
 
     if (!user) {
       return null
     }
-
-    user.role = user.role.value
 
     return user
   },

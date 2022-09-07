@@ -22,7 +22,7 @@ const {
 
 const authService = {
   signup: async (role, firstName, lastName, email, password) => {
-    const candidate = await userService.getUserByParam(email)
+    const candidate = await userService.getUserByEmail(email)
 
     if (candidate) {
       throw createError(409, ALREADY_REGISTERED)
@@ -51,24 +51,26 @@ const authService = {
   },
 
   login: async (email, password) => {
-    const user = await userService.getUserByParam(email)
+    const user = await userService.getUserByEmail(email)
 
     if (!user || !(await comparePasswords(password, user.password))) {
       throw createError(401, INCORRECT_CREDENTIALS)
     }
 
-    if (!user.isEmailConfirmed) {
+    const { _id, role, isFirstLogin, isEmailConfirmed } = user
+
+    if (!isEmailConfirmed) {
       throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
-    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })
-    await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
+    const tokens = tokenService.generateTokens({ id: _id, role, isFirstLogin })
+    await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
-    if (user.isFirstLogin) {
-      await userService.updateUser(user._id, { isFirstLogin: false })
+    if (isFirstLogin) {
+      await userService.updateUser(_id, { isFirstLogin: false })
     }
 
-    await userService.updateUser(user._id, { lastLogin: new Date() })
+    await userService.updateUser(_id, { lastLogin: new Date() })
 
     return tokens
   },
@@ -113,7 +115,7 @@ const authService = {
   },
 
   sendResetPasswordEmail: async (email) => {
-    const user = await userService.getUserByParam(email)
+    const user = await userService.getUserByEmail(email)
 
     if (!user) {
       throw createError(404, EMAIL_NOT_FOUND)

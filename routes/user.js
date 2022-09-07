@@ -9,8 +9,7 @@ const router = express.Router()
 router.param('userId', idValidation)
 
 router.get('/', asyncWrapper(userController.getUsers))
-router.get('/param/:param', asyncWrapper(userController.getUserByParam))
-router.get('/id/:userId', asyncWrapper(userController.getUserById))
-router.delete('/id/:userId', asyncWrapper(userController.deleteUser))
+router.get('/:userId', asyncWrapper(userController.getUserById))
+router.delete('/:userId', asyncWrapper(userController.deleteUser))
 
 module.exports = router

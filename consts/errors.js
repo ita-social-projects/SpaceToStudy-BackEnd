@@ -94,6 +94,10 @@ const errors = {
   EXAMPLE_NOT_FOUND: {
     code: 'EXAMPLE_NOT_FOUND',
     message: 'Example not found.'
+  },
+  INVALID_LANGUAGE: {
+    code: 'INVALID_LANGUAGE',
+    message: "The language name is invalid. Possible options: 'ua' or 'en'."
   }
 }
 

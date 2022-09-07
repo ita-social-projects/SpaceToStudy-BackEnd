@@ -24,7 +24,7 @@ const authService = {
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
 
-    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { confirmToken, email, firstName })
+    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
 
     return {
       userId: user._id,
@@ -108,7 +108,7 @@ const authService = {
     const resetToken = tokenService.generateResetToken({ id: _id })
     await tokenService.saveToken(_id, resetToken, RESET_TOKEN)
 
-    await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
+    await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, language, { resetToken, email, firstName })
   },
 
   updatePassword: async (resetToken, password) => {

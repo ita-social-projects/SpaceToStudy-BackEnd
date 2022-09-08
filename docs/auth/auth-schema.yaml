@@ -1,19 +1,4 @@
 definitions:
-  user:
-    type: object
-    properties:
-      firstName:
-        type: string
-        example: John
-      lastName:
-        type: string
-        example: Doe
-      email:
-        type: string
-        example: johndoe@gmail.com
-      id:
-        type: string
-        example: 6255bc080a75adf9223df101
   login:
     type: object
     properties:
@@ -44,10 +29,10 @@ definitions:
   signupResponse:
     type: object
     properties:
-      id:
+      userId:
         type: string
         example: 6255bc080a75adf9223df100
-      email:
+      userEmail:
         type: string
         example: johndoe@gmail.com
   resetToken:

@@ -1,18 +1,21 @@
 const User = require('~/models/user')
+const Role = require('~/models/role')
+const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
-const { USER_NOT_FOUND } = require('~/consts/errors')
+const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
   getUsers: async () => {
     const users = await User.find().populate('role').lean().exec()
 
-    return users.map(({ _id, firstName, lastName, role, email }) => ({
-      id: _id,
+    return users.map(({ _id, role, firstName, lastName, email, lastLogin }) => ({
+      _id,
+      role: role.value,
       firstName,
       lastName,
-      role: role.value,
-      email
+      email,
+      lastLogin
     }))
   },
 
@@ -23,9 +26,9 @@ const userService = {
       throw createError(404, USER_NOT_FOUND)
     }
 
-    const { _id, firstName, lastName, role, email, isEmailConfirmed, isFirstLogin } = user
+    const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin } = user
 
-    return { _id, firstName, lastName, role: role.value, email, isEmailConfirmed, isFirstLogin }
+    return { _id, role: role.value, firstName, lastName, email, isEmailConfirmed, isFirstLogin }
   },
 
   getUserByEmail: async (email) => {
@@ -36,6 +39,21 @@ const userService = {
     }
 
     return user
+  },
+
+  createUser: async (role, firstName, lastName, email, password) => {
+    const duplicateUser = await userService.getUserByEmail(email)
+
+    if (duplicateUser) {
+      throw createError(409, ALREADY_REGISTERED)
+    }
+
+    const foundRole = await Role.findOne({ value: role }).exec()
+    const hashedPassword = await hashPassword(password)
+
+    const newUser = await User.create({ role: foundRole, firstName, lastName, email, password: hashedPassword })
+
+    return newUser
   },
 
   updateUser: async (userId, param) => {

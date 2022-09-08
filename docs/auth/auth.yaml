@@ -36,7 +36,7 @@ paths:
               example:
                 status: 409
                 code: 'ALREADY_REGISTERED'
-                message: 'User already exists.'
+                message: 'User with specified email already exists.'
   /auth/login:
     post:
       tags:
@@ -75,7 +75,7 @@ paths:
                   value:
                     status: 401
                     code: 'INCORRECT_CREDENTIALS'
-                    message: 'Wrong email or password.'
+                    message: 'The password or email you entered is incorrect.'
                 email-not-confirmed:
                   value:
                     status: 401

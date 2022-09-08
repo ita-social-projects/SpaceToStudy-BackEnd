@@ -1,12 +1,9 @@
-const User = require('~/models/user')
-const Role = require('~/models/role')
 const tokenService = require('~/services/token')
 const userService = require('~/services/user')
 const emailService = require('~/services/email')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 const {
-  ALREADY_REGISTERED,
   EMAIL_ALREADY_CONFIRMED,
   EMAIL_NOT_CONFIRMED,
   BAD_CONFIRM_TOKEN,
@@ -22,22 +19,7 @@ const {
 
 const authService = {
   signup: async (role, firstName, lastName, email, password) => {
-    const candidate = await userService.getUserByEmail(email)
-
-    if (candidate) {
-      throw createError(409, ALREADY_REGISTERED)
-    }
-
-    const hashedPassword = await hashPassword(password)
-    const foundRole = await Role.findOne({ value: role }).exec()
-
-    const user = await User.create({
-      role: foundRole,
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword
-    })
+    const user = await userService.createUser(role, firstName, lastName, email, password)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
@@ -121,10 +103,10 @@ const authService = {
       throw createError(404, EMAIL_NOT_FOUND)
     }
 
-    const resetToken = tokenService.generateResetToken({ id: user._id })
-    await tokenService.saveToken(user._id, resetToken, RESET_TOKEN)
+    const { _id, firstName } = user
 
-    const { firstName } = user
+    const resetToken = tokenService.generateResetToken({ id: _id })
+    await tokenService.saveToken(_id, resetToken, RESET_TOKEN)
 
     await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
   },

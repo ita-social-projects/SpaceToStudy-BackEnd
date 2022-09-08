@@ -62,7 +62,7 @@ paths:
               example:
                 status: 404
                 code: 'USER_NOT_FOUND'
-                message: 'User with specified email or id was not found.'
+                message: 'User with the specified email or id was not found.'
     delete:
       tags:
         - Users
@@ -98,4 +98,4 @@ paths:
               example:
                 status: 404
                 code: 'USER_NOT_FOUND'
-                message: 'User with specified email or id was not found.'
+                message: 'User with the specified email or id was not found.'

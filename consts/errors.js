@@ -1,7 +1,7 @@
 const errors = {
   USER_NOT_FOUND: {
     code: 'USER_NOT_FOUND',
-    message: 'User with specified email or id was not found.'
+    message: 'User with the specified email or id was not found.'
   },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',
@@ -34,7 +34,7 @@ const errors = {
   }),
   ALREADY_REGISTERED: {
     code: 'ALREADY_REGISTERED',
-    message: 'User with specified email already exists.'
+    message: 'User with the specified email already exists.'
   },
   EMAIL_ALREADY_CONFIRMED: {
     code: 'EMAIL_ALREADY_CONFIRMED',

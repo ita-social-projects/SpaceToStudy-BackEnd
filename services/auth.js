@@ -18,7 +18,7 @@ const {
 } = require('~/consts/auth')
 
 const authService = {
-  signup: async (role, firstName, lastName, email, password) => {
+  signup: async (role, firstName, lastName, email, password, language) => {
     const user = await userService.createUser(role, firstName, lastName, email, password)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
@@ -96,7 +96,7 @@ const authService = {
     return tokens
   },
 
-  sendResetPasswordEmail: async (email) => {
+  sendResetPasswordEmail: async (email, language) => {
     const user = await userService.getUserByEmail(email)
 
     if (!user) {

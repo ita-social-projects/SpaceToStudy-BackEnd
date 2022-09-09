@@ -27,6 +27,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/signupResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'EMAIL_NOT_SENT'
+                message: 'Email has not been sent.'
         409:
           description: Conflict
           content:
@@ -65,7 +75,7 @@ paths:
               example:
                 accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM'
         401:
-          description: 'Unauthorized'
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -101,6 +111,16 @@ paths:
       responses:
         204:
           description: Email successfully sent
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'EMAIL_NOT_SENT'
+                message: 'Email has not been sent.'
         404:
           description: The email was not found
           content:

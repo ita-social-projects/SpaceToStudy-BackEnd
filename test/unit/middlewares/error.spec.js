@@ -22,9 +22,9 @@ describe('Error middleware', () => {
 
   it('Should return the given INTERNAL_SERVER_ERROR if no error was given', () => {
     const message = 'Server-specific error message.'
-    const { status, code } = createError(500, { message, ...INTERNAL_SERVER_ERROR })
+    const status = 500
     errorMiddleware({ message }, mockRequest, mockResponse, mockNextFunc)
 
-    expect(jsonFunc).toBeCalledWith({ status, code, message })
+    expect(jsonFunc).toBeCalledWith({ status, message, ...INTERNAL_SERVER_ERROR })
   })
 })

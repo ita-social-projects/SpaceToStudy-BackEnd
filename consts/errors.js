@@ -1,3 +1,7 @@
+const {
+  enums: { LANG_ENUM }
+} = require('~/consts/validation')
+
 const errors = {
   USER_NOT_FOUND: {
     code: 'USER_NOT_FOUND',
@@ -97,7 +101,7 @@ const errors = {
   },
   INVALID_LANGUAGE: {
     code: 'INVALID_LANGUAGE',
-    message: "The language name is invalid. Possible options: 'ua' or 'en'."
+    message: `The language name is invalid. Possible options: ${LANG_ENUM.join(', ')}.`
   }
 }
 

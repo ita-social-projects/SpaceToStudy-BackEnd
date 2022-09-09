@@ -17,8 +17,9 @@ const COOKIE_OPTIONS = {
 
 const signup = async (req, res) => {
   const { role, firstName, lastName, email, password } = req.body
+  const lang = req.lang
 
-  const userData = await authService.signup(role, firstName, lastName, email, password)
+  const userData = await authService.signup(role, firstName, lastName, email, password, lang)
 
   res.status(201).json(userData)
 }
@@ -65,8 +66,9 @@ const refreshAccessToken = async (req, res) => {
 
 const sendResetPasswordEmail = async (req, res) => {
   const { email } = req.body
+  const lang = req.lang
 
-  await authService.sendResetPasswordEmail(email)
+  await authService.sendResetPasswordEmail(email, lang)
 
   res.status(204).end()
 }

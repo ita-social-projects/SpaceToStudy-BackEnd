@@ -18,13 +18,13 @@ const {
 } = require('~/consts/auth')
 
 const authService = {
-  signup: async (role, firstName, lastName, email, password) => {
+  signup: async (role, firstName, lastName, email, password, language) => {
     const user = await userService.createUser(role, firstName, lastName, email, password)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
 
-    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, { confirmToken, email, firstName })
+    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
 
     return {
       userId: user._id,
@@ -96,7 +96,7 @@ const authService = {
     return tokens
   },
 
-  sendResetPasswordEmail: async (email) => {
+  sendResetPasswordEmail: async (email, language) => {
     const user = await userService.getUserByEmail(email)
 
     if (!user) {
@@ -108,7 +108,7 @@ const authService = {
     const resetToken = tokenService.generateResetToken({ id: _id })
     await tokenService.saveToken(_id, resetToken, RESET_TOKEN)
 
-    await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
+    await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, language, { resetToken, email, firstName })
   },
 
   updatePassword: async (resetToken, password) => {

@@ -11,8 +11,8 @@ paths:
     get:
       tags:
         - Users
-      summary: returns object with users list
-      description: Returns an Object with a users list.
+      summary: Find all users
+      description: Finds and returns an array with a list of users.
       produces:
         - application/json
       responses:
@@ -26,8 +26,8 @@ paths:
     get:
       tags:
         - Users
-      summary: returns a user by Id
-      description: Finds and returns a user object with specified Id.
+      summary: Find user by ID
+      description: Finds and returns a user with the specified ID.
       produces:
         - application/json
       parameters:
@@ -38,16 +38,36 @@ paths:
           type: string
       responses:
         200:
-          description: User information
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/definitions/user'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'User with the specified email or id was not found.'
     delete:
       tags:
         - Users
-      summary: finds and deletes a User by Id
-      description: Removes a User with specified Id from the db. Returns an object with message.
+      summary: Find and delete user by ID
+      description: Finds and deletes a user with the specified ID.
       produces:
         - application/json
       parameters:
@@ -58,4 +78,24 @@ paths:
           type: string
       responses:
         204:
-          description: Deletion was successful
+          description: User has been successfully deleted
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'User with the specified email or id was not found.'

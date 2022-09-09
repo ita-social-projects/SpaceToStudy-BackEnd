@@ -6,16 +6,16 @@ const getUsers = async (_req, res) => {
   res.status(200).json(users)
 }
 
-const getUser = async (req, res) => {
-  const userId = req.params.userId
+const getUserById = async (req, res) => {
+  const { userId } = req.params
 
-  const user = await userService.getUser(userId)
+  const user = await userService.getUserById(userId)
 
   res.status(200).json(user)
 }
 
 const deleteUser = async (req, res) => {
-  const userId = req.params.userId
+  const { userId } = req.params
 
   await userService.deleteUser(userId)
 
@@ -24,6 +24,6 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   getUsers,
-  getUser,
+  getUserById,
   deleteUser
 }

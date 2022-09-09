@@ -1,11 +1,11 @@
 const errors = {
-  USER_NOT_REGISTERED: {
-    code: 'USER_NOT_REGISTERED',
-    message: 'User is not registered.'
+  USER_NOT_FOUND: {
+    code: 'USER_NOT_FOUND',
+    message: 'User with the specified email or id was not found.'
   },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',
-    message: 'Wrong email or password.'
+    message: 'The password or email you entered is incorrect.'
   },
   BODY_IS_NOT_DEFINED: {
     code: 'BODY_IS_NOT_DEFINED',
@@ -34,7 +34,7 @@ const errors = {
   }),
   ALREADY_REGISTERED: {
     code: 'ALREADY_REGISTERED',
-    message: 'User already exists.'
+    message: 'User with the specified email already exists.'
   },
   EMAIL_ALREADY_CONFIRMED: {
     code: 'EMAIL_ALREADY_CONFIRMED',
@@ -87,8 +87,8 @@ const errors = {
     code: 'API_TOKEN_NOT_RETRIEVED',
     message: 'The access token has not been retrieved.'
   },
-  EMAIL_NOT_SEND: {
-    code: 'EMAIL_NOT_SEND',
+  EMAIL_NOT_SENT: {
+    code: 'EMAIL_NOT_SENT',
     message: 'Email has not been sent.'
   },
   EXAMPLE_NOT_FOUND: {

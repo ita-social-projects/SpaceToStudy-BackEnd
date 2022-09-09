@@ -1,17 +1,13 @@
-const User = require('~/models/user')
-const Role = require('~/models/role')
 const tokenService = require('~/services/token')
 const userService = require('~/services/user')
 const emailService = require('~/services/email')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 const {
-  ALREADY_REGISTERED,
   EMAIL_ALREADY_CONFIRMED,
   EMAIL_NOT_CONFIRMED,
   BAD_CONFIRM_TOKEN,
   INCORRECT_CREDENTIALS,
-  USER_NOT_REGISTERED,
   EMAIL_NOT_FOUND,
   BAD_RESET_TOKEN,
   BAD_REFRESH_TOKEN
@@ -23,22 +19,7 @@ const {
 
 const authService = {
   signup: async (role, firstName, lastName, email, password) => {
-    const candidate = await User.findOne({ email }).exec()
-
-    if (candidate) {
-      throw createError(409, ALREADY_REGISTERED)
-    }
-
-    const hashedPassword = await hashPassword(password)
-    const foundRole = await Role.findOne({ value: role }).exec()
-
-    const user = await User.create({
-      role: foundRole,
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword
-    })
+    const user = await userService.createUser(role, firstName, lastName, email, password)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
@@ -52,31 +33,26 @@ const authService = {
   },
 
   login: async (email, password) => {
-    const user = await User.findOne({ email }).populate('role').exec()
+    const user = await userService.getUserByEmail(email)
 
-    if (!user) {
-      throw createError(401, USER_NOT_REGISTERED)
-    }
-
-    const isPassEquals = await comparePasswords(password, user.password)
-
-    if (!isPassEquals) {
+    if (!user || !(await comparePasswords(password, user.password))) {
       throw createError(401, INCORRECT_CREDENTIALS)
     }
 
-    if (!user.isEmailConfirmed) {
+    const { _id, role, isFirstLogin, isEmailConfirmed } = user
+
+    if (!isEmailConfirmed) {
       throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
-    const tokens = tokenService.generateTokens({ id: user._id, role: user.role.value, isFirstLogin: user.isFirstLogin })
-    await tokenService.saveToken(user._id, tokens.refreshToken, REFRESH_TOKEN)
+    const tokens = tokenService.generateTokens({ id: _id, role, isFirstLogin })
+    await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
-    if (user.isFirstLogin) {
-      await User.updateOne({ _id: user._id }, { $set: { isFirstLogin: false } }).exec()
+    if (isFirstLogin) {
+      await userService.updateUser(_id, { isFirstLogin: false })
     }
 
-    user.lastLogin = new Date()
-    await user.save()
+    await userService.updateUser(_id, { lastLogin: new Date() })
 
     return tokens
   },
@@ -95,14 +71,13 @@ const authService = {
       throw createError(400, BAD_CONFIRM_TOKEN)
     }
 
-    const { id: userId } = tokenData
-    const user = await userService.getUser(userId)
+    const { _id, isEmailConfirmed } = await userService.getUserById(tokenData.id)
 
-    if (user.isEmailConfirmed) {
+    if (isEmailConfirmed) {
       throw createError(400, EMAIL_ALREADY_CONFIRMED)
     }
 
-    await User.updateOne({ _id: userId }, { $set: { isEmailConfirmed: true } }).exec()
+    await userService.updateUser(_id, { isEmailConfirmed: true })
   },
 
   refreshAccessToken: async (refreshToken) => {
@@ -113,24 +88,25 @@ const authService = {
       throw createError(400, BAD_REFRESH_TOKEN)
     }
 
-    const { id, role, isFirstLogin } = await userService.getUser(tokenData.id)
+    const { _id, role, isFirstLogin } = await userService.getUserById(tokenData.id)
 
-    const tokens = tokenService.generateTokens({ id, role, isFirstLogin })
-    await tokenService.saveToken(id, tokens.refreshToken, REFRESH_TOKEN)
+    const tokens = tokenService.generateTokens({ id: _id, role, isFirstLogin })
+    await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
     return tokens
   },
 
   sendResetPasswordEmail: async (email) => {
-    const user = await User.findOne({ email }).exec()
+    const user = await userService.getUserByEmail(email)
+
     if (!user) {
       throw createError(404, EMAIL_NOT_FOUND)
     }
 
-    const resetToken = tokenService.generateResetToken({ id: user._id })
-    await tokenService.saveToken(user._id, resetToken, RESET_TOKEN)
+    const { _id, firstName } = user
 
-    const { firstName } = user
+    const resetToken = tokenService.generateResetToken({ id: _id })
+    await tokenService.saveToken(_id, resetToken, RESET_TOKEN)
 
     await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, { resetToken, email, firstName })
   },
@@ -146,7 +122,7 @@ const authService = {
     const { id: userId } = tokenData
     const hashedPassword = await hashPassword(password)
 
-    await User.updateOne({ _id: userId }, { $set: { password: hashedPassword } }).exec()
+    await userService.updateUser(userId, { password: hashedPassword })
 
     await tokenService.removeResetToken(userId)
   }

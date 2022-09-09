@@ -27,6 +27,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/signupResponse'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'EMAIL_NOT_SENT'
+                message: 'Email has not been sent.'
         409:
           description: Conflict
           content:
@@ -36,7 +46,7 @@ paths:
               example:
                 status: 409
                 code: 'ALREADY_REGISTERED'
-                message: 'User already exists.'
+                message: 'User with specified email already exists.'
   /auth/login:
     post:
       tags:
@@ -65,7 +75,7 @@ paths:
               example:
                 accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM'
         401:
-          description: 'Unauthorized'
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -75,7 +85,7 @@ paths:
                   value:
                     status: 401
                     code: 'INCORRECT_CREDENTIALS'
-                    message: 'Wrong email or password.'
+                    message: 'The password or email you entered is incorrect.'
                 email-not-confirmed:
                   value:
                     status: 401
@@ -101,6 +111,16 @@ paths:
       responses:
         204:
           description: Email successfully sent
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'EMAIL_NOT_SENT'
+                message: 'Email has not been sent.'
         404:
           description: The email was not found
           content:

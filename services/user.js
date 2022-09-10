@@ -38,6 +38,8 @@ const userService = {
       return null
     }
 
+    user.role = user.role.value
+
     return user
   },
 

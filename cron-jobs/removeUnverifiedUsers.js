@@ -15,7 +15,7 @@ const removeUsersWithUnconfirmedEmail = async () => {
     return
   }
 
-  const unconfirmedUsersData = usersWithConfirmToken?.filter(({ user }) => user && !user.isEmailConfirmed)
+  const unconfirmedUsersData = usersWithConfirmToken.filter(({ user }) => user && !user.isEmailConfirmed)
 
   await  Promise.all(
     unconfirmedUsersData?.map(async ({ confirmToken }) => {
@@ -37,4 +37,4 @@ const removeUsersWithUnconfirmedEmail = async () => {
   )
 }
 
-module.exports = removeUnverifiedUsers
+module.exports = {removeUsersWithUnconfirmedEmail, removeUnverifiedUsers}

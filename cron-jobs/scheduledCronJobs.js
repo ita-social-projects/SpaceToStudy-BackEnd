@@ -1,5 +1,5 @@
 const checkUsersForLastLogin = require('./checkForLastLogin')
-const removeUnverifiedUsers = require('./removeUnverifiedUsers')
+const {removeUnverifiedUsers} = require('./removeUnverifiedUsers')
 
 const scheduledCronJobs = () => {
   checkUsersForLastLogin.start()

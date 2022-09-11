@@ -2,7 +2,7 @@ const idValidation = require('~/middlewares/idValidation')
 const { createError } = require('~/utils/errorsHelper')
 const { INVALID_ID } = require('~/consts/errors')
 
-describe('Validation middleware', () => {
+describe('idValidation middleware', () => {
   const mockResponse = {}
   const mockRequest = {}
   const mockNextFunc = jest.fn()

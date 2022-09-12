@@ -1,55 +1,44 @@
 definitions:
+  signup:
+    type: object
+    properties:
+      role:
+        type: string
+        enum: [student, tutor]
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      password:
+        type: string
   login:
     type: object
     properties:
       email:
         type: string
-        example: johndoe@gmail.com
       password:
         type: string
-        example: qwer1234
-  signup:
-    type: object
-    properties:
-      role:
-        type: string #enum?
-        example: student
-      firstName:
-        type: string
-        example: John
-      lastName:
-        type: string
-        example: Doe
-      email:
-        type: string
-        example: johndoe@gmail.com
-      password:
-        type: string
-        example: qwer1234
   signupResponse:
     type: object
     properties:
       userId:
         type: string
-        example: 6255bc080a75adf9223df100
       userEmail:
         type: string
-        example: johndoe@gmail.com
-  resetToken:
-    type: object
-    properties:
-      resetToken:
-        type: string
-        example: 348dasas9209a0d9asd09asd09asd09
   accessToken:
     type: object
     properties:
       accessToken:
         type: string
-        example: eyJhbGciOiJIUz.eyJpZUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5MjgWomanzMjQ4M30.gn_hJqB9zVi5Ud8NXeDM
+  forgotPassword:
+    type: object
+    properties:
+      email:
+        type: string
   resetPassword:
     type: object
     properties:
       password:
         type: string
-        example: smth12345

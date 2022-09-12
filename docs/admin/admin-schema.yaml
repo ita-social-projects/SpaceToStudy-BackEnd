@@ -4,33 +4,24 @@ definitions:
     items:
       type: object
       properties:
-        id:
+        _id:
           type: string
-          example: 6255bc080a75adf9223df100
         firstName:
           type: string
-          example: John
         lastName:
           type: string
-          example: Doe
         email:
           type: string
-          example: johndoe@gmail.com
   admin:
     type: object
     properties:
-      id:
+      _id:
         type: string
-        example: 6255bc080a75adf9223df100
       firstName:
         type: string
-        example: John
       lastName:
         type: string
-        example: Doe
       email:
         type: string
-        example: johndoe@gmail.com
       isEmailConfirmed:
-        type: string
-        example: true
+        type: boolean

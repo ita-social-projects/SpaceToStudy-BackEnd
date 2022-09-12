@@ -1,25 +1,25 @@
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-security:
-  - bearerAuth: []
 paths:
   /auth/signup:
     post:
       tags:
         - Auth
-      summary:
-      description: Stores new user in the database. Returns user information.
+      summary: User registration
+      description: Creates a new user, sends an email to the user and returns user ID and email.
       produces:
         - application/json
       requestBody:
+        required: true
+        description: Provide required data to create a user account.
         content:
           application/json:
             schema:
               $ref: '#/definitions/signup'
+            example:
+              role: student
+              firstName: John
+              lastName: Doe
+              email: johndoe@gmail.com
+              password: qwer1234
       responses:
         201:
           description: Created
@@ -27,6 +27,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/signupResponse'
+              example:
+                userId: 6255bc080a75adf9223df100
+                userEmail: johndoe@gmail.com
         400:
           description: Bad Request
           content:
@@ -51,15 +54,20 @@ paths:
     post:
       tags:
         - Auth
-      summary: returns the user object
-      description: Creates JWT token and returns the user object in case that user provides the correct email and password.
+      summary: User authentication
+      description: Authenticates a user, returns an access token and sets cookie with a refresh token.
       produces:
         - application/json
       requestBody:
+        required: true
+        description: Provide required data to log in.
         content:
           application/json:
             schema:
               $ref: '#/definitions/login'
+            example:
+              email: johndoe@gmail.com
+              password: qwer1234
       responses:
         200:
           description: OK
@@ -73,7 +81,7 @@ paths:
               schema:
                 $ref: '#/definitions/accessToken'
               example:
-                accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM'
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM
         401:
           description: Unauthorized
           content:
@@ -91,26 +99,43 @@ paths:
                     status: 401
                     code: 'EMAIL_NOT_CONFIRMED'
                     message: 'Please confirm your email to login.'
+  /auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: Logs the current user out
+      description: Logs the current user out, deletes a refresh token from the DB and clears cookie.
+      produces:
+        - application/json
+      parameters:
+        - name: Cookie
+          in: header
+          required: true
+          description: Refresh Token
+          type: string
+      responses:
+        204:
+          description: No Content
   /auth/forgot-password:
     post:
       tags:
         - Auth
-      summary: sends an email with a reset link
-      description: Saves a generated reset token and sends an email with a reset link
+      summary: Sends an email with a reset link
+      description: Saves a generated reset token to the DB and sends an email to a user with a reset link.
       produces:
         - application/json
       requestBody:
+        required: true
+        description: Provide required data to reset a password.
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: test@gmail.com
+              $ref: '#/definitions/forgotPassword'
+            example:
+              email: johndoe@gmail.com
       responses:
         204:
-          description: Email successfully sent
+          description: No Content
         400:
           description: Bad Request
           content:
@@ -122,7 +147,7 @@ paths:
                 code: 'EMAIL_NOT_SENT'
                 message: 'Email has not been sent.'
         404:
-          description: The email was not found
+          description: Not Found
           content:
             application/json:
               schema:
@@ -135,8 +160,8 @@ paths:
     patch:
       tags:
         - Auth
-      summary: updates a password to a new one
-      description: Checks the reset token for validity, and updates the password
+      summary: Updates a password to a new one
+      description: Receives a reset token, validates it and updates user password.
       produces:
         - application/json
       parameters:
@@ -146,15 +171,19 @@ paths:
           description: Reset Token
           type: string
       requestBody:
+        required: true
+        description: Provide required data to update a password.
         content:
           application/json:
             schema:
               $ref: '#/definitions/resetPassword'
+            example:
+              password: smth12345
       responses:
         204:
-          description: Successful completion of an update
+          description: No Content
         400:
-          description: Reset token is invalid or expired
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -167,8 +196,8 @@ paths:
     get:
       tags:
         - Auth
-      summary: confirms user email
-      description: Receives a confirmation token, validates it and confirms user email
+      summary: Confirms user email
+      description: Receives a confirmation token, validates it and confirms user email.
       produces:
         - application/json
       parameters:
@@ -179,7 +208,7 @@ paths:
           type: string
       responses:
         204:
-          description: User email has been successfully confirmed
+          description: No Content
         400:
           description: Bad Request
           content:
@@ -201,8 +230,8 @@ paths:
     get:
       tags:
         - Auth
-      summary: refresh access token
-      description: Takes refresh token from cookies and retrieve access token
+      summary: Refresh access token
+      description: Takes refresh token from cookies and retrieve a new access token.
       produces:
         - application/json
       parameters:
@@ -213,7 +242,7 @@ paths:
           type: string
       responses:
         200:
-          description: Access token has been successfully refreshed
+          description: OK
           headers:
             Set-Cookie:
               schema:
@@ -224,7 +253,7 @@ paths:
               schema:
                 $ref: '#/definitions/accessToken'
               example:
-                accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM'
+                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM
         400:
           description: Bad Request
           content:

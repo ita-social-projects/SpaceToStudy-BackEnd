@@ -1,14 +1,8 @@
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-security:
-  - bearerAuth: []
 paths:
   /users:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Users
       summary: Find all users
@@ -22,8 +16,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/users'
+              example:
+                - _id: 6255bc080a75adf9223df100
+                  role: student
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@gmail.com
+                  lastLogin: null
+                - _id: 8755bc080a00adr9243df104
+                  role: mentor
+                  firstName: Joe
+                  lastName: Doe
+                  email: joedoe@outlook.com
+                  lastLogin: 2022-09-02T11:59:53.243+00:00
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
   /users/{userId}:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - Users
       summary: Find user by ID
@@ -34,7 +53,7 @@ paths:
         - name: userId
           in: path
           required: true
-          description: User Id
+          description: ID of the user that needs to be fetched
           type: string
       responses:
         200:
@@ -43,6 +62,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/user'
+              example:
+                _id: 6255bc080a75adf9223df100
+                role: student
+                firstName: John
+                lastName: Doe
+                email: johndoe@gmail.com
+                isEmailConfirmed: true
+                isFirstLogin: true
         400:
           description: Bad Request
           content:
@@ -53,6 +80,16 @@ paths:
                 status: 400
                 code: 'INVALID_ID'
                 message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
         404:
           description: Not Found
           content:
@@ -64,6 +101,8 @@ paths:
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email or id was not found.'
     delete:
+      security:
+        - bearerAuth: []
       tags:
         - Users
       summary: Find and delete user by ID
@@ -74,11 +113,11 @@ paths:
         - name: userId
           in: path
           required: true
-          description: User Id
+          description: ID of the user that needs to be deleted
           type: string
       responses:
         204:
-          description: User has been successfully deleted
+          description: No Content
         400:
           description: Bad Request
           content:
@@ -89,6 +128,16 @@ paths:
                 status: 400
                 code: 'INVALID_ID'
                 message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
         404:
           description: Not Found
           content:

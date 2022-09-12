@@ -191,7 +191,8 @@ describe('Auth controller', () => {
   describe('UpdatePassword endpoint', () => {
     let resetToken
     beforeAll(() => {
-      resetToken = tokenService.generateResetToken({ id: user._id })
+      const { _id: id, firstName, email } = user
+      resetToken = tokenService.generateResetToken({ id, firstName, email })
       Token.findOne = jest.fn().mockResolvedValue({ resetToken })
     })
     afterAll(() => jest.resetAllMocks())

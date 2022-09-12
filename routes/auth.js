@@ -30,6 +30,7 @@ router.post(
 router.patch(
   '/reset-password/:token',
   validationMiddleware(resetPasswordValidationSchema),
+  langMiddleware,
   asyncWrapper(authController.updatePassword)
 )
 

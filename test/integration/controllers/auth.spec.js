@@ -152,8 +152,7 @@ describe('Auth controller', () => {
     it('should logout user', async () => {
       const response = await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
 
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({ deletedCount: 1 })
+      expect(response.statusCode).toBe(204)
     })
   })
 

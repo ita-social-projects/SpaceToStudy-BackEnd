@@ -58,9 +58,7 @@ const authService = {
   },
 
   logout: async (refreshToken) => {
-    const deleteInfo = await tokenService.removeRefreshToken(refreshToken)
-
-    return deleteInfo
+    await tokenService.removeRefreshToken(refreshToken)
   },
 
   confirmEmail: async (confirmToken) => {

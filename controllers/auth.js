@@ -10,7 +10,7 @@ const {
 const COOKIE_OPTIONS = {
   maxAge: oneDayInMs,
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === 'production',
   sameSite: 'none',
   domain: COOKIE_DOMAIN
 }
@@ -39,10 +39,10 @@ const login = async (req, res) => {
 const logout = async (req, res) => {
   const { refreshToken } = req.cookies
 
-  const logoutInfo = await authService.logout(refreshToken)
+  await authService.logout(refreshToken)
   res.clearCookie(REFRESH_TOKEN)
 
-  res.status(200).json(logoutInfo)
+  res.status(204).end()
 }
 
 const confirmEmail = async (req, res) => {

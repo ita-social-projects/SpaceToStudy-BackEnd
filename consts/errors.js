@@ -95,10 +95,6 @@ const errors = {
     code: 'EMAIL_NOT_SENT',
     message: 'Email has not been sent.'
   },
-  EXAMPLE_NOT_FOUND: {
-    code: 'EXAMPLE_NOT_FOUND',
-    message: 'Example not found.'
-  },
   INVALID_LANGUAGE: {
     code: 'INVALID_LANGUAGE',
     message: `The language name is invalid. Possible options: ${LANG_ENUM.join(', ')}.`

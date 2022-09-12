@@ -10,7 +10,7 @@ const {
 const COOKIE_OPTIONS = {
   maxAge: oneDayInMs,
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === 'production',
   sameSite: 'none',
   domain: COOKIE_DOMAIN
 }

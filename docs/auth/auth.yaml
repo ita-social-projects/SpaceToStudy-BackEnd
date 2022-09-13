@@ -75,13 +75,13 @@ paths:
             Set-Cookie:
               schema:
                 type: string
-                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.GUiOiJzdHVkZW50IiwiaXNatalXJzdExvZ2luIjpQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
+                example: refreshToken=eyJhbGciOiJIUzI1NiIsInRI.0IiwiaXNatalXJzdExvZ2A5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4O; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
           content:
             application/json:
               schema:
                 $ref: '#/definitions/accessToken'
               example:
-                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM
+                accessToken: eyJhbGciOiJIUzI1NiIsInkpXV.jNDA4NmU1MjFmMCIsInJvbGVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx
         401:
           description: Unauthorized
           content:
@@ -247,13 +247,13 @@ paths:
             Set-Cookie:
               schema:
                 type: string
-                example: refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.GUiOiJzdHVkZW50IiwiaXNatalXJzdExvZ2luIjpQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
+                example: refreshToken=eyJhbGciOiJIUzI1NiIpXV.0IiwiaXNatalXluIjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4O; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
           content:
             application/json:
               schema:
                 $ref: '#/definitions/accessToken'
               example:
-                accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyZmY2NzU2YjRmMDFjNDA4NmU1MjFmMCIsInJvbGUiOiJzdHVkZW50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM
+                accessToken: eyJhbGciOiJIUzI1NiIsInRIkpXV.jRmMDFjNDA4NmU1MjFmMCIiO50IiwiaXNataliaaXJzdExvZ2luIjp0cnSuperQiOjE2NjA5Mjg4ODMsImV4cCI6MWomanz.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4Od8NXeDM
         400:
           description: Bad Request
           content:

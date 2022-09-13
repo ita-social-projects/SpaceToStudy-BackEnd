@@ -1,6 +1,6 @@
-const { NOT_FOUND, INTERNAL_SERVER_ERROR } = require('~/consts/errors')
+const { INTERNAL_SERVER_ERROR } = require('~/consts/errors')
 const errorMiddleware = require('~/middlewares/error')
-const { createError } = require('~/utils/errorsHelper')
+const { createNotFoundError } = require('~/utils/errorsHelper')
 
 describe('Error middleware', () => {
   const jsonFunc = jest.fn()
@@ -13,7 +13,7 @@ describe('Error middleware', () => {
   const mockNextFunc = jest.fn()
 
   it('Should return the given error status & message', () => {
-    const errorToTest = createError(404, NOT_FOUND)
+    const errorToTest = createNotFoundError()
     const { status, code, message } = errorToTest
     errorMiddleware(errorToTest, mockRequest, mockResponse, mockNextFunc)
 

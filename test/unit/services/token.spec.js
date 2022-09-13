@@ -1,5 +1,4 @@
 require('~/initialization/envSetup')
-
 const Token = require('~/models/token')
 const tokenService = require('~/services/token')
 const {
@@ -12,9 +11,9 @@ describe('Token service', () => {
   const data = { id: 'testExample' }
   const tokenValue = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ8'
   const userId = '631f8e5e587794b884b75483'
+
   it('Should validate access token', () => {
     const { accessToken } = tokenService.generateTokens(data)
-
     const testData = tokenService.validateAccessToken(accessToken)
 
     expect(testData).toEqual(expect.objectContaining(data))

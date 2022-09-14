@@ -62,7 +62,7 @@ const errors = {
   },
   UNAUTHORIZED: {
     code: 'UNAUTHORIZED',
-    message: 'User is not authorized.'
+    message: 'The requested URL requires user authorization.'
   },
   INTERNAL_SERVER_ERROR: {
     code: 'INTERNAL_SERVER_ERROR'

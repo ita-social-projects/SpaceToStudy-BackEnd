@@ -16,40 +16,21 @@ definitions:
           type: string
         lastLogin:
           type: string
-    example:
-      - _id: 6255bc080a75adf9223df100
-        role: student
-        firstName: John
-        lastName: Doe
-        email: johndoe@gmail.com
-        lastLogin: 2022-07-22T10:23:33.243+00:00
-      - _id: 8755bc080a00adr9243df104
-        role: mentor
-        firstName: Joe
-        lastName: Doe
-        email: joedoe@outlook.com
-        lastLogin: 2022-09-02T11:59:53.243+00:00
+          format: date-time
   user:
     type: object
     properties:
       _id:
         type: string
-        example: 6255bc080a75adf9223df100
       role:
         type: string
-        example: student
       firstName:
         type: string
-        example: John
       lastName:
         type: string
-        example: Doe
       email:
         type: string
-        example: johndoe@gmail.com
       isEmailConfirmed:
         type: boolean
-        example: true
       isFirstLogin:
         type: boolean
-        example: true

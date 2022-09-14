@@ -10,7 +10,17 @@ const swagger = {
       {
         url: 'http://localhost:8080'
       }
-    ]
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          description: 'Enter JWT Bearer Token',
+          bearerFormat: 'JWT'
+        }
+      }
+    }
   },
   apis: ['./docs/**/*.yaml']
 }

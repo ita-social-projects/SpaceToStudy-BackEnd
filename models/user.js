@@ -1,4 +1,7 @@
 const { Schema, model } = require('mongoose')
+const {
+  enums: { LANG_ENUM }
+} = require('~/consts/validation')
 
 const userSchema = new Schema({
   role: {
@@ -35,6 +38,11 @@ const userSchema = new Schema({
   lastLogin: {
     type: Date,
     default: null
+  },
+  language: {
+    type: String,
+    enum: LANG_ENUM,
+    default: LANG_ENUM[0]
   }
 })
 

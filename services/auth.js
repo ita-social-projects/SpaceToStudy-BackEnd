@@ -19,7 +19,7 @@ const {
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
-    const user = await userService.createUser(role, firstName, lastName, email, password)
+    const user = await userService.createUser(role, firstName, lastName, email, password, language)
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)

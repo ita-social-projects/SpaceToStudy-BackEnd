@@ -9,13 +9,14 @@ const userService = {
   getUsers: async () => {
     const users = await User.find().populate('role').lean().exec()
 
-    return users.map(({ _id, role, firstName, lastName, email, lastLogin }) => ({
+    return users.map(({ _id, role, firstName, lastName, email, lastLogin, language }) => ({
       _id,
       role: role.value,
       firstName,
       lastName,
       email,
-      lastLogin
+      lastLogin,
+      language
     }))
   },
 
@@ -43,7 +44,7 @@ const userService = {
     return user
   },
 
-  createUser: async (role, firstName, lastName, email, password) => {
+  createUser: async (role, firstName, lastName, email, password, language) => {
     const duplicateUser = await userService.getUserByEmail(email)
 
     if (duplicateUser) {
@@ -53,7 +54,14 @@ const userService = {
     const foundRole = await Role.findOne({ value: role }).exec()
     const hashedPassword = await hashPassword(password)
 
-    const newUser = await User.create({ role: foundRole, firstName, lastName, email, password: hashedPassword })
+    const newUser = await User.create({
+      role: foundRole,
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      language
+    })
 
     return newUser
   },

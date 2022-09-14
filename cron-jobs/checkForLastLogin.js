@@ -13,11 +13,11 @@ const checkLastLogin = async () => {
   const daysToDeleteUser = 180
 
   users.forEach(async (user) => {
-    const { email, firstName, lastLogin, _id } = user
+    const { email, firstName, lastLogin, language, _id } = user
     if (lastLogin) {
       const differenceInDays = Math.floor((dateNow.getTime() - lastLogin.getTime()) / oneDayInMs)
       if (differenceInDays === daysToSendEmail) {
-        await emailService.sendEmail(email, emailSubject.LONG_TIME_WITHOUT_LOGIN, { email, firstName })
+        await emailService.sendEmail(email, emailSubject.LONG_TIME_WITHOUT_LOGIN, language, { email, firstName })
       }
       if (differenceInDays >= daysToDeleteUser) {
         await userService.deleteUser(_id)

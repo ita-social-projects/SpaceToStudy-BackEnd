@@ -14,6 +14,9 @@ jobs:
       - name: 'Checkout the Repo'
         uses: actions/checkout@v3
 
+      # - name: Run DB
+      #  run: docker-compose -f docker-compose.yaml up -d
+
       - name: 'Start MongoDB'
         uses: supercharge/mongodb-github-action@1.8.0
         with:

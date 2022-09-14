@@ -12,7 +12,7 @@ const regex = {
 }
 
 const enums = {
-  ROLE_ENUM: ['student', 'mentor'],
+  ROLE_ENUM: ['student', 'tutor'],
   LANG_ENUM: ['en', 'ua']
 }
 

@@ -24,7 +24,7 @@ paths:
                   email: johndoe@gmail.com
                   lastLogin: null
                 - _id: 8755bc080a00adr9243df104
-                  role: mentor
+                  role: tutor
                   firstName: Joe
                   lastName: Doe
                   email: joedoe@outlook.com

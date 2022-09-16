@@ -22,27 +22,32 @@ describe('User controller', () => {
     it('should GET all users', async () => {
       const response = await app.get(endpointUrl)
 
-      testUser = response.body[0]
-
-      const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin } = testUser
-
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
       expect(response.body[0]).toEqual(
-        expect.objectContaining({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin })
+        expect.objectContaining({
+          _id: expect.any(String),
+          role: expect.any(String),
+          firstName: expect.any(String),
+          lastName: expect.any(String),
+          email: expect.any(String),
+          isEmailConfirmed: expect.any(Boolean),
+          isFirstLogin: expect.any(Boolean)
+        })
       )
+      testUser = response.body[0]
     })
   })
 
   describe(`GET ${endpointUrl}:userId`, () => {
     it('should GET user by ID', async () => {
-      const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin } = testUser
+      const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin } = testUser
 
       const response = await app.get(endpointUrl + _id)
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(
-        expect.objectContaining({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin })
+        expect.objectContaining({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin })
       )
     })
 

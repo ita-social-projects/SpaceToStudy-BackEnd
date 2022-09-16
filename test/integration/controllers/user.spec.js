@@ -22,34 +22,31 @@ describe('User controller', () => {
     it('should GET all users', async () => {
       const response = await app.get(endpointUrl)
 
+      testUser = response.body[0]
+
+      const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin } = testUser
+
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]._id).toBeDefined()
-      expect(response.body[0].firstName).toBeDefined()
-      expect(response.body[0].lastName).toBeDefined()
-      expect(response.body[0].email).toBeDefined()
-      expect(response.body[0].isEmailConfirmed).toBeDefined()
-      expect(response.body[0].isFirstLogin).toBeDefined()
-      expect(response.body[0].lastLogin).toBeDefined()
-      testUser = response.body[0]
+      expect(response.body[0]).toEqual(
+        expect.objectContaining({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin })
+      )
     })
   })
 
   describe(`GET ${endpointUrl}:userId`, () => {
     it('should GET user by ID', async () => {
-      const response = await app.get(endpointUrl + testUser._id)
+      const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin } = testUser
+
+      const response = await app.get(endpointUrl + _id)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body.role).toBe(testUser.role)
-      expect(response.body.firstName).toBe(testUser.firstName)
-      expect(response.body.lastName).toBe(testUser.lastName)
-      expect(response.body.email).toBe(testUser.email)
-      expect(response.body.isEmailConfirmed).toBe(testUser.isEmailConfirmed)
-      expect(response.body.isFirstLogin).toBe(testUser.isFirstLogin)
-      expect(response.body.lastLogin).toBe(testUser.lastLogin)
+      expect(response.body).toEqual(
+        expect.objectContaining({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin })
+      )
     })
 
-    it('should throw 404, USER_NOT_FOUND', async () => {
+    it('should throw USER_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingUserId)
 
       expectError(404, USER_NOT_FOUND, response)
@@ -63,7 +60,7 @@ describe('User controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
-    it('should throw 404, USER_NOT_FOUND', async () => {
+    it('should throw USER_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingUserId)
 
       expectError(404, USER_NOT_FOUND, response)

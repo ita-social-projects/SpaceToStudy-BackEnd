@@ -6,7 +6,7 @@ jest.mock('~/cron-jobs/checkForLastLogin', () => ({ start: jest.fn() }))
 jest.mock('~/cron-jobs/removeUnverifiedUsers', () => ({ removeUnverifiedUsers: { start: jest.fn() } }))
 
 describe('scheduledCronJobs', () => {
-  it('should calls cron jobs', () => {
+  it('should call all the cron jobs', () => {
     scheduledCronJobs()
 
     expect(removeUnverifiedUsers.start).toHaveBeenCalled()

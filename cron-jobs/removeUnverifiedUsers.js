@@ -1,7 +1,7 @@
 const CronJob = require('cron').CronJob
 const tokenService = require('~/services/token')
 const userService = require('~/services/user')
-const tokenNames = require('~/consts/auth')
+const { tokenNames } = require('~/consts/auth')
 
 const EVERY_MIDNIGHT = '0 0 * * *'
 
@@ -20,18 +20,18 @@ const removeUsersWithUnconfirmedEmail = async () => {
     unconfirmedUsersData?.map(async ({ confirmToken }) => {
       const payload = await tokenService.validateConfirmToken(confirmToken)
 
-      if (payload?.userId) {
+      if (payload && payload.id) {
         return
       }
 
-      const confirmTokenData = await tokenService.findToken(confirmToken, tokenNames.CONFIRM_TOKEN)
+      const tokenData = await tokenService.findToken(confirmToken, tokenNames.CONFIRM_TOKEN)
 
-      if (!confirmTokenData) {
+      if (!tokenData) {
         return
       }
 
-      await userService.deleteUser(confirmTokenData.userId)
-      return tokenService.removeConfirmToken(confirmToken)
+      await userService.deleteUser(tokenData.user)
+      return tokenService.removeConfirmToken(tokenData.confirmToken)
     })
   )
 }

@@ -15,11 +15,6 @@ const mockedUsersList = [
 ]
 
 jest.mock('~/services/token', () => ({
-  findTokensWithUsersByParams: jest.fn(() => mockedUsersList),
-  validateConfirmToken: jest.fn(),
-  findToken: jest.fn(() => ({
-    userId
-  })),
   removeConfirmToken: jest.fn()
 }))
 
@@ -28,7 +23,15 @@ jest.mock('~/services/user', () => ({
 }))
 
 describe('removeUsersWithUnconfirmedEmail cron-job', () => {
-  it('should removes unconfirmed users successfully', async () => {
+  beforeEach(() => {
+    tokenService.findTokensWithUsersByParams = jest.fn(() => mockedUsersList)
+    tokenService.validateConfirmToken = jest.fn()
+    tokenService.findToken = jest.fn(() => ({
+      user: userId,
+      confirmToken
+    }))
+  })
+  it('should remove unconfirmed users successfully', async () => {
     await removeUsersWithUnconfirmedEmail()
 
     expect(userService.deleteUser).toHaveBeenCalledWith(userId)
@@ -36,7 +39,7 @@ describe('removeUsersWithUnconfirmedEmail cron-job', () => {
     expect(tokenService.removeConfirmToken).toHaveBeenCalledWith(confirmToken)
   })
 
-  it('should return if tge users with confirm token do not exist', async () => {
+  it('should return if the users with confirm token do not exist', async () => {
     tokenService.findTokensWithUsersByParams.mockImplementation(() => [])
     const res = await removeUsersWithUnconfirmedEmail()
 
@@ -45,9 +48,8 @@ describe('removeUsersWithUnconfirmedEmail cron-job', () => {
   })
 
   it('should return if the confirm token is valid', async () => {
-    tokenService.validateConfirmToken.mockImplementation(() => ({
-      userId: 'id'
-    }))
+    tokenService.validateConfirmToken.mockImplementation(() => ({ id: userId }))
+
     const res = await removeUsersWithUnconfirmedEmail()
 
     expect(tokenService.validateConfirmToken).toHaveBeenCalledTimes(1)
@@ -55,7 +57,7 @@ describe('removeUsersWithUnconfirmedEmail cron-job', () => {
   })
 
   it('should return if the confirm token data does not exist', async () => {
-    tokenService.findToken.mockImplementation(() => jest.fn())
+    tokenService.findToken.mockImplementation(() => null)
     const res = await removeUsersWithUnconfirmedEmail()
 
     expect(tokenService.findToken).toHaveBeenCalledTimes(1)

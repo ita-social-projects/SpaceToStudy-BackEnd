@@ -8,16 +8,15 @@ const EVERY_MIDNIGHT = '0 0 * * *'
 const removeUnverifiedUsers = new CronJob(EVERY_MIDNIGHT, () => removeUsersWithUnconfirmedEmail())
 
 const removeUsersWithUnconfirmedEmail = async () => {
-  
   const usersWithConfirmToken = await tokenService.findTokensWithUsersByParams({ confirmToken: { $ne: null } })
 
-  if(!usersWithConfirmToken?.length){
+  if (!usersWithConfirmToken?.length) {
     return
   }
 
   const unconfirmedUsersData = usersWithConfirmToken.filter(({ user }) => user && !user.isEmailConfirmed)
 
-  await  Promise.all(
+  await Promise.all(
     unconfirmedUsersData?.map(async ({ confirmToken }) => {
       const payload = await tokenService.validateConfirmToken(confirmToken)
 
@@ -25,9 +24,9 @@ const removeUsersWithUnconfirmedEmail = async () => {
         return
       }
 
-      const confirmTokenData = await tokenService.findToken(confirmToken,tokenNames.CONFIRM_TOKEN)
+      const confirmTokenData = await tokenService.findToken(confirmToken, tokenNames.CONFIRM_TOKEN)
 
-      if(!confirmTokenData){
+      if (!confirmTokenData) {
         return
       }
 
@@ -37,4 +36,4 @@ const removeUsersWithUnconfirmedEmail = async () => {
   )
 }
 
-module.exports = {removeUsersWithUnconfirmedEmail, removeUnverifiedUsers}
+module.exports = { removeUsersWithUnconfirmedEmail, removeUnverifiedUsers }

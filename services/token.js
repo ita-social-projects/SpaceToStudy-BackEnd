@@ -98,10 +98,7 @@ const tokenService = {
   },
 
   findTokensWithUsersByParams: async (params) => {
-    return  Token.find(params)
-    .populate('user')
-    .lean()
-    .exec()
+    return Token.find(params).populate('user').lean().exec()
   },
 
   removeRefreshToken: async (refreshToken) => {

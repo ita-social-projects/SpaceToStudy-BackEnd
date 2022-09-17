@@ -21,10 +21,10 @@ const checkLastLogin = async () => {
       }
 
       const differenceInDays = Math.floor((dateNow.getTime() - lastLogin.getTime()) / oneDayInMs)
-      if (differenceInDays === daysToSendEmail) {
+      if (differenceInDays === DAYS_TO_SEND_EMAILS) {
         await emailService.sendEmail(email, emailSubject.LONG_TIME_WITHOUT_LOGIN, language, { email, firstName })
       }
-      if (differenceInDays >= daysToDeleteUser) {
+      if (differenceInDays >= DAYS_TO_DELETE_USER) {
         await userService.deleteUser(_id)
       }
     })

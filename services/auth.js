@@ -103,13 +103,13 @@ const authService = {
 
     const { _id, firstName } = user
 
-    const resetToken = tokenService.generateResetToken({ id: _id })
+    const resetToken = tokenService.generateResetToken({ id: _id, firstName, email })
     await tokenService.saveToken(_id, resetToken, RESET_TOKEN)
 
     await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, language, { resetToken, email, firstName })
   },
 
-  updatePassword: async (resetToken, password) => {
+  updatePassword: async (resetToken, password, language) => {
     const tokenData = tokenService.validateResetToken(resetToken)
     const tokenFromDB = await tokenService.findToken(resetToken, RESET_TOKEN)
 
@@ -117,12 +117,16 @@ const authService = {
       throw createError(400, BAD_RESET_TOKEN)
     }
 
-    const { id: userId } = tokenData
+    const { id: userId, firstName, email } = tokenData
     const hashedPassword = await hashPassword(password)
 
     await userService.updateUser(userId, { password: hashedPassword })
 
     await tokenService.removeResetToken(userId)
+
+    await emailService.sendEmail(email, emailSubject.SUCCESSFUL_PASSWORD_RESET, language, {
+      firstName
+    })
   }
 }
 

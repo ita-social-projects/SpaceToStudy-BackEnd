@@ -5,7 +5,7 @@ const { expectError } = require('~/test/helpers')
 const endpointUrl = '/users/'
 
 let testUser
-const nonExistingUserId = '6301644cb3f6e97afe2706ae'
+const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
 
 describe('User controller', () => {
   let app, server
@@ -66,7 +66,7 @@ describe('User controller', () => {
     })
 
     it('should throw USER_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingUserId)
+      const response = await app.delete(endpointUrl + nonExistingUserId)
 
       expectError(404, USER_NOT_FOUND, response)
     })

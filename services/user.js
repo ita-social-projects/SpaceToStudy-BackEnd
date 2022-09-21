@@ -9,12 +9,14 @@ const userService = {
   getUsers: async () => {
     const users = await User.find().populate('role').lean().exec()
 
-    return users.map(({ _id, role, firstName, lastName, email, lastLogin, language }) => ({
+    return users.map(({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin, language }) => ({
       _id,
       role: role.value,
       firstName,
       lastName,
       email,
+      isEmailConfirmed,
+      isFirstLogin,
       lastLogin,
       language
     }))
@@ -27,9 +29,9 @@ const userService = {
       throw createError(404, USER_NOT_FOUND)
     }
 
-    const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin } = user
+    const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin } = user
 
-    return { _id, role: role.value, firstName, lastName, email, isEmailConfirmed, isFirstLogin }
+    return { _id, role: role.value, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin }
   },
 
   getUserByEmail: async (email) => {

@@ -97,6 +97,10 @@ const tokenService = {
     return tokenData
   },
 
+  findTokensWithUsersByParams: async (params) => {
+    return Token.find(params).populate('user').lean().exec()
+  },
+
   removeRefreshToken: async (refreshToken) => {
     const deleteInfo = await Token.deleteOne({ refreshToken })
 
@@ -105,6 +109,10 @@ const tokenService = {
 
   removeResetToken: async (userId) => {
     await Token.updateOne({ user: userId }, { $set: { resetToken: null } })
+  },
+
+  removeConfirmToken: async (confirmToken) => {
+    await Token.deleteOne({ confirmToken })
   }
 }
 

@@ -10,7 +10,7 @@ const removeUnverifiedUsers = new CronJob(EVERY_MIDNIGHT, () => removeUsersWithU
 const removeUsersWithUnconfirmedEmail = async () => {
   const usersWithConfirmToken = await tokenService.findTokensWithUsersByParams({ confirmToken: { $ne: null } })
 
-  if (!usersWithConfirmToken?.length) {
+  if (!usersWithConfirmToken.length) {
     return
   }
 

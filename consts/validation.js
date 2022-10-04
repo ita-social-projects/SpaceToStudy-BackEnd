@@ -13,7 +13,8 @@ const regex = {
 
 const enums = {
   ROLE_ENUM: ['student', 'tutor'],
-  LANG_ENUM: ['en', 'ua']
+  LANG_ENUM: ['en', 'ua'],
+  ADMIN_STATUS_ENUM: ['active', 'blocked', 'pending']
 }
 
 module.exports = {

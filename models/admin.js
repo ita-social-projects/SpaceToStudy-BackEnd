@@ -33,6 +33,11 @@ const adminSchema = new Schema({
     default: false,
     required: true
   },
+  blocked: {
+    type: Boolean,
+    default: false,
+    required: true
+  },
   dateOfInvitation: {
     type: Date,
     required: true

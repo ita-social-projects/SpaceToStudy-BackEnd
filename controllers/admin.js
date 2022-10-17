@@ -1,19 +1,29 @@
 const adminService = require('~/services/admin')
 
-const getAdmins = async (_req, res) => {
-  const admins = await adminService.getAdmins()
+const addAdmin = async (req, res) => {
 
-  res.status(200).json(admins)
 }
 
-const getAdmin = async (req, res) => {
-  const userId = req.params.userId
+const getAdmins = async (_req, res) => {
 
-  const admin = await adminService.getAdmin(userId)
-  res.status(200).json(admin)
+}
+
+const getAdminById = async (req, res) => {
+
+}
+
+const updateAdmin = async (req, res) => {
+
+}
+
+const deleteAdmin = async (req, res) => {
+
 }
 
 module.exports = {
-  getAdmin,
-  getAdmins
+  addAdmin,
+  getAdmins,
+  getAdminById,
+  updateAdmin,
+  deleteAdmin
 }

@@ -7,9 +7,9 @@ const router = express.Router()
 router.param('reviewId', idValidation)
 
 router.get('/')
-router.get('/:reviewId')
 router.post('/')
-router.put('/:reviewId')
+router.get('/:reviewId')
+router.patch('/:reviewId')
 router.delete('/:reviewId')
 
 module.exports = router

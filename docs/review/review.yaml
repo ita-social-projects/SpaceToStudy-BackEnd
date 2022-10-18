@@ -1,0 +1,250 @@
+paths:
+  /reviews:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Find all reviews
+      description: Finds and returns an array with a list of reviews.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/reviews'
+              example:
+                - _id: 6255bc080a75adf9223df100
+                  comment: Not bad
+                  rating: 4
+                  tutor: 6255bc080a75adf9223df211
+                  student: 6255bc080a75adf9223df212
+                - _id: 8755bc080a00adr9243df104
+                  comment: Best tutor!
+                  rating: 5
+                  tutor: 6255bc080a75adf9223df111
+                  student: 6255bc080a75adf9223df112
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Create new review.
+      description: Saves a new review the DB.
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        description: Create new review.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/review'
+            example:
+              comment: Best tutor!
+              rating: 5
+              tutor: 6255bc080a75adf9223df111
+              student: 6255bc080a75adf9223df112
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'EMAIL_NOT_SENT'
+                message: 'Revieww has not been sent.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+  /reviews/{reviewId}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Find review by ID
+      description: Finds and returns a reviews with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          description: ID of the review that needs to be fetched
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/review'
+              example:
+                _id: 8755bc080a00adr9243df104
+                comment: Best tutor!
+                rating: 5
+                tutor: 6255bc080a75adf9223df111
+                student: 6255bc080a75adf9223df112
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'Review with the specified id was not found.'
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Update review by ID
+      description: Finds and update a review with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          description: Review ID
+          type: string
+      requestBody:
+        required: true
+        description: Provide required data to reset a password.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/review'
+            example:
+              comment: Best tutor!
+              rating: 5
+              tutor: 6255bc080a75adf9223df111
+              student: 6255bc080a75adf9223df112
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'Review with the specified id was not found.'
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Reviews
+      summary: Find and delete review by ID
+      description: Finds and deletes a review with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          description: ID of the review that needs to be deleted
+          type: string
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'Review with the specified id was not found.'

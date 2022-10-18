@@ -1,0 +1,29 @@
+definitions:
+  reviews:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        comment:
+          type: string
+        rating:
+          type: number
+        tutor:
+          type: string
+        student:
+          type: string
+  review:
+    type: object
+    properties:
+      _id:
+        type: string
+      comment:
+        type: string
+      rating:
+        type: number
+      tutor:
+        type: string
+      student:
+        type: string

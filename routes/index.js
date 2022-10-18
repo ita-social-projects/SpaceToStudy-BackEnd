@@ -12,6 +12,6 @@ router.use('/auth', auth)
 router.use('/users', user)
 router.use('/admins', admin)
 router.use('/send-email', email)
-router.use('/review', review)
+router.use('/reviews', review)
 
 module.exports = router

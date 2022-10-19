@@ -17,11 +17,14 @@ definitions:
         blocked:
           type: boolean
         dateOfInvitation:
-          type: date
+          type: string
+          format: date-time
         dateOfActivation:
-          type: date
+          type: string
+          format: date-time
         lastLogin:
-          type: date
+          type: string
+          format: date-time
   admin:
     type: object
     properties:
@@ -38,9 +41,12 @@ definitions:
       blocked:
         type: boolean
       dateOfInvitation:
-        type: date
+        type: string
+        format: date-time
       dateOfActivation:
-        type: date
+        type: string
+        format: date-time
       lastLogin:
-        type: date
+        type: string
+        format: date-time
       

@@ -36,9 +36,9 @@ paths:
                   email: johndoe@gmail.com
                   active: true
                   blocked: false
-                  dateOfInvitation: 01-01-2022
-                  dateOfActivation: 01-01-2022
-                  lastLogin: 01-01-2022
+                  dateOfInvitation: 2022-09-02T11:59:53.243+00:00
+                  dateOfActivation: 2022-09-02T11:59:53.243+00:00
+                  lastLogin: 2022-09-02T11:59:53.243+00:00
         400:
           description: Bad Request
           content:
@@ -83,18 +83,18 @@ paths:
                   email: johndoe@gmail.com
                   active: true
                   blocked: false
-                  dateOfInvitation: 04-03-2022
-                  dateOfActivation: 02-04-2022
-                  lastLogin: 01-01-2022
+                  dateOfInvitation: 2022-09-02T11:59:53.243+00:00
+                  dateOfActivation: 2022-09-02T11:59:53.243+00:00
+                  lastLogin: 2022-09-02T11:59:53.243+00:00
                 - _id: 8755bc080a00adr9243df104
                   firstName: Joe
                   lastName: Doe
                   email: joedoe@outlook.com
                   active: true
                   blocked: true
-                  dateOfInvitation: 14-01-2022
-                  dateOfActivation: 21-01-2022
-                  lastLogin: 20-01-2022
+                  dateOfInvitation: 2022-09-02T11:59:53.243+00:00
+                  dateOfActivation: 2022-09-02T11:59:53.243+00:00
+                  lastLogin: 2022-09-02T11:59:53.243+00:00
         401:
           description: Unauthorized
           content:
@@ -135,9 +135,9 @@ paths:
                 email: johndoe@gmail.com
                 active: true
                 blocked: false
-                dateOfInvitation: 01-01-2022
-                dateOfActivation: 01-01-2022
-                lastLogin: 01-01-2022
+                dateOfInvitation: 2022-09-02T11:59:53.243+00:00
+                dateOfActivation: 2022-09-02T11:59:53.243+00:00
+                lastLogin: 2022-09-02T11:59:53.243+00:00
         400:
           description: Bad Request
           content:
@@ -204,9 +204,9 @@ paths:
                   email: johndoe@gmail.com
                   active: true
                   blocked: false
-                  dateOfInvitation: 01-01-2022
-                  dateOfActivation: 01-01-2022
-                  lastLogin: 01-01-2022
+                  dateOfInvitation: 2022-09-02T11:59:53.243+00:00
+                  dateOfActivation: 2022-09-02T11:59:53.243+00:00
+                  lastLogin: 2022-09-02T11:59:53.243+00:00
         400:
           description: Bad Request
           content:

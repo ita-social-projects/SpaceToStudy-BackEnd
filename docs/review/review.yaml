@@ -22,11 +22,15 @@ paths:
                   rating: 4
                   tutor: 6255bc080a75adf9223df211
                   student: 6255bc080a75adf9223df212
+                  createdAt: 2022-09-02T11:59:53.243+00:00
+                  updatedAt: 2022-10-02T11:59:53.243+00:00
                 - _id: 8755bc080a00adr9243df104
                   comment: Best tutor!
                   rating: 5
                   tutor: 6255bc080a75adf9223df111
                   student: 6255bc080a75adf9223df112
+                  createdAt: 2022-09-02T11:59:53.243+00:00
+                  updatedAt: 2022-10-02T11:59:53.243+00:00
         401:
           description: Unauthorized
           content:
@@ -110,6 +114,8 @@ paths:
                 rating: 5
                 tutor: 6255bc080a75adf9223df111
                 student: 6255bc080a75adf9223df112
+                createdAt: 2022-09-02T11:59:53.243+00:00
+                updatedAt: 2022-10-02T11:59:53.243+00:00
         400:
           description: Bad Request
           content:

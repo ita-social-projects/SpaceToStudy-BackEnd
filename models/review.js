@@ -9,7 +9,9 @@ const reviewSchema = new Schema(
     },
     rating: {
       type: Number,
-      required: true
+      required: true,
+      min: 1,
+      max: 5
     },
     tutor: {
       type: Schema.Types.ObjectId,

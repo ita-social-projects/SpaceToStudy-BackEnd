@@ -52,6 +52,10 @@ const errors = {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'
   },
+  FORBIDDEN: {
+    code: 'FORBIDDEN',
+    message: 'You do not have permission to perform this action.'
+  },
   BAD_CONFIRM_TOKEN: {
     code: 'BAD_CONFIRM_TOKEN',
     message: 'The confirm token is either invalid or has expired.'
@@ -98,6 +102,14 @@ const errors = {
   INVALID_LANGUAGE: {
     code: 'INVALID_LANGUAGE',
     message: `The language name is invalid. Possible options: ${LANG_ENUM.join(', ')}.`
+  },
+  REVIEW_NOT_FOUND: {
+    code: 'REVIEW_NOT_FOUND',
+    message: 'Review with the specified id was not found.'
+  },
+  REVIEW_NOT_CREATED: {
+    code: 'REVIEW_NOT_CREATED',
+    message: 'You are allowed to leave only one review for a tutor.'
   }
 }
 

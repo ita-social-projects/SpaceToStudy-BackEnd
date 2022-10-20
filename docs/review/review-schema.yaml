@@ -29,7 +29,7 @@ definitions:
         type: string
       rating:
         type: number
-      //TODO: tutor and student shoul be refs
+      #TODO: tutor and student shoul be refs
       tutor:
         type: string
       student:

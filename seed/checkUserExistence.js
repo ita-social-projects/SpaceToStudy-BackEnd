@@ -5,11 +5,13 @@ const {
 } = require('~/consts/auth')
 const SeedSuperAdmin = require('~/seed/seedSuperAdmin')
 const checkRoleExistence = require('~/seed/checkRoleExistence')
+const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const logger = require('~/logger/logger')
 
 const checkUserExistence = async () => {
   try {
     await checkRoleExistence()
+    await checkCategoryExistence()
 
     const foundRole = await Role.findOne({ value: SUPERADMIN }).exec()
     const isUserExist = await User.exists({ role: foundRole })

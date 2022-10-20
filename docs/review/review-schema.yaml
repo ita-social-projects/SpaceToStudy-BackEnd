@@ -20,7 +20,7 @@ definitions:
         updatedAt:
           type: string
           format: date-time
-  review:
+  reviewResponse:
     type: object
     properties:
       _id:
@@ -40,3 +40,10 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  review:
+    type: object
+    properties:
+      comment:
+        type: string
+      rating:
+        type: number

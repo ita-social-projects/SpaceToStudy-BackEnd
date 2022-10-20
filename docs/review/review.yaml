@@ -15,7 +15,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/reviews'
+                $ref: '#/definitions/reviewResponse'
               example:
                 - _id: 6255bc080a75adf9223df100
                   comment: Not bad
@@ -60,17 +60,13 @@ paths:
             example:
               comment: Best tutor!
               rating: 5
-              tutor: 6255bc080a75adf9223df111
-              student: 6255bc080a75adf9223df112
-              createdAt: 2022-10-18T13:25:36.292Z
-              updatedAt: 2022-10-18T13:25:36.292Z
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/definitions/review'
+                $ref: '#/definitions/reviewResponse'
               example:
                 comment: Best tutor!
                 rating: 5
@@ -87,7 +83,7 @@ paths:
               example:
                 status: 400
                 code: REVIEW_NOT_CREATED
-                message: Review has not been posted.
+                message: You are allowed to leave only one review for a tutor.
         401:
           description: Unauthorized
           content:
@@ -130,7 +126,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/review'
+                $ref: '#/definitions/reviewResponse'
               example:
                 _id: 8755bc080a00adr9243df104
                 comment: Best tutor!
@@ -194,8 +190,6 @@ paths:
             example:
               comment: Best tutor!
               rating: 5
-              tutor: 6255bc080a75adf9223df111
-              student: 6255bc080a75adf9223df112
       responses:
         204:
           description: No Content

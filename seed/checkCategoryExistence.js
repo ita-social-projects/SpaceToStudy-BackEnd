@@ -1,6 +1,6 @@
 const Category = require('~/models/category')
 const categories = require('~/consts/categories')
-const SeedCategory = require('./seedCategory')
+const SeedCategory = require('~/seed/seedCategory')
 const logger = require('~/logger/logger')
 
 const checkCategoryExistence = async () => {

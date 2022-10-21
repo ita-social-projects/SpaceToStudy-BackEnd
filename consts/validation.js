@@ -13,6 +13,23 @@ const regex = {
 
 const enums = {
   ROLE_ENUM: ['student', 'tutor'],
+  CATEGORY_ENUM: [
+    'languages',
+    'mathematics',
+    'computer science',
+    'music',
+    'design',
+    'history',
+    'biology',
+    'painting',
+    'finances',
+    'marketing',
+    'audit',
+    'chemistry',
+    'astronomy',
+    'physics',
+    'psychology'
+  ],
   LANG_ENUM: ['en', 'ua'],
   ADMIN_STATUS_ENUM: ['active', 'blocked', 'pending']
 }

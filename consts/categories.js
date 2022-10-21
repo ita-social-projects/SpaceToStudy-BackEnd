@@ -1,7 +1,7 @@
 const categories = {
   LANGUAGES: 'languages',
   MATHEMATICS: 'mathematics',
-  COMPUTER_SCIENCE: 'computer_science',
+  COMPUTER_SCIENCE: 'computer science',
   MUSIC: 'music',
   DESIGN: 'design',
   HISTORY: 'history',

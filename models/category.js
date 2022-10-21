@@ -1,12 +1,10 @@
 const { Schema, model } = require('mongoose')
-const {
-  enums: { CATEGORY_ENUM }
-} = require('~/consts/validation')
+const categories = require('~/consts/categories')
 
 const categorySchema = new Schema({
   name: {
     type: String,
-    enum: CATEGORY_ENUM,
+    enum: Object.values(categories),
     unique: true,
     required: true
   }

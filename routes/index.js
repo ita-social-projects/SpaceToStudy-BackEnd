@@ -5,6 +5,7 @@ const auth = require('~/routes/auth')
 const user = require('~/routes/user')
 const email = require('~/routes/email')
 const review = require('~/routes/review')
+const tutor = require('~/routes/tutor')
 
 const router = express.Router()
 
@@ -13,5 +14,6 @@ router.use('/users', user)
 router.use('/admins', admin)
 router.use('/send-email', email)
 router.use('/reviews', review)
+router.use('/tutor', tutor)
 
 module.exports = router

@@ -4,17 +4,17 @@ const tokenService = require('~/services/token')
 const authMiddleware = (req, _res, next) => {
   const authorizationHeader = req.headers.authorization
   if (!authorizationHeader) {
-    return next(createUnauthorizedError())
+    throw createUnauthorizedError()
   }
 
   const accessToken = authorizationHeader.split(' ')[1]
   if (!accessToken) {
-    return next(createUnauthorizedError())
+    throw createUnauthorizedError()
   }
 
   const userData = tokenService.validateAccessToken(accessToken)
   if (!userData) {
-    return next(createUnauthorizedError())
+    throw createUnauthorizedError()
   }
 
   req.user = userData

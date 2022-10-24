@@ -12,7 +12,7 @@ const userService = {
     return users.map(
       ({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin, language }) => ({
         _id,
-        role,
+        role: role.value,
         firstName,
         lastName,
         email,

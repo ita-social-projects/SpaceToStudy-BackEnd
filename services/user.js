@@ -9,17 +9,19 @@ const userService = {
   getUsers: async () => {
     const users = await User.find().populate('role').lean().exec()
 
-    return users.map(({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin, language }) => ({
-      _id,
-      role: role.value,
-      firstName,
-      lastName,
-      email,
-      isEmailConfirmed,
-      isFirstLogin,
-      lastLogin,
-      language
-    }))
+    return users.map(
+      ({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin, language }) => ({
+        _id,
+        role,
+        firstName,
+        lastName,
+        email,
+        isEmailConfirmed,
+        isFirstLogin,
+        lastLogin,
+        language
+      })
+    )
   },
 
   getUserById: async (userId) => {

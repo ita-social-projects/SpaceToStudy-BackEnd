@@ -52,6 +52,10 @@ const errors = {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'
   },
+  FORBIDDEN: {
+    code: 'FORBIDDEN',
+    message: 'You do not have permission to perform this action.'
+  },
   BAD_CONFIRM_TOKEN: {
     code: 'BAD_CONFIRM_TOKEN',
     message: 'The confirm token is either invalid or has expired.'

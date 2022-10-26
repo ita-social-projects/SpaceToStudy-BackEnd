@@ -7,6 +7,7 @@ const errors = {
     code: 'USER_NOT_FOUND',
     message: 'User with the specified email or id was not found.'
   },
+<<<<<<< HEAD
   ADMIN_ALREADY_BLOCKED: {
     code: 'ADMIN_ALREADY_BLOCKED',
     message: 'Admin with the specified id is already blocked.'
@@ -14,6 +15,11 @@ const errors = {
   ADMIN_ALREADY_UNBLOCKED: {
     code: 'ADMIN_ALREADY_UNBLOCKED',
     message: 'Admin with the specified id is already unblocked.'
+=======
+  ADMIN_NOT_FOUND: {
+    code: 'ADMIN_NOT_FOUND',
+    message: 'Admin with the specified email or id was not found.'
+>>>>>>> a620641 (Implemented admin service)
   },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',

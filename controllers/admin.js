@@ -9,6 +9,7 @@ const inviteAdmins = async (req, res) => {
   res.status(201).json(admins)
 }
 
+<<<<<<< HEAD
 const getInvitations = async (req, res) => {
   const invitations = await adminService.getInvitations()
 
@@ -50,14 +51,26 @@ const getAdmins = async (req, res) => {
     sortBySignUpDate: parseInt(sortBySignUpDate)
   })
 
+=======
+const getAdmins = async (req, res) => {
+  const { skip, limit } = req.query
+  
+  const admins = await adminService.getAdmins({ skip, limit })
+
+>>>>>>> a620641 (Implemented admin service)
   res.status(200).json(admins)
 }
 
 const getAdminById = async (req, res) => {
+<<<<<<< HEAD
   const { id } = req.params
 
   const admin = await adminService.getAdminById(id)
 
+=======
+  const admin = await adminService.getAdminById(req.params.id)
+
+>>>>>>> a620641 (Implemented admin service)
   res.status(200).json(admin)
 }
 

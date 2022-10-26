@@ -139,7 +139,7 @@ const adminService = {
       .exec()
 
     if (!admin) {
-      throw createError(404, USER_NOT_FOUND)
+      throw createError(404, ADMIN_NOT_FOUND)
     }
 
     return admin

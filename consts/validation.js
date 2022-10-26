@@ -14,8 +14,7 @@ const regex = {
 const enums = {
   LANG_ENUM: ['en', 'ua'],
   LANG_LEVEL_ENUM: ['Beginner', 'Pre-Intermediate', 'Intermediate', 'Upper-Intermediate', 'Advanced', 'Native'],
-  ROLE_ENUM: ['student', 'tutor', 'admin'],
-  LANG_ENUM: ['en', 'ua']
+  ROLE_ENUM: ['student', 'tutor', 'admin']
 }
 
 module.exports = {

@@ -16,10 +16,7 @@ definitions:
           type: boolean
         blocked:
           type: boolean
-        dateOfInvitation:
-          type: string
-          format: date-time
-        dateOfActivation:
+        signUpDate:
           type: string
           format: date-time
         lastLogin:
@@ -40,10 +37,7 @@ definitions:
         type: boolean
       blocked:
         type: boolean
-      dateOfInvitation:
-        type: string
-        format: date-time
-      dateOfActivation:
+      signUpDate:
         type: string
         format: date-time
       lastLogin:

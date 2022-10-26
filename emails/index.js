@@ -40,6 +40,16 @@ const templateList = {
       subject: 'Ви занадто довго були неактивні',
       template: 'ua/long-time-without-login'
     }
+  },
+  [emailSubject.ADMIN_INVITATION]: {
+    en: {
+      subject: 'Admin invitation',
+      template: 'en/invite-admin'
+    },
+    ua: {
+      subject: 'Запрошення адміна',
+      template: 'ua/invite-admin'
+    }
   }
 }
 

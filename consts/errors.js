@@ -7,6 +7,10 @@ const errors = {
     code: 'USER_NOT_FOUND',
     message: 'User with the specified email or id was not found.'
   },
+  ADMIN_NOT_FOUND: {
+    code: 'ADMIN_NOT_FOUND',
+    message: 'Admin with the specified email or id was not found.'
+  },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',
     message: 'The password or email you entered is incorrect.'

@@ -1,0 +1,49 @@
+definitions:
+  reviews:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        comment:
+          type: string
+        rating:
+          type: number
+        tutor:
+          type: string
+        student:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  reviewResponse:
+    type: object
+    properties:
+      _id:
+        type: string
+      comment:
+        type: string
+      rating:
+        type: number
+      #TODO: tutor and student shoul be refs
+      tutor:
+        type: string
+      student:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  review:
+    type: object
+    properties:
+      comment:
+        type: string
+      rating:
+        type: number

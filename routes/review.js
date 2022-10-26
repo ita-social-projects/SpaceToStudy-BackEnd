@@ -1,0 +1,17 @@
+const express = require('express')
+
+const idValidation = require('~/middlewares/idValidation')
+const asyncWrapper = require('~/middlewares/asyncWrapper')
+const reviewController = require('~/controllers/review')
+
+const router = express.Router()
+
+router.param('id', idValidation)
+
+router.get('/', asyncWrapper(reviewController.getReviews))
+router.post('/', asyncWrapper(reviewController.addReview))
+router.get('/:id', asyncWrapper(reviewController.getReviewById))
+router.patch('/:id', asyncWrapper(reviewController.updateReview))
+router.delete('/:id', asyncWrapper(reviewController.deleteReview))
+
+module.exports = router

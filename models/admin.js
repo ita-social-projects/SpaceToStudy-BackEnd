@@ -39,11 +39,7 @@ const adminSchema = new Schema({
     default: false,
     required: true
   },
-  dateOfInvitation: {
-    type: Date,
-    required: true
-  },
-  dateOfActivation: {
+  signUpDate: {
     type: Date,
     required: true
   },

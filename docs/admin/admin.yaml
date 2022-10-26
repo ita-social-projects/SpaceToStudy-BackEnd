@@ -36,8 +36,7 @@ paths:
                   email: johndoe@gmail.com
                   active: true
                   blocked: false
-                  dateOfInvitation: 2022-09-02T11:59:53.243Z
-                  dateOfActivation: 2022-09-02T11:59:53.243Z
+                  signUpDate: 2022-09-02T11:59:53.243Z
                   lastLogin: 2022-09-02T11:59:53.243Z
         400:
           description: Bad Request
@@ -83,8 +82,7 @@ paths:
                   email: johndoe@gmail.com
                   active: true
                   blocked: false
-                  dateOfInvitation: 2022-09-02T11:59:53.243Z
-                  dateOfActivation: 2022-09-02T11:59:53.243Z
+                  signUpDate: 2022-09-02T11:59:53.243Z
                   lastLogin: 2022-09-02T11:59:53.243Z
                 - _id: 8755bc080a00adr9243df104
                   firstName: Joe
@@ -92,8 +90,7 @@ paths:
                   email: joedoe@outlook.com
                   active: true
                   blocked: true
-                  dateOfInvitation: 2022-09-02T11:59:53.243Z
-                  dateOfActivation: 2022-09-02T11:59:53.243Z
+                  signUpDate: 2022-09-02T11:59:53.243Z
                   lastLogin: 2022-09-02T11:59:53.243Z
         401:
           description: Unauthorized
@@ -135,8 +132,7 @@ paths:
                 email: johndoe@gmail.com
                 active: true
                 blocked: false
-                dateOfInvitation: 2022-09-02T11:59:53.243Z
-                dateOfActivation: 2022-09-02T11:59:53.243Z
+                signUpDate: 2022-09-02T11:59:53.243Z
                 lastLogin: 2022-09-02T11:59:53.243Z
         400:
           description: Bad Request
@@ -210,8 +206,7 @@ paths:
                   email: johndoe@gmail.com
                   active: true
                   blocked: false
-                  dateOfInvitation: 2022-09-02T11:59:53.243Z
-                  dateOfActivation: 2022-09-02T11:59:53.243Z
+                  signUpDate: 2022-09-02T11:59:53.243Z
                   lastLogin: 2022-09-02T11:59:53.243Z
         400:
           description: Bad Request

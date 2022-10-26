@@ -1,0 +1,57 @@
+definitions:
+  students:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        role:
+          type: string
+          enum:
+            - student
+            - tutor
+            - admin
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        photo:
+          type: string
+        active:
+          type: boolean
+        blocked:
+          type: boolean
+        lastLogin:
+          type: string
+          format: date-time
+  student:
+    type: object
+    properties:
+      _id:
+        type: string
+      role:
+        type: string
+        enum:
+          - student
+          - tutor
+          - admin
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      photo:
+        type: string
+      active:
+        type: boolean
+      blocked:
+        type: boolean
+      isEmailConfirmed:
+        type: boolean
+      lastLogin:
+        type: string
+        format: date-time

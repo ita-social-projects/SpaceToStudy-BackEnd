@@ -177,6 +177,12 @@ paths:
       description: Updates and returns an admin with the specified ID
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the admin to update
+          type: string
       requestBody:
         required: true
         description: Provide required data to update an admin
@@ -246,6 +252,12 @@ paths:
       description: Deletes an admin with the specified ID
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the admin to delete
+          type: string
       responses:
         204:
           description: No Content

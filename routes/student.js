@@ -8,7 +8,6 @@ const router = express.Router()
 
 router.param('id', idValidation)
 
-router.post('/', asyncWrapper(studentController.addStudent))
 router.get('/', asyncWrapper(studentController.getStudents))
 router.get('/:id', asyncWrapper(studentController.getStudentById))
 router.patch('/:id', asyncWrapper(studentController.updateStudent))

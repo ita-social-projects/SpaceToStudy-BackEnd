@@ -14,7 +14,7 @@ const regex = {
 const enums = {
   ROLE_ENUM: ['student', 'tutor'],
   LANG_ENUM: ['en', 'ua'],
-  LANG_LEVEL_ENUM: ['Beginner', 'Pre-Intermediate', 'Intermediate', 'Upper-Intermediate', 'Advanced', 'Proficiency'],
+  LANG_LEVEL_ENUM: ['Beginner', 'Pre-Intermediate', 'Intermediate', 'Upper-Intermediate', 'Advanced', 'Native speaker'],
   ADMIN_STATUS_ENUM: ['active', 'blocked', 'pending']
 }
 

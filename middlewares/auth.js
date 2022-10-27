@@ -1,4 +1,4 @@
-const { createUnauthorizedError } = require('~/utils/errorsHelper')
+const { createUnauthorizedError, createForbiddenError } = require('~/utils/errorsHelper')
 const tokenService = require('~/services/token')
 
 const authMiddleware = (req, _res, next) => {
@@ -21,4 +21,12 @@ const authMiddleware = (req, _res, next) => {
   next()
 }
 
-module.exports = authMiddleware
+const restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(createForbiddenError())
+    }
+  }
+}
+
+module.exports = { authMiddleware, restrictTo }

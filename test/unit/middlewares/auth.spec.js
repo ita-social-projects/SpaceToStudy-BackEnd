@@ -1,5 +1,5 @@
 require('~/initialization/envSetup')
-const authMiddleware = require('~/middlewares/auth')
+const { authMiddleware } = require('~/middlewares/auth')
 const { createUnauthorizedError } = require('~/utils/errorsHelper')
 const tokenService = require('~/services/token')
 

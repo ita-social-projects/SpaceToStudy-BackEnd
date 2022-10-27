@@ -10,6 +10,7 @@ router.param('id', idValidation)
 
 router.get('/')
 router.get('/:id')
+router.patch('/:id')
 router.delete('/:id')
 
 module.exports = router

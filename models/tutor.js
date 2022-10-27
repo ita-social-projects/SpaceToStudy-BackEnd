@@ -1,14 +1,15 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { LANG_ENUM }
+  enums: { ROLE_ENUM }
 } = require('~/consts/validation')
 
 const tutorSchema = new Schema(
   {
     role: {
-      type: Schema.Types.ObjectId,
-      ref: 'Role',
-      required: true
+      type: String,
+      enum: ROLE_ENUM,
+      required: true,
+      default: 'tutor'
     },
     firstName: {
       type: String,
@@ -26,13 +27,13 @@ const tutorSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, 'Please enter a password']
+      required: [true, 'Please enter a password'],
+      select: false
     },
     photo: {
       type: String
     },
-    bio: {
-      //??
+    biography: {
       type: String
     },
     city: {
@@ -42,11 +43,6 @@ const tutorSchema = new Schema(
       type: String
     },
     categories: {
-      type: Schema.Types.ObjectId,
-      ref: 'Category'
-    },
-    subjects: {
-      //??
       type: Schema.Types.ObjectId,
       ref: 'Category'
     },
@@ -66,6 +62,10 @@ const tutorSchema = new Schema(
       type: Boolean,
       default: true
     },
+    lastLogin: {
+      type: Date,
+      default: null
+    },
     active: {
       type: Boolean,
       required: true,
@@ -75,17 +75,13 @@ const tutorSchema = new Schema(
       type: Boolean,
       required: true,
       default: false
-    },
-    lastLogin: {
-      type: Date,
-      default: null
-    },
-    language: {
-      //??
-      type: String,
-      enum: LANG_ENUM,
-      default: LANG_ENUM[0]
     }
+    // languages: {
+    //   //??
+    //   type: String,
+    //   enum: LANG_ENUM,
+    //   default: LANG_ENUM[0]
+    // }
   },
   { timestamps: true }
 )

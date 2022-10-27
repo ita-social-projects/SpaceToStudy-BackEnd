@@ -16,16 +16,13 @@ definitions:
         type: string
       photo:
         type: string
-      bio:
+      biography:
         type: string
       city:
         type: string
       education:
         type: string
       categories:
-        #ref
-        type: string
-      subjects:
         #ref
         type: string
       averageRating:
@@ -36,13 +33,13 @@ definitions:
         type: boolean
       isFirstLogin:
         type: boolean
+      lastLogin:
+        type: string
+        format: date-time
       active:
         type: boolean
       blocked:
         type: boolean
-      lastLogin:
-        type: string
-        format: date-time
   tutor:
     type: object
     properties:
@@ -58,16 +55,13 @@ definitions:
         type: string
       photo:
         type: string
-      bio:
+      biography:
         type: string
       city:
         type: string
       education:
         type: string
       categories:
-        #ref
-        type: string
-      subjects:
         #ref
         type: string
       averageRating:
@@ -78,10 +72,10 @@ definitions:
         type: boolean
       isFirstLogin:
         type: boolean
+      lastLogin:
+        type: string
+        format: date-time
       active:
         type: boolean
       blocked:
         type: boolean
-      lastLogin:
-        type: string
-        format: date-time

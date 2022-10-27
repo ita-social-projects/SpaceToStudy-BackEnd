@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { ROLE_ENUM }
+  enums: { ROLE_ENUM, LANG_LEVEL_ENUM }
 } = require('~/consts/validation')
 
 const tutorSchema = new Schema(
@@ -52,7 +52,8 @@ const tutorSchema = new Schema(
       max: 5
     },
     ratingQuantity: {
-      type: Number
+      type: Number,
+      default: 0
     },
     isEmailConfirmed: {
       type: Boolean,
@@ -75,13 +76,16 @@ const tutorSchema = new Schema(
       type: Boolean,
       required: true,
       default: false
-    }
-    // languages: {
-    //   //??
-    //   type: String,
-    //   enum: LANG_ENUM,
-    //   default: LANG_ENUM[0]
-    // }
+    },
+    languagesSpoken: [
+      {
+        language: String,
+        level: {
+          type: String,
+          enum: LANG_LEVEL_ENUM
+        }
+      }
+    ]
   },
   { timestamps: true }
 )

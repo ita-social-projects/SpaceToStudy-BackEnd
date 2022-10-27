@@ -8,6 +8,7 @@ definitions:
         type: string
       role:
         type: string
+        enum: [student, tutor, admin]
       firstName:
         type: string
       lastName:
@@ -23,7 +24,7 @@ definitions:
       education:
         type: string
       categories:
-        #ref
+        #TODO: add ref
         type: string
       averageRating:
         type: number
@@ -40,6 +41,16 @@ definitions:
         type: boolean
       blocked:
         type: boolean
+      languagesSpoken:
+        type: array
+        items:
+          type: object
+          properties:
+            language:
+              type: string
+            level:
+              type: string
+              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Proficiency]
   tutor:
     type: object
     properties:
@@ -47,6 +58,7 @@ definitions:
         type: string
       role:
         type: string
+        enum: [student, tutor, admin]
       firstName:
         type: string
       lastName:
@@ -62,7 +74,7 @@ definitions:
       education:
         type: string
       categories:
-        #ref
+        #TODO: add ref
         type: string
       averageRating:
         type: number
@@ -79,3 +91,13 @@ definitions:
         type: boolean
       blocked:
         type: boolean
+      languagesSpoken:
+        type: array
+        items:
+          type: object
+          properties:
+            language:
+              type: string
+            level:
+              type: string
+              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Proficiency]

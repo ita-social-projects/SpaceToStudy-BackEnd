@@ -34,6 +34,9 @@ paths:
                   lastLogin: 2022-10-25T11:59:53.243Z
                   active: true
                   blocked: false
+                  languagesSpoken:
+                    - language: English
+                      level: Intermediate
                 - _id: 6255bc080a75adf9223df102
                   role: tutor
                   firstName: John
@@ -51,6 +54,9 @@ paths:
                   lastLogin: 2022-10-22T11:59:53.243Z
                   active: true
                   blocked: false
+                  languagesSpoken:
+                    - language: English
+                      level: Intermediate
         401:
           description: Unauthorized
           content:
@@ -102,6 +108,9 @@ paths:
                   lastLogin: 2022-10-25T11:59:53.243Z
                   active: true
                   blocked: false
+                  languagesSpoken:
+                    - language: English
+                      level: Intermediate
         400:
           description: Bad Request
           content:
@@ -164,32 +173,12 @@ paths:
               city: Lviv
               education: Lviv Polytechnic National University
               categories: 6255bc080a75adf9223df211
+              languagesSpoken:
+                - language: English
+                  level: Intermediate
       responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                schema:
-                  $ref: '#/definitions/student'
-                example:
-                  - _id: 6255bc080a75adf9223df101
-                    role: tutor
-                    firstName: John
-                    lastName: Doe
-                    email: johndoe@gmail.com
-                    photo: image.png
-                    biography: I am best tutor
-                    city: Lviv
-                    education: Lviv Polytechnic National University
-                    categories: 6255bc080a75adf9223df211
-                    averageRating: 4
-                    ratingQuantity: 10
-                    isEmailConfirmed: true
-                    isFirstLogin: true
-                    lastLogin: 2022-10-25T11:59:53.243Z
-                    active: true
-                    blocked: false
+        204:
+          description: No Content
         400:
           description: Bad Request
           content:

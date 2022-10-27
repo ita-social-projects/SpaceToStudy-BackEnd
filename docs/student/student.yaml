@@ -25,6 +25,7 @@ paths:
                   photo: image.png
                   active: true
                   blocked: false
+                  isEmailConfirmed: true
                   lastLogin: 2022-10-25T11:59:53.243Z
                 - _id: 6255bc080a75adf9223df102
                   role: student
@@ -34,6 +35,7 @@ paths:
                   photo: image.png
                   active: true
                   blocked: false
+                  isEmailConfirmed: true
                   lastLogin: 2022-10-22T11:59:53.243Z
         401:
           description: Unauthorized
@@ -107,8 +109,8 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: STUDENT_NOT_FOUND
-                message: Student with the specified id or email was not found.
+                code: USER_NOT_FOUND
+                message: User with the specified id or email was not found.
     patch:
       security:
         - bearerAuth: []
@@ -130,7 +132,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/signup'
+              $ref: '#/definitions/student'
             example:
               firstName: John
               lastName: Doe
@@ -154,6 +156,7 @@ paths:
                   photo: image.png
                   active: true
                   blocked: false
+                  isEmailConfirmed: true
                   lastLogin: 2022-10-25T11:59:53.243Z
         400:
           description: Bad Request
@@ -183,8 +186,8 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: STUDENT_NOT_FOUND
-                message: Student with the specified id or email was not found.
+                code: USER_NOT_FOUND
+                message: User with the specified id or email was not found.
     delete:
       security:
         - bearerAuth: []
@@ -231,5 +234,5 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: STUDENT_NOT_FOUND
-                message: Student with the specified id or email was not found.
+                code: USER_NOT_FOUND
+                message: User with the specified id or email was not found.

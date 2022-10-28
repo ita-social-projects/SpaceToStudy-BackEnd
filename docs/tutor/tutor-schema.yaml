@@ -8,7 +8,7 @@ definitions:
         type: string
       role:
         type: string
-        enum: [student, tutor, admin]
+        enum: [student, tutor]
       firstName:
         type: string
       lastName:
@@ -50,7 +50,7 @@ definitions:
               type: string
             level:
               type: string
-              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native speaker]
+              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native]
   tutor:
     type: object
     properties:
@@ -58,7 +58,7 @@ definitions:
         type: string
       role:
         type: string
-        enum: [student, tutor, admin]
+        enum: [student, tutor]
       firstName:
         type: string
       lastName:
@@ -100,4 +100,4 @@ definitions:
               type: string
             level:
               type: string
-              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native speaker]
+              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native]

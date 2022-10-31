@@ -1,5 +1,6 @@
 const tokenService = require('~/services/token')
 const userService = require('~/services/user')
+const tutorService = require('~/services/tutor')
 const emailService = require('~/services/email')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
@@ -19,16 +20,21 @@ const {
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
-    const user = await userService.createUser(role, firstName, lastName, email, password, language)
+    // const user = await userService.createUser(role, firstName, lastName, email, password, language)
+    let user
 
-    const confirmToken = tokenService.generateConfirmToken({ id: user._id })
-    await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
+    if (role === 'tutor') {
+      user = await tutorService.createTutor(role, firstName, lastName, email, password, language)
 
-    await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
+      const confirmToken = tokenService.generateConfirmToken({ id: user._id })
+      await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
 
-    return {
-      userId: user._id,
-      userEmail: user.email
+      await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
+
+      return {
+        userId: user._id,
+        userEmail: user.email
+      }
     }
   },
 

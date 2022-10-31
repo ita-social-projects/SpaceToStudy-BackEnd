@@ -79,10 +79,14 @@ const tutorSchema = new Schema(
     },
     languagesSpoken: [
       {
-        language: String,
+        language: {
+          type: String,
+          default: 'English'
+        },
         level: {
           type: String,
-          enum: LANG_LEVEL_ENUM
+          enum: LANG_LEVEL_ENUM,
+          default: 'Native'
         }
       }
     ]

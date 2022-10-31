@@ -1,15 +1,23 @@
 const Admin = require('~/models/admin')
+<<<<<<< HEAD
 const {
   ALREADY_REGISTERED,
   USER_NOT_FOUND,
   ADMIN_ALREADY_BLOCKED,
   ADMIN_ALREADY_UNBLOCKED
 } = require('~/consts/errors')
+=======
+const { ADMIN_NOT_FOUND } = require('~/consts/errors')
+>>>>>>> a9096e8 (Progress)
 const { createError } = require('~/utils/errorsHelper')
 const { hashPassword } = require('~/utils/passwordHelper')
 const emailService = require('~/services/email')
 const emailSubject = require('~/consts/emailSubject')
+<<<<<<< HEAD
 const AdminInvitation = require('~/models/admin-invitation')
+=======
+const adminInvitation = require('~/models/admin-invitation')
+>>>>>>> a9096e8 (Progress)
 
 const adminService = {
   createAdmin: async (role, firstName, lastName, email, password, language) => {
@@ -38,7 +46,11 @@ const adminService = {
     const invitations = []
 
     for (const email of emails) {
+<<<<<<< HEAD
       const invitation = await AdminInvitation.create({
+=======
+      const invitation = await adminInvitation.create({
+>>>>>>> a9096e8 (Progress)
         email,
         dateOfInvitation: Date.now()
       })
@@ -56,6 +68,7 @@ const adminService = {
       .lean()
       .exec()
 
+<<<<<<< HEAD
     return invitations
   },
 
@@ -131,6 +144,9 @@ const adminService = {
       items: admins.items,
       count: admins.calculations[0].count
     }
+=======
+    return admins
+>>>>>>> a9096e8 (Progress)
   },
 
   getAdminById: async (id) => {
@@ -143,6 +159,7 @@ const adminService = {
     }
 
     return admin
+<<<<<<< HEAD
   },
 
   blockAdmin: async (id) => {
@@ -190,6 +207,8 @@ const adminService = {
     }
 
     await admin.delete()
+=======
+>>>>>>> a9096e8 (Progress)
   }
 }
 

@@ -12,6 +12,16 @@ definitions:
           type: string
         email:
           type: string
+        active:
+          type: boolean
+        blocked:
+          type: boolean
+        signUpDate:
+          type: string
+          format: date-time
+        lastLogin:
+          type: string
+          format: date-time
   admin:
     type: object
     properties:
@@ -23,5 +33,14 @@ definitions:
         type: string
       email:
         type: string
-      isEmailConfirmed:
+      active:
         type: boolean
+      blocked:
+        type: boolean
+      signUpDate:
+        type: string
+        format: date-time
+      lastLogin:
+        type: string
+        format: date-time
+      

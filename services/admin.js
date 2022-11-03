@@ -7,8 +7,6 @@ const {
 } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const { hashPassword } = require('~/utils/passwordHelper')
-const emailService = require('~/services/email')
-const emailSubject = require('~/consts/emailSubject')
 
 const adminService = {
   createAdmin: async (role, firstName, lastName, email, password, language) => {
@@ -113,7 +111,7 @@ const adminService = {
       .exec()
 
     if (!admin) {
-      throw createError(404, ADMIN_NOT_FOUND)
+      throw createError(404, USER_NOT_FOUND)
     }
 
     return admin

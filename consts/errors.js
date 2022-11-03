@@ -8,6 +8,7 @@ const errors = {
     message: 'User with the specified email or id was not found.'
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
   ADMIN_ALREADY_BLOCKED: {
     code: 'ADMIN_ALREADY_BLOCKED',
     message: 'Admin with the specified id is already blocked.'
@@ -21,6 +22,8 @@ const errors = {
     message: 'Admin with the specified email or id was not found.'
 >>>>>>> a620641 (Implemented admin service)
   },
+=======
+>>>>>>> 641577f (Implemented getInvitations)
   ADMIN_ALREADY_BLOCKED: {
     code: 'ADMIN_ALREADY_BLOCKED',
     message: 'Admin with the specified id is already blocked.'

@@ -22,14 +22,78 @@ const adminService = {
     
     return invitations
   },
-  getAdmins: async ({ skip, limit }) => {
-    const admins = await Admin.find({})
-      .skip(skip)
-      .limit(limit)
-      .lean()
-      .exec()
+  getAdmins: async ({
+    skip = 0,
+    limit = 10,
+    name,
+    email,
+    active,
+    blocked,
+    signUpDateFrom,
+    signUpDateTo,
+    lastLoginFrom,
+    lastLoginTo,
+    sortByName,
+    sortByEmail,
+    sortByLastLogin,
+    sortBySignUpDate,
+  }) => {
+    const match = {
+      name: {
+        $regex: name.length > 0 ? name : '.*',
+        $options: 'i'
+      },
+      email: {
+        $regex: email.length > 0 ? email : '.*',
+        $options: 'i'
+      },
+      active,
+      blocked,
+      signUpDate: {
+        $gte: signUpDateFrom,
+        $lte: signUpDateTo
+      },
+      lastLogin: {
+        $gte: lastLoginFrom,
+        $lte: lastLoginTo
+      },
+    }
 
-    return admins
+    const sort = {
+      name: sortByName,
+      email: sortByEmail,
+      lastLogin: sortByLastLogin,
+      signUpDate: sortBySignUpDate
+    }
+
+    const [admins] = await Admin.aggregate([
+      {
+        $addFields: {
+          name: { $concat: ['$firstName', ' ', '$lastName'] },
+        },
+      },
+      {
+        $project: {
+          firstName: 0,
+          lastName: 0
+        }
+      }
+    ])
+    .facet({
+      items: [
+        { $match: match },
+        { $sort: sort },
+        { $skip: skip },
+        { $limit: limit }
+      ],
+      calculations: [{ $match: match }, { $count: 'count' }],
+    })
+    .exec()
+
+    return {
+      items: admins.items,
+      count: admins.calculations[0].count
+    }
   },
 
   getAdminById: async (id) => {

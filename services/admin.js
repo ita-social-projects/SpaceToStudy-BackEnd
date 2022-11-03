@@ -1,5 +1,9 @@
 const Admin = require('~/models/admin')
-const { ADMIN_NOT_FOUND } = require('~/consts/errors')
+const {
+  ADMIN_NOT_FOUND,
+  ADMIN_ALREADY_BLOCKED,
+  ADMIN_ALREADY_UNBLOCKED
+} = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const emailService = require('~/services/email')
 const emailSubject = require('~/consts/emailSubject')
@@ -106,6 +110,53 @@ const adminService = {
     }
 
     return admin
+  },
+
+  blockAdmin: async (id) => {
+    const admin = await Admin.findById(id)
+      .exec()
+
+    if (!admin) {
+      throw createError(404, ADMIN_NOT_FOUND)
+    }
+
+    if (admin.blocked) {
+      throw createError(409, ADMIN_ALREADY_BLOCKED)
+    }
+
+    admin.blocked = true
+    await admin.save()
+
+    return admin
+  },
+
+  unblockAdmin: async (id) => {
+    const admin = await Admin.findById(id)
+      .exec()
+
+    if (!admin) {
+      throw createError(404, ADMIN_NOT_FOUND)
+    }
+
+    if (!admin.blocked) {
+      throw createError(409, ADMIN_ALREADY_UNBLOCKED)
+    }
+
+    admin.blocked = false
+    await admin.save()
+
+    return admin
+  },
+
+  deleteAdmin: async (id) => {
+    const admin = await Admin.findById(id)
+      .exec()
+
+    if (!admin) {
+      throw createError(404, ADMIN_NOT_FOUND)
+    }
+
+    await admin.delete()
   }
 }
 

@@ -13,6 +13,8 @@ router.post('/', langMiddleware, asyncWrapper(adminController.inviteAdmins))
 router.get('/', asyncWrapper(adminController.getAdmins))
 router.get('/:id', asyncWrapper(adminController.getAdminById))
 router.patch('/:id', asyncWrapper(adminController.updateAdmin))
+router.patch('/:id/block', asyncWrapper(adminController.blockAdmin))
+router.patch('/:id/unblock', asyncWrapper(adminController.unblockAdmin))
 router.delete('/:id', asyncWrapper(adminController.deleteAdmin))
 
 module.exports = router

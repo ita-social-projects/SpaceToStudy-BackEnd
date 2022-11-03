@@ -57,8 +57,22 @@ const updateAdmin = async (req, res) => {
 
 }
 
-const deleteAdmin = async (req, res) => {
+const blockAdmin = async (req, res) => {
+  const admin = await adminService.blockAdmin(req.params.id)
 
+  res.status(200).json(admin)
+}
+
+const unblockAdmin = async (req, res) => {
+  const admin = await adminService.unblockAdmin(req.params.id)
+
+  res.status(200).json(admin)
+}
+
+const deleteAdmin = async (req, res) => {
+  await adminService.deleteAdmin(req.params.id)
+
+  res.sendStatus(204)
 }
 
 module.exports = {
@@ -66,5 +80,7 @@ module.exports = {
   getAdmins,
   getAdminById,
   updateAdmin,
+  blockAdmin,
+  unblockAdmin,
   deleteAdmin
 }

@@ -21,6 +21,14 @@ const errors = {
     message: 'Admin with the specified email or id was not found.'
 >>>>>>> a620641 (Implemented admin service)
   },
+  ADMIN_ALREADY_BLOCKED: {
+    code: 'ADMIN_ALREADY_BLOCKED',
+    message: 'Admin with the specified id is already blocked.'
+  },
+  ADMIN_ALREADY_UNBLOCKED: {
+    code: 'ADMIN_ALREADY_UNBLOCKED',
+    message: 'Admin with the specified id is already unblocked.'
+  },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',
     message: 'The password or email you entered is incorrect.'

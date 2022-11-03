@@ -109,25 +109,37 @@ const updateAdmin = async (req, res) => {
 }
 
 const blockAdmin = async (req, res) => {
+<<<<<<< HEAD
   const { id } = req.params
 
   const admin = await adminService.blockAdmin(id)
+=======
+  const admin = await adminService.blockAdmin(req.params.id)
+>>>>>>> b2626a3 (Implemented block, unblock and delete for admin)
 
   res.status(200).json(admin)
 }
 
 const unblockAdmin = async (req, res) => {
+<<<<<<< HEAD
   const { id } = req.params
 
   const admin = await adminService.unblockAdmin(id)
+=======
+  const admin = await adminService.unblockAdmin(req.params.id)
+>>>>>>> b2626a3 (Implemented block, unblock and delete for admin)
 
   res.status(200).json(admin)
 }
 
 const deleteAdmin = async (req, res) => {
+<<<<<<< HEAD
   const { id } = req.params
 
   await adminService.deleteAdmin(id)
+=======
+  await adminService.deleteAdmin(req.params.id)
+>>>>>>> b2626a3 (Implemented block, unblock and delete for admin)
 
   res.sendStatus(204)
 }

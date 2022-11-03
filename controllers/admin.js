@@ -9,6 +9,12 @@ const inviteAdmins = async (req, res) => {
   res.status(201).json(admins)
 }
 
+const getInvitations = async (req, res) => {
+  const invitations = await adminService.getInvitations()
+
+  res.status(200).json(invitations)
+}
+
 const getAdmins = async (req, res) => {
   const {
     skip,
@@ -48,7 +54,9 @@ const getAdmins = async (req, res) => {
 }
 
 const getAdminById = async (req, res) => {
-  const admin = await adminService.getAdminById(req.params.id)
+  const { id } = req.params
+
+  const admin = await adminService.getAdminById(id)
 
   res.status(200).json(admin)
 }
@@ -58,19 +66,25 @@ const updateAdmin = async (req, res) => {
 }
 
 const blockAdmin = async (req, res) => {
-  const admin = await adminService.blockAdmin(req.params.id)
+  const { id } = req.params
+
+  const admin = await adminService.blockAdmin(id)
 
   res.status(200).json(admin)
 }
 
 const unblockAdmin = async (req, res) => {
-  const admin = await adminService.unblockAdmin(req.params.id)
+  const { id } = req.params
+
+  const admin = await adminService.unblockAdmin(id)
 
   res.status(200).json(admin)
 }
 
 const deleteAdmin = async (req, res) => {
-  await adminService.deleteAdmin(req.params.id)
+  const { id } = req.params
+
+  await adminService.deleteAdmin(id)
 
   res.sendStatus(204)
 }
@@ -78,6 +92,7 @@ const deleteAdmin = async (req, res) => {
 module.exports = {
   inviteAdmins,
   getAdmins,
+  getInvitations,
   getAdminById,
   updateAdmin,
   blockAdmin,

@@ -1,20 +1,20 @@
 const Admin = require('~/models/admin')
 const {
-  ADMIN_NOT_FOUND,
+  USER_NOT_FOUND,
   ADMIN_ALREADY_BLOCKED,
   ADMIN_ALREADY_UNBLOCKED
 } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const emailService = require('~/services/email')
 const emailSubject = require('~/consts/emailSubject')
-const adminInvitation = require('~/models/admin-invitation')
+const AdminInvitation = require('~/models/admin-invitation')
 
 const adminService = {
   inviteAdmins: async ({ emails, language }) => {
     const invitations = []
 
     for (const email of emails) {
-      const invitation = await adminInvitation.create({
+      const invitation = await AdminInvitation.create({
         email,
         dateOfInvitation: Date.now()
       })
@@ -26,6 +26,15 @@ const adminService = {
     
     return invitations
   },
+
+  getInvitations: async () => {
+    const invitations = await AdminInvitation.find()
+      .lean()
+      .exec()
+
+    return invitations
+  },
+
   getAdmins: async ({
     skip = 0,
     limit = 10,
@@ -106,7 +115,7 @@ const adminService = {
       .exec()
 
     if (!admin) {
-      throw createError(404, ADMIN_NOT_FOUND)
+      throw createError(404, USER_NOT_FOUND)
     }
 
     return admin
@@ -117,7 +126,7 @@ const adminService = {
       .exec()
 
     if (!admin) {
-      throw createError(404, ADMIN_NOT_FOUND)
+      throw createError(404, USER_NOT_FOUND)
     }
 
     if (admin.blocked) {
@@ -135,7 +144,7 @@ const adminService = {
       .exec()
 
     if (!admin) {
-      throw createError(404, ADMIN_NOT_FOUND)
+      throw createError(404, USER_NOT_FOUND)
     }
 
     if (!admin.blocked) {
@@ -153,7 +162,7 @@ const adminService = {
       .exec()
 
     if (!admin) {
-      throw createError(404, ADMIN_NOT_FOUND)
+      throw createError(404, USER_NOT_FOUND)
     }
 
     await admin.delete()

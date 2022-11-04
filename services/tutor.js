@@ -5,8 +5,20 @@ const { createError } = require('~/utils/errorsHelper')
 const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const tutorService = {
+  getTutorByEmail: async (email) => {
+    const tutor = await Tutor.findOne({ email }).lean().exec()
+
+    if (!tutor) {
+      return null
+    }
+
+    tutor.role = tutor.role.value
+
+    return tutor
+  },
+
   createTutor: async (role, firstName, lastName, email, password, language) => {
-    const duplicateTutor = await tutorService.getUserByEmail(email)
+    const duplicateTutor = await tutorService.getTutorByEmail(email)
 
     if (duplicateTutor) {
       throw createError(409, ALREADY_REGISTERED)
@@ -37,18 +49,6 @@ const tutorService = {
     if (!tutor) {
       throw createError(404, USER_NOT_FOUND)
     }
-
-    return tutor
-  },
-
-  getTutorByEmail: async (email) => {
-    const tutor = await Tutor.findOne({ email }).lean().exec()
-
-    if (!tutor) {
-      return null
-    }
-
-    tutor.role = tutor.role.value
 
     return tutor
   },

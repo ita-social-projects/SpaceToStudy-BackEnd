@@ -2,16 +2,15 @@ const Tutor = require('~/models/tutor')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
-// const { USER_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN, INCORRECT_CREDENTIALS } = require('~/consts/errors')
-const { USER_NOT_FOUND } = require('~/consts/errors')
+const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const tutorService = {
   createTutor: async (role, firstName, lastName, email, password, language) => {
-    // const duplicateUser = await userService.getUserByEmail(email)
+    const duplicateTutor = await tutorService.getUserByEmail(email)
 
-    // if (duplicateUser) {
-    //   throw createError(409, ALREADY_REGISTERED)
-    // }
+    if (duplicateTutor) {
+      throw createError(409, ALREADY_REGISTERED)
+    }
     const hashedPassword = await hashPassword(password)
 
     const newTutor = await Tutor.create({

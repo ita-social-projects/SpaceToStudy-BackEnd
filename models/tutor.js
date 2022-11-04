@@ -70,23 +70,21 @@ const tutorSchema = new Schema(
     active: {
       type: Boolean,
       required: true,
-      default: true
+      default: true,
+      select: false
     },
     blocked: {
       type: Boolean,
       required: true,
-      default: false
+      default: false,
+      select: false
     },
     languagesSpoken: [
       {
-        language: {
-          type: String,
-          default: 'English'
-        },
+        language: String,
         level: {
           type: String,
-          enum: LANG_LEVEL_ENUM,
-          default: 'Native'
+          enum: LANG_LEVEL_ENUM
         }
       }
     ]

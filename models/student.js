@@ -43,12 +43,14 @@ const studentSchema = new Schema({
   active: {
     type: Boolean,
     default: true,
-    required: true
+    required: true,
+    select: false
   },
   blocked: {
     type: Boolean,
     default: false,
-    required: true
+    required: true,
+    select: false
   },
   language: {
     type: String,

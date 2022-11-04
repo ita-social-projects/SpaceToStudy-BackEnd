@@ -59,8 +59,6 @@ const studentService = {
     if (!student) {
       throw createError(404, USER_NOT_FOUND)
     }
-
-    return student
   },
 
   deleteStudent: async (id) => {

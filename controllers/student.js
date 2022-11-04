@@ -18,9 +18,9 @@ const updateStudent = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
 
-  const student = await studentService.updateStudent(id, updateData)
+  await studentService.updateStudent(id, updateData)
 
-  res.status(200).json(student)
+  res.status(204).end()
 }
 
 const deleteStudent = async (req, res) => {

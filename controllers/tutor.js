@@ -9,9 +9,9 @@ const getTutors = async (_req, res) => {
 const getTutorById = async (req, res) => {
   const { id } = req.params
 
-  const user = await tutorService.getTutorById(id)
+  const tutor = await tutorService.getTutorById(id)
 
-  res.status(200).json(user)
+  res.status(200).json(tutor)
 }
 
 const updateTutor = async (req, res) => {

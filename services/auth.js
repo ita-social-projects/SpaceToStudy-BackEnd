@@ -23,9 +23,7 @@ const authService = {
 
     const confirmToken = tokenService.generateConfirmToken({ id: user._id })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
-
     await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
-
     return {
       userId: user._id,
       userEmail: user.email

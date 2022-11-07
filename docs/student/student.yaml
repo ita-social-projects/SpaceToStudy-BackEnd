@@ -140,24 +140,8 @@ paths:
               photo: image.png
               password: qwer1234
       responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                schema:
-                  $ref: '#/definitions/student'
-                example:
-                  _id: 6255bc080a75adf9223df101
-                  role: student
-                  firstName: John
-                  lastName: Doe
-                  email: johndoe@gmail.com
-                  photo: image.png
-                  active: true
-                  blocked: false
-                  isEmailConfirmed: true
-                  lastLogin: 2022-10-25T11:59:53.243Z
+        204:
+          description: No Content
         400:
           description: Bad Request
           content:

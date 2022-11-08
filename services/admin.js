@@ -1,15 +1,39 @@
 const Admin = require('~/models/admin')
 const {
+  ALREADY_REGISTERED,
   USER_NOT_FOUND,
   ADMIN_ALREADY_BLOCKED,
   ADMIN_ALREADY_UNBLOCKED
 } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
+const { hashPassword } = require('~/utils/passwordHelper')
 const emailService = require('~/services/email')
 const emailSubject = require('~/consts/emailSubject')
 const AdminInvitation = require('~/models/admin-invitation')
 
 const adminService = {
+  createAdmin: async (role, firstName, lastName, email, password, language) => {
+    const admin = await Admin.findOne({ email })
+      .lean()
+      .exec()
+
+    if (admin) {
+      throw createError(409, ALREADY_REGISTERED)
+    }
+    const hashedPassword = await hashPassword(password)
+
+    const newAdmin = await Admin.create({
+      role,
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      language
+    })
+
+    return newAdmin
+  },
+
   inviteAdmins: async ({ emails, language }) => {
     const invitations = []
 

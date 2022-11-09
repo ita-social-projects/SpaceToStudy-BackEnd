@@ -1,5 +1,6 @@
 const adminService = require('~/services/admin')
 
+<<<<<<< HEAD
 const inviteAdmins = async (req, res) => {
   const admins = await adminService.inviteAdmins({
     ...req.body,
@@ -19,6 +20,8 @@ const getInvitations = async (req, res) => {
   res.status(200).json(invitations)
 }
 
+=======
+>>>>>>> 7cb2db2 (Added updateAdmin)
 const getAdmins = async (req, res) => {
   const {
     skip,
@@ -114,7 +117,12 @@ const getAdminById = async (req, res) => {
 }
 
 const updateAdmin = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
 
+  const updatedAdmin = await adminService.updateAdmin(id, updateData)
+
+  res.status(200).json(updatedAdmin)
 }
 
 const blockAdmin = async (req, res) => {
@@ -172,9 +180,7 @@ const deleteAdmin = async (req, res) => {
 }
 
 module.exports = {
-  inviteAdmins,
   getAdmins,
-  getInvitations,
   getAdminById,
   updateAdmin,
   blockAdmin,

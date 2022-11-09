@@ -17,6 +17,7 @@ const adminService = {
     if (admin) {
       throw createError(409, ALREADY_REGISTERED)
     }
+    
     const hashedPassword = await hashPassword(password)
 
     const newAdmin = await Admin.create({
@@ -109,6 +110,16 @@ const adminService = {
     const admin = await Admin.findById(id)
       .lean()
       .exec()
+
+    if (!admin) {
+      throw createError(404, USER_NOT_FOUND)
+    }
+
+    return admin
+  },
+
+  updateAdmin: async (id, updateData) => {
+    const admin = await Admin.findByIdAndUpdate(id, updateData, { new: true }).lean().exec()
 
     if (!admin) {
       throw createError(404, USER_NOT_FOUND)

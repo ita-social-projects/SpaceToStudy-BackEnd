@@ -110,6 +110,14 @@ const errors = {
   REVIEW_NOT_CREATED: {
     code: 'REVIEW_NOT_CREATED',
     message: 'You are allowed to leave only one review for a tutor.'
+  },
+  SUBJECT_NOT_FOUND: {
+    code: 'SUBJECT_NOT_FOUND',
+    message: 'Subject with the specified id was not found.'
+  },
+  SUBJECT_NOT_CREATED: {
+    code: 'SUBJECT_NOT_CREATED',
+    message: 'Subject with the specified name and level already exist.'
   }
 }
 

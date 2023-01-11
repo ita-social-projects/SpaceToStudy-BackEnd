@@ -79,8 +79,8 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 400
-                code: SUBJECT_NOT_CREATED
-                message: Subject with the specified name and level already exist.
+                code: SUBJECT_ALREADY_EXISTS
+                message: Subject with the specified name and level already exists.
         401:
           description: Unauthorized
           content:

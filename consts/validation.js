@@ -13,7 +13,7 @@ const regex = {
 
 const enums = {
   LANG_ENUM: ['en', 'ua'],
-  LANG_LEVEL_ENUM: ['Beginner', 'Pre-Intermediate', 'Intermediate', 'Upper-Intermediate', 'Advanced', 'Native'],
+  SUBJECT_LEVEL_ENUM: ['Beginner', 'Intermediate', 'Advanced', 'Test Preparation', 'Professional', 'Specialized'],
   ROLE_ENUM: ['student', 'tutor', 'admin']
 }
 

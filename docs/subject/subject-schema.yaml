@@ -12,7 +12,7 @@ definitions:
           type: number
         proficiencyLevel:
           type: string
-          enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native]
+          enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional, Specialized]
         category:
           type: string
           $ref: '#/components/category'
@@ -20,12 +20,12 @@ definitions:
     type: object
     properties:
       name:
-        type: number
+        type: string
       price:
         type: number
       proficiencyLevel:
         type: string
-        enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native]
+        enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional, Specialized]
       category:
         type: string
         $ref: '#/components/category'
@@ -35,12 +35,12 @@ definitions:
       _id:
         type: string
       name:
-        type: number
+        type: string
       price:
         type: number
       proficiencyLevel:
         type: string
-        enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native]
+        enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional, Specialized]
       category:
         type: string
         $ref: '#/components/category'

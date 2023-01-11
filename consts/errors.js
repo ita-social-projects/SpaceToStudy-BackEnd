@@ -115,9 +115,9 @@ const errors = {
     code: 'SUBJECT_NOT_FOUND',
     message: 'Subject with the specified id was not found.'
   },
-  SUBJECT_NOT_CREATED: {
-    code: 'SUBJECT_NOT_CREATED',
-    message: 'Subject with the specified name and level already exist.'
+  SUBJECT_ALREADY_EXISTS: {
+    code: 'SUBJECT_ALREADY_EXISTS',
+    message: 'Subject with the specified name and level already exists.'
   }
 }
 

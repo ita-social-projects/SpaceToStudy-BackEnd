@@ -50,7 +50,7 @@ definitions:
               type: string
             level:
               type: string
-              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native]
+              enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional, Specialized]
   tutor:
     type: object
     properties:
@@ -100,4 +100,4 @@ definitions:
               type: string
             level:
               type: string
-              enum: [Beginner, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced, Native]
+              enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional, Specialized]

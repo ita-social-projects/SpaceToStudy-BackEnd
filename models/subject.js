@@ -1,26 +1,27 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { LANG_LEVEL_ENUM }
+  enums: { SUBJECT_LEVEL_ENUM }
 } = require('~/consts/validation')
 
 const subjectSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: [true, 'Please enter a subject name']
   },
   price: {
     type: Number,
-    required: true
+    min: [0, 'Price should be greater than 0'],
+    required: [true, 'Please enter a subject price']
   },
   proficiencyLevel: {
     type: String,
-    enum: LANG_LEVEL_ENUM,
-    required: true
+    enum: SUBJECT_LEVEL_ENUM,
+    required: [true, 'Please choose a subject proficiency level']
   },
   category: {
     type: Schema.Types.ObjectId,
     ref: 'Category',
-    required: true
+    required: [true, 'Please choose a subject category']
   }
 })
 

@@ -1,0 +1,46 @@
+definitions:
+  subjects:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+        proficiencyLevel:
+          type: string
+          enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional]
+        category:
+          type: string
+          $ref: '#/components/category'
+  subjectBody:
+    type: object
+    properties:
+      name:
+        type: string
+      price:
+        type: number
+      proficiencyLevel:
+        type: string
+        enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional]
+      category:
+        type: string
+        $ref: '#/components/category'
+  subject:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      proficiencyLevel:
+        type: string
+        enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional]
+      category:
+        type: string
+        $ref: '#/components/category'

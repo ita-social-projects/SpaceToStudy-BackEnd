@@ -1,0 +1,290 @@
+paths:
+  /subjects:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subjects
+      summary: Find all subjects
+      description: Finds and returns an array with a list of subjects.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/subjects'
+              example:
+                - _id: 6255bc080a71adf9223df134
+                  name: English
+                  price: 30
+                  proficiencyLevel: Advanced
+                  category: 63525e23bf163f5ea609ff27
+                - _id: 6255bc080a71adf9223df135
+                  name: Algebra
+                  price: 25
+                  proficiencyLevel: Beginner
+                  category: 63525e23bf163f5ea609ff29
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subjects
+      summary: Create new subject.
+      description: Saves a new subject to the database.
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        description: Create new subject.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/subjectBody'
+            example:
+              name: Ukrainian
+              price: 15
+              proficiencyLevel: Beginner
+              category: 63525e23bf163f5ea609ff27
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/subject'
+              example:
+                _id: 6255bc080a71adf9223df136
+                name: Ukrainian
+                price: 15
+                proficiencyLevel: Beginner
+                category: 63525e23bf163f5ea609ff27
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: SUBJECT_ALREADY_EXISTS
+                message: Subject with the specified name and level already exists.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+  /subjects/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subjects
+      summary: Find subject by ID
+      description: Finds and returns a subject with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the subject that needs to be fetched
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/subject'
+              example:
+                _id: 6255bc080a71adf9223df134
+                name: English
+                price: 30
+                proficiencyLevel: Advanced
+                category: 63525e23bf163f5ea609ff27
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: SUBJECT_NOT_FOUND
+                message: Subject with the specified id was not found.
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subjects
+      summary: Update subject by ID
+      description: Finds and update a subject with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the subject that needs to be updated
+          type: string
+      requestBody:
+        required: true
+        description: Provide required data to update subject.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/subjectBody'
+            example:
+              name: Ukrainian
+              price: 15
+              proficiencyLevel: Beginner
+              category: 63525e23bf163f5ea609ff27
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: SUBJECT_NOT_FOUND
+                message: Subject with the specified id was not found.
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Subjects
+      summary: Delete subject by ID
+      description: Finds and deletes a subject with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the subject that needs to be deleted
+          type: string
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: SUBJECT_NOT_FOUND
+                message: Subject with the specified id was not found.

@@ -6,14 +6,11 @@ const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const tutorService = {
   getTutorByEmail: async (email) => {
-    const tutor = await Tutor.findOne({ email }).lean().exec()
+    const tutor = await Tutor.findOne({ email }).select('+password').lean().exec()
 
     if (!tutor) {
       return null
     }
-
-    tutor.role = tutor.role.value
-
     return tutor
   },
 

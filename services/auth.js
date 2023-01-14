@@ -1,6 +1,7 @@
 const tokenService = require('~/services/token')
-const userService = require('~/services/user')
 const emailService = require('~/services/email')
+const { createStudent, getStudentByEmail, getStudentById, updateStudent } = require('~/services/student')
+const { createTutor, getTutorByEmail, getTutorById, updateTutor } = require('~/services/tutor')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 const {
@@ -16,12 +17,14 @@ const emailSubject = require('~/consts/emailSubject')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
+const { choseLastUsedRole, choseServiceByRole } = require('~/utils/auth')
 
 const authService = {
   signup: async (role, firstName, lastName, email, password, language) => {
-    const user = await userService.createUser(role, firstName, lastName, email, password, language)
+    const createUser = choseServiceByRole(role, createTutor, createStudent)
+    const user = await createUser(role, firstName, lastName, email, password, language)
 
-    const confirmToken = tokenService.generateConfirmToken({ id: user._id })
+    const confirmToken = tokenService.generateConfirmToken({ id: user._id, role })
     await tokenService.saveToken(user._id, confirmToken, CONFIRM_TOKEN)
     await emailService.sendEmail(email, emailSubject.EMAIL_CONFIRMATION, language, { confirmToken, email, firstName })
     return {
@@ -31,7 +34,10 @@ const authService = {
   },
 
   login: async (email, password) => {
-    const user = await userService.getUserByEmail(email)
+    const tutor = await getTutorByEmail(email)
+    const student = await getStudentByEmail(email)
+
+    const user = choseLastUsedRole(tutor, student)
 
     if (!user || !(await comparePasswords(password, user.password))) {
       throw createError(401, INCORRECT_CREDENTIALS)
@@ -45,12 +51,13 @@ const authService = {
 
     const tokens = tokenService.generateTokens({ id: _id, role, isFirstLogin })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
+    const updateUser = choseServiceByRole(role, updateTutor, updateStudent)
 
     if (isFirstLogin) {
-      await userService.updateUser(_id, { isFirstLogin: false })
+      await updateUser(_id, { isFirstLogin: false })
     }
 
-    await userService.updateUser(_id, { lastLogin: new Date() })
+    await updateUser(_id, { lastLogin: new Date() })
 
     return tokens
   },
@@ -66,14 +73,16 @@ const authService = {
     if (!tokenFromDB || !tokenData) {
       throw createError(400, BAD_CONFIRM_TOKEN)
     }
+    const getUserById = choseServiceByRole(tokenData.role, getTutorById, getStudentById)
+    const updateUser = choseServiceByRole(tokenData.role, updateTutor, updateStudent)
 
-    const { _id, isEmailConfirmed } = await userService.getUserById(tokenData.id)
+    const { _id, isEmailConfirmed } = await getUserById(tokenData.id)
 
     if (isEmailConfirmed) {
       throw createError(400, EMAIL_ALREADY_CONFIRMED)
     }
 
-    await userService.updateUser(_id, { isEmailConfirmed: true })
+    await updateUser(_id, { isEmailConfirmed: true })
   },
 
   refreshAccessToken: async (refreshToken) => {
@@ -84,7 +93,8 @@ const authService = {
       throw createError(400, BAD_REFRESH_TOKEN)
     }
 
-    const { _id, role, isFirstLogin } = await userService.getUserById(tokenData.id)
+    const getUserById = choseServiceByRole(tokenData.role, getTutorById, getStudentById)
+    const { _id, role, isFirstLogin } = await getUserById(tokenData.id)
 
     const tokens = tokenService.generateTokens({ id: _id, role, isFirstLogin })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
@@ -93,15 +103,18 @@ const authService = {
   },
 
   sendResetPasswordEmail: async (email, language) => {
-    const user = await userService.getUserByEmail(email)
+    const tutor = await getTutorByEmail(email)
+    const student = await getStudentByEmail(email)
+
+    const user = choseLastUsedRole(tutor, student)
 
     if (!user) {
       throw createError(404, EMAIL_NOT_FOUND)
     }
 
-    const { _id, firstName } = user
+    const { _id, firstName, role } = user
 
-    const resetToken = tokenService.generateResetToken({ id: _id, firstName, email })
+    const resetToken = tokenService.generateResetToken({ id: _id, firstName, email, role })
     await tokenService.saveToken(_id, resetToken, RESET_TOKEN)
 
     await emailService.sendEmail(email, emailSubject.RESET_PASSWORD, language, { resetToken, email, firstName })
@@ -115,10 +128,11 @@ const authService = {
       throw createError(400, BAD_RESET_TOKEN)
     }
 
-    const { id: userId, firstName, email } = tokenData
+    const { id: userId, firstName, email, role } = tokenData
     const hashedPassword = await hashPassword(password)
+    const updateUser = choseServiceByRole(role, updateTutor, updateStudent)
 
-    await userService.updateUser(userId, { password: hashedPassword })
+    await updateUser(userId, { password: hashedPassword })
 
     await tokenService.removeResetToken(userId)
 

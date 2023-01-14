@@ -90,7 +90,7 @@ describe('Auth controller', () => {
   describe('Confirm email endpoint', () => {
     let confirmToken
     beforeAll(() => {
-      confirmToken = tokenService.generateConfirmToken({ id: user._id })
+      confirmToken = tokenService.generateConfirmToken({ id: user._id, role: user.role })
       Token.findOne = jest.fn().mockResolvedValue({ confirmToken })
     })
     afterAll(() => jest.resetAllMocks())
@@ -190,8 +190,8 @@ describe('Auth controller', () => {
   describe('UpdatePassword endpoint', () => {
     let resetToken
     beforeAll(() => {
-      const { _id: id, firstName, email } = user
-      resetToken = tokenService.generateResetToken({ id, firstName, email })
+      const { _id: id, firstName, email, role } = user
+      resetToken = tokenService.generateResetToken({ id, firstName, email, role })
       Token.findOne = jest.fn().mockResolvedValue({ resetToken })
     })
     afterAll(() => jest.resetAllMocks())

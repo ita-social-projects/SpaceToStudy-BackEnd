@@ -14,7 +14,7 @@ const tutorService = {
     return tutor
   },
 
-  createTutor: async (role, firstName, lastName, email, password, language) => {
+  createTutor: async (role, firstName, lastName, email, password, language, isEmailConfirmed) => {
     const duplicateTutor = await tutorService.getTutorByEmail(email)
 
     if (duplicateTutor) {
@@ -28,7 +28,8 @@ const tutorService = {
       lastName,
       email,
       password: hashedPassword,
-      language
+      language,
+      isEmailConfirmed
     })
 
     return newTutor

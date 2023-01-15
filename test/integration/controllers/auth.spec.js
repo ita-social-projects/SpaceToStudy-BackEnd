@@ -7,6 +7,9 @@ const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
 const Token = require('~/models/token')
 const { expectError } = require('~/test/helpers')
+const { OAuth2Client } = require('google-auth-library')
+
+jest.mock('google-auth-library')
 
 describe('Auth controller', () => {
   let app, server
@@ -131,7 +134,7 @@ describe('Auth controller', () => {
     it('should throw INCORRECT_CREDENTIALS error', async () => {
       const response = await app.post('/auth/login').send({ email: 'invalid@gmail.com', password: 'invalid' })
 
-      expectError(401, errors.INCORRECT_CREDENTIALS, response)
+      expectError(401, errors.USER_NOT_FOUND, response)
     })
 
     it('should throw INCORRECT_CREDENTIALS error', async () => {
@@ -205,6 +208,45 @@ describe('Auth controller', () => {
       const response = await app.patch('/auth/reset-password/invalid-token').send({ password: 'valid_pass1' })
 
       expectError(400, errors.BAD_RESET_TOKEN, response)
+    })
+  })
+
+  describe('GoogleAuth endpoint', () => {
+    beforeAll(() => {
+      const googleUser = { given_name: 'test', family_name: 'test', email: 'test@test.com', sub: '123456789' }
+
+      const mockVerifyIdToken = jest.fn(() => ({
+        getPayload: () => googleUser
+      }))
+
+      OAuth2Client.mockImplementation(() => {
+        return {
+          verifyIdToken: mockVerifyIdToken
+        }
+      })
+    })
+    afterAll(() => {
+      jest.resetAllMocks()
+    })
+
+    const credential = 'test'
+
+    it('should throw USER_NOT_FOUND if user doesn`t have account', async () => {
+      const response = await app.post('/auth/google-auth').send({ token: { credential } })
+
+      expectError(401, errors.USER_NOT_FOUND, response)
+    })
+
+    it('should register and log in user if user doesn`t have account', async () => {
+      const role = 'tutor'
+      const response = await app.post('/auth/google-auth').send({ token: { credential }, role })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
     })
   })
 })

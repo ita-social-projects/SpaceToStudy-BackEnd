@@ -4,7 +4,7 @@ const { hashPassword } = require('~/utils/passwordHelper')
 const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const studentService = {
-  createStudent: async (role, firstName, lastName, email, password, language) => {
+  createStudent: async (role, firstName, lastName, email, password, language, isEmailConfirmed) => {
     const duplicateStudent = await studentService.getStudentByEmail(email)
 
     if (duplicateStudent) {
@@ -19,7 +19,8 @@ const studentService = {
       lastName,
       email,
       password: hashedPassword,
-      language
+      language,
+      isEmailConfirmed
     })
 
     return newStudent

@@ -9,7 +9,7 @@ const errors = {
   },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',
-    message: 'The password or email you entered is incorrect.'
+    message: 'The password you entered is incorrect.'
   },
   BODY_IS_NOT_DEFINED: {
     code: 'BODY_IS_NOT_DEFINED',

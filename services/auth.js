@@ -1,3 +1,4 @@
+const { OAuth2Client } = require('google-auth-library')
 const tokenService = require('~/services/token')
 const emailService = require('~/services/email')
 const { createStudent, getStudentByEmail, getStudentById, updateStudent } = require('~/services/student')
@@ -11,12 +12,16 @@ const {
   INCORRECT_CREDENTIALS,
   EMAIL_NOT_FOUND,
   BAD_RESET_TOKEN,
-  BAD_REFRESH_TOKEN
+  BAD_REFRESH_TOKEN,
+  USER_NOT_FOUND
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const {
   tokenNames: { REFRESH_TOKEN, RESET_TOKEN, CONFIRM_TOKEN }
 } = require('~/consts/auth')
+const {
+  gmailCredentials: { clientId }
+} = require('~/configs/config')
 const { choseLastUsedRole, choseServiceByRole } = require('~/utils/auth')
 
 const authService = {
@@ -33,13 +38,49 @@ const authService = {
     }
   },
 
-  login: async (email, password) => {
+  googleAuth: async (idToken, role, language) => {
+    const client = new OAuth2Client(clientId)
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: clientId
+    })
+    const payload = ticket.getPayload()
+
+    if (role) {
+      const getUserByEmail = choseServiceByRole(role, getTutorByEmail, getStudentByEmail)
+      const user = await getUserByEmail(payload.email)
+      if (!user) {
+        const isEmailConfirmed = true
+        const createUser = choseServiceByRole(role, createTutor, createStudent)
+        await createUser(
+          role,
+          payload.given_name,
+          payload.family_name,
+          payload.email,
+          payload.sub,
+          language,
+          isEmailConfirmed
+        )
+      }
+    }
+    const isFromGoogle = true
+
+    return await module.exports.login(payload.email, payload.sub, isFromGoogle)
+  },
+
+  login: async (email, password, isFromGoogle) => {
     const tutor = await getTutorByEmail(email)
     const student = await getStudentByEmail(email)
 
     const user = choseLastUsedRole(tutor, student)
 
-    if (!user || !(await comparePasswords(password, user.password))) {
+    if (!user) {
+      throw createError(401, USER_NOT_FOUND)
+    }
+
+    const checkedPassword = (await comparePasswords(password, user.password)) || isFromGoogle
+
+    if (!checkedPassword) {
       throw createError(401, INCORRECT_CREDENTIALS)
     }
 

@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { ROLE_ENUM }
+  enums: { ROLE_ENUM, LANG_ENUM }
 } = require('~/consts/validation')
 
 const adminSchema = new Schema({
@@ -11,12 +11,10 @@ const adminSchema = new Schema({
     default: 'admin'
   },
   firstName: {
-    type: String,
-    required: true
+    type: String
   },
   lastName: {
-    type: String,
-    required: true
+    type: String
   },
   email: {
     type: String,
@@ -26,7 +24,6 @@ const adminSchema = new Schema({
   },
   password: {
     type: String,
-    required: true,
     select: false
   },
   active: {
@@ -44,8 +41,12 @@ const adminSchema = new Schema({
     required: true
   },
   lastLogin: {
-    type: Date,
-    required: true
+    type: Date
+  },
+  language: {
+    type: String,
+    enum: LANG_ENUM,
+    default: LANG_ENUM[0]
   }
 })
 

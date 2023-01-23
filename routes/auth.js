@@ -4,7 +4,7 @@ const asyncWrapper = require('~/middlewares/asyncWrapper')
 const authController = require('~/controllers/auth')
 const validationMiddleware = require('~/middlewares/validation')
 const signupValidationSchema = require('~/validation/schemas/signup')
-const loginValidationSchema = require('~/validation/schemas/login')
+const { loginValidationSchema, googleAuthValidationSchema } = require('~/validation/schemas/login')
 const resetPasswordValidationSchema = require('~/validation/schemas/resetPassword')
 const forgotPasswordValidationSchema = require('~/validation/schemas/forgotPassword')
 const langMiddleware = require('~/middlewares/language')
@@ -18,6 +18,12 @@ router.post(
   asyncWrapper(authController.signup)
 )
 router.post('/login', validationMiddleware(loginValidationSchema), asyncWrapper(authController.login))
+router.post(
+  '/google-auth',
+  validationMiddleware(googleAuthValidationSchema),
+  langMiddleware,
+  asyncWrapper(authController.googleAuth)
+)
 router.post('/logout', asyncWrapper(authController.logout))
 router.get('/confirm-email/:token', asyncWrapper(authController.confirmEmail))
 router.get('/refresh', asyncWrapper(authController.refreshAccessToken))

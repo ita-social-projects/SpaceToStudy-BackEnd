@@ -7,13 +7,13 @@ const errors = {
     code: 'USER_NOT_FOUND',
     message: 'User with the specified email or id was not found.'
   },
-  ADMIN_ALREADY_BLOCKED: {
-    code: 'ADMIN_ALREADY_BLOCKED',
-    message: 'Admin with the specified id is already blocked.'
+  USER_ALREADY_BLOCKED: {
+    code: 'USER_ALREADY_BLOCKED',
+    message: 'User with the specified id is already blocked.'
   },
-  ADMIN_ALREADY_UNBLOCKED: {
-    code: 'ADMIN_ALREADY_UNBLOCKED',
-    message: 'Admin with the specified id is already unblocked.'
+  USER_ALREADY_UNBLOCKED: {
+    code: 'USER_ALREADY_UNBLOCKED',
+    message: 'User with the specified id is already unblocked.'
   },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',

@@ -38,7 +38,7 @@ const adminSchema = new Schema({
   },
   signUpDate: {
     type: Date,
-    required: true
+    default: Date.now
   },
   lastLogin: {
     type: Date

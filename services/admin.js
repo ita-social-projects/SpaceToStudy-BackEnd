@@ -2,8 +2,8 @@ const Admin = require('~/models/admin')
 const {
   ALREADY_REGISTERED,
   USER_NOT_FOUND,
-  ADMIN_ALREADY_BLOCKED,
-  ADMIN_ALREADY_UNBLOCKED
+  USER_ALREADY_BLOCKED,
+  USER_ALREADY_UNBLOCKED
 } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const { hashPassword } = require('~/utils/passwordHelper')
@@ -95,7 +95,7 @@ const adminService = {
 
     return {
       items: admins.items,
-      count: admins.calculations[0].count
+      count: admins.calculations[0]?.count || 0
     }
   },
 
@@ -127,7 +127,7 @@ const adminService = {
     }
 
     if (admin.blocked) {
-      throw createError(409, ADMIN_ALREADY_BLOCKED)
+      throw createError(409, USER_ALREADY_BLOCKED)
     }
 
     admin.blocked = true
@@ -144,7 +144,7 @@ const adminService = {
     }
 
     if (!admin.blocked) {
-      throw createError(409, ADMIN_ALREADY_UNBLOCKED)
+      throw createError(409, USER_ALREADY_UNBLOCKED)
     }
 
     admin.blocked = false

@@ -50,25 +50,25 @@ const updateAdmin = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
 
-  const updatedAdmin = await adminService.updateAdmin(id, updateData)
+  await adminService.updateAdmin(id, updateData)
 
-  res.status(200).json(updatedAdmin)
+  res.status(204).end()
 }
 
 const blockAdmin = async (req, res) => {
   const { id } = req.params
 
-  const admin = await adminService.blockAdmin(id)
+  await adminService.blockAdmin(id)
 
-  res.status(200).json(admin)
+  res.status(204).end()
 }
 
 const unblockAdmin = async (req, res) => {
   const { id } = req.params
 
-  const admin = await adminService.unblockAdmin(id)
+  await adminService.unblockAdmin(id)
 
-  res.status(200).json(admin)
+  res.status(204).end()
 }
 
 const deleteAdmin = async (req, res) => {

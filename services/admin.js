@@ -1,10 +1,5 @@
 const Admin = require('~/models/admin')
-const {
-  ALREADY_REGISTERED,
-  USER_NOT_FOUND,
-  USER_ALREADY_BLOCKED,
-  USER_ALREADY_UNBLOCKED
-} = require('~/consts/errors')
+const { ALREADY_REGISTERED, USER_NOT_FOUND, USER_ALREADY_BLOCKED, USER_ALREADY_UNBLOCKED } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const { hashPassword } = require('~/utils/passwordHelper')
 
@@ -115,8 +110,6 @@ const adminService = {
     if (!admin) {
       throw createError(404, USER_NOT_FOUND)
     }
-
-    return admin
   },
 
   blockAdmin: async (id) => {
@@ -132,8 +125,6 @@ const adminService = {
 
     admin.blocked = true
     await admin.save()
-
-    return admin
   },
 
   unblockAdmin: async (id) => {
@@ -149,8 +140,6 @@ const adminService = {
 
     admin.blocked = false
     await admin.save()
-
-    return admin
   },
 
   deleteAdmin: async (id) => {

@@ -1,12 +1,14 @@
 const { serverCleanup, serverInit } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { SUBJECT_NOT_FOUND } = require('~/consts/errors')
-const tokenService = require('~/services/token')
 
 const endpointUrl = '/subjects/'
 
-let testSubject, testUser, accessToken
+let testSubject
+const accessToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZDBmNWY5YWZiMDlmMTQ4YzM0MmU2NCIsInJvbGUiOiJ0dXRvciIsImlzRmlyc3RMb2dpbiI6dHJ1ZSwiaWF0IjoxNjc0NjM4ODQ1LCJleHAiOjE2NzQ2NDI0NDV9.IHzUDH_IeEcgEnLzsNUarpLoiQOZi_IPHsX7PSaUoZc'
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
+
 describe('Subject controller', () => {
   let app, server
 
@@ -20,25 +22,6 @@ describe('Subject controller', () => {
 
   describe(`POST ${endpointUrl}`, () => {
     it('should create a subject', async () => {
-      testUser = {
-        role: 'tutor',
-        firstName: 'Tart',
-        lastName: 'Dilling',
-        email: 'test@gmail.com',
-        password: 'Superpass123@'
-      }
-      const createUserResponse = await app.post('/auth/signup').send(testUser)
-      testUser._id = createUserResponse.body.userId
-
-      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({ user: testUser._id })
-      const confirmToken = findConfirmTokenResponse[0].confirmToken
-      await app.get(`/auth/confirm-email/${confirmToken}`)
-
-      const loginUserResponse = await app
-        .post('/auth/login')
-        .send({ email: testUser.email, password: testUser.password })
-      accessToken = loginUserResponse.body.accessToken
-
       const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send({
         name: 'English',
         price: 20,

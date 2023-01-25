@@ -129,12 +129,17 @@ describe('Admin controller', () => {
     describe('PATCH admins/:id/block', () => {
       it('should block admin by id', async () => {
         delete testAdmin._id
+        await Admin.deleteOne({
+          email: testAdmin.email
+        })
         const admin = await Admin.create(testAdmin)
 
         const url = `/admins/${admin._id}/block`
         const response = await app.patch(url)
 
         expect(response.statusCode).toBe(204)
+
+        testAdmin._id = admin._id
       })
 
       it('should throw USER_NOT_FOUND', async () => {
@@ -145,13 +150,7 @@ describe('Admin controller', () => {
       })
 
       it('should throw USER_ALREADY_BLOCKED', async () => {
-        delete testAdmin._id
-        const admin = await Admin.create({
-          ...testAdmin,
-          blocked: true
-        })
-
-        const url = `/admins/${admin._id}/block`
+        const url = `/admins/${testAdmin._id}/block`
         const response = await app.patch(url)
 
         expectError(409, USER_ALREADY_BLOCKED, response)
@@ -162,6 +161,11 @@ describe('Admin controller', () => {
   describe('admins/:id/unblock endpoint', () => {
     describe('PATCH admins/:id/unblock', () => {
       it('should unblock admin by id', async () => {
+        delete testAdmin._id
+        await Admin.deleteOne({
+          email: testAdmin.email
+        })
+
         const admin = await Admin.create({
           ...testAdmin,
           blocked: true
@@ -171,6 +175,8 @@ describe('Admin controller', () => {
         const response = await app.patch(url)
 
         expect(response.statusCode).toBe(204)
+
+        testAdmin._id = admin._id
       })
 
       it('should throw USER_NOT_FOUND', async () => {
@@ -181,9 +187,7 @@ describe('Admin controller', () => {
       })
 
       it('should throw USER_ALREADY_UNBLOCKED', async () => {
-        const admin = await Admin.create(testAdmin)
-
-        const url = `/admins/${admin._id}/unblock`
+        const url = `/admins/${testAdmin._id}/unblock`
         const response = await app.patch(url)
 
         expectError(409, USER_ALREADY_UNBLOCKED, response)

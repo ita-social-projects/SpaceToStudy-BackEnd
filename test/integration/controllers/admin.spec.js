@@ -3,11 +3,7 @@ const {
   roles: { ADMIN }
 } = require('~/consts/auth')
 const Admin = require('~/models/admin')
-const {
-  USER_NOT_FOUND,
-  USER_ALREADY_BLOCKED,
-  USER_ALREADY_UNBLOCKED
-} = require('~/consts/errors')
+const { USER_NOT_FOUND, USER_ALREADY_BLOCKED, USER_ALREADY_UNBLOCKED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 const {
   enums: { LANG_ENUM }
@@ -67,10 +63,10 @@ describe('Admin controller', () => {
     describe('GET admins/:id', () => {
       it('should get admin by id', async () => {
         const admin = await Admin.create(testAdmin)
-  
+
         const url = `/admins/${admin._id}`
         const response = await app.get(url)
-  
+
         expect(response.statusCode).toBe(200)
         expect(response.body).toEqual(
           expect.objectContaining({
@@ -81,54 +77,41 @@ describe('Admin controller', () => {
             language: LANG_ENUM[0]
           })
         )
+
+        testAdmin._id = admin._id
       })
-  
+
       it('should throw USER_NOT_FOUND', async () => {
         const url = `/admins/${nonExistingAdminId}`
         const response = await app.get(url)
-  
+
         expectError(404, USER_NOT_FOUND, response)
       })
     })
 
     describe('PATCH admins/:id', () => {
       it('should update admin by id', async () => {
-        const admin = await Admin.create(testAdmin)
-  
-        const url = `/admins/${admin._id}`
+        const url = `/admins/${testAdmin._id}`
         const response = await app.patch(url).send(testAdmin)
-  
-        expect(response.statusCode).toBe(200)
-        expect(response.body).toEqual(
-          expect.objectContaining({
-            role: ADMIN,
-            firstName: testAdmin.firstName,
-            lastName: testAdmin.lastName,
-            email: testAdmin.email,
-            language: LANG_ENUM[0]
-          })
-        )  
+
+        expect(response.statusCode).toBe(204)
       })
 
       it('should throw USER_NOT_FOUND', async () => {
         const url = `/admins/${nonExistingAdminId}`
-        const response = await app
-          .patch(url)
-          .send(testAdmin)
-  
+        const response = await app.patch(url).send(testAdmin)
+
         expectError(404, USER_NOT_FOUND, response)
       })
     })
 
     describe('DELETE admins/:id', () => {
       it('should delete admin by id', async () => {
-        const admin = await Admin.create(testAdmin)
-  
-        const url = `/admins/${admin._id}`
+        const url = `/admins/${testAdmin._id}`
         const response = await app.delete(url)
-  
-        const adminById = await Admin.findById(admin._id).lean().exec()
-        
+
+        const adminById = await Admin.findById(testAdmin._id).lean().exec()
+
         expect(adminById).toBeNull()
         expect(response.statusCode).toBe(204)
       })
@@ -136,7 +119,7 @@ describe('Admin controller', () => {
       it('should throw USER_NOT_FOUND', async () => {
         const url = `/admins/${nonExistingAdminId}`
         const response = await app.delete(url)
-  
+
         expectError(404, USER_NOT_FOUND, response)
       })
     })
@@ -145,37 +128,29 @@ describe('Admin controller', () => {
   describe('admins/:id/block endpoint', () => {
     describe('PATCH admins/:id/block', () => {
       it('should block admin by id', async () => {
+        delete testAdmin._id
         const admin = await Admin.create(testAdmin)
-  
+
         const url = `/admins/${admin._id}/block`
         const response = await app.patch(url)
-  
-        expect(response.body).toEqual(
-          expect.objectContaining({
-            role: ADMIN,
-            firstName: testAdmin.firstName,
-            lastName: testAdmin.lastName,
-            email: testAdmin.email,
-            language: LANG_ENUM[0],
-            blocked: true
-          })
-        )
-        expect(response.statusCode).toBe(200)
+
+        expect(response.statusCode).toBe(204)
       })
 
       it('should throw USER_NOT_FOUND', async () => {
         const url = `/admins/${nonExistingAdminId}/block`
         const response = await app.patch(url)
-  
+
         expectError(404, USER_NOT_FOUND, response)
       })
 
       it('should throw USER_ALREADY_BLOCKED', async () => {
+        delete testAdmin._id
         const admin = await Admin.create({
           ...testAdmin,
           blocked: true
         })
-  
+
         const url = `/admins/${admin._id}/block`
         const response = await app.patch(url)
 
@@ -191,33 +166,23 @@ describe('Admin controller', () => {
           ...testAdmin,
           blocked: true
         })
-  
+
         const url = `/admins/${admin._id}/unblock`
         const response = await app.patch(url)
-  
-        expect(response.body).toEqual(
-          expect.objectContaining({
-            role: ADMIN,
-            firstName: testAdmin.firstName,
-            lastName: testAdmin.lastName,
-            email: testAdmin.email,
-            language: LANG_ENUM[0],
-            blocked: false
-          })
-        )
-        expect(response.statusCode).toBe(200)
+
+        expect(response.statusCode).toBe(204)
       })
 
       it('should throw USER_NOT_FOUND', async () => {
         const url = `/admins/${nonExistingAdminId}/unblock`
         const response = await app.patch(url)
-  
+
         expectError(404, USER_NOT_FOUND, response)
       })
 
       it('should throw USER_ALREADY_UNBLOCKED', async () => {
         const admin = await Admin.create(testAdmin)
-  
+
         const url = `/admins/${admin._id}/unblock`
         const response = await app.patch(url)
 

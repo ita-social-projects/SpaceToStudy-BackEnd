@@ -4,6 +4,11 @@ const {
 } = require('~/consts/validation')
 
 const subjectSchema = new Schema({
+  tutorId: {
+    type: Schema.Types.ObjectId,
+    ref: 'Tutor',
+    required: true
+  },
   name: {
     type: String,
     required: [true, 'Please, enter a subject name']

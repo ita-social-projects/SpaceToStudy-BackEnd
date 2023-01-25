@@ -6,6 +6,9 @@ definitions:
       properties:
         _id:
           type: string
+        tutorId:
+          type: string
+          $ref: '#/components/tutor'
         name:
           type: string
         price:
@@ -19,6 +22,9 @@ definitions:
   subjectBody:
     type: object
     properties:
+      tutorId:
+        type: string
+        $ref: '#/components/tutor'
       name:
         type: string
       price:
@@ -34,6 +40,9 @@ definitions:
     properties:
       _id:
         type: string
+      tutorId:
+        type: string
+        $ref: '#/components/tutor'
       name:
         type: string
       price:

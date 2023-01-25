@@ -18,11 +18,13 @@ paths:
                 $ref: '#/definitions/subjects'
               example:
                 - _id: 6255bc080a71adf9223df134
+                  tutorId: 63cef5e2c2586efc326538db
                   name: English
                   price: 30
                   proficiencyLevel: Advanced
                   category: 63525e23bf163f5ea609ff27
                 - _id: 6255bc080a71adf9223df135
+                  tutorId: 63cef5e97485991d9a6e2471
                   name: Algebra
                   price: 25
                   proficiencyLevel: Beginner
@@ -67,6 +69,7 @@ paths:
                 $ref: '#/definitions/subject'
               example:
                 _id: 6255bc080a71adf9223df136
+                tutorId: 63cef5e97485991d9a6e2471
                 name: Ukrainian
                 price: 15
                 proficiencyLevel: Beginner
@@ -126,6 +129,7 @@ paths:
                 $ref: '#/definitions/subject'
               example:
                 _id: 6255bc080a71adf9223df134
+                tutorId: 63cef5e97485991d9a6e2471
                 name: English
                 price: 30
                 proficiencyLevel: Advanced

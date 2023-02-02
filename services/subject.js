@@ -1,6 +1,6 @@
 const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
-const { SUBJECT_NOT_FOUND } = require('~/consts/errors')
+const { SUBJECT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const subjectService = {
   getSubjects: async () => {
@@ -19,9 +19,14 @@ const subjectService = {
     return subject
   },
 
-  addSubject: async (tutorId, name, price, proficiencyLevel, category) => {
-    const newSubject = await Subject.create({ tutorId, name, price, proficiencyLevel, category })
+  addSubject: async (name, category) => {
+    const duplicatedSubject = await Subject.findOne({ name }).lean().exec()
 
+    if (duplicatedSubject) {
+      throw createError(409, SUBJECT_ALREADY_EXISTS)
+    }
+
+    const newSubject = await Subject.create({ name, category })
     return newSubject
   },
 
@@ -34,7 +39,7 @@ const subjectService = {
   },
 
   deleteSubject: async (id) => {
-    const subject = Subject.findByIdAndRemove(id).exec()
+    const subject = await Subject.findByIdAndRemove(id).exec()
 
     if (!subject) {
       throw createError(404, SUBJECT_NOT_FOUND)

@@ -6,32 +6,24 @@ definitions:
       properties:
         _id:
           type: string
-        tutorId:
-          type: string
-          $ref: '#/components/tutor'
         name:
           type: string
-        price:
-          type: number
-        proficiencyLevel:
-          type: string
-          enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional]
         category:
           type: string
           $ref: '#/components/category'
+        totalOffers:
+          type: Number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
   subjectBody:
     type: object
     properties:
-      tutorId:
-        type: string
-        $ref: '#/components/tutor'
       name:
         type: string
-      price:
-        type: number
-      proficiencyLevel:
-        type: string
-        enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional]
       category:
         type: string
         $ref: '#/components/category'
@@ -40,16 +32,16 @@ definitions:
     properties:
       _id:
         type: string
-      tutorId:
-        type: string
-        $ref: '#/components/tutor'
       name:
         type: string
-      price:
-        type: number
-      proficiencyLevel:
-        type: string
-        enum: [Beginner, Intermediate, Advanced, Test Preparation, Professional]
       category:
         type: string
         $ref: '#/components/category'
+      totalOffers:
+        type: Number
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

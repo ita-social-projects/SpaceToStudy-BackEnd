@@ -1,6 +1,6 @@
 const { request } = require('express')
 const { INVALID_LANGUAGE } = require('~/consts/errors')
-const langMiddleware = require('~/middlewares/language')
+const langMiddleware = require('~/middlewares/appLanguage')
 const { createError } = require('~/utils/errorsHelper')
 
 describe('Language middleware', () => {

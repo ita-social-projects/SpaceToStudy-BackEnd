@@ -2,7 +2,7 @@ const express = require('express')
 
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const emailController = require('~/controllers/email')
-const langMiddleware = require('~/middlewares/language')
+const langMiddleware = require('~/middlewares/appLanguage')
 
 const router = express.Router()
 

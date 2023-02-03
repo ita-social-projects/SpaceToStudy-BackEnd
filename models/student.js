@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { ROLE_ENUM, LANG_ENUM }
+  enums: { ROLE_ENUM, APP_LANG_ENUM }
 } = require('~/consts/validation')
 
 const studentSchema = new Schema({
@@ -54,8 +54,8 @@ const studentSchema = new Schema({
   },
   language: {
     type: String,
-    enum: LANG_ENUM,
-    default: LANG_ENUM[0]
+    enum: APP_LANG_ENUM,
+    default: APP_LANG_ENUM[0]
   }
 })
 

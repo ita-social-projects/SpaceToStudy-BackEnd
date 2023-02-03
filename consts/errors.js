@@ -1,5 +1,5 @@
 const {
-  enums: { LANG_ENUM }
+  enums: { APP_LANG_ENUM }
 } = require('~/consts/validation')
 
 const errors = {
@@ -101,7 +101,7 @@ const errors = {
   },
   INVALID_LANGUAGE: {
     code: 'INVALID_LANGUAGE',
-    message: `The language name is invalid. Possible options: ${LANG_ENUM.join(', ')}.`
+    message: `The language name is invalid. Possible options: ${APP_LANG_ENUM.join(', ')}.`
   },
   REVIEW_NOT_FOUND: {
     code: 'REVIEW_NOT_FOUND',

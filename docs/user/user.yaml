@@ -18,17 +18,39 @@ paths:
                 $ref: '#/definitions/users'
               example:
                 - _id: 6255bc080a75adf9223df100
-                  role: student
+                  role: [student, tutor]
                   firstName: John
                   lastName: Doe
                   email: johndoe@gmail.com
+                  categories:
+                    [
+                      { _id: 6255bc080a75adf9223df444, name: Languages },
+                      { _id: 6255bc080a75adf443d7644, name: Biology }
+                    ]
+                  totalReviews: 10
+                  averageRating: 4.5
+                  nativeLanguage: english
+                  address: { country: The USA, city: California }
+                  education: KNPU H.S. Skovoroda
+                  photo: john-doe-photo.jpg
                   lastLogin: null
+                  createdAt: 2021-04-09T11:34:53.243+00:00
+                  updatedAt: 2022-09-02T11:59:53.243+00:00
                 - _id: 8755bc080a00adr9243df104
-                  role: tutor
+                  role: [tutor]
                   firstName: Joe
                   lastName: Doe
                   email: joedoe@outlook.com
+                  categories: [{ _id: 6255bc080a75adf9223df444, name: Languages }]
+                  totalReviews: 530
+                  averageRating: 5
+                  nativeLanguage: ukrainian
+                  address: { country: Ukraine, city: Kharkiv }
+                  education: KNPU H.S. Skovoroda
+                  photo: joe-doe-photo.jpg
                   lastLogin: 2022-09-02T11:59:53.243+00:00
+                  createdAt: 2021-04-09T11:34:53.243+00:00
+                  updatedAt: 2022-09-02T11:59:53.243+00:00
         401:
           description: Unauthorized
           content:
@@ -68,8 +90,19 @@ paths:
                 firstName: John
                 lastName: Doe
                 email: johndoe@gmail.com
+                categories:
+                  [{ _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology }]
+                totalReviews: 10
+                averageRating: 4.5
+                nativeLanguage: english
+                address: { country: The USA, city: California }
+                education: KNPU H.S. Skovoroda
+                photo: john-doe-photo.jpg
                 isEmailConfirmed: true
                 isFirstLogin: true
+                lastLogin: 2022-09-02T11:59:53.243+00:00
+                createdAt: 2021-04-09T11:34:53.243+00:00
+                updatedAt: 2022-09-02T11:59:53.243+00:00
         400:
           description: Bad Request
           content:

@@ -1,5 +1,4 @@
 const User = require('~/models/user')
-const Role = require('~/models/role')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
@@ -7,64 +6,54 @@ const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
   getUsers: async () => {
-    const users = await User.find().populate('role').lean().exec()
+    const users = await User.find().populate('categories').lean().exec()
 
-    return users.map(
-      ({ _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin, language }) => ({
-        _id,
-        role: role.value,
-        firstName,
-        lastName,
-        email,
-        isEmailConfirmed,
-        isFirstLogin,
-        lastLogin,
-        language
-      })
-    )
+    return users
   },
 
   getUserById: async (userId) => {
-    const user = await User.findById(userId).populate('role').lean().exec()
+    const user = await User.findById(userId)
+      .populate('categories')
+      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin')
+      .lean()
+      .exec()
 
     if (!user) {
       throw createError(404, USER_NOT_FOUND)
     }
 
-    const { _id, role, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin } = user
-
-    return { _id, role: role.value, firstName, lastName, email, isEmailConfirmed, isFirstLogin, lastLogin }
+    return user
   },
 
   getUserByEmail: async (email) => {
-    const user = await User.findOne({ email }).populate('role').lean().exec()
+    const user = await User.findOne({ email })
+      .select('+password +lastLoginAs +isEmailConfirmed +isFirstLogin +appLanguage')
+      .lean()
+      .exec()
 
     if (!user) {
       return null
     }
 
-    user.role = user.role.value
-
     return user
   },
 
-  createUser: async (role, firstName, lastName, email, password, language) => {
+  createUser: async (role, firstName, lastName, email, password, appLanguage) => {
     const duplicateUser = await userService.getUserByEmail(email)
 
     if (duplicateUser) {
       throw createError(409, ALREADY_REGISTERED)
     }
 
-    const foundRole = await Role.findOne({ value: role }).exec()
     const hashedPassword = await hashPassword(password)
 
     const newUser = await User.create({
-      role: foundRole,
+      role,
       firstName,
       lastName,
       email,
       password: hashedPassword,
-      language
+      appLanguage
     })
 
     return newUser

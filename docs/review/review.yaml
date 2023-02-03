@@ -23,6 +23,7 @@ paths:
                   authorId: 6255bc080a75adf9223df211
                   targetUserId: 6255bc080a75adf9223df212
                   targetUserRole: tutor
+                  offerId: 6255bc033a75adf9223df231
                   createdAt: 2022-10-18T13:25:36.292Z
                   updatedAt: 2022-10-18T13:25:36.292Z
                 - _id: 8755bc080a00adr9243df104
@@ -31,6 +32,7 @@ paths:
                   authorId: 6255bc080a75adf9223df211
                   targetUserId: 6255bc080a75adf9223df212
                   targetUserRole: tutor
+                  offerId: 6255bc033a75adf9223df231
                   createdAt: 2022-10-18T13:25:36.292Z
                   updatedAt: 2022-10-18T13:25:36.292Z
         401:
@@ -75,6 +77,7 @@ paths:
                 authorId: 6255bc080a75adf9223df211
                 targetUserId: 6255bc080a75adf9223df212
                 targetUserRole: tutor
+                offerId: 6255bc033a75adf9223df231
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:
@@ -137,6 +140,7 @@ paths:
                 authorId: 6255bc080a75adf9223df211
                 targetUserId: 6255bc080a75adf9223df212
                 targetUserRole: tutor
+                offerId: 6255bc033a75adf9223df231
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:

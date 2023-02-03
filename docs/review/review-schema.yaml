@@ -18,6 +18,9 @@ definitions:
           ref: '#components/user'
         targetUserRole:
           type: string
+        offerId:
+          type: string
+          ref: '#components/offer'
         createdAt:
           type: string
           format: date-time
@@ -41,6 +44,9 @@ definitions:
         ref: '#components/user'
       targetUserRole:
         type: string
+      offerId:
+        type: string
+        ref: '#components/offer'
       createdAt:
         type: string
         format: date-time
@@ -62,6 +68,9 @@ definitions:
         ref: '#components/user'
       targetUserRole:
         type: string
+      offerId:
+        type: string
+        ref: '#components/offer'
       createdAt:
         type: string
         format: date-time

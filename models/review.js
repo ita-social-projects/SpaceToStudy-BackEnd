@@ -29,6 +29,7 @@ const reviewSchema = new Schema(
     },
     offerId: {
       type: Schema.Types.ObjectId,
+      ref: 'Offer',
       required: true
     }
   },

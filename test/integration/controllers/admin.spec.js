@@ -2,18 +2,16 @@ const { serverInit, serverCleanup } = require('~/test/setup')
 const {
   roles: { ADMIN }
 } = require('~/consts/auth')
-const Admin = require('~/models/admin')
+const User = require('~/models/user')
 const { USER_NOT_FOUND, USER_ALREADY_BLOCKED, USER_ALREADY_UNBLOCKED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
-const {
-  enums: { LANG_ENUM }
-} = require('~/consts/validation')
 
 const testAdmin = {
   firstName: 'John',
   lastName: 'Doe',
   email: 'johndoe@gmail.com',
-  password: 'password'
+  password: 'password',
+  role: [ADMIN]
 }
 const nonExistingAdminId = '63ce52c1df0dee9758873429'
 
@@ -31,14 +29,14 @@ describe('Admin controller', () => {
   describe('admins endpoint', () => {
     it('should get admins', async () => {
       const params = new URLSearchParams()
-      params.set('skip', 0)
-      params.set('limit', 10)
+      params.set('skip', '0')
+      params.set('limit', '10')
       params.set('name', '')
       params.set('email', '')
       params.set('active', '1')
       params.set('blocked', '0')
-      params.set('signUpDateFrom', new Date().toISOString())
-      params.set('signUpDateTo', new Date().toISOString())
+      params.set('createdAtFrom', new Date().toISOString())
+      params.set('createdAtTo', new Date().toISOString())
       params.set('lastLoginFrom', new Date().toISOString())
       params.set('lastLoginTo', new Date().toISOString())
       params.set('sortByName', '1')
@@ -62,21 +60,29 @@ describe('Admin controller', () => {
   describe('admins/:id endpoint', () => {
     describe('GET admins/:id', () => {
       it('should get admin by id', async () => {
-        const admin = await Admin.create(testAdmin)
+        const admin = await User.create(testAdmin)
+
+        const { _id, role, firstName, lastName, email, averageRating, lastLogin, totalReviews, createdAt, updatedAt } =
+          admin
 
         const url = `/admins/${admin._id}`
         const response = await app.get(url)
 
         expect(response.statusCode).toBe(200)
-        expect(response.body).toEqual(
-          expect.objectContaining({
-            role: ADMIN,
-            firstName: testAdmin.firstName,
-            lastName: testAdmin.lastName,
-            email: testAdmin.email,
-            language: LANG_ENUM[0]
-          })
-        )
+        expect(response.body).toEqual({
+          _id: _id.toString(),
+          role,
+          firstName,
+          lastName,
+          email,
+          averageRating,
+          lastLogin,
+          totalReviews,
+          createdAt: createdAt.toISOString(),
+          updatedAt: updatedAt.toISOString(),
+          categories: [],
+          __v: 0
+        })
 
         testAdmin._id = admin._id
       })
@@ -110,7 +116,7 @@ describe('Admin controller', () => {
         const url = `/admins/${testAdmin._id}`
         const response = await app.delete(url)
 
-        const adminById = await Admin.findById(testAdmin._id).lean().exec()
+        const adminById = await User.findById(testAdmin._id).lean().exec()
 
         expect(adminById).toBeNull()
         expect(response.statusCode).toBe(204)
@@ -128,11 +134,12 @@ describe('Admin controller', () => {
   describe('admins/:id/block endpoint', () => {
     describe('PATCH admins/:id/block', () => {
       it('should block admin by id', async () => {
-        delete testAdmin._id
-        await Admin.deleteOne({
+        await User.deleteOne({
           email: testAdmin.email
         })
-        const admin = await Admin.create(testAdmin)
+        delete testAdmin._id
+
+        const admin = await User.create(testAdmin)
 
         const url = `/admins/${admin._id}/block`
         const response = await app.patch(url)
@@ -162,11 +169,11 @@ describe('Admin controller', () => {
     describe('PATCH admins/:id/unblock', () => {
       it('should unblock admin by id', async () => {
         delete testAdmin._id
-        await Admin.deleteOne({
+        await User.deleteOne({
           email: testAdmin.email
         })
 
-        const admin = await Admin.create({
+        const admin = await User.create({
           ...testAdmin,
           blocked: true
         })

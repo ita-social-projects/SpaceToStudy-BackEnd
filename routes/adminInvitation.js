@@ -1,6 +1,6 @@
 const express = require('express')
 
-const langMiddleware = require('~/middlewares/language')
+const langMiddleware = require('~/middlewares/appLanguage')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const adminInvitationController = require('~/controllers/adminInvitation')
 

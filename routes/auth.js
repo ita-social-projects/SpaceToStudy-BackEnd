@@ -7,7 +7,7 @@ const signupValidationSchema = require('~/validation/schemas/signup')
 const { loginValidationSchema, googleAuthValidationSchema } = require('~/validation/schemas/login')
 const resetPasswordValidationSchema = require('~/validation/schemas/resetPassword')
 const forgotPasswordValidationSchema = require('~/validation/schemas/forgotPassword')
-const langMiddleware = require('~/middlewares/language')
+const langMiddleware = require('~/middlewares/appLanguage')
 
 const router = express.Router()
 

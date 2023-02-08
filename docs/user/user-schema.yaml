@@ -7,14 +7,45 @@ definitions:
         _id:
           type: string
         role:
-          type: string
+          type: array
+          items:
+            type: string
+            enum:
+              - student
+              - tutor
         firstName:
           type: string
         lastName:
           type: string
         email:
           type: string
+        categories:
+          type: array
+          $ref: '#/components/category'
+        totalReviews:
+          type: number
+        averageRating:
+          type: number
+        nativeLanguage:
+          type: string
+        address:
+          type: object
+          properties:
+            country:
+              type: string
+            city:
+              type: string
+        education:
+          type: string
+        photo:
+          type: string
         lastLogin:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
           type: string
           format: date-time
   user:
@@ -23,14 +54,48 @@ definitions:
       _id:
         type: string
       role:
-        type: string
+        type: array
+        items:
+          type: string
+          enum:
+            - student
+            - tutor
       firstName:
         type: string
       lastName:
         type: string
       email:
         type: string
+      categories:
+        type: array
+        $ref: '#/components/category'
+      totalReviews:
+        type: number
+      averageRating:
+        type: number
+      nativeLanguage:
+        type: string
+      address:
+        type: object
+        properties:
+          country:
+            type: string
+          city:
+            type: string
+      education:
+        type: string
+      photo:
+        type: string
       isEmailConfirmed:
         type: boolean
       isFirstLogin:
         type: boolean
+      lastLogin:
+        type: string
+        format: date-time
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

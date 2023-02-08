@@ -15,7 +15,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/admins'
+                $ref: '#/definitions/users'
               example:
                 - _id: 6255bc080a75adf9223df100
                   firstName: John
@@ -65,7 +65,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/admin'
+                $ref: '#/definitions/user'
               example:
                 _id: 6255bc080a75adf9223df100
                 firstName: John
@@ -126,7 +126,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/signup'
+              $ref: '#/definitions/user'
             example:
               firstName: John
               lastName: Doe
@@ -138,7 +138,7 @@ paths:
             application/json:
               schema:
                 schema:
-                  $ref: '#/definitions/admin'
+                  $ref: '#/definitions/user'
                 example:
                   _id: 6255bc080a75adf9223df100
                   firstName: John

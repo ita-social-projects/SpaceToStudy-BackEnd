@@ -47,7 +47,7 @@ const adminService = {
     sortByName,
     sortByEmail,
     sortByLastLogin,
-    sortBySignUpDate
+    sortByCreatedAt
   }) => {
     const match = {
       role: ADMIN,
@@ -75,7 +75,7 @@ const adminService = {
       name: sortByName,
       email: sortByEmail,
       lastLogin: sortByLastLogin,
-      signUpDate: sortBySignUpDate
+      createdAt: sortByCreatedAt
     }
 
     const [admins] = await User.aggregate([

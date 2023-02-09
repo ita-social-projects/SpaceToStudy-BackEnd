@@ -10,7 +10,7 @@ const userSchema = new Schema(
   {
     role: {
       type: [String],
-      enum: [STUDENT, TUTOR],
+      enum: [STUDENT, TUTOR, ADMIN],
       required: [true, 'User role must be selected.']
     },
     firstName: {

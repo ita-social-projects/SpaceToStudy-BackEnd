@@ -12,7 +12,7 @@ const SeedSuperAdmin = {
   createSuperAdmin: async () => {
     try {
       const hashedPassword = await hashPassword(password)
-      const admin = {
+      const superAdmin = {
         role: SUPERADMIN,
         firstName,
         lastName,
@@ -22,7 +22,7 @@ const SeedSuperAdmin = {
         isEmailConfirmed: true
       }
 
-      return await User.create(admin)
+      return await User.create(superAdmin)
     } catch (err) {
       logger.error(err)
     }

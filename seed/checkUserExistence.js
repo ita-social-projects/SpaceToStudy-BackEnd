@@ -1,16 +1,16 @@
 const User = require('~/models/user')
 const {
-  roles: { ADMIN }
+  roles: { SUPERADMIN }
 } = require('~/consts/auth')
-const SeedAdmin = require('~/seed/seedAdmin')
+const SeedSuperAdmin = require('~/seed/seedSuperAdmin')
 const logger = require('~/logger/logger')
 
 const checkUserExistence = async () => {
   try {
-    const isUserExist = await User.exists({ role: ADMIN })
+    const isUserExist = await User.exists({ role: SUPERADMIN })
 
     if (!isUserExist) {
-      return await SeedAdmin.createAdmin()
+      return await SeedSuperAdmin.createSuperAdmin()
     }
   } catch (err) {
     logger.error(err)

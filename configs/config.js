@@ -21,11 +21,11 @@ const gmailCredentials = {
   redirectUri: process.env.GMAIL_REDIRECT_URI
 }
 
-const admin = {
+const superAdmin = {
   firstName: process.env.MAIL_FIRSTNAME,
   lastName: process.env.MAIL_LASTNAME,
   email: process.env.MAIL_USER,
   password: process.env.MAIL_PASS
 }
 
-module.exports = { config, gmailCredentials, admin }
+module.exports = { config, gmailCredentials, superAdmin }

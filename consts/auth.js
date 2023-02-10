@@ -1,7 +1,8 @@
 const roles = {
   STUDENT: 'student',
   TUTOR: 'tutor',
-  ADMIN: 'admin'
+  ADMIN: 'admin',
+  SUPERADMIN: 'superadmin'
 }
 
 const tokenNames = {

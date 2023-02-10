@@ -1,19 +1,19 @@
 const User = require('~/models/user')
 const {
-  admin: { firstName, lastName, email, password }
+  superAdmin: { firstName, lastName, email, password }
 } = require('~/configs/config')
 const {
-  roles: { ADMIN }
+  roles: { SUPERADMIN }
 } = require('~/consts/auth')
 const { hashPassword } = require('~/utils/passwordHelper')
 const logger = require('~/logger/logger')
 
-const SeedAdmin = {
-  createAdmin: async () => {
+const SeedSuperAdmin = {
+  createSuperAdmin: async () => {
     try {
       const hashedPassword = await hashPassword(password)
       const admin = {
-        role: ADMIN,
+        role: SUPERADMIN,
         firstName,
         lastName,
         email,
@@ -29,4 +29,4 @@ const SeedAdmin = {
   }
 }
 
-module.exports = SeedAdmin
+module.exports = SeedSuperAdmin

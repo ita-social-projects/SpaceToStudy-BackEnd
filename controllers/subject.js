@@ -13,10 +13,9 @@ const getSubjectById = async (req, res) => {
   res.status(200).json(subject)
 }
 const addSubject = async (req, res) => {
-  const tutorId = req.params.id
-  const { name, price, proficiencyLevel, category } = req.body
+  const { name, category } = req.body
 
-  const newSubject = await subjectService.addSubject(tutorId, name, price, proficiencyLevel, category)
+  const newSubject = await subjectService.addSubject(name, category)
 
   res.status(201).json(newSubject)
 }

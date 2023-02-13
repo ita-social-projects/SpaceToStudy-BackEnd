@@ -117,7 +117,7 @@ const errors = {
   },
   SUBJECT_ALREADY_EXISTS: {
     code: 'SUBJECT_ALREADY_EXISTS',
-    message: 'Subject with the specified name and level already exists.'
+    message: 'Subject with the specified name already exists.'
   }
 }
 

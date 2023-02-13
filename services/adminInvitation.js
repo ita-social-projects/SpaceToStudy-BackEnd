@@ -4,17 +4,15 @@ const AdminInvitation = require('~/models/adminInvitation')
 
 const adminInvitationService = {
   sendAdminInvitations: async (emails, language) => {
-    const invitations = []
+    return Promise.all(
+      emails.map(async (email) => {
+        const invitation = await AdminInvitation.create({ email })
 
-    for (const email of emails) {
-      const invitation = await AdminInvitation.create({ email })
+        await emailService.sendEmail(email, emailSubject.ADMIN_INVITATION, language, { email })
 
-      await emailService.sendEmail(email, emailSubject.ADMIN_INVITATION, language, { email })
-
-      invitations.push(invitation)
-    }
-
-    return invitations
+        return invitation
+      })
+    )
   },
 
   getAdminInvitations: async () => {

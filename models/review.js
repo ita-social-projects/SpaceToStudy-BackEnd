@@ -13,14 +13,23 @@ const reviewSchema = new Schema(
       min: 1,
       max: 5
     },
-    tutor: {
+    authorId: {
       type: Schema.Types.ObjectId,
-      ref: 'Tutor',
+      ref: 'User',
       required: true
     },
-    student: {
+    targetUserId: {
       type: Schema.Types.ObjectId,
-      ref: 'Student',
+      ref: 'User',
+      required: true
+    },
+    targetUserRole: {
+      type: String,
+      required: true
+    },
+    offerId: {
+      type: Schema.Types.ObjectId,
+      ref: 'Offer',
       required: true
     }
   },

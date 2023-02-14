@@ -20,15 +20,19 @@ paths:
                 - _id: 6255bc080a75adf9223df100
                   comment: Not bad
                   rating: 4
-                  tutor: 6255bc080a75adf9223df211
-                  student: 6255bc080a75adf9223df212
+                  authorId: 6255bc080a75adf9223df211
+                  targetUserId: 6255bc080a75adf9223df212
+                  targetUserRole: tutor
+                  offerId: 6255bc033a75adf9223df231
                   createdAt: 2022-10-18T13:25:36.292Z
                   updatedAt: 2022-10-18T13:25:36.292Z
                 - _id: 8755bc080a00adr9243df104
                   comment: Best tutor!
                   rating: 5
-                  tutor: 6255bc080a75adf9223df111
-                  student: 6255bc080a75adf9223df112
+                  authorId: 6255bc080a75adf9223df211
+                  targetUserId: 6255bc080a75adf9223df212
+                  targetUserRole: tutor
+                  offerId: 6255bc033a75adf9223df231
                   createdAt: 2022-10-18T13:25:36.292Z
                   updatedAt: 2022-10-18T13:25:36.292Z
         401:
@@ -70,8 +74,10 @@ paths:
               example:
                 comment: Best tutor!
                 rating: 5
-                tutor: 6255bc080a75adf9223df111
-                student: 6255bc080a75adf9223df112
+                authorId: 6255bc080a75adf9223df211
+                targetUserId: 6255bc080a75adf9223df212
+                targetUserRole: tutor
+                offerId: 6255bc033a75adf9223df231
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:
@@ -131,8 +137,10 @@ paths:
                 _id: 8755bc080a00adr9243df104
                 comment: Best tutor!
                 rating: 5
-                tutor: 6255bc080a75adf9223df111
-                student: 6255bc080a75adf9223df112
+                authorId: 6255bc080a75adf9223df211
+                targetUserId: 6255bc080a75adf9223df212
+                targetUserRole: tutor
+                offerId: 6255bc033a75adf9223df231
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:

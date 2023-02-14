@@ -10,10 +10,17 @@ definitions:
           type: string
         rating:
           type: number
-        tutor:
+        authorId:
           type: string
-        student:
+          ref: '#/components/user'
+        targetUserId:
           type: string
+          ref: '#components/user'
+        targetUserRole:
+          type: string
+        offerId:
+          type: string
+          ref: '#components/offer'
         createdAt:
           type: string
           format: date-time
@@ -29,11 +36,17 @@ definitions:
         type: string
       rating:
         type: number
-      #TODO: tutor and student shoul be refs
-      tutor:
+      authorId:
         type: string
-      student:
+        ref: '#/components/user'
+      targetUserId:
         type: string
+        ref: '#components/user'
+      targetUserRole:
+        type: string
+      offerId:
+        type: string
+        ref: '#components/offer'
       createdAt:
         type: string
         format: date-time
@@ -47,3 +60,20 @@ definitions:
         type: string
       rating:
         type: number
+      authorId:
+        type: string
+        ref: '#/components/user'
+      targetUserId:
+        type: string
+        ref: '#components/user'
+      targetUserRole:
+        type: string
+      offerId:
+        type: string
+        ref: '#components/offer'
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { SPOKEN_LANG_ENUM }
+  enums: { SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
 } = require('~/consts/validation')
 const {
   roles: { STUDENT, TUTOR }
@@ -15,35 +15,37 @@ const offerSchema = new Schema(
     },
     proficiencyLevel: {
       type: String,
+      enum: SUBJECT_LEVEL_ENUM,
       required: [true, 'This field cannot be empty.']
     },
     description: {
       type: String,
       minlength: [1, 'Last Name cannot be shorter than 1 symbol.'],
-      maxlength: [300, 'Last Name cannot be longer than 300 symbols.']
+      maxlength: [200, 'Last Name cannot be longer than 300 symbols.'],
+      required: [true, 'This field cannot be empty.']
     },
     languages: {
       type: [String],
-      enum: [SPOKEN_LANG_ENUM[0], SPOKEN_LANG_ENUM[1]],
+      enum: SPOKEN_LANG_ENUM,
       required: [true, 'Spoken language must be selected.']
     },
     userRole: {
-      type: [String],
+      type: String,
       enum: [STUDENT, TUTOR],
       required: [true, 'User role must be selected.']
     },
     userId: {
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
     },
     subjectId: {
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: 'Subject',
       required: true
     },
-    categoriesId: {
-      type: [Schema.Types.ObjectId],
+    categoryId: {
+      type: Schema.Types.ObjectId,
       ref: 'Category',
       required: true
     },

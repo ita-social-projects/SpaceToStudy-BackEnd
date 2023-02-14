@@ -16,7 +16,8 @@ const getOfferById = async (req, res) => {
 
 const createOffer = async (req, res) => {
   const userId = req.params.id
-  const { price, proficiencyLevel, description, languages, userRole, subjectId, categoryId, isActive } = req.body
+  const userRole = req.user.role
+  const { price, proficiencyLevel, description, languages, subjectId, categoryId, isActive } = req.body
 
   const newOffer = await offerService.createOffer(
     price,

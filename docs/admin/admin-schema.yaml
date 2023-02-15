@@ -1,46 +1,9 @@
 definitions:
-  admins:
-    type: array
-    items:
-      type: object
-      properties:
-        _id:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        email:
-          type: string
-        active:
-          type: boolean
-        blocked:
-          type: boolean
-        signUpDate:
-          type: string
-          format: date-time
-        lastLogin:
-          type: string
-          format: date-time
-  admin:
-    type: object
-    properties:
-      _id:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
-      active:
-        type: boolean
-      blocked:
-        type: boolean
-      signUpDate:
-        type: string
-        format: date-time
-      lastLogin:
-        type: string
-        format: date-time
-      
+  paginated-admins:
+    items: 
+      type: array
+      items:
+        $ref: '#/definitions/user'
+    count:
+      type: integer
+    

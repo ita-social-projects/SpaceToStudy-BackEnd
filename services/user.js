@@ -38,7 +38,7 @@ const userService = {
     return user
   },
 
-  createUser: async (role, firstName, lastName, email, password, appLanguage) => {
+  createUser: async (role, firstName, lastName, email, password, appLanguage, isEmailConfirmed = false) => {
     const duplicateUser = await userService.getUserByEmail(email)
 
     if (duplicateUser) {
@@ -52,8 +52,10 @@ const userService = {
       firstName,
       lastName,
       email,
+      lastLoginAs: role,
       password: hashedPassword,
-      appLanguage
+      appLanguage,
+      isEmailConfirmed
     })
 
     return newUser

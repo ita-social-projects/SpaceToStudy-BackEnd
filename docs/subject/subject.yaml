@@ -18,17 +18,17 @@ paths:
                 $ref: '#/definitions/subjects'
               example:
                 - _id: 6255bc080a71adf9223df134
-                  tutorId: 63cef5e2c2586efc326538db
                   name: English
-                  price: 30
-                  proficiencyLevel: Advanced
                   category: 63525e23bf163f5ea609ff27
+                  totalOffers: 2167
+                  createdAt: 2023-20-01T13:25:36.292Z
+                  updatedAt: 2023-20-01T13:25:36.292Z                  
                 - _id: 6255bc080a71adf9223df135
-                  tutorId: 63cef5e97485991d9a6e2471
                   name: Algebra
-                  price: 25
-                  proficiencyLevel: Beginner
                   category: 63525e23bf163f5ea609ff29
+                  totalOffers: 913
+                  createdAt: 2023-20-01T13:25:36.292Z
+                  updatedAt: 2023-20-01T13:25:36.292Z
         401:
           description: Unauthorized
           content:
@@ -57,8 +57,6 @@ paths:
               $ref: '#/definitions/subjectBody'
             example:
               name: Ukrainian
-              price: 15
-              proficiencyLevel: Beginner
               category: 63525e23bf163f5ea609ff27
       responses:
         201:
@@ -69,21 +67,11 @@ paths:
                 $ref: '#/definitions/subject'
               example:
                 _id: 6255bc080a71adf9223df136
-                tutorId: 63cef5e97485991d9a6e2471
                 name: Ukrainian
-                price: 15
-                proficiencyLevel: Beginner
                 category: 63525e23bf163f5ea609ff27
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 400
-                code: SUBJECT_ALREADY_EXISTS
-                message: Subject with the specified name and level already exists.
+                totalOffers: 0
+                createdAt: 2023-20-01T13:25:36.292Z
+                updatedAt: 2023-20-01T13:25:36.292Z
         401:
           description: Unauthorized
           content:
@@ -104,6 +92,16 @@ paths:
                 status: 403
                 code: FORBIDDEN
                 message: You do not have permission to perform this action.
+        409:
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 409
+                code: SUBJECT_ALREADY_EXISTS
+                message: Subject with the specified name already exists.
   /subjects/{id}:
     get:
       security:
@@ -129,11 +127,11 @@ paths:
                 $ref: '#/definitions/subject'
               example:
                 _id: 6255bc080a71adf9223df134
-                tutorId: 63cef5e97485991d9a6e2471
                 name: English
-                price: 30
-                proficiencyLevel: Advanced
                 category: 63525e23bf163f5ea609ff27
+                totalOffers: 1647
+                createdAt: 2023-20-01T13:25:36.292Z
+                updatedAt: 2023-20-01T13:25:36.292Z
         400:
           description: Bad Request
           content:
@@ -188,9 +186,8 @@ paths:
               $ref: '#/definitions/subjectBody'
             example:
               name: Ukrainian
-              price: 15
-              proficiencyLevel: Beginner
               category: 63525e23bf163f5ea609ff27
+              totalOffers: 25
       responses:
         204:
           description: No Content

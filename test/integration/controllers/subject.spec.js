@@ -1,6 +1,6 @@
 const { serverCleanup, serverInit } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { SUBJECT_NOT_FOUND } = require('~/consts/errors')
+const { SUBJECT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
 const tokenService = require('~/services/token')
 
 const endpointUrl = '/subjects/'
@@ -40,24 +40,33 @@ describe('Subject controller', () => {
       accessToken = loginUserResponse.body.accessToken
       const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send({
         name: 'English',
-        price: 20,
-        proficiencyLevel: 'Intermediate',
         category: '63525e23bf163f5ea609ff27'
       })
 
       expect(response.statusCode).toBe(201)
       expect(response.body).toEqual(
         expect.objectContaining({
-          tutorId: expect.any(String),
+          _id: expect.any(String),
           name: expect.any(String),
-          price: expect.any(Number),
-          proficiencyLevel: expect.any(String),
-          category: expect.any(String)
+          category: expect.any(String),
+          totalOffers: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          __v: expect.anything()
         })
       )
 
       testSubject = response.body
     })
+  })
+
+  it('should throw SUBJECT_ALREADY_EXISTS', async () => {
+    const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send({
+      name: 'English',
+      category: '63525e23bf163f5ea609ff27'
+    })
+
+    expectError(409, SUBJECT_ALREADY_EXISTS, response)
   })
 
   describe(`GET ${endpointUrl}`, () => {
@@ -68,11 +77,13 @@ describe('Subject controller', () => {
       expect(Array.isArray(response.body)).toBeTruthy()
       expect(response.body[0]).toEqual(
         expect.objectContaining({
-          tutorId: expect.any(String),
+          _id: expect.any(String),
           name: expect.any(String),
-          price: expect.any(Number),
-          proficiencyLevel: expect.any(String),
-          category: expect.any(String)
+          category: expect.any(String),
+          totalOffers: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          __v: expect.anything()
         })
       )
     })

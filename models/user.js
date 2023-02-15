@@ -3,14 +3,14 @@ const {
   enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM }
 } = require('~/consts/validation')
 const {
-  roles: { STUDENT, TUTOR, ADMIN }
+  roles: { STUDENT, TUTOR, ADMIN, SUPERADMIN }
 } = require('~/consts/auth')
 
 const userSchema = new Schema(
   {
     role: {
       type: [String],
-      enum: [STUDENT, TUTOR],
+      enum: [STUDENT, TUTOR, ADMIN, SUPERADMIN],
       required: [true, 'User role must be selected.']
     },
     firstName: {

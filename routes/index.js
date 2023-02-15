@@ -6,6 +6,7 @@ const user = require('~/routes/user')
 const email = require('~/routes/email')
 const review = require('~/routes/review')
 const subject = require('~/routes/subject')
+const location = require('~/routes/location')
 
 const router = express.Router()
 
@@ -15,5 +16,6 @@ router.use('/admins', admin)
 router.use('/send-email', email)
 router.use('/reviews', review)
 router.use('/subjects', subject)
+router.use('/location', location)
 
 module.exports = router

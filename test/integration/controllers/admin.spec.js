@@ -41,8 +41,8 @@ describe('Admin controller', () => {
       params.set('lastLoginTo', new Date().toISOString())
       params.set('sortByName', '1')
       params.set('sortByEmail', '1')
+      params.set('sortByCreatedAt', '1')
       params.set('sortByLastLogin', '1')
-      params.set('sortBySignUpDate', '1')
 
       const url = `/admins?${params.toString()}`
       const response = await app.get(url)

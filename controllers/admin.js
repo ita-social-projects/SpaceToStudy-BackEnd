@@ -1,38 +1,14 @@
 const adminService = require('~/services/admin')
+const { getAdminsFilter, getAdminsSort } = require('~/utils/getAdminsQuery')
 
 const getAdmins = async (req, res) => {
-  const {
-    skip,
-    limit,
-    name,
-    email,
-    active,
-    blocked,
-    createdAtFrom,
-    createdAtTo,
-    lastLoginFrom,
-    lastLoginTo,
-    sortByName,
-    sortByEmail,
-    sortByLastLogin,
-    sortBySignUpDate
-  } = req.query
+  const { skip, limit } = req.query
 
   const admins = await adminService.getAdmins({
     skip: parseInt(skip),
     limit: parseInt(limit),
-    name,
-    email,
-    active: Boolean(parseInt(active)),
-    blocked: Boolean(parseInt(blocked)),
-    createdAtFrom: new Date(createdAtFrom),
-    createdAtTo: new Date(createdAtTo),
-    lastLoginFrom: new Date(lastLoginFrom),
-    lastLoginTo: new Date(lastLoginTo),
-    sortByName: parseInt(sortByName),
-    sortByEmail: parseInt(sortByEmail),
-    sortByLastLogin: parseInt(sortByLastLogin),
-    sortBySignUpDate: parseInt(sortBySignUpDate)
+    ...getAdminsFilter(req.query),
+    ...getAdminsSort(req.query)
   })
 
   res.status(200).json(admins)

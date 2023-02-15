@@ -6,6 +6,7 @@ const User = require('~/models/user')
 const { USER_NOT_FOUND, USER_ALREADY_BLOCKED, USER_ALREADY_UNBLOCKED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 
+const endpointUrl = '/admins/'
 const testAdmin = {
   firstName: 'John',
   lastName: 'Doe',
@@ -26,7 +27,7 @@ describe('Admin controller', () => {
     await serverCleanup(server)
   })
 
-  describe('admins endpoint', () => {
+  describe(`${endpointUrl} endpoint`, () => {
     it('should get admins', async () => {
       const params = new URLSearchParams()
       params.set('skip', '0')
@@ -57,8 +58,8 @@ describe('Admin controller', () => {
     })
   })
 
-  describe('admins/:id endpoint', () => {
-    describe('GET admins/:id', () => {
+  describe(`${endpointUrl} :id endpoint`, () => {
+    describe(`GET ${endpointUrl}:id`, () => {
       it('should get admin by id', async () => {
         const admin = await User.create(testAdmin)
 
@@ -88,32 +89,32 @@ describe('Admin controller', () => {
       })
 
       it('should throw USER_NOT_FOUND', async () => {
-        const url = `/admins/${nonExistingAdminId}`
+        const url = `${endpointUrl}${nonExistingAdminId}`
         const response = await app.get(url)
 
         expectError(404, USER_NOT_FOUND, response)
       })
     })
 
-    describe('PATCH admins/:id', () => {
+    describe(`PATCH ${endpointUrl}:id`, () => {
       it('should update admin by id', async () => {
-        const url = `/admins/${testAdmin._id}`
+        const url = `${endpointUrl}${testAdmin._id}`
         const response = await app.patch(url).send(testAdmin)
 
         expect(response.statusCode).toBe(204)
       })
 
       it('should throw USER_NOT_FOUND', async () => {
-        const url = `/admins/${nonExistingAdminId}`
+        const url = `${endpointUrl}${nonExistingAdminId}`
         const response = await app.patch(url).send(testAdmin)
 
         expectError(404, USER_NOT_FOUND, response)
       })
     })
 
-    describe('DELETE admins/:id', () => {
+    describe(`DELETE ${endpointUrl}:id`, () => {
       it('should delete admin by id', async () => {
-        const url = `/admins/${testAdmin._id}`
+        const url = `${endpointUrl}${testAdmin._id}`
         const response = await app.delete(url)
 
         const adminById = await User.findById(testAdmin._id).lean().exec()
@@ -123,7 +124,7 @@ describe('Admin controller', () => {
       })
 
       it('should throw USER_NOT_FOUND', async () => {
-        const url = `/admins/${nonExistingAdminId}`
+        const url = `${endpointUrl}${nonExistingAdminId}`
         const response = await app.delete(url)
 
         expectError(404, USER_NOT_FOUND, response)
@@ -131,8 +132,8 @@ describe('Admin controller', () => {
     })
   })
 
-  describe('admins/:id/block endpoint', () => {
-    describe('PATCH admins/:id/block', () => {
+  describe(`${endpointUrl}:id/block endpoint`, () => {
+    describe(`PATCH ${endpointUrl}:id/block`, () => {
       it('should block admin by id', async () => {
         await User.deleteOne({
           email: testAdmin.email
@@ -150,14 +151,14 @@ describe('Admin controller', () => {
       })
 
       it('should throw USER_NOT_FOUND', async () => {
-        const url = `/admins/${nonExistingAdminId}/block`
+        const url = `${endpointUrl}${nonExistingAdminId}/block`
         const response = await app.patch(url)
 
         expectError(404, USER_NOT_FOUND, response)
       })
 
       it('should throw USER_ALREADY_BLOCKED', async () => {
-        const url = `/admins/${testAdmin._id}/block`
+        const url = `${endpointUrl}${testAdmin._id}/block`
         const response = await app.patch(url)
 
         expectError(409, USER_ALREADY_BLOCKED, response)
@@ -165,8 +166,8 @@ describe('Admin controller', () => {
     })
   })
 
-  describe('admins/:id/unblock endpoint', () => {
-    describe('PATCH admins/:id/unblock', () => {
+  describe(`${endpointUrl}:id/unblock endpoint`, () => {
+    describe(`PATCH ${endpointUrl}:id/unblock`, () => {
       it('should unblock admin by id', async () => {
         delete testAdmin._id
         await User.deleteOne({
@@ -178,7 +179,7 @@ describe('Admin controller', () => {
           blocked: true
         })
 
-        const url = `/admins/${admin._id}/unblock`
+        const url = `${endpointUrl}${admin._id}/unblock`
         const response = await app.patch(url)
 
         expect(response.statusCode).toBe(204)
@@ -187,14 +188,14 @@ describe('Admin controller', () => {
       })
 
       it('should throw USER_NOT_FOUND', async () => {
-        const url = `/admins/${nonExistingAdminId}/unblock`
+        const url = `${endpointUrl}${nonExistingAdminId}/unblock`
         const response = await app.patch(url)
 
         expectError(404, USER_NOT_FOUND, response)
       })
 
       it('should throw USER_ALREADY_UNBLOCKED', async () => {
-        const url = `/admins/${testAdmin._id}/unblock`
+        const url = `${endpointUrl}${testAdmin._id}/unblock`
         const response = await app.patch(url)
 
         expectError(409, USER_ALREADY_UNBLOCKED, response)

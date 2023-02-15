@@ -60,10 +60,17 @@ const adminService = {
         $gte: createdAtFrom,
         $lte: createdAtTo
       },
-      lastLogin: {
-        $gte: lastLoginFrom,
-        $lte: lastLoginTo
-      }
+      $or: [
+        {
+          lastLogin: null
+        },
+        {
+          evalDate: {
+            $gte: lastLoginFrom,
+            $lte: lastLoginTo
+          }
+        }
+      ]
     }
 
     const sort = {

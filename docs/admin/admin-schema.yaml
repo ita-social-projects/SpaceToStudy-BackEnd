@@ -1,0 +1,9 @@
+definitions:
+  paginated-admins:
+    items: 
+      type: array
+      items:
+        $ref: '#/definitions/user'
+    count:
+      type: integer
+    

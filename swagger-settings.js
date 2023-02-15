@@ -1,3 +1,7 @@
+const {
+  config: { SERVER_URL }
+} = require('~/configs/config')
+
 const swagger = {
   definition: {
     openapi: '3.0.0',
@@ -8,7 +12,7 @@ const swagger = {
     },
     servers: [
       {
-        url: 'http://localhost:8080'
+        url: SERVER_URL
       }
     ],
     components: {

@@ -35,8 +35,8 @@ const adminService = {
   },
 
   getAdmins: async ({
-    skip = 0,
-    limit = 10,
+    skip,
+    limit,
     name,
     email,
     active,

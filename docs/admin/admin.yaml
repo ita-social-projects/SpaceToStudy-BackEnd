@@ -33,12 +33,12 @@ paths:
         - in: query
           name: active
           schema:
-            type: boolean
+            type: integer
           required: true
         - in: query
           name: blocked
           schema:
-            type: boolean
+            type: integer
           required: true
         - in: query
           name: createdAtFrom

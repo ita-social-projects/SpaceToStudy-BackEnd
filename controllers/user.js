@@ -7,17 +7,17 @@ const getUsers = async (_req, res) => {
 }
 
 const getUserById = async (req, res) => {
-  const { userId } = req.params
+  const { id } = req.params
 
-  const user = await userService.getUserById(userId)
+  const user = await userService.getUserById(id)
 
   res.status(200).json(user)
 }
 
 const deleteUser = async (req, res) => {
-  const { userId } = req.params
+  const { id } = req.params
 
-  await userService.deleteUser(userId)
+  await userService.deleteUser(id)
 
   res.status(204).end()
 }

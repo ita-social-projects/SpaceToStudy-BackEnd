@@ -61,7 +61,7 @@ paths:
                 status: 401
                 code: 'UNAUTHORIZED'
                 message: 'The requested URL requires user authorization.'
-  /users/{userId}:
+  /users/{id}:
     get:
       security:
         - bearerAuth: []
@@ -72,7 +72,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           description: ID of the user that needs to be fetched
@@ -143,7 +143,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           description: ID of the user that needs to be deleted

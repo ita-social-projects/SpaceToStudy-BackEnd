@@ -34,13 +34,10 @@ definitions:
           type: string
         userId:
           type: string
-          $ref: '#/components/user'
         subjectId:
           type: string
-          $ref: '#/components/subject'
         categoryId:
           type: string
-          $ref: '#/components/category'
         isActive:
           type: boolean
         createdAt:
@@ -80,13 +77,10 @@ definitions:
         type: string
       userId:
         type: string
-        $ref: '#/components/user'
       subjectId:
         type: string
-        $ref: '#/components/subject'
       categoryId:
         type: string
-        $ref: '#/components/category'
       isActive:
         type: boolean
   offer:
@@ -122,13 +116,10 @@ definitions:
         type: string
       userId:
         type: string
-        $ref: '#/components/user'
       subjectId:
         type: string
-        $ref: '#/components/subject'
       categoryId:
         type: string
-        $ref: '#/components/category'
       isActive:
         type: boolean
       createdAt:

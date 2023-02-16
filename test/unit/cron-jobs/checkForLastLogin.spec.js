@@ -65,7 +65,7 @@ describe('checkForLastUserLogin cron-job', () => {
     expect(res.length).toBe(1)
     expect(res).toContain(undefined)
   })
-  it('should return array of undefined if user has not lastLogin field', async () => {
+  it('should return array of undefined if user has no lastLogin field', async () => {
     userService.getUsers.mockImplementation(() => [mockedUser])
 
     const res = await checkLastLogin()

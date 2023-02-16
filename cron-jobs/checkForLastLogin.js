@@ -33,6 +33,3 @@ const checkLastLogin = async () => {
 
 exports.checkUsersForLastLogin = checkUsersForLastLogin
 exports.checkLastLogin = checkLastLogin
-
-// exports.checkUsersForLastLogin = checkUsersForLastLogin
-// exports.checkLastLogin = checkLastLogin

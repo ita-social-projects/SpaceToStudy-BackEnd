@@ -15,9 +15,10 @@ const getReviewById = async (req, res) => {
 }
 
 const addReview = async (req, res) => {
-  const { comment, rating, tutor, student } = req.body
+  const { id: authorId } = req.params
+  const { comment, rating, targetUserId, targetUserRole, offerId } = req.body
 
-  const newReview = await reviewService.addReview(comment, rating, tutor, student)
+  const newReview = await reviewService.addReview(comment, rating, authorId, targetUserId, targetUserRole, offerId)
 
   res.status(201).json(newReview)
 }

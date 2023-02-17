@@ -5,8 +5,19 @@ const testUserAuthentication = require('~/utils/testUserAuth')
 
 const endpointUrl = '/reviews/'
 
-let testReview, accessToken
+let accessToken
 const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
+let testReview = {
+  comment: 'Good mentor and learning program',
+  rating: 5,
+  targetUserId: '63bed43c51ee69a0d4c5ff92',
+  targetUserRole: 'tutor',
+  offerId: '63bed445cf00bcbdcdb4e648'
+}
+const updateData = {
+  comment: 'waste of money',
+  rating: 1
+}
 
 describe('Review controller', () => {
   let app, server
@@ -21,13 +32,7 @@ describe('Review controller', () => {
 
   describe(`POST ${endpointUrl}`, () => {
     it('should throw UNAUTHORIZED', async () => {
-      const response = await app.post(endpointUrl).send({
-        comment: 'Good mentor and learning program',
-        rating: 5,
-        targetUserId: '63bed43c51ee69a0d4c5ff92',
-        targetUserRole: 'tutor',
-        offerId: '63bed445cf00bcbdcdb4e648'
-      })
+      const response = await app.post(endpointUrl).send(testReview)
 
       expectError(401, UNAUTHORIZED, response)
     })
@@ -35,27 +40,14 @@ describe('Review controller', () => {
     it('should create a review', async () => {
       accessToken = await testUserAuthentication(app)
 
-      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send({
-        comment: 'Good mentor and learning program',
-        rating: 5,
-        targetUserId: '63bed43c51ee69a0d4c5ff92',
-        targetUserRole: 'tutor',
-        offerId: '63bed445cf00bcbdcdb4e648'
-      })
+      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testReview)
 
       expect(response.statusCode).toBe(201)
       expect(response.body).toBeTruthy()
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          comment: 'Good mentor and learning program',
-          rating: 5,
-          targetUserId: '63bed43c51ee69a0d4c5ff92',
-          targetUserRole: 'tutor',
-          offerId: '63bed445cf00bcbdcdb4e648'
-        })
-      )
+      expect(response.body).toEqual(expect.objectContaining(testReview))
 
       testReview = response.body
+      console.log(testReview)
     })
   })
 
@@ -71,18 +63,7 @@ describe('Review controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(
-        expect.objectContaining({
-          _id: expect.any(String),
-          comment: expect.any(String),
-          rating: expect.any(Number),
-          targetUserId: expect.any(String),
-          targetUserRole: expect.any(String),
-          offerId: expect.any(String),
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String)
-        })
-      )
+      expect(response.body[0]).toEqual(expect.objectContaining(testReview))
     })
   })
 
@@ -94,23 +75,10 @@ describe('Review controller', () => {
     })
 
     it('should get a review by id', async () => {
-      const { _id, comment, rating, authorId, targetUserId, targetUserRole, createdAt, updatedAt } = testReview
-
-      const response = await app.get(endpointUrl + _id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + testReview._id).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(
-        expect.objectContaining({
-          _id,
-          comment,
-          rating,
-          authorId,
-          targetUserId,
-          targetUserRole,
-          createdAt,
-          updatedAt
-        })
-      )
+      expect(response.body).toEqual(expect.objectContaining(testReview))
     })
 
     it('should throw REVIEW_NOT_FOUND', async () => {
@@ -122,10 +90,7 @@ describe('Review controller', () => {
 
   describe(`UPDATE ${endpointUrl}:reviewId`, () => {
     it('should throw UNAUTHORIZED', async () => {
-      const response = await app.patch(endpointUrl + testReview._id).send({
-        comment: 'waste of money',
-        rating: 1
-      })
+      const response = await app.patch(endpointUrl + testReview._id).send(updateData)
 
       expectError(401, UNAUTHORIZED, response)
     })
@@ -134,10 +99,7 @@ describe('Review controller', () => {
       const response = await app
         .patch(endpointUrl + testReview._id)
         .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          comment: 'horrible mentor',
-          rating: 1
-        })
+        .send(updateData)
 
       expect(response.statusCode).toBe(204)
     })
@@ -146,10 +108,7 @@ describe('Review controller', () => {
       const response = await app
         .patch(endpointUrl + nonExistingReviewId)
         .set('Authorization', `Bearer ${accessToken}`)
-        .send({
-          comment: 'horrible mentor',
-          rating: 1
-        })
+        .send(updateData)
 
       expectError(404, REVIEW_NOT_FOUND, response)
     })

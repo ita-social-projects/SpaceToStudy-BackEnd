@@ -86,7 +86,7 @@ const userSchema = new Schema(
       select: false
     },
     lastLoginAs: { type: String, enum: [STUDENT, TUTOR, ADMIN], select: false },
-    bookmarkedOffers: { type: [Schema.Types.ObjectId], ref: 'Offer', select: false, default: null }
+    bookmarkedOffers: { type: [Schema.Types.ObjectId], ref: 'Offer', select: false }
   },
   {
     timestamps: true,

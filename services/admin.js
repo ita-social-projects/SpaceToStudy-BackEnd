@@ -65,7 +65,7 @@ const adminService = {
           lastLogin: null
         },
         {
-          evalDate: {
+          lastLogin: {
             $gte: lastLoginFrom,
             $lte: lastLoginTo
           }

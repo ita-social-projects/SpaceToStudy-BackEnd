@@ -101,6 +101,7 @@ paths:
                 isEmailConfirmed: true
                 isFirstLogin: true
                 lastLogin: 2022-09-02T11:59:53.243+00:00
+                bookmarkedOffers: []
                 createdAt: 2021-04-09T11:34:53.243+00:00
                 updatedAt: 2022-09-02T11:59:53.243+00:00
         400:

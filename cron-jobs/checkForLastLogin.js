@@ -31,4 +31,4 @@ const checkLastLogin = async () => {
   )
 }
 
-module.exports = checkUsersForLastLogin
+module.exports = { checkUsersForLastLogin, checkLastLogin }

@@ -5,10 +5,23 @@ const { createError } = require('~/utils/errorsHelper')
 const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
-  getUsers: async () => {
-    const users = await User.find().populate('categories').select('-__v').lean().exec()
+  getUsers: async ({ match, sort, skip, limit }) => {
+    const [{ items, calculations }] = await User.aggregate([
+      { $match: match },
+      { $addFields: { name: { $concat: ['$firstName', ' ', '$lastName'] } } },
+      { $project: { firstName: 0, lastName: 0 } },
+      {
+        $facet: {
+          items: [{ $sort: sort }, { $skip: skip }, { $limit: limit }],
+          calculations: [{ $count: 'count' }]
+        }
+      }
+    ])
 
-    return users
+    return {
+      items,
+      count: calculations[0]?.count || 0
+    }
   },
 
   getUserById: async (id) => {

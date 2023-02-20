@@ -15,7 +15,7 @@ router.param('id', idValidation)
 router.get('/', asyncWrapper(offerController.getOffers))
 router.post('/', setCurrentUserId, asyncWrapper(offerController.createOffer))
 router.get('/:id', asyncWrapper(offerController.getOfferById))
-router.patch('/:id', asyncWrapper(offerController.updateOffer))
+router.patch('/:id', setCurrentUserId, asyncWrapper(offerController.updateOffer))
 router.delete('/:id', asyncWrapper(offerController.deleteOffer))
 
 module.exports = router

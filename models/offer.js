@@ -20,19 +20,19 @@ const offerSchema = new Schema(
     },
     description: {
       type: String,
-      minlength: [1, 'Last Name cannot be shorter than 1 symbol.'],
-      maxlength: [200, 'Last Name cannot be longer than 300 symbols.'],
+      minlength: [1, 'Description cannot be shorter than 1 symbol.'],
+      maxlength: [200, 'Description cannot be longer than 300 symbols.'],
       required: [true, 'This field cannot be empty.']
     },
     languages: {
       type: [String],
       enum: SPOKEN_LANG_ENUM,
-      required: [true, 'Spoken language must be selected.']
+      required: [true, 'Please select a language(s) that will be used in teaching.']
     },
-    userRole: {
+    authorRole: {
       type: String,
       enum: [STUDENT, TUTOR],
-      required: [true, 'User role must be selected.']
+      required: [true, 'Author role must be selected.']
     },
     userId: {
       type: Schema.Types.ObjectId,

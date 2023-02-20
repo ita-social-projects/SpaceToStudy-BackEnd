@@ -19,24 +19,17 @@ const offerService = {
     return offer
   },
 
-  createOffer: async (
-    price,
-    proficiencyLevel,
-    description,
-    languages,
-    userRole,
-    userId,
-    subjectId,
-    categoryId,
-    isActive
-  ) => {
+  createOffer: async (params) => {
+    const { authorRole, userId, price, proficiencyLevel, description, languages, subjectId, categoryId, isActive } =
+      params
+
     const newOffer = await Offer.create({
+      authorRole,
+      userId,
       price,
       proficiencyLevel,
       description,
       languages,
-      userRole,
-      userId,
       subjectId,
       categoryId,
       isActive
@@ -54,7 +47,7 @@ const offerService = {
   },
 
   deleteOffer: async (id) => {
-    const offer = Offer.findByIdAndRemove(id).exec()
+    const offer = await Offer.findByIdAndRemove(id).exec()
 
     if (!offer) {
       throw createError(404, OFFER_NOT_FOUND)

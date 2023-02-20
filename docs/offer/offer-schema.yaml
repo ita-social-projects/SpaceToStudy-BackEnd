@@ -30,7 +30,7 @@ definitions:
               - French
               - Spanish
               - Arabic
-        userRole:
+        authorRole:
           type: string
         userId:
           type: string
@@ -73,7 +73,7 @@ definitions:
             - French
             - Spanish
             - Arabic
-      userRole:
+      authorRole:
         type: string
       userId:
         type: string
@@ -112,7 +112,7 @@ definitions:
             - French
             - Spanish
             - Arabic
-      userRole:
+      authorRole:
         type: string
       userId:
         type: string

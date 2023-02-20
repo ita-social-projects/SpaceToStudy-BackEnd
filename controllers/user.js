@@ -1,8 +1,8 @@
 const userService = require('~/services/user')
-const createAgregateOptions = require('~/utils/createAgregateOptions')
+const createAggregateOptions = require('~/utils/createAggregateOptions')
 
 const getUsers = async (req, res) => {
-  const { skip, limit, sort, match } = createAgregateOptions(req.query)
+  const { skip, limit, sort, match } = createAggregateOptions(req.query)
 
   const users = await userService.getUsers({ skip, limit, sort, match })
 

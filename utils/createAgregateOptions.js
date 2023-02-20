@@ -8,7 +8,7 @@ const generateOptions = (value) => {
   return options.map((option) => option === 'true')
 }
 
-const createAgregateOptions = (query) => {
+const createAggregateOptions = (query) => {
   const { email, isEmailConfirmed, isFirstLogin, lastLogin, limit, name, role, skip, sort } = query
   const { from, to } = JSON.parse(lastLogin)
   const { orderBy, order } = JSON.parse(sort)
@@ -51,4 +51,4 @@ const createAgregateOptions = (query) => {
   }
 }
 
-module.exports = createAgregateOptions
+module.exports = createAggregateOptions

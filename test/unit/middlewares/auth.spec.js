@@ -8,7 +8,7 @@ describe('Auth middleware', () => {
   const mockResponse = {}
   const mockNextFunc = jest.fn()
 
-  it("Should throw UNAUTHORIZED error when auth header isn't given", () => {
+  it('Should throw UNAUTHORIZED error when auth header is not given', () => {
     const mockRequest = {
       headers: {}
     }
@@ -17,7 +17,7 @@ describe('Auth middleware', () => {
     expect(middlewareFunc).toThrow(error)
   })
 
-  it("Should throw UNAUTHORIZED error when access token isn't given", () => {
+  it('Should throw UNAUTHORIZED error when access token is not given', () => {
     const mockRequest = {
       headers: {
         authorization: 'invalid_token'

@@ -93,6 +93,9 @@ definitions:
       lastLogin:
         type: string
         format: date-time
+      bookmarkedOffers:
+        type: array
+        $ref: '#/components/offer'
       createdAt:
         type: string
         format: date-time

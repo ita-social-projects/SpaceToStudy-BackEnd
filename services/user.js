@@ -6,15 +6,15 @@ const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
   getUsers: async () => {
-    const users = await User.find().populate('categories').lean().exec()
+    const users = await User.find().populate('categories').select('-__v').lean().exec()
 
     return users
   },
 
-  getUserById: async (userId) => {
-    const user = await User.findById(userId)
+  getUserById: async (id) => {
+    const user = await User.findById(id)
       .populate('categories')
-      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin')
+      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers -__v')
       .lean()
       .exec()
 
@@ -61,16 +61,16 @@ const userService = {
     return newUser
   },
 
-  updateUser: async (userId, param) => {
-    const user = await User.findByIdAndUpdate(userId, param, { new: true }).exec()
+  updateUser: async (id, param) => {
+    const user = await User.findByIdAndUpdate(id, param, { new: true }).exec()
 
     if (!user) {
       throw createError(404, USER_NOT_FOUND)
     }
   },
 
-  deleteUser: async (userId) => {
-    const user = await User.findByIdAndRemove(userId).exec()
+  deleteUser: async (id) => {
+    const user = await User.findByIdAndRemove(id).exec()
 
     if (!user) {
       throw createError(404, USER_NOT_FOUND)

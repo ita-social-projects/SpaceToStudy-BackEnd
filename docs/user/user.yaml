@@ -61,7 +61,7 @@ paths:
                 status: 401
                 code: 'UNAUTHORIZED'
                 message: 'The requested URL requires user authorization.'
-  /users/{userId}:
+  /users/{id}:
     get:
       security:
         - bearerAuth: []
@@ -72,7 +72,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           description: ID of the user that needs to be fetched
@@ -101,6 +101,7 @@ paths:
                 isEmailConfirmed: true
                 isFirstLogin: true
                 lastLogin: 2022-09-02T11:59:53.243+00:00
+                bookmarkedOffers: []
                 createdAt: 2021-04-09T11:34:53.243+00:00
                 updatedAt: 2022-09-02T11:59:53.243+00:00
         400:
@@ -143,7 +144,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           description: ID of the user that needs to be deleted

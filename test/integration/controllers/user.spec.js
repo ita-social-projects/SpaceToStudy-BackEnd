@@ -55,6 +55,7 @@ describe('User controller', () => {
         categories: expect.any(Array),
         isEmailConfirmed: expect.any(Boolean),
         isFirstLogin: expect.any(Boolean),
+        bookmarkedOffers: expect.any(Array),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })

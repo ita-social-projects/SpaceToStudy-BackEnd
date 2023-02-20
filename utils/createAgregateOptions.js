@@ -1,4 +1,4 @@
-const matchRegex = require('./matchRegex')
+const getRegex = require('./getRegex')
 
 const generateOptions = (value) => {
   if (!value) {
@@ -13,8 +13,8 @@ const createAgregateOptions = (query) => {
   const { from, to } = JSON.parse(lastLogin)
   const { orderBy, order } = JSON.parse(sort)
   const nameArray = name.trim().split(' ')
-  const firstNameRegex = matchRegex(nameArray[0])
-  const lastNameRegex = matchRegex(nameArray[1])
+  const firstNameRegex = getRegex(nameArray[0])
+  const lastNameRegex = getRegex(nameArray[1])
 
   const nameQuery = {
     $or: [
@@ -26,7 +26,7 @@ const createAgregateOptions = (query) => {
   const match = {
     role,
     ...nameQuery,
-    email: matchRegex(email),
+    email: getRegex(email),
     isFirstLogin: { $in: generateOptions(isFirstLogin) },
     isEmailConfirmed: { $in: generateOptions(isEmailConfirmed) }
   }

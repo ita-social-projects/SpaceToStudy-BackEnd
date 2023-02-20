@@ -5,7 +5,7 @@ const { hashPassword } = require('~/utils/passwordHelper')
 const {
   roles: { ADMIN }
 } = require('~/consts/auth')
-const matchRegex = require('~/utils/matchRegex')
+const getRegex = require('~/utils/getRegex')
 
 const adminService = {
   createAdmin: async (role, firstName, lastName, email, password, language) => {
@@ -52,8 +52,8 @@ const adminService = {
   }) => {
     const match = {
       role: ADMIN,
-      name: matchRegex(name),
-      email: matchRegex(email),
+      name: getRegex(name),
+      email: getRegex(email),
       active,
       blocked,
       createdAt: {

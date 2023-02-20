@@ -41,7 +41,11 @@ const createAggregateOptions = (query) => {
     }
   }
 
-  const sortOption = { [orderBy]: order === 'asc' ? 1 : -1 }
+  const sortKey = orderBy === 'name' ? 'nameLower' : orderBy
+
+  const sortOption = {
+    [sortKey]: order === 'asc' ? 1 : -1
+  }
 
   return {
     match,

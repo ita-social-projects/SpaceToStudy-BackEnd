@@ -9,6 +9,7 @@ const userService = {
     const [{ items, calculations }] = await User.aggregate([
       { $match: match },
       { $addFields: { name: { $concat: ['$firstName', ' ', '$lastName'] } } },
+      { $addFields: { nameLower: { $toLower: '$name' } } },
       { $project: { firstName: 0, lastName: 0 } },
       {
         $facet: {

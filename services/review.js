@@ -1,6 +1,6 @@
 const Review = require('~/models/review')
 const { createError } = require('~/utils/errorsHelper')
-const { REVIEW_NOT_FOUND } = require('~/consts/errors')
+const { REVIEW_NOT_FOUND, REVIEW_NOT_CREATED } = require('~/consts/errors')
 
 const reviewService = {
   getReviews: async () => {
@@ -18,6 +18,12 @@ const reviewService = {
   },
 
   addReview: async (comment, rating, authorId, targetUserId, targetUserRole, offerId) => {
+    const reviewPresent = await Review.findOne({ authorId, targetUserId, offerId }).lean().exec()
+
+    if (reviewPresent) {
+      throw createError(404, REVIEW_NOT_CREATED)
+    }
+
     const newReview = await Review.create({
       comment,
       rating,

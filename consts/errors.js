@@ -115,9 +115,9 @@ const errors = {
     code: 'REVIEW_NOT_FOUND',
     message: 'Review with the specified id was not found.'
   },
-  REVIEW_NOT_CREATED: {
-    code: 'REVIEW_NOT_CREATED',
-    message: 'You are allowed to leave only one review for a tutor.'
+  REVIEW_ALREADY_EXISTS: {
+    code: 'REVIEW_ALREADY_EXISTS',
+    message: 'You are allowed to leave only one review.'
   },
   SUBJECT_NOT_FOUND: {
     code: 'SUBJECT_NOT_FOUND',

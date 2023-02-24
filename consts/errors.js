@@ -126,6 +126,10 @@ const errors = {
   SUBJECT_ALREADY_EXISTS: {
     code: 'SUBJECT_ALREADY_EXISTS',
     message: 'Subject with the specified name already exists.'
+  },
+  OFFER_NOT_FOUND: {
+    code: 'OFFER_NOT_FOUND',
+    message: 'Offer with provided data was not found.'
   }
 }
 

@@ -8,6 +8,7 @@ const review = require('~/routes/review')
 const subject = require('~/routes/subject')
 const location = require('~/routes/location')
 const adminInvitation = require('~/routes/adminInvitation')
+const offer = require('~/routes/offer')
 
 const router = express.Router()
 
@@ -19,5 +20,6 @@ router.use('/reviews', review)
 router.use('/subjects', subject)
 router.use('/location', location)
 router.use('/admin-invitations', adminInvitation)
+router.use('/offers', offer)
 
 module.exports = router

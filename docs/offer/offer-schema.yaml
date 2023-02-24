@@ -1,0 +1,130 @@
+definitions:
+  offers:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        price:
+          type: number
+        proficiencyLevel:
+          type: string
+          enum:
+            - Beginner
+            - Intermediate
+            - Advanced
+            - Test Preparation
+            - Professional
+        description:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
+            enum:
+              - English
+              - Ukrainian
+              - Polish
+              - German
+              - French
+              - Spanish
+              - Arabic
+        authorRole:
+          type: string
+        userId:
+          type: string
+        subjectId:
+          type: string
+        categoryId:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  offerBody:
+    type: object
+    properties:
+      price:
+        type: number
+      proficiencyLevel:
+        type: string
+        enum:
+          - Beginner
+          - Intermediate
+          - Advanced
+          - Test Preparation
+          - Professional
+      description:
+        type: string
+      languages:
+        type: array
+        items:
+          type: string
+          enum:
+            - English
+            - Ukrainian
+            - Polish
+            - German
+            - French
+            - Spanish
+            - Arabic
+      authorRole:
+        type: string
+      userId:
+        type: string
+      subjectId:
+        type: string
+      categoryId:
+        type: string
+      isActive:
+        type: boolean
+  offer:
+    type: object
+    properties:
+      _id:
+        type: string
+      price:
+        type: number
+      proficiencyLevel:
+        type: string
+        enum:
+          - Beginner
+          - Intermediate
+          - Advanced
+          - Test Preparation
+          - Professional
+      description:
+        type: string
+      languages:
+        type: array
+        items:
+          type: string
+          enum:
+            - English
+            - Ukrainian
+            - Polish
+            - German
+            - French
+            - Spanish
+            - Arabic
+      authorRole:
+        type: string
+      userId:
+        type: string
+      subjectId:
+        type: string
+      categoryId:
+        type: string
+      isActive:
+        type: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

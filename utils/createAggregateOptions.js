@@ -9,7 +9,17 @@ const generateOptions = (value) => {
 }
 
 const createAggregateOptions = (query) => {
-  const { email, isEmailConfirmed, isFirstLogin, lastLogin, limit, name, role, skip, sort } = query
+  const {
+    email,
+    isEmailConfirmed,
+    isFirstLogin,
+    lastLogin = '{}',
+    limit = 5,
+    name = '',
+    role,
+    skip = 0,
+    sort = '{}'
+  } = query
   const { from, to } = JSON.parse(lastLogin)
   const { orderBy, order } = JSON.parse(sort)
   const nameArray = name.trim().split(' ')
@@ -24,8 +34,8 @@ const createAggregateOptions = (query) => {
   }
 
   const match = {
-    role,
     ...nameQuery,
+    role: getRegex(role),
     email: getRegex(email),
     isFirstLogin: { $in: generateOptions(isFirstLogin) },
     isEmailConfirmed: { $in: generateOptions(isEmailConfirmed) }

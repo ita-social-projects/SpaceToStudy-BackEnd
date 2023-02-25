@@ -10,10 +10,7 @@ let testUser = {
   firstName: 'john',
   lastName: 'doe',
   email: 'johndoe@gmail.com',
-  password: 'supersecretpass',
-  isEmailConfirmed: true,
-  isFirstLogin: true,
-  lastLogin: null
+  password: 'supersecretpass'
 }
 
 const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
@@ -30,26 +27,31 @@ describe('User controller', () => {
   })
 
   describe(`GET ${endpointUrl}`, () => {
-    it('should return a list of users', async () => {
+    it('should GET all users', async () => {
       let user = await User.create(testUser)
 
+      const response = await app.get(endpointUrl)
+
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body.items)).toBeTruthy()
+      expect(response.body.items).toEqual(expect.any(Array))
+
+      testUser = user
+    })
+
+    it('should GET all users which match query', async () => {
       const query = {
-        email: '',
-        isEmailConfirmed: 'true',
-        isFirstLogin: 'true',
-        lastLogin: '{"from":"","to":""}',
-        limit: '10',
-        name: '',
-        role: 'student',
-        skip: '0',
-        sort: '{"orderBy":"emil","order":"asc"}'
+        email: testUser.email,
+        isEmailConfirmed: 'false',
+        role: testUser.role[0]
       }
 
       const response = await app.get(endpointUrl).query(query)
+
       expect(response.status).toBe(200)
       expect(Array.isArray(response.body.items)).toBeTruthy()
-
-      testUser = user
+      expect(response.body.items.length).toBe(1)
+      expect(response.body.count).toBe(1)
     })
   })
 

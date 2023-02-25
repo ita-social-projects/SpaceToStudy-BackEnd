@@ -10,7 +10,6 @@ const userService = {
       { $match: match },
       { $addFields: { name: { $concat: ['$firstName', ' ', '$lastName'] } } },
       { $addFields: { nameLower: { $toLower: '$name' } } },
-      { $project: { firstName: 0, lastName: 0 } },
       {
         $facet: {
           items: [{ $sort: sort }, { $skip: skip }, { $limit: limit }],

@@ -36,4 +36,6 @@ const reviewSchema = new Schema(
   { timestamps: true }
 )
 
+reviewSchema.index({ authorId: 1, targetUserId: 1, offerId: 1 }, { unique: true })
+
 module.exports = model('Review', reviewSchema)

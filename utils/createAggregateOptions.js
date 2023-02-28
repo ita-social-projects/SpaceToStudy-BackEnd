@@ -50,12 +50,14 @@ const createAggregateOptions = (query) => {
       match.lastLogin.$lte = new Date(new Date(to).setHours(23, 59, 59))
     }
   }
+  const sortOrder = order === 'asc' ? 1 : -1
 
-  const sortKey = orderBy === 'name' ? 'nameLower' : orderBy
-
-  const sortOption = {
-    [sortKey]: order === 'asc' ? 1 : -1
+  const sortByName = {
+    firstName: sortOrder,
+    lastName: sortOrder
   }
+
+  const sortOption = orderBy === 'name' ? sortByName : { [orderBy]: sortOrder }
 
   return {
     match,

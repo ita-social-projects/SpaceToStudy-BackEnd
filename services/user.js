@@ -6,21 +6,19 @@ const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
-    const [{ items, calculations }] = await User.aggregate([
-      { $match: match },
-      { $addFields: { name: { $concat: ['$firstName', ' ', '$lastName'] } } },
-      { $addFields: { nameLower: { $toLower: '$name' } } },
-      {
-        $facet: {
-          items: [{ $sort: sort }, { $skip: skip }, { $limit: limit }],
-          calculations: [{ $count: 'count' }]
-        }
-      }
-    ])
+    const count = await User.countDocuments(match)
+
+    const items = await User.find(match)
+      .select('+isEmailConfirmed +isFirstLogin')
+      .sort(sort)
+      .collation({ locale: 'en_US', strength: 2, caseLevel: false })
+      .skip(skip)
+      .limit(limit)
+      .exec()
 
     return {
       items,
-      count: calculations[0]?.count || 0
+      count
     }
   },
 

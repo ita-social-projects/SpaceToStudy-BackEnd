@@ -4,7 +4,6 @@ const { USER_NOT_FOUND } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 
 const endpointUrl = '/users/'
-const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
 
 let testUser = {
   role: ['student'],
@@ -13,6 +12,8 @@ let testUser = {
   email: 'johndoe@gmail.com',
   password: 'supersecretpass'
 }
+
+const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
 
 describe('User controller', () => {
   let app, server
@@ -32,10 +33,25 @@ describe('User controller', () => {
       const response = await app.get(endpointUrl)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body).toEqual(expect.any(Array))
+      expect(Array.isArray(response.body.items)).toBeTruthy()
+      expect(response.body.items).toEqual(expect.any(Array))
 
       testUser = user
+    })
+
+    it('should GET all users which match query', async () => {
+      const query = {
+        email: testUser.email,
+        isEmailConfirmed: 'false',
+        role: testUser.role[0]
+      }
+
+      const response = await app.get(endpointUrl).query(query)
+
+      expect(response.status).toBe(200)
+      expect(Array.isArray(response.body.items)).toBeTruthy()
+      expect(response.body.items.length).toBe(1)
+      expect(response.body.count).toBe(1)
     })
   })
 
@@ -63,7 +79,6 @@ describe('User controller', () => {
 
     it('should throw USER_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingUserId)
-
       expectError(404, USER_NOT_FOUND, response)
     })
   })

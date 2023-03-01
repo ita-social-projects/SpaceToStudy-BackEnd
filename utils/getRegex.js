@@ -1,6 +1,6 @@
-const matchRegex = (regex) => ({
+const getRegex = (regex = '') => ({
   $regex: regex.length > 0 ? regex : '.*',
   $options: 'i'
 })
 
-module.exports = matchRegex
+module.exports = getRegex

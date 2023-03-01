@@ -5,10 +5,20 @@ const { createError } = require('~/utils/errorsHelper')
 const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
-  getUsers: async () => {
-    const users = await User.find().populate('categories').select('-__v').lean().exec()
+  getUsers: async ({ match, sort, skip, limit }) => {
+    const count = await User.countDocuments(match)
 
-    return users
+    const items = await User.find(match)
+      .sort(sort)
+      .collation({ locale: 'en_US', strength: 2, caseLevel: false })
+      .skip(skip)
+      .limit(limit)
+      .exec()
+
+    return {
+      items,
+      count
+    }
   },
 
   getUserById: async (id) => {

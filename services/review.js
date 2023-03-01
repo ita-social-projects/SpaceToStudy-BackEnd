@@ -1,7 +1,7 @@
 const Review = require('~/models/review')
 const { createError } = require('~/utils/errorsHelper')
 const { REVIEW_NOT_FOUND } = require('~/consts/errors')
-const calculateAverageRatingAndTotalReviews = require('~/utils/reviewAggregation')
+const calculateAverageRatingAndTotalReviews = require('~/utils/reviews/reviewAggregation')
 
 const reviewService = {
   getReviews: async () => {

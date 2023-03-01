@@ -1,20 +1,12 @@
 const { serverCleanup, serverInit } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { OFFER_NOT_FOUND } = require('~/consts/errors')
-const tokenService = require('~/services/token')
+const testUserAuthentication = require('~/utils/testUserAuth')
 
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
 
 let testOffer, accessToken
-
-const testUser = {
-  role: 'tutor',
-  firstName: 'Tart',
-  lastName: 'Dilling',
-  email: 'test@gmail.com',
-  password: 'Superpass123@'
-}
 
 describe('Offer controller', () => {
   let app, server
@@ -29,16 +21,7 @@ describe('Offer controller', () => {
 
   describe(`test POST ${endpointUrl}`, () => {
     it('should create new offer', async () => {
-      const createUserResponse = await app.post('/auth/signup').send(testUser)
-      testUser._id = createUserResponse.body.userId
-      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({ user: testUser._id })
-      const confirmToken = findConfirmTokenResponse[0].confirmToken
-      await app.get(`/auth/confirm-email/${confirmToken}`)
-
-      const loginUserResponse = await app
-        .post('/auth/login')
-        .send({ email: testUser.email, password: testUser.password })
-      accessToken = loginUserResponse.body.accessToken
+      accessToken = await testUserAuthentication(app)
 
       const response = await app
         .post(endpointUrl)

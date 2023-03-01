@@ -1,5 +1,5 @@
 const userService = require('~/services/user')
-const createAggregateOptions = require('~/utils/createAggregateOptions')
+const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 
 const getUsers = async (req, res) => {
   const { skip, limit, sort, match } = createAggregateOptions(req.query)

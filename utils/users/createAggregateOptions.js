@@ -1,4 +1,4 @@
-const getRegex = require('./getRegex')
+const getRegex = require('../getRegex')
 
 const generateOptions = (value) => {
   if (!value) {

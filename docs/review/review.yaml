@@ -46,7 +46,7 @@ paths:
                     _id: 63ebc6fbd2f34037d0aba791
                     price: 111
                     proficiencyLevel: Beginner
-                    description: this is a new blbsksfmlgksjfglk jlskgjslfgkjsflgk l gks lgsl sjglkgj
+                    description: This is a new course for those who want to start learning English
                     languages: English
                     authorRole: tutor
                     userId: 6255bc080a75adf9223df212
@@ -83,7 +83,7 @@ paths:
                     _id: 63ebc6fbd2f34037d0aba791
                     price: 300
                     proficiencyLevel: Advanced
-                    description: this is a new 123123123123123 text
+                    description: Extended English language course
                     languages: English, Ukrainian
                     authorRole: tutor
                     userId: 63e63bb04d1bf3bea00e3d88
@@ -147,7 +147,7 @@ paths:
                 _id: 63ebc6fbd2f34037d0aba791
                 price: 300
                 proficiencyLevel: Advanced
-                description: this is a new 123123123123123 text
+                description: Extended English language course
                 languages: English, Ukrainian
                 authorRole: tutor
                 userId: 63e63bb04d1bf3bea00e3d88
@@ -254,7 +254,7 @@ paths:
                   _id: 63ebc6fbd2f34037d0aba791
                   price: 111
                   proficiencyLevel: Beginner
-                  description: this is a new blbsksfmlgksjfglk jlskgjslfgkjsflgk l gks lgsl sjglkgj
+                  description: This is a new course for those who want to start learning English
                   languages: English
                   authorRole: tutor
                   userId: 6255bc080a75adf9223df212

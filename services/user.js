@@ -23,9 +23,8 @@ const userService = {
 
   getUserById: async (id) => {
     const user = await User.findById(id)
-      .populate('categories')
+      .populate('categories reviews')
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers -__v')
-      .lean()
       .exec()
 
     if (!user) {

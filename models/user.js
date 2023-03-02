@@ -96,7 +96,7 @@ const userSchema = new Schema(
 )
 
 // TODO:
-// review(virtuals)
+userSchema.virtual('reviews', { ref: 'Review', foreignField: 'targetUserId', localField: '_id' })
 // coops(virtuals)
 
 module.exports = model('User', userSchema)

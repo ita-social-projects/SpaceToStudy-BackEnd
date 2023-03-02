@@ -4,11 +4,11 @@ const { REVIEW_NOT_FOUND } = require('~/consts/errors')
 
 const reviewService = {
   getReviews: async (targetUserId, targetUserRole) => {
-    return await Review.find({ targetUserId, targetUserRole }).lean().exec()
+    return await Review.find({ targetUserId, targetUserRole }).populate('author offer').lean().exec()
   },
 
   getReviewById: async (id) => {
-    const review = await Review.findById(id).lean().exec()
+    const review = await Review.findById(id).populate('author offer').lean().exec()
 
     if (!review) {
       throw createError(404, REVIEW_NOT_FOUND)
@@ -17,17 +17,17 @@ const reviewService = {
     return review
   },
 
-  addReview: async (comment, rating, authorId, targetUserId, targetUserRole, offerId) => {
+  addReview: async (comment, rating, author, targetUserId, targetUserRole, offer) => {
     const newReview = await Review.create({
       comment,
       rating,
-      authorId,
+      author,
       targetUserId,
       targetUserRole,
-      offerId
+      offer
     })
 
-    return newReview
+    return await newReview.populate('author offer')
   },
 
   updateReview: async (id, updateData) => {

@@ -18,7 +18,8 @@ const createAggregateOptions = (query) => {
     name = '',
     role,
     skip = 0,
-    sort = '{}'
+    sort = '{}',
+    status = []
   } = query
   const { from, to } = JSON.parse(lastLogin)
   const { orderBy, order } = JSON.parse(sort)
@@ -35,21 +36,33 @@ const createAggregateOptions = (query) => {
 
   const match = {
     ...nameQuery,
-    role: getRegex(role),
     email: getRegex(email),
     isFirstLogin: { $in: generateOptions(isFirstLogin) },
     isEmailConfirmed: { $in: generateOptions(isEmailConfirmed) }
   }
 
+  if (role) {
+    match.role = role
+  }
+
   if (from || to) {
     match.lastLogin = {}
+
     if (from) {
       match.lastLogin.$gte = new Date(from)
     }
+
     if (to) {
       match.lastLogin.$lte = new Date(new Date(to).setHours(23, 59, 59))
     }
   }
+
+  if (status.length) {
+    match.status = {
+      $in: status
+    }
+  }
+
   const sortOrder = order === 'asc' ? 1 : -1
 
   const sortByName = {

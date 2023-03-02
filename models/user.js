@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM }
+  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM }
 } = require('~/consts/validation')
 const {
   roles: { STUDENT, TUTOR, ADMIN, SUPERADMIN }
@@ -75,14 +75,10 @@ const userSchema = new Schema(
       default: APP_LANG_ENUM[0],
       select: false
     },
-    active: {
-      type: Boolean,
-      default: true,
-      select: false
-    },
-    blocked: {
-      type: Boolean,
-      default: false,
+    status: {
+      type: String,
+      enum: STATUS_ENUM,
+      default: STATUS_ENUM[0],
       select: false
     },
     lastLoginAs: { type: String, enum: [STUDENT, TUTOR, ADMIN], select: false },

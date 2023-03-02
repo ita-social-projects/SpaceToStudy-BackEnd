@@ -9,6 +9,7 @@ const userService = {
     const count = await User.countDocuments(match)
 
     const items = await User.find(match)
+      .select('+status')
       .sort(sort)
       .collation({ locale: 'en_US', strength: 2, caseLevel: false })
       .skip(skip)

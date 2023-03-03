@@ -126,9 +126,9 @@ Then open one more terminal and run `npm run cypress`.
     We should have a folder per entity with tests.
   - Test files:
 
-    - {entityName}.queries.spec.jsx - Testing the queries (if it exists)
-    - {entityName}.mutations.spec.jsx - Testing the mutations (if it exists)
-    - {entityName}.subscriptions.spec.jsx - Testing the subscriptions (if it exists)
+    - {entityName}.queries.spec.js - Testing the queries (if it exists)
+    - {entityName}.mutations.spec.js - Testing the mutations (if it exists)
+    - {entityName}.subscriptions.spec.js - Testing the subscriptions (if it exists)
 
   - Testing guides:
     1.  All fields in data from the response from the backend should be checked for the appropriate value.

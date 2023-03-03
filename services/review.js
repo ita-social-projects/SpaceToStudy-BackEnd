@@ -4,8 +4,8 @@ const { REVIEW_NOT_FOUND } = require('~/consts/errors')
 const calculateAverageRatingAndTotalReviews = require('~/utils/reviews/reviewAggregation')
 
 const reviewService = {
-  getReviews: async (setTargetUserId) => {
-    return await Review.find(setTargetUserId).lean().exec()
+  getReviews: async (targetUserId) => {
+    return await Review.find(targetUserId).lean().exec()
   },
 
   getReviewById: async (id) => {

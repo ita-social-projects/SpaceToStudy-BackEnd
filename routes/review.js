@@ -6,7 +6,7 @@ const { authMiddleware } = require('~/middlewares/auth')
 const reviewController = require('~/controllers/review')
 const setCurrentUserId = require('~/middlewares/setCurrentUserId')
 
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 
 router.use(authMiddleware)
 

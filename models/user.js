@@ -96,7 +96,6 @@ const userSchema = new Schema(
 )
 
 // TODO:
-// review(virtuals)
 // coops(virtuals)
 
 module.exports = model('User', userSchema)

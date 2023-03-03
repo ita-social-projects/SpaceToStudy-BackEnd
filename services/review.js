@@ -3,8 +3,8 @@ const { createError } = require('~/utils/errorsHelper')
 const { REVIEW_NOT_FOUND } = require('~/consts/errors')
 
 const reviewService = {
-  getReviews: async (targetUserId, targetUserRole) => {
-    return await Review.find({ targetUserId, targetUserRole }).populate('author offer').lean().exec()
+  getReviews: async (match, skip, limit) => {
+    return await Review.find(match).populate('author offer').skip(skip).limit(limit).lean().exec()
   },
 
   getReviewById: async (id) => {

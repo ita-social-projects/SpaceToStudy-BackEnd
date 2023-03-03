@@ -9,6 +9,32 @@ paths:
       description: Finds and returns an array with a list of reviews.
       produces:
         - application/json
+      parameters:
+        - in: query
+          name: targetUserRole
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: rating
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - name: id
+          in: path
+          required: true
+          description: targetUserId field
+          type: string
       responses:
         200:
           description: OK

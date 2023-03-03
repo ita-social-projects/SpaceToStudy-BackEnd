@@ -40,7 +40,7 @@ SpaceToStudy project is a platform where experts in various fields share their k
 
 ### Required to install
 
-- NodeJS (14.15.4)
+- NodeJS (18.14.0 LTS)
 
 ### Clone
 
@@ -91,8 +91,8 @@ Then open one more terminal and run `npm run cypress`.
     should be used and all styles should be located inside separate
     component.
 - Components
-  - Components that are connected to redux should be located inside
-    `containers` folder. Components without connection to redux should
+  - Components that are connected to Redux should be located inside
+    `containers` folder. Components without connection to Redux should
     be located inside `components` folder.
   - Each individual page that is accessed via `react-router`
     should be located inside `pages` folder. All components
@@ -100,10 +100,10 @@ Then open one more terminal and run `npm run cypress`.
     folder for the specific page.
   - Each component should have at least three files:
     - `index.js` where we export anything from the whole folder
-    - `{component-name}.js` - file where component is located
+    - `{component-name}.jsx` - file where component is located
     - `{component-name}.styles.js` where all styles are located
 - File naming
-  - Files should be name in format `some-component.type.js`
+  - Files should be name in format `some-component.type.jsx`
 - Architecture
   - Logic is separated in layers
     - resolver layer (handles graphql actions)
@@ -121,14 +121,14 @@ Then open one more terminal and run `npm run cypress`.
 
 ### Testing
 
- - Tests are implemented in the format of contract tests. We test actual Graphql operations like queries, mutations, or subscriptions on the running application.
+ - Tests are implemented in the format of contract tests. We test actual GraphQL operations like queries, mutations, or subscriptions on the running application.
     For testing, we should use a database that is running as a container locally.
     We should have a folder per entity with tests.
   - Test files:
 
-    - {entityName}.queries.test.js - Testing the queries (if it exists)
-    - {entityName}.mutations.test.js - Testing the mutations (if it exists)
-    - {entityName}.subscriptions.test.js - Testing the subscriptions (if it exists)
+    - {entityName}.queries.spec.jsx - Testing the queries (if it exists)
+    - {entityName}.mutations.spec.jsx - Testing the mutations (if it exists)
+    - {entityName}.subscriptions.spec.jsx - Testing the subscriptions (if it exists)
 
   - Testing guides:
     1.  All fields in data from the response from the backend should be checked for the appropriate value.
@@ -141,8 +141,8 @@ Then open one more terminal and run `npm run cypress`.
     5.  Tests should be executed before any commit and don’t allow to push code if tests are failing.
     6.  We need to develop utility functions that we can reuse in many tests files for creating user and base authentication (obtaining JWT token) for future performing operations that require authorization
   - Libraries
-    - jest - testing framework
-    - apollo-boost - client for performing Graphql operations
+    - vitest - testing framework
+    - apollo-boost - client for performing GraphQL operations
 
 - Runtime work
   - Locally application is running in docker container. We have two docker
@@ -153,9 +153,9 @@ Then open one more terminal and run `npm run cypress`.
 Order of testing components:
 
 1. simple stateless components that are used in multiple places
-2. components that depends on other components but not connected to redux and don’t have any state
-3. components that have internal state but are not connected to redux
-4. components that connected to redux
+2. components that depends on other components but not connected to Redux and don’t have any state
+3. components that have internal state but are not connected to Redux
+4. components that connected to Redux
 
 ##### Don’t test:
 
@@ -320,6 +320,12 @@ Only the release should merge into the main branch!!!
 [![@Yurenko](https://avatars.githubusercontent.com/u/83120263?v=4)](https://github.com/Yurenko)
 [![@KhrystynaPavlikovska](https://avatars.githubusercontent.com/u/34419998?s=400&u=15346304d164fb346cc2671a7d33052d2a6324e2&v=4)](https://github.com/KhrystynaPavlikovska)
 [![@Roman-Peretiatko](https://avatars.githubusercontent.com/u/79856961?v=4)](https://github.com/Roman-Peretiatko)
+[![@mxrcury](https://user-images.githubusercontent.com/34419998/222748150-75fae7f1-e219-48f6-a225-8f91f9cbbbd3.png)](https://github.com/mxrcury)
+[![@tsivkadi](https://user-images.githubusercontent.com/34419998/222748492-37a29d91-8acc-4319-8402-52ec5fbaa57a.png)](https://github.com/tsivkadi)
+[![@Radomyr-kh](https://user-images.githubusercontent.com/34419998/222748801-1112f260-9c96-4234-9e5e-550cddeb80d5.png)](https://github.com/Radomyr-kh)
+[![@ArturBekhDEV](https://avatars.githubusercontent.com/u/102412173?v=4)](https://github.com/ArturBekhDEV)
+[![@FryDay969](https://avatars.githubusercontent.com/u/39992977?v=4)](https://github.com/FryDay969)
+
 
 ### DevOps team
 

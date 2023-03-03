@@ -63,8 +63,7 @@ describe('Review controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(testReview)
+      expect(response.body).toEqual(expect.objectContaining({ count: 1, reviews: [testReview] }))
     })
   })
 

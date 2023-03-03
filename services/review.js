@@ -4,7 +4,14 @@ const { REVIEW_NOT_FOUND } = require('~/consts/errors')
 
 const reviewService = {
   getReviews: async (match, skip, limit) => {
-    return await Review.find(match).populate('author offer').skip(skip).limit(limit).lean().exec()
+    const count = await Review.countDocuments(match)
+
+    const reviews = await Review.find(match).populate('author offer').skip(skip).limit(limit).lean().exec()
+
+    return {
+      count,
+      reviews
+    }
   },
 
   getReviewById: async (id) => {

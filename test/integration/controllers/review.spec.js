@@ -67,7 +67,7 @@ describe('Review controller', () => {
     })
   })
 
-  describe(`GET ${endpointUrl}/:reviewId`, () => {
+  describe(`GET ${endpointUrl}/:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl + testReview._id)
 
@@ -88,7 +88,7 @@ describe('Review controller', () => {
     })
   })
 
-  describe(`UPDATE ${endpointUrl}:reviewId`, () => {
+  describe(`UPDATE ${endpointUrl}:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.patch(endpointUrl + testReview._id).send(updateData)
 
@@ -114,7 +114,7 @@ describe('Review controller', () => {
     })
   })
 
-  describe(`DELETE ${endpointUrl}:reviewId`, () => {
+  describe(`DELETE ${endpointUrl}:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.delete(endpointUrl + testReview._id)
 

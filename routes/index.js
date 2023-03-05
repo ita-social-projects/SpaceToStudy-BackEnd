@@ -9,6 +9,7 @@ const subject = require('~/routes/subject')
 const location = require('~/routes/location')
 const adminInvitation = require('~/routes/adminInvitation')
 const offer = require('~/routes/offer')
+const category = require('~/routes/category')
 
 const router = express.Router()
 

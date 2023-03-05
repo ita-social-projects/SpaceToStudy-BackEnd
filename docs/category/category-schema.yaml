@@ -1,4 +1,36 @@
-components:
+definitions:
+  categories:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        categoryIcon:
+          type: string
+        subjectsIcon:
+          type: string
+        totalOffers:
+          type: number
+          default: 0
+          $ref: '#/definitions/offer'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  categoryBody:
+    type: object
+    properties:
+      name:
+        type: string
+      categoryIcon:
+        type: string
+      subjectsIcon:
+        type: string
   category:
     type: object
     properties:
@@ -6,3 +38,17 @@ components:
         type: string
       name:
         type: string
+      categoryIcon:
+        type: string
+      subjectsIcon:
+        type: string
+      totalOffers:
+        type: number
+        default: 0
+        $ref: '#/definitions/offer'
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

@@ -15,7 +15,8 @@ const enums = {
   APP_LANG_ENUM: ['en', 'ua'],
   SPOKEN_LANG_ENUM: ['English', 'Ukrainian', 'Polish', 'German', 'French', 'Spanish', 'Arabic'],
   SUBJECT_LEVEL_ENUM: ['Beginner', 'Intermediate', 'Advanced', 'Test Preparation', 'Professional'],
-  ROLE_ENUM: ['student', 'tutor', 'admin']
+  ROLE_ENUM: ['student', 'tutor', 'admin'],
+  STATUS_ENUM: ['active', 'blocked']
 }
 
 module.exports = {

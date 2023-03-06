@@ -1,4 +1,5 @@
 const User = require('~/models/user')
+const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
@@ -32,7 +33,9 @@ const userService = {
       throw createError(404, USER_NOT_FOUND)
     }
 
-    return user
+    const reviewStats = await calculateReviewStats(user._id)
+
+    return { reviewStats, user }
   },
 
   getUserByEmail: async (email) => {

@@ -1,72 +1,49 @@
 const { serverCleanup, serverInit } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { SUBJECT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
-const tokenService = require('~/services/token')
+const testUserAuthentication = require('~/utils/testUserAuth')
 
 const endpointUrl = '/subjects/'
-
-let testSubject, testUser, accessToken
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
 
-describe('Subject controller', () => {
-  let app, server
+const subjectBody = { name: 'English', category: '63525e23bf163f5ea609ff27' }
 
-  beforeAll(async () => {
+describe('Subject controller', () => {
+  let app, server, accessToken, testSubject
+
+  beforeEach(async () => {
     ;({ app, server } = await serverInit())
+    accessToken = await testUserAuthentication(app)
+    testSubject = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await serverCleanup(server)
   })
 
   describe(`POST ${endpointUrl}`, () => {
     it('should create a subject', async () => {
-      testUser = {
-        role: 'tutor',
-        firstName: 'Tart',
-        lastName: 'Dilling',
-        email: 'test@gmail.com',
-        password: 'Superpass123@'
-      }
-      const createUserResponse = await app.post('/auth/signup').send(testUser)
-      testUser._id = createUserResponse.body.userId
-      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({ user: testUser._id })
-      const confirmToken = findConfirmTokenResponse[0].confirmToken
-      await app.get(`/auth/confirm-email/${confirmToken}`)
-
-      const loginUserResponse = await app
-        .post('/auth/login')
-        .send({ email: testUser.email, password: testUser.password })
-      accessToken = loginUserResponse.body.accessToken
-      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send({
-        name: 'English',
-        category: '63525e23bf163f5ea609ff27'
-      })
-
-      expect(response.statusCode).toBe(201)
-      expect(response.body).toEqual(
+      expect(testSubject.statusCode).toBe(201)
+      expect(testSubject.body).toEqual(
         expect.objectContaining({
           _id: expect.any(String),
-          name: expect.any(String),
-          category: expect.any(String),
-          totalOffers: expect.any(Number),
+          name: 'English',
+          category: '63525e23bf163f5ea609ff27',
+          totalOffers: 0,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           __v: expect.anything()
         })
       )
-
-      testSubject = response.body
     })
   })
 
   it('should throw SUBJECT_ALREADY_EXISTS', async () => {
-    const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send({
-      name: 'English',
-      category: '63525e23bf163f5ea609ff27'
-    })
+    expect(testSubject.statusCode).toBe(201)
 
-    expectError(409, SUBJECT_ALREADY_EXISTS, response)
+    const error = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
+
+    expectError(409, SUBJECT_ALREADY_EXISTS, error)
   })
 
   describe(`GET ${endpointUrl}`, () => {
@@ -78,9 +55,9 @@ describe('Subject controller', () => {
       expect(response.body[0]).toEqual(
         expect.objectContaining({
           _id: expect.any(String),
-          name: expect.any(String),
-          category: expect.any(String),
-          totalOffers: expect.any(Number),
+          name: 'English',
+          category: '63525e23bf163f5ea609ff27',
+          totalOffers: 0,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           __v: expect.anything()
@@ -91,7 +68,7 @@ describe('Subject controller', () => {
 
   describe(`GET ${endpointUrl}:id`, () => {
     it('should get a subject by ID', async () => {
-      const response = await app.get(endpointUrl + testSubject._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + testSubject.body._id).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
     })
@@ -106,7 +83,7 @@ describe('Subject controller', () => {
   describe(`UPDATE ${endpointUrl}:id`, () => {
     it('should update subject by ID', async () => {
       const response = await app
-        .patch(endpointUrl + testSubject._id)
+        .patch(endpointUrl + testSubject.body._id)
         .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Eng' })
 
@@ -125,13 +102,17 @@ describe('Subject controller', () => {
 
   describe(`DELETE ${endpointUrl}:id`, () => {
     it('should delete subject by ID', async () => {
-      const response = await app.delete(endpointUrl + testSubject._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app
+        .delete(endpointUrl + testSubject.body._id)
+        .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(204)
     })
 
     it('should throw SUBJECT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingSubjectId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app
+        .delete(endpointUrl + nonExistingSubjectId)
+        .set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, SUBJECT_NOT_FOUND, response)
     })

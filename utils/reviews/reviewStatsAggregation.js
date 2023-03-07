@@ -1,7 +1,7 @@
 const Review = require('~/models/review')
 
 const calculateReviewStats = async (targetUserId, targetUserRole) => {
-  const reviews = await Review.aggregate([
+  const [reviews] = await Review.aggregate([
     {
       $match: {
         targetUserId,
@@ -51,7 +51,7 @@ const calculateReviewStats = async (targetUserId, targetUserRole) => {
     }
   ])
 
-  return { result: reviews }
+  return reviews
 }
 
 module.exports = calculateReviewStats

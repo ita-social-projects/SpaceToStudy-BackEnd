@@ -27,6 +27,7 @@ const userService = {
     const user = await User.findOne({ _id: id, role })
       .populate('categories')
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers -__v')
+      .lean()
       .exec()
 
     if (!user) {
@@ -35,7 +36,7 @@ const userService = {
 
     const reviewStats = await calculateReviewStats(user._id, role)
 
-    return { reviewStats, user }
+    return { ...user, reviewStats }
   },
 
   getUserById: async (id) => {

@@ -14,7 +14,7 @@ const getOneUser = async (req, res) => {
 
   const user = await userService.getOneUser(id, role)
 
-  res.status(200).json({ user })
+  res.status(200).json(user)
 }
 
 const deleteUser = async (req, res) => {

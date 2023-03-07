@@ -9,12 +9,12 @@ const getUsers = async (req, res) => {
   res.status(200).json(users)
 }
 
-const getUserById = async (req, res) => {
-  const { id } = req.params
+const getOneUser = async (req, res) => {
+  const { id: targetUserId, role: targetUserRole } = req.params
 
-  const user = await userService.getUserById(id)
+  const user = await userService.getOneUser(targetUserId, targetUserRole)
 
-  res.status(200).json(user)
+  res.status(200).json({ user })
 }
 
 const deleteUser = async (req, res) => {
@@ -27,6 +27,6 @@ const deleteUser = async (req, res) => {
 
 module.exports = {
   getUsers,
-  getUserById,
+  getOneUser,
   deleteUser
 }

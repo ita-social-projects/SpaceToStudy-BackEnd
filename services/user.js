@@ -23,8 +23,8 @@ const userService = {
     }
   },
 
-  getUserById: async (id) => {
-    const user = await User.findById(id)
+  getOneUser: async (targetUserId, targetUserRole) => {
+    const user = await User.findOne({ _id: targetUserId, role: targetUserRole })
       .populate('categories')
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers -__v')
       .exec()
@@ -33,9 +33,19 @@ const userService = {
       throw createError(404, USER_NOT_FOUND)
     }
 
-    const reviewStats = await calculateReviewStats(user._id)
+    const reviewStats = await calculateReviewStats(user._id, targetUserRole)
 
     return { reviewStats, user }
+  },
+
+  getUserById: async (id) => {
+    const user = await User.findById(id).select('+lastLoginAs +isEmailConfirmed +isFirstLogin -__v').exec()
+
+    if (!user) {
+      throw createError(404, USER_NOT_FOUND)
+    }
+
+    return user
   },
 
   getUserByEmail: async (email) => {

@@ -9,10 +9,10 @@ const router = express.Router()
 
 router.param('id', idValidation)
 
-router.use('/:id/reviews', reviewRouter)
+router.use('/:id/:role/reviews', reviewRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
-router.get('/:id', asyncWrapper(userController.getUserById))
+router.get('/:id/:role', asyncWrapper(userController.getOneUser))
 router.delete('/:id', asyncWrapper(userController.deleteUser))
 
 module.exports = router

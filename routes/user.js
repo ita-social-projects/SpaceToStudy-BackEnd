@@ -19,6 +19,8 @@ router.use('/:id/reviews', reviewRouter)
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', asyncWrapper(userController.getOneUser))
 router.get('/my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.getOneUser))
+
+router.patch('/:id', asyncWrapper(userController.updateUser))
 router.delete('/:id', asyncWrapper(userController.deleteUser))
 
 module.exports = router

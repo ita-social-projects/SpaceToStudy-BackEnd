@@ -40,7 +40,7 @@ const userService = {
   },
 
   getUserById: async (id) => {
-    const user = await User.findById(id).select('+lastLoginAs +isEmailConfirmed +isFirstLogin -__v').exec()
+    const user = await User.findById(id).select('+lastLoginAs +isEmailConfirmed +isFirstLogin -__v').lean().exec()
 
     if (!user) {
       throw createError(404, USER_NOT_FOUND)

@@ -6,7 +6,13 @@ const reviewService = {
   getReviews: async (match, skip, limit) => {
     const count = await Review.countDocuments(match)
 
-    const reviews = await Review.find(match).populate('author offer').skip(skip).limit(limit).lean().exec()
+    const reviews = await Review.find(match)
+      .populate('author')
+      .populate({ path: 'offer', populate: { path: 'categoryId subjectId' } })
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec()
 
     return {
       count,

@@ -1,9 +1,13 @@
 const reviewService = require('~/services/review')
+const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getReviews = async (req, res) => {
   const { id: targetUserId, role: targetUserRole } = req.params
+  const { rating, skip, limit } = req.query
 
-  const reviews = await reviewService.getReviews(targetUserId, targetUserRole)
+  const match = getMatchOptions({ targetUserId, targetUserRole, rating })
+
+  const reviews = await reviewService.getReviews(match, parseInt(skip), parseInt(limit))
 
   res.status(200).json(reviews)
 }
@@ -17,10 +21,10 @@ const getReviewById = async (req, res) => {
 }
 
 const addReview = async (req, res) => {
-  const { id: authorId } = req.params
-  const { comment, rating, targetUserId, targetUserRole, offerId } = req.body
+  const { id: author } = req.params
+  const { comment, rating, targetUserId, targetUserRole, offer } = req.body
 
-  const newReview = await reviewService.addReview(comment, rating, authorId, targetUserId, targetUserRole, offerId)
+  const newReview = await reviewService.addReview(comment, rating, author, targetUserId, targetUserRole, offer)
 
   res.status(201).json(newReview)
 }

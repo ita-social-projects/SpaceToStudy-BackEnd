@@ -3,12 +3,29 @@ const { createError } = require('~/utils/errorsHelper')
 const { REVIEW_NOT_FOUND } = require('~/consts/errors')
 
 const reviewService = {
-  getReviews: async (targetUserId, targetUserRole) => {
-    return await Review.find({ targetUserId, targetUserRole }).lean().exec()
+  getReviews: async (match, skip, limit) => {
+    const count = await Review.countDocuments(match)
+
+    const reviews = await Review.find(match)
+      .populate('author')
+      .populate({ path: 'offer', populate: { path: 'categoryId subjectId' } })
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec()
+
+    return {
+      count,
+      reviews
+    }
   },
 
   getReviewById: async (id) => {
-    const review = await Review.findById(id).lean().exec()
+    const review = await Review.findById(id)
+      .populate('author')
+      .populate({ path: 'offer', populate: { path: 'categoryId subjectId' } })
+      .lean()
+      .exec()
 
     if (!review) {
       throw createError(404, REVIEW_NOT_FOUND)
@@ -17,17 +34,17 @@ const reviewService = {
     return review
   },
 
-  addReview: async (comment, rating, authorId, targetUserId, targetUserRole, offerId) => {
+  addReview: async (comment, rating, author, targetUserId, targetUserRole, offer) => {
     const newReview = await Review.create({
       comment,
       rating,
-      authorId,
+      author,
       targetUserId,
       targetUserRole,
-      offerId
+      offer
     })
 
-    return newReview
+    return await newReview.populate('author offer')
   },
 
   updateReview: async (id, updateData) => {

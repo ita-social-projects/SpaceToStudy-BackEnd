@@ -10,16 +10,16 @@ definitions:
           type: string
         rating:
           type: number
-        authorId:
-          type: string
+        author:
+          type: object
           ref: '#/components/user'
         targetUserId:
           type: string
           ref: '#components/user'
         targetUserRole:
           type: string
-        offerId:
-          type: string
+        offer:
+          type: object
           ref: '#components/offer'
         createdAt:
           type: string
@@ -36,16 +36,16 @@ definitions:
         type: string
       rating:
         type: number
-      authorId:
-        type: string
+      author:
+        type: object
         ref: '#/components/user'
       targetUserId:
         type: string
         ref: '#components/user'
       targetUserRole:
         type: string
-      offerId:
-        type: string
+      offer:
+        type: object
         ref: '#components/offer'
       createdAt:
         type: string
@@ -60,16 +60,16 @@ definitions:
         type: string
       rating:
         type: number
-      authorId:
-        type: string
+      author:
+        type: object
         ref: '#/components/user'
       targetUserId:
         type: string
         ref: '#components/user'
       targetUserRole:
         type: string
-      offerId:
-        type: string
+      offer:
+        type: object
         ref: '#components/offer'
       createdAt:
         type: string

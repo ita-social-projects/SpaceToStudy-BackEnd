@@ -11,8 +11,7 @@ let testReview = {
   comment: 'Good mentor and learning program',
   rating: 5,
   targetUserId: '63bed43c51ee69a0d4c5ff92',
-  targetUserRole: 'tutor',
-  offerId: '63bed445cf00bcbdcdb4e648'
+  targetUserRole: 'tutor'
 }
 const updateData = {
   comment: 'waste of money',
@@ -40,14 +39,16 @@ describe('Review controller', () => {
     it('should create a review', async () => {
       accessToken = await testUserAuthentication(app)
 
-      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testReview)
+      const response = await app
+        .post(endpointUrl)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ ...testReview, offer: '63bed445cf00bcbdcdb4e648' })
 
       expect(response.statusCode).toBe(201)
       expect(response.body).toBeTruthy()
       expect(response.body).toEqual(expect.objectContaining(testReview))
 
       testReview = response.body
-      console.log(testReview)
     })
   })
 
@@ -62,12 +63,11 @@ describe('Review controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(expect.objectContaining(testReview))
+      expect(response.body).toEqual(expect.objectContaining({ count: 1, reviews: [testReview] }))
     })
   })
 
-  describe(`GET ${endpointUrl}/:reviewId`, () => {
+  describe(`GET ${endpointUrl}/:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl + testReview._id)
 
@@ -88,7 +88,7 @@ describe('Review controller', () => {
     })
   })
 
-  describe(`UPDATE ${endpointUrl}:reviewId`, () => {
+  describe(`UPDATE ${endpointUrl}:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.patch(endpointUrl + testReview._id).send(updateData)
 
@@ -114,7 +114,7 @@ describe('Review controller', () => {
     })
   })
 
-  describe(`DELETE ${endpointUrl}:reviewId`, () => {
+  describe(`DELETE ${endpointUrl}:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.delete(endpointUrl + testReview._id)
 

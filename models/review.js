@@ -13,7 +13,7 @@ const reviewSchema = new Schema(
       min: [1, 'Rating must be above 1'],
       max: [5, 'Rating must be below 5']
     },
-    authorId: {
+    author: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true
@@ -27,7 +27,7 @@ const reviewSchema = new Schema(
       type: String,
       required: true
     },
-    offerId: {
+    offer: {
       type: Schema.Types.ObjectId,
       ref: 'Offer',
       required: true

@@ -23,8 +23,8 @@ const userService = {
     }
   },
 
-  getOneUser: async (targetUserId, targetUserRole) => {
-    const user = await User.findOne({ _id: targetUserId, role: targetUserRole })
+  getOneUser: async (id, role) => {
+    const user = await User.findOne({ _id: id, role })
       .populate('categories')
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers -__v')
       .exec()
@@ -33,7 +33,7 @@ const userService = {
       throw createError(404, USER_NOT_FOUND)
     }
 
-    const reviewStats = await calculateReviewStats(user._id, targetUserRole)
+    const reviewStats = await calculateReviewStats(user._id, role)
 
     return { reviewStats, user }
   },

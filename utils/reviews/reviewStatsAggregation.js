@@ -51,7 +51,7 @@ const calculateReviewStats = async (targetUserId, targetUserRole) => {
     }
   ])
 
-  return { reviews }
+  return { result: reviews }
 }
 
 module.exports = calculateReviewStats

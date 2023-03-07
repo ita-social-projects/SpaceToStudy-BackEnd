@@ -10,9 +10,9 @@ const getUsers = async (req, res) => {
 }
 
 const getOneUser = async (req, res) => {
-  const { id: targetUserId, role: targetUserRole } = req.params
+  const { id, role } = req.params
 
-  const user = await userService.getOneUser(targetUserId, targetUserRole)
+  const user = await userService.getOneUser(id, role)
 
   res.status(200).json({ user })
 }

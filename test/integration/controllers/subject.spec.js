@@ -27,12 +27,11 @@ describe('Subject controller', () => {
       expect(testSubject.body).toEqual(
         expect.objectContaining({
           _id: expect.any(String),
-          name: 'English',
-          category: '63525e23bf163f5ea609ff27',
+          name: subjectBody.name,
+          category: subjectBody.category,
           totalOffers: 0,
           createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          __v: expect.anything()
+          updatedAt: expect.any(String)
         })
       )
     })
@@ -55,12 +54,11 @@ describe('Subject controller', () => {
       expect(response.body[0]).toEqual(
         expect.objectContaining({
           _id: expect.any(String),
-          name: 'English',
-          category: '63525e23bf163f5ea609ff27',
+          name: subjectBody.name,
+          category: subjectBody.category,
           totalOffers: 0,
           createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          __v: expect.anything()
+          updatedAt: expect.any(String)
         })
       )
     })
@@ -71,6 +69,16 @@ describe('Subject controller', () => {
       const response = await app.get(endpointUrl + testSubject.body._id).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          _id: expect.any(String),
+          name: subjectBody.name,
+          category: subjectBody.category,
+          totalOffers: 0,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+      )
     })
 
     it('should throw SUBJECT_NOT_FOUND', async () => {

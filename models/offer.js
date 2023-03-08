@@ -51,14 +51,12 @@ const offerSchema = new Schema(
     },
     isActive: {
       type: Boolean,
-      default: false,
-      select: false
+      default: false
     }
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    versionKey: false
   }
 )
 

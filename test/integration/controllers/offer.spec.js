@@ -71,6 +71,7 @@ describe('Offer controller', () => {
   describe(`test GET ${endpointUrl}:id`, () => {
     it('should get an offer by ID', async () => {
       const response = await app.get(endpointUrl + testOffer._id).set('Authorization', `Bearer ${accessToken}`)
+
       expect(response.body).toEqual(expect.objectContaining(testOffer))
       expect(response.statusCode).toBe(200)
     })

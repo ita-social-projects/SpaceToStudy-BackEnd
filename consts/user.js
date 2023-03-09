@@ -6,7 +6,6 @@ const allowedUserFieldsForUpdate = {
     country: true,
     city: true
   },
-  city: true,
   experience: true,
   subject: true,
   averageRating: true,

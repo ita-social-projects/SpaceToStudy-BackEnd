@@ -2,6 +2,7 @@ const User = require('~/models/user')
 const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
+const filterAllowedUserFields = require('~/utils/users/filterAllowedUserFields')
 
 const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
@@ -85,8 +86,16 @@ const userService = {
     return newUser
   },
 
-  updateUser: async (id, param) => {
+  _updateUser: async (id, param) => {
     const user = await User.findByIdAndUpdate(id, param, { new: true }).exec()
+
+    if (!user) {
+      throw createError(404, USER_NOT_FOUND)
+    }
+  },
+  updateUser: async (id, param) => {
+    const filteredParam = filterAllowedUserFields(param)
+    const user = await User.findByIdAndUpdate(id, filteredParam, { new: true }).exec()
 
     if (!user) {
       throw createError(404, USER_NOT_FOUND)

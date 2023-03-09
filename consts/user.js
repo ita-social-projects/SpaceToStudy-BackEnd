@@ -8,7 +8,6 @@ const allowedUserFieldsForUpdate = {
   },
   education: true,
   categories: true,
-  totalReviews: true,
   averageRating: true,
   nativeLanguage: true,
   appLanguage: true

@@ -1,4 +1,4 @@
-const { allowedUserFieldsForUpdate } = require('~/consts/user')
+const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 
 const isObjectEmpty = (obj) => Object.keys(obj).length === 0
 

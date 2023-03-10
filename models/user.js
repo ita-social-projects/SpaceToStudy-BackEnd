@@ -44,16 +44,6 @@ const userSchema = new Schema(
     photo: String,
     education: String,
     categories: { type: [Schema.Types.ObjectId], ref: 'Category' },
-    totalReviews: {
-      type: Number,
-      default: 0
-    },
-    averageRating: {
-      type: Number,
-      default: 3,
-      min: [1, 'Rating must be above 1'],
-      max: [5, 'Rating must be below 5']
-    },
     nativeLanguage: { type: String, enum: SPOKEN_LANG_ENUM },
     isEmailConfirmed: {
       type: Boolean,
@@ -87,7 +77,8 @@ const userSchema = new Schema(
   {
     timestamps: true,
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
+    versionKey: false
   }
 )
 

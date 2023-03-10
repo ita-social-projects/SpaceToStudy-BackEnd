@@ -1,11 +1,10 @@
 const Review = require('~/models/review')
 const { createError } = require('~/utils/errorsHelper')
 const { REVIEW_NOT_FOUND } = require('~/consts/errors')
-const calculateAverageRatingAndTotalReviews = require('~/utils/reviews/reviewAggregation')
 
 const reviewService = {
-  getReviews: async (targetUserId) => {
-    return await Review.find(targetUserId).lean().exec()
+  getReviews: async (targetUserId, targetUserRole) => {
+    return await Review.find({ targetUserId, targetUserRole }).lean().exec()
   },
 
   getReviewById: async (id) => {
@@ -28,8 +27,6 @@ const reviewService = {
       offerId
     })
 
-    await calculateAverageRatingAndTotalReviews(newReview.targetUserId)
-
     return newReview
   },
 
@@ -39,8 +36,6 @@ const reviewService = {
     if (!review) {
       throw createError(404, REVIEW_NOT_FOUND)
     }
-
-    await calculateAverageRatingAndTotalReviews(review.targetUserId)
   },
 
   deleteReview: async (id) => {
@@ -49,8 +44,6 @@ const reviewService = {
     if (!review) {
       throw createError(404, REVIEW_NOT_FOUND)
     }
-
-    await calculateAverageRatingAndTotalReviews(review.targetUserId)
   }
 }
 

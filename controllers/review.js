@@ -1,11 +1,9 @@
 const reviewService = require('~/services/review')
 
 const getReviews = async (req, res) => {
-  const { id } = req.params
+  const { id: targetUserId, role: targetUserRole } = req.params
 
-  const targetUserId = id ? { targetUserId: id } : {}
-
-  const reviews = await reviewService.getReviews(targetUserId)
+  const reviews = await reviewService.getReviews(targetUserId, targetUserRole)
 
   res.status(200).json(reviews)
 }

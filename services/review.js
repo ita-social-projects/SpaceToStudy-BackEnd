@@ -21,7 +21,11 @@ const reviewService = {
   },
 
   getReviewById: async (id) => {
-    const review = await Review.findById(id).populate('author offer').lean().exec()
+    const review = await Review.findById(id)
+      .populate('author')
+      .populate({ path: 'offer', populate: { path: 'categoryId subjectId' } })
+      .lean()
+      .exec()
 
     if (!review) {
       throw createError(404, REVIEW_NOT_FOUND)

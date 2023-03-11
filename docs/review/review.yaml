@@ -11,15 +11,10 @@ paths:
         - application/json
       parameters:
         - in: query
-          name: targetUserRole
-          schema:
-            type: string
-          required: true
-        - in: query
           name: rating
           schema:
             type: integer
-          required: true
+          required: false
         - in: query
           name: skip
           schema:
@@ -30,11 +25,16 @@ paths:
           schema:
             type: integer
           required: false
-        - name: id
-          in: path
+        - in: path
+          name: id
           required: true
-          description: targetUserId field
-          type: string
+          schema:
+            type: string
+        - in: path
+          name: role
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -78,8 +78,24 @@ paths:
                       languages: English
                       authorRole: tutor
                       userId: 6255bc080a75adf9223df212
-                      subjectId: 63da8767c9ad4c9a0b0eacd3
-                      categoryId: 63525e23bf163f5ea609ff2b
+                      subjectId:
+                        _id: 6255bc080a71adf9223df134
+                        name: English
+                        category: 63525e23bf163f5ea609ff27
+                        totalOffers: 3
+                        createdAt: 2023-20-01T13:25:36.292Z
+                        updatedAt: 2023-20-01T13:25:36.292Z
+                      categoryId:
+                        _id: 64045f98b131dd04d7896af6
+                        name: languages
+                        categoryIcon: categories-icons/link-to-icon.png
+                        totalOffers: 9
+                        subjects:
+                          [
+                            { _id: 6255bc080a71adf9223df134, name: English }
+                          ]
+                        createdAt: 2023-20-01T13:25:36.292Z
+                        updatedAt: 2023-20-01T13:25:36.292Z
                     createdAt: 2022-10-18T13:25:36.292Z
                     updatedAt: 2022-10-18T13:25:36.292Z
                   - _id: 8755bc080a00adr9243df104
@@ -115,8 +131,24 @@ paths:
                       languages: English, Ukrainian
                       authorRole: tutor
                       userId: 63e63bb04d1bf3bea00e3d88
-                      subjectId: 63da8767c9ad4c9a0b0eacd3
-                      categoryId: 63525e23bf163f5ea609ff2b
+                      subjectId:
+                        _id: 6255bc080a71adf9222df134
+                        name: English
+                        category: 63525e23bf163f5ea609ff27
+                        totalOffers: 3
+                        createdAt: 2023-20-01T13:25:36.292Z
+                        updatedAt: 2023-20-01T13:25:36.292Z
+                      categoryId:
+                        _id: 64045f98b131dd04d7896af6
+                        name: languages
+                        categoryIcon: categories-icons/link-to-icon.png
+                        totalOffers: 9
+                        subjects:
+                          [
+                            { _id: 6255bc080a71adf9223df134, name: English }
+                          ]
+                        createdAt: 2023-20-01T13:25:36.292Z
+                        updatedAt: 2023-20-01T13:25:36.292Z
                     createdAt: 2022-10-18T13:25:36.292Z
                     updatedAt: 2022-10-18T13:25:36.292Z
 
@@ -150,40 +182,10 @@ paths:
               _id: 8755bc080a00adr9243df104
               comment: Best tutor!
               rating: 5
-              author:
-                _id: 6255bc080a75adf9223df211
-                role: [ student, tutor ]
-                firstName: John
-                lastName: Doe
-                email: johndoe@gmail.com
-                categories:
-                  [
-                    { _id: 6255bc080a75adf9223df444, name: Languages },
-                    { _id: 6255bc080a75adf443d7644, name: Biology }
-                  ]
-                totalReviews: 10
-                averageRating: 4.5
-                nativeLanguage: english
-                address: { country: The USA, city: California }
-                education: KNPU H.S. Skovoroda
-                photo: john-doe-photo.jpg
-                lastLogin: null
-                createdAt: 2021-04-09T11:34:53.243+00:00
-                updatedAt: 2022-09-02T11:59:53.243+00:00
+              author: 6255bc080a75adf9223df211
               targetUserId: 6255bc080a75adf9223df212
               targetUserRole: tutor
-              offer:
-                _id: 63ebc6fbd2f34037d0aba791
-                price: 300
-                proficiencyLevel: Advanced
-                description: Extended English language course
-                languages: English, Ukrainian
-                authorRole: tutor
-                userId: 63e63bb04d1bf3bea00e3d88
-                subjectId: 63da8767c9ad4c9a0b0eacd3
-                categoryId: 63525e23bf163f5ea609ff2b
-              createdAt: 2022-10-18T13:25:36.292Z
-              updatedAt: 2022-10-18T13:25:36.292Z
+              offer: 63ebc6fbd2f34037d0aba791
       responses:
         201:
           description: Created
@@ -192,12 +194,41 @@ paths:
               schema:
                 $ref: '#/definitions/reviewResponse'
               example:
+                _id: 8755bc080a00adr9243df104
                 comment: Best tutor!
                 rating: 5
-                author: 6255bc080a75adf9223df211
+                author:
+                  _id: 6255bc080a75adf9223df211
+                  role: [ student, tutor ]
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@gmail.com
+                  categories:
+                    [
+                      { _id: 6255bc080a75adf9223df444, name: Languages },
+                      { _id: 6255bc080a75adf443d7644, name: Biology }
+                    ]
+                  totalReviews: 10
+                  averageRating: 4.5
+                  nativeLanguage: english
+                  address: { country: The USA, city: California }
+                  education: KNPU H.S. Skovoroda
+                  photo: john-doe-photo.jpg
+                  lastLogin: null
+                  createdAt: 2021-04-09T11:34:53.243+00:00
+                  updatedAt: 2022-09-02T11:59:53.243+00:00
                 targetUserId: 6255bc080a75adf9223df212
                 targetUserRole: tutor
-                offer: 6255bc033a75adf9223df231
+                offer:
+                  _id: 63ebc6fbd2f34037d0aba791
+                  price: 300
+                  proficiencyLevel: Advanced
+                  description: Extended English language course
+                  languages: English, Ukrainian
+                  authorRole: tutor
+                  userId: 63e63bb04d1bf3bea00e3d88
+                  subjectId: 6255bc080a71adf9222df134
+                  categoryId: 64045f98b131dd04d7896af6
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:
@@ -287,8 +318,24 @@ paths:
                   languages: English
                   authorRole: tutor
                   userId: 6255bc080a75adf9223df212
-                  subjectId: 63da8767c9ad4c9a0b0eacd3
-                  categoryId: 63525e23bf163f5ea609ff2b
+                  subjectId:
+                    _id: 6255bc080a71adf9222df134
+                    name: English
+                    category: 63525e23bf163f5ea609ff27
+                    totalOffers: 3
+                    createdAt: 2023-20-01T13:25:36.292Z
+                    updatedAt: 2023-20-01T13:25:36.292Z
+                  categoryId:
+                    _id: 64045f98b131dd04d7896af6
+                    name: languages
+                    categoryIcon: categories-icons/link-to-icon.png
+                    totalOffers: 9
+                    subjects:
+                      [
+                        { _id: 6255bc080a71adf9223df134, name: English }
+                      ]
+                    createdAt: 2023-20-01T13:25:36.292Z
+                    updatedAt: 2023-20-01T13:25:36.292Z
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:

@@ -56,7 +56,8 @@ const offerSchema = new Schema(
   },
   {
     timestamps: true,
-    versionKey: false
+    versionKey: false,
+    id: false
   }
 )
 

@@ -182,8 +182,6 @@ paths:
                 status: 404
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email or id was not found.'
-<<<<<<< HEAD
-=======
     patch:
       security:
         - bearerAuth: []
@@ -242,4 +240,3 @@ paths:
                 status: 404
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email or id was not found.'
->>>>>>> 82c2582 (add image format for swagger example of incoming body)

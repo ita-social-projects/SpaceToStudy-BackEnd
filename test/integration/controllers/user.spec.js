@@ -82,6 +82,22 @@ describe('User controller', () => {
       expectError(404, USER_NOT_FOUND, response)
     })
   })
+  describe(`UPDATE ${endpointUrl}:id`, () => {
+    it('should UPDATE user by ID', async () => {
+      console.log(testUser._id)
+      const response = await app.patch(endpointUrl + testUser._id).send({
+        nativeLanguage: 'Ukrainian'
+      })
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw USER_NOT_FOUND', async () => {
+      const response = await app.patch(endpointUrl + nonExistingUserId)
+
+      expectError(404, USER_NOT_FOUND, response)
+    })
+  })
 
   describe(`DELETE ${endpointUrl}:id`, () => {
     it('should DELETE user by ID', async () => {

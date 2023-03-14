@@ -1,0 +1,68 @@
+const { serverInit, serverCleanup } = require('~/test/setup')
+const testUserAuthentication = require('~/utils/testUserAuth')
+const { expectError } = require('~/test/helpers')
+const { CATEGORY_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
+
+const endpointUrl = '/categories/'
+const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
+
+let accessToken
+let categoryData = {
+  name: 'languages',
+  categoryIcon: 'mocked-path-to-icon'
+}
+
+describe('Category controller', () => {
+  let app, server
+
+  beforeEach(async () => {
+    ;({ app, server } = await serverInit())
+
+    accessToken = await testUserAuthentication(app)
+
+    const categoriesResponse = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+    categoryData._id = categoriesResponse.body[0]._id
+  })
+
+  afterEach(async () => {
+    await serverCleanup(server)
+  })
+
+  describe(`GET ${endpointUrl}`, () => {
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should get all categories', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body)).toBeTruthy()
+      expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
+    })
+  })
+
+  describe(`GET ${endpointUrl}:id`, () => {
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl + categoryData._id)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw CATEGORY_NOT_FOUND', async () => {
+      const response = await app.get(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, CATEGORY_NOT_FOUND, response)
+    })
+
+    it('should get a category by id', async () => {
+      const response = await app.get(endpointUrl + categoryData._id).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(expect.objectContaining(categoryData))
+    })
+  })
+})

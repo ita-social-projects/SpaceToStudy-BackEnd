@@ -9,25 +9,22 @@ const categorySchema = new Schema(
     },
     categoryIcon: {
       type: String,
-      require: true,
-    },
-    subjectsIcon: {
-      type: String,
-      require: true
+      required: true
     },
     totalOffers: {
       type: Number,
       ref: 'Offer',
-      required: true,
       default: 0
     }
   },
   {
     timestamps: true,
+    versionKey: false,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
-
   }
 )
+
+categorySchema.virtual('subjects', { ref: 'Subject', foreignField: 'category', localField: '_id' })
 
 module.exports = model('Category', categorySchema)

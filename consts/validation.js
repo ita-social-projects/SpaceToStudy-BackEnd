@@ -18,7 +18,8 @@ const enums = {
   ROLE_ENUM: ['student', 'tutor', 'admin', 'superadmin'],
   LOGIN_ROLE_ENUM: ['student', 'tutor', 'admin'],
   AUTHOR_ROLE_ENUM: ['student', 'tutor'],
-  STATUS_ENUM: ['active', 'blocked']
+  STATUS_ENUM: ['active', 'blocked'],
+  COOPERATION_STATUS: ['active', 'closed', 'pending']
 }
 
 module.exports = {

@@ -1,0 +1,79 @@
+definitions:
+  cooperations:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        offerId:
+          type: string
+          ref: '#components/offer'
+        tutorId:
+          type: string
+          ref: '#/components/user'
+        studentId:
+          type: string
+          ref: '#components/user' 
+        price:
+          type: number
+        cooperationStatus:
+          type: string
+          enum:
+           - active
+           - closed
+           - pending
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  cooperationBody:
+    type: object
+    properties:
+      offerId:
+          type: string
+          ref: '#components/offer'
+      tutorId:
+          type: string
+          ref: '#/components/user'
+      studentId:
+          type: string
+          ref: '#components/user' 
+      price:
+          type: number
+      cooperationStatus:
+          type: string
+          enum:
+           - active
+           - closed
+           - pending
+  review:
+    type: object
+    properties:
+      _id:
+          type: string
+      offerId:
+          type: string
+          ref: '#components/offer'
+      tutorId:
+          type: string
+          ref: '#/components/user'
+      studentId:
+          type: string
+          ref: '#components/user' 
+      price:
+          type: number
+      cooperationStatus:
+          type: string
+          enum:
+           - active
+           - closed
+           - pending
+      createdAt:
+          type: string
+          format: date-time
+      updatedAt:
+          type: string
+          format: date-time

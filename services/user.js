@@ -86,7 +86,7 @@ const userService = {
     return newUser
   },
 
-  _updateUser: async (id, param) => {
+  privateUpdateUser: async (id, param) => {
     const user = await User.findByIdAndUpdate(id, param, { new: true }).exec()
 
     if (!user) {

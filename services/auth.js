@@ -1,7 +1,7 @@
 const { OAuth2Client } = require('google-auth-library')
 const tokenService = require('~/services/token')
 const emailService = require('~/services/email')
-const { getUserByEmail, createUser, _updateUser, getUserById } = require('~/services/user')
+const { getUserByEmail, createUser, privateUpdateUser, getUserById } = require('~/services/user')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 const {
@@ -86,10 +86,10 @@ const authService = {
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
     if (isFirstLogin) {
-      await _updateUser(_id, { isFirstLogin: false })
+      await privateUpdateUser(_id, { isFirstLogin: false })
     }
 
-    await _updateUser(_id, { lastLogin: new Date() })
+    await privateUpdateUser(_id, { lastLogin: new Date() })
 
     return tokens
   },
@@ -112,7 +112,7 @@ const authService = {
       throw createError(400, EMAIL_ALREADY_CONFIRMED)
     }
 
-    await _updateUser(_id, { isEmailConfirmed: true })
+    await privateUpdateUser(_id, { isEmailConfirmed: true })
   },
 
   refreshAccessToken: async (refreshToken) => {
@@ -156,7 +156,7 @@ const authService = {
 
     const { id: userId, firstName, email } = tokenData
     const hashedPassword = await hashPassword(password)
-    await _updateUser(userId, { password: hashedPassword })
+    await privateUpdateUser(userId, { password: hashedPassword })
 
     await tokenService.removeResetToken(userId)
 

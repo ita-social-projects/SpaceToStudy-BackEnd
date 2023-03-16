@@ -1,35 +1,46 @@
 const { serverInit, serverCleanup } = require('~/test/setup')
 
 const emails = ['test1@gmail.com', 'test2@gmail.com']
+const endpointURL = '/admin-invitations'
 
 describe('Admin invitation controller', () => {
-  let app, server
+  let app, server, response
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     ;({ app, server } = await serverInit())
+    response = await app.post(endpointURL).send({ emails }).set('Accept-Language', 'en')
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await serverCleanup(server)
   })
 
   describe('admin-invitations endpoint', () => {
-    describe('POST admin-invitations', () => {
+    describe(`POST ${endpointURL}`, () => {
       it('should send admin invitations', async () => {
-        const response = await app.post('/admin-invitations').send({ emails }).set('Accept-Language', 'en')
-
         expect(response.statusCode).toBe(201)
-        expect(response.body[0].email).toBe(emails[0])
-        expect(response.body[1].email).toBe(emails[1])
+
+        expect(response.body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ email: emails[0] }),
+            expect.objectContaining({ email: emails[1] })
+          ])
+        )
       })
     })
 
-    describe('GET admin-invitations', () => {
+    describe(`GET ${endpointURL}`, () => {
       it('should get admin invitations', async () => {
-        const response = await app.get('/admin-invitations')
+        const { body, statusCode } = await app.get(endpointURL)
 
-        expect(response.statusCode).toBe(200)
-        expect(response.body).toHaveLength(2)
+        expect(statusCode).toBe(200)
+
+        expect(body).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({ email: emails[0] }),
+            expect.objectContaining({ email: emails[1] })
+          ])
+        )
       })
     })
   })

@@ -3,8 +3,8 @@ const { createError } = require('~/utils/errorsHelper')
 const { CATEGORY_NOT_FOUND } = require('~/consts/errors')
 
 const categoryService = {
-  getCategories: async () => {
-    return await Category.find().populate('subjects').lean().exec()
+  getCategories: async (searchFilter, skip, limit) => {
+    return await Category.find(searchFilter).populate('subjects').skip(skip).limit(limit).lean().exec()
   },
 
   getCategoryById: async (id) => {

@@ -2,6 +2,7 @@ const { serverInit, serverCleanup } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
 const { CATEGORY_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
+const Category = require('~/models/category')
 
 const endpointUrl = '/categories/'
 const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
@@ -42,6 +43,47 @@ describe('Category controller', () => {
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
       expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
+    })
+
+    it('should get all categories that contain "lan" in their name', async () => {
+      const params = new URLSearchParams()
+      params.set('match', 'lan')
+      const response = await app
+        .get(endpointUrl + '?' + params.toString())
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body)).toBeTruthy()
+      expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
+    })
+
+    it('should get 5 categories', async () => {
+      const params = new URLSearchParams()
+      params.set('limit', '5')
+
+      const response = await app
+        .get(endpointUrl + '?' + params.toString())
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body)).toBeTruthy()
+      expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
+      expect(response.body.length).toBe(5)
+    })
+
+    it('should skip 8 categories and return the rest', async () => {
+      const params = new URLSearchParams()
+      params.set('skip', '8')
+
+      const count = await Category.countDocuments()
+
+      const response = await app
+        .get(endpointUrl + '?' + params.toString())
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body)).toBeTruthy()
+      expect(response.body.length).toBe(count - 8)
     })
   })
 

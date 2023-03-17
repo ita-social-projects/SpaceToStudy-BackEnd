@@ -9,6 +9,22 @@ paths:
       description: Finds and returns an array with a list of categories
       produces:
         - application/json
+      parameters:
+        - in: query
+          name: match
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: OK

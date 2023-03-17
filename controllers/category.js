@@ -1,7 +1,11 @@
 const categoryService = require('~/services/category')
 
 const getCategories = async (req, res) => {
-  const categories = await categoryService.getCategories()
+  const { match, skip, limit } = req.query
+
+  const searchFilter = match ? { name: { $regex: `${match}` } } : {}
+
+  const categories = await categoryService.getCategories(searchFilter, parseInt(skip), parseInt(limit))
 
   res.status(200).json(categories)
 }

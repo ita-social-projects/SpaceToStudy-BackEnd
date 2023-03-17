@@ -19,16 +19,24 @@ const cooperationService = {
     return cooperation
   },
 
-  createCooperation: async (offerId, tutorId, studentId, price, cooperationStatus) => {
+  createCooperation: async (offerId, tutorId, studentId, price, status) => {
     const newCooperation = await Cooperation.create({
       offerId,
       tutorId,
       studentId,
       price,
-      cooperationStatus
+      status
     })
 
     return newCooperation
+  },
+
+  updateCooperation: async (id, updateData) => {
+    const cooperation = await Cooperation.findByIdAndUpdate(id, updateData).lean().exec()
+
+    if (!cooperation) {
+      throw createError(404, COOPERATION_NOT_FOUND)
+    }
   },
 
   deleteCooperation: async (id) => {

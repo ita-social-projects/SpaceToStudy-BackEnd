@@ -1,0 +1,304 @@
+paths:
+  /cooperations:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Reviews
+      summary: Find all cooperations
+      description: Finds and returns an array with a list of cooperations.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/cooperations'
+              example:
+                - _id: 63ebc6fbd2f34037d0aba314
+                  offerId: 63ebc6fbd2f34037d0aba791
+                  tutorId: 6255bc080a75adf9223df212
+                  studentId: 6255bc080a75adf9223df100
+                  price: 200
+                  status: active
+                  createdAt: 2021-05-09T11:34:53.243+00:00
+                  updatedAt: 2022-07-02T11:59:53.243+00:00
+                - _id: 63ebc6fbd2f34037d0aba314
+                  offerId: 64ebc6fbd2f34037d0aba781
+                  tutorId: 6755bc080a75adf9223df217
+                  studentId: 6655bc080a75adf9223df108
+                  price: 300
+                  status: closed
+                  createdAt: 2021-04-09T11:34:53.243+00:00
+                  updatedAt: 2022-09-02T11:59:53.243+00:00
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/cooperations/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+    post:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Cooperations
+      summary: Create new cooperation.
+      description: Saves a new cooperation the DB.
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        description: Create new cooperation.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/cooperation'
+            example:
+              offerId: 64ebc6fbd2f34037d0aba781
+              tutorId: 6755bc080a75adf9223df217
+              studentId: 6655bc080a75adf9223df108
+              price: 300
+              status: closed
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/cooperation'
+              example:
+                _id: 8755bc080a00adr9243df104
+                offerId: 64ebc6fbd2f34037d0aba781
+                tutorId: 6755bc080a75adf9223df217
+                studentId: 6655bc080a75adf9223df108
+                price: 300
+                status: closed
+                createdAt: 2021-04-09T11:34:53.243+00:00
+                updatedAt: 2022-09-02T11:59:53.243+00:00
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+  /cooperations/{id}:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Cooperations
+      summary: Find cooperation by ID
+      description: Finds and returns cooperations with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation that needs to be fetched
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/reviewResponse'
+              example:
+                _id: 8755bc080a00adr9243df106
+                offerId: 64ebc6fbd2f34037d0aba782
+                tutorId: 6755bc080a75adf9223df210
+                studentId: 6655bc080a75adf9223df108
+                price: 150
+                status: pending
+                createdAt: 2022-10-18T13:25:36.292+00:00
+                updatedAt: 2022-10-18T13:25:36.292+00:00
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: COOPERATION_NOT_FOUND
+                message: Cooperation with the specified id was not found.
+    patch:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Cooperations
+      summary: Update cooperation by ID
+      description: Finds and update a cooperation with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Cooperation ID
+          type: string
+      requestBody:
+        required: true
+        description: Provide required data to update status of cooperation.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/cooperation'
+            example:
+              offerId: 64ebc6fbd2f34037d0aba782
+              tutorId: 6755bc080a75adf9223df210
+              studentId: 6655bc080a75adf9223df108
+              price: 150
+              status: closed
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: COOPERATION_NOT_FOUND
+                message: Cooperation with the specified id was not found.
+    delete:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Cooperations
+      summary: Find and delete cooperation by ID
+      description: Finds and deletes a cooperation with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation that needs to be deleted
+          type: string
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: COOPERATION_NOT_FOUND
+                message: Cooperation with the specified id was not found.

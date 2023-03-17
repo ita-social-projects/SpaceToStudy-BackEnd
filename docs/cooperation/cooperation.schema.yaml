@@ -17,7 +17,7 @@ definitions:
           ref: '#components/user' 
         price:
           type: number
-        cooperationStatus:
+        status:
           type: string
           enum:
            - active
@@ -43,7 +43,7 @@ definitions:
           ref: '#components/user' 
       price:
           type: number
-      cooperationStatus:
+      status:
           type: string
           enum:
            - active
@@ -65,7 +65,7 @@ definitions:
           ref: '#components/user' 
       price:
           type: number
-      cooperationStatus:
+      status:
           type: string
           enum:
            - active

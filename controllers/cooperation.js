@@ -1,6 +1,6 @@
 const cooperationService = require('~/services/cooperation')
 
-const getCooperations = async (res) => {
+const getCooperations = async (req, res) => {
   const cooperations = await cooperationService.getCooperations()
 
   res.status(200).json(cooperations)
@@ -15,17 +15,26 @@ const getCooperationById = async (req, res) => {
 }
 
 const createCooperation = async (req, res) => {
-  const { offerId, tutorId, studentId, price, cooperationStatus } = req.body
+  const { offerId, tutorId, studentId, price, status } = req.body
 
   const newCooperation = await cooperationService.createCooperation({
     offerId,
     tutorId,
     studentId,
     price,
-    cooperationStatus
+    status
   })
 
   res.status(201).json(newCooperation)
+}
+
+const updateCooperation = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
+
+  await cooperationService.updateCooperation(id, updateData)
+
+  res.status(204).end()
 }
 
 const deleteCooperation = async (req, res) => {
@@ -40,5 +49,6 @@ module.exports = {
   getCooperations,
   getCooperationById,
   createCooperation,
+  updateCooperation,
   deleteCooperation
 }

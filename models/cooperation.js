@@ -25,12 +25,11 @@ const cooperationSchema = new Schema(
       required: [true, 'This field cannot be empty.'],
       min: [1, 'Price must be positive number']
     },
-    cooperationStatus: {
+    status: {
       type: String,
       enum: COOPERATION_STATUS,
       required: [true, 'Cooperation status must be selected.']
     }
-    //coure ?
   },
   { timestamps: true }
 )

@@ -10,7 +10,8 @@ const getUsers = async (req, res) => {
 }
 
 const getOneUser = async (req, res) => {
-  const { id, role } = req.params
+  const { id } = req.params
+  const { role } = req.query
 
   const user = await userService.getOneUser(id, role)
 

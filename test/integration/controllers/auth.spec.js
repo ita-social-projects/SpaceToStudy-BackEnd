@@ -8,17 +8,19 @@ const tokenService = require('~/services/token')
 const Token = require('~/models/token')
 const { expectError } = require('~/test/helpers')
 const { OAuth2Client } = require('google-auth-library')
+const userService = require('~/services/user')
 
 jest.mock('google-auth-library')
 
 describe('Auth controller', () => {
-  let app, server
+  let app, server, response
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     ;({ app, server } = await serverInit())
+    response = await app.post('/auth/signup').send(user)
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await serverCleanup(server)
   })
 
@@ -30,9 +32,9 @@ describe('Auth controller', () => {
     email: 'test@gmail.com',
     password: 'testpass_135'
   }
+
   describe('Signup endpoint', () => {
     it('should register a user', async () => {
-      const response = await app.post('/auth/signup').send(user)
       user._id = response.body.userId
 
       expect(response.statusCode).toBe(201)
@@ -84,7 +86,9 @@ describe('Auth controller', () => {
     })
 
     it('should throw ALREADY_REGISTERED error', async () => {
-      const response = await app.post('/auth/signup').send(user)
+      await app.post('/auth/signup').send(user)
+
+      response = await app.post('/auth/signup').send(user)
 
       expectError(409, errors.ALREADY_REGISTERED, response)
     })
@@ -92,11 +96,15 @@ describe('Auth controller', () => {
 
   describe('Confirm email endpoint', () => {
     let confirmToken
-    beforeAll(() => {
-      confirmToken = tokenService.generateConfirmToken({ id: user._id, role: user.role })
+    beforeEach(async () => {
+      const { role } = userService.getUserById(response.body.userId)
+      confirmToken = tokenService.generateConfirmToken({ id: response.body.userId, role })
+
+      // const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({ user: response.body.userId })
+      // confirmToken = findConfirmTokenResponse[0].confirmToken
       Token.findOne = jest.fn().mockResolvedValue({ confirmToken })
     })
-    afterAll(() => jest.resetAllMocks())
+    afterEach(() => jest.resetAllMocks())
 
     it('should confirm email', async () => {
       const response = await app.get(`/auth/confirm-email/${confirmToken}`)
@@ -105,6 +113,7 @@ describe('Auth controller', () => {
     })
 
     it('should throw EMAIL_ALREADY_CONFIRMED error', async () => {
+      await app.get(`/auth/confirm-email/${confirmToken}`)
       const response = await app.get(`/auth/confirm-email/${confirmToken}`)
 
       expectError(400, errors.EMAIL_ALREADY_CONFIRMED, response)
@@ -117,14 +126,21 @@ describe('Auth controller', () => {
     })
   })
 
-  let refreshToken
+  let refreshToken, confirmToken
   describe('Login endpoint', () => {
     it('should login a user', async () => {
-      const response = await app.post('/auth/login').send({ email: user.email, password: user.password })
-      refreshToken = response.header['set-cookie'][0].split(';')[0].split('=')[1]
+      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({ user: response.body.userId })
+      confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(
+      await app.get(`/auth/confirm-email/${confirmToken}`)
+
+      const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
+      console.log(loginUserResponse.body)
+
+      refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+
+      expect(loginUserResponse.statusCode).toBe(200)
+      expect(loginUserResponse.body).toEqual(
         expect.objectContaining({
           accessToken: expect.any(String)
         })
@@ -192,12 +208,12 @@ describe('Auth controller', () => {
 
   describe('UpdatePassword endpoint', () => {
     let resetToken
-    beforeAll(() => {
+    beforeEach(() => {
       const { _id: id, firstName, email, role } = user
       resetToken = tokenService.generateResetToken({ id, firstName, email, role })
       Token.findOne = jest.fn().mockResolvedValue({ resetToken })
     })
-    afterAll(() => jest.resetAllMocks())
+    afterEach(() => jest.resetAllMocks())
 
     it('should update a password', async () => {
       const response = await app.patch(`/auth/reset-password/${resetToken}`).send({ password: 'valid_pass1' })
@@ -212,7 +228,7 @@ describe('Auth controller', () => {
   })
 
   describe('GoogleAuth endpoint', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       const googleUser = { given_name: 'test', family_name: 'test', email: 'test@test.com', sub: '123456789' }
 
       const mockVerifyIdToken = jest.fn(() => ({
@@ -225,7 +241,7 @@ describe('Auth controller', () => {
         }
       })
     })
-    afterAll(() => {
+    afterEach(() => {
       jest.resetAllMocks()
     })
 

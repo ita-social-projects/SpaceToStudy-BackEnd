@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { refs: { CATEGORY } } = require('~/consts/models')
 
 const subjectSchema = new Schema(
   {
@@ -9,7 +10,7 @@ const subjectSchema = new Schema(
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: 'Category',
+      ref: CATEGORY,
       required: [true, 'Please, choose a subject category']
     },
     totalOffers: {

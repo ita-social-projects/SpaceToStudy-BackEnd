@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { refs: { OFFER } } = require('~/consts/models')
 
 const categorySchema = new Schema(
   {
@@ -13,7 +14,8 @@ const categorySchema = new Schema(
     },
     totalOffers: {
       type: Number,
-      ref: 'Offer',
+      ref: OFFER,
+      required: true,
       default: 0
     }
   },

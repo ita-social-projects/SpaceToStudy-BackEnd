@@ -1,9 +1,10 @@
 const { Schema, model } = require('mongoose')
+const { refs: { USER } } = require('~/consts/models')
 
 const tokenSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: 'User'
+    ref: USER
   },
   refreshToken: {
     type: String,

@@ -3,6 +3,7 @@ const userSchema = require('~/models/user')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
+const { refs: { USER, OFFER } } = require('~/consts/models')
 
 const reviewSchema = new Schema(
   {
@@ -19,12 +20,12 @@ const reviewSchema = new Schema(
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: USER,
       required: true
     },
     targetUserId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: USER,
       required: true
     },
     targetUserRole: {
@@ -33,7 +34,7 @@ const reviewSchema = new Schema(
     },
     offer: {
       type: Schema.Types.ObjectId,
-      ref: 'Offer',
+      ref: OFFER,
       required: true
     }
   },

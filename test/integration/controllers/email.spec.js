@@ -6,11 +6,11 @@ const emailSubject = require('~/consts/emailSubject')
 describe('Email controller', () => {
   let app, server
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     ;({ app, server } = await serverInit())
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await serverCleanup(server)
   })
 
@@ -23,7 +23,7 @@ describe('Email controller', () => {
       expect(response.statusCode).toBe(204)
     })
     it('should throw TEMPLATE_NOT_FOUND error', async () => {
-      const response = await app.post('/send-email').send({ email: 'test@gmail.com', subject: 'incorrect template'})
+      const response = await app.post('/send-email').send({ email: 'test@gmail.com', subject: 'incorrect template' })
 
       expectError(404, errors.TEMPLATE_NOT_FOUND, response)
     })

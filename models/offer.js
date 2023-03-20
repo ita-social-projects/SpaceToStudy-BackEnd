@@ -1,10 +1,7 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
+  enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
 } = require('~/consts/validation')
-const {
-  roles: { STUDENT, TUTOR }
-} = require('~/consts/auth')
 
 const offerSchema = new Schema(
   {
@@ -37,7 +34,10 @@ const offerSchema = new Schema(
     },
     authorRole: {
       type: String,
-      enum: { values: [STUDENT, TUTOR], message: `Author role can be either ${STUDENT} or ${TUTOR}` },
+      enum: {
+        values: AUTHOR_ROLE_ENUM,
+        message: `Author role can be only one of these: ${AUTHOR_ROLE_ENUM.toString()}`
+      },
       required: [true, 'Author role must be selected.']
     },
     userId: {

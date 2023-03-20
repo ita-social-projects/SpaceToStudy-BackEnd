@@ -1,18 +1,15 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM }
+  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
-const {
-  roles: { STUDENT, TUTOR, ADMIN, SUPERADMIN }
-} = require('~/consts/auth')
 
 const userSchema = new Schema(
   {
     role: {
       type: [String],
       enum: {
-        values: [STUDENT, TUTOR, ADMIN, SUPERADMIN],
-        message: `User role can be only ${STUDENT}, ${TUTOR}, ${ADMIN} or ${SUPERADMIN}`
+        values: ROLE_ENUM,
+        message: `User role can be only one of these: ${ROLE_ENUM.toString()}`
       },
       required: [true, 'User role must be selected.']
     },
@@ -89,8 +86,8 @@ const userSchema = new Schema(
     lastLoginAs: {
       type: String,
       enum: {
-        values: [STUDENT, TUTOR, ADMIN],
-        message: `User's last login should be as ${STUDENT}, ${TUTOR} or ${ADMIN}`
+        values: LOGIN_ROLE_ENUM,
+        message: `User's last login should be as one of these: ${LOGIN_ROLE_ENUM.toString()}`
       },
       select: false
     },

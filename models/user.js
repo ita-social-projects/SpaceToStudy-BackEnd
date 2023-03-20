@@ -10,7 +10,10 @@ const userSchema = new Schema(
   {
     role: {
       type: [String],
-      enum: [STUDENT, TUTOR, ADMIN, SUPERADMIN],
+      enum: {
+        values: [STUDENT, TUTOR, ADMIN, SUPERADMIN],
+        message: `User role can be only ${STUDENT}, ${TUTOR}, ${ADMIN} or ${SUPERADMIN}`
+      },
       required: [true, 'User role must be selected.']
     },
     firstName: {
@@ -44,7 +47,13 @@ const userSchema = new Schema(
     photo: String,
     education: String,
     categories: { type: [Schema.Types.ObjectId], ref: 'Category' },
-    nativeLanguage: { type: String, enum: SPOKEN_LANG_ENUM },
+    nativeLanguage: {
+      type: String,
+      enum: {
+        values: SPOKEN_LANG_ENUM,
+        message: `Native language can be only one of these: ${SPOKEN_LANG_ENUM.toString()}`
+      }
+    },
     isEmailConfirmed: {
       type: Boolean,
       default: false,
@@ -61,17 +70,30 @@ const userSchema = new Schema(
     },
     appLanguage: {
       type: String,
-      enum: APP_LANG_ENUM,
+      enum: {
+        values: APP_LANG_ENUM,
+        message: `App language can be only one of these: ${APP_LANG_ENUM.toString()}`
+      },
       default: APP_LANG_ENUM[0],
       select: false
     },
     status: {
       type: String,
-      enum: STATUS_ENUM,
+      enum: {
+        values: STATUS_ENUM,
+        message: `User status can be only one of these: ${STATUS_ENUM.toString()}`
+      },
       default: STATUS_ENUM[0],
       select: false
     },
-    lastLoginAs: { type: String, enum: [STUDENT, TUTOR, ADMIN], select: false },
+    lastLoginAs: {
+      type: String,
+      enum: {
+        values: [STUDENT, TUTOR, ADMIN],
+        message: `User's last login should be as ${STUDENT}, ${TUTOR} or ${ADMIN}`
+      },
+      select: false
+    },
     bookmarkedOffers: { type: [Schema.Types.ObjectId], ref: 'Offer', select: false }
   },
   {

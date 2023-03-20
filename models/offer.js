@@ -14,7 +14,7 @@ const offerSchema = new Schema(
       type: String,
       enum: {
         values: SUBJECT_LEVEL_ENUM,
-        message: `Proficiency level can be only one of these: ${SPOKEN_LANG_ENUM.toString()}`
+        message: `Proficiency level can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
       },
       required: [true, 'This field cannot be empty.']
     },
@@ -28,7 +28,7 @@ const offerSchema = new Schema(
       type: [String],
       enum: {
         values: SPOKEN_LANG_ENUM,
-        message: `Language can be only one of these: ${SPOKEN_LANG_ENUM.toString()}`
+        message: `Language can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
       },
       required: [true, 'Please select a language(s) that will be used in teaching.']
     },
@@ -36,7 +36,7 @@ const offerSchema = new Schema(
       type: String,
       enum: {
         values: AUTHOR_ROLE_ENUM,
-        message: `Author role can be only one of these: ${AUTHOR_ROLE_ENUM.toString()}`
+        message: `Author role can be either of these: ${AUTHOR_ROLE_ENUM.toString()}`
       },
       required: [true, 'Author role must be selected.']
     },

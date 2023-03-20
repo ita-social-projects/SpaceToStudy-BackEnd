@@ -9,7 +9,7 @@ const userSchema = new Schema(
       type: [String],
       enum: {
         values: ROLE_ENUM,
-        message: `User role can be only one of these: ${ROLE_ENUM.toString()}`
+        message: `User role can be either of these: ${ROLE_ENUM.toString()}`
       },
       required: [true, 'User role must be selected.']
     },
@@ -48,7 +48,7 @@ const userSchema = new Schema(
       type: String,
       enum: {
         values: SPOKEN_LANG_ENUM,
-        message: `Native language can be only one of these: ${SPOKEN_LANG_ENUM.toString()}`
+        message: `Native language can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
       }
     },
     isEmailConfirmed: {
@@ -69,7 +69,7 @@ const userSchema = new Schema(
       type: String,
       enum: {
         values: APP_LANG_ENUM,
-        message: `App language can be only one of these: ${APP_LANG_ENUM.toString()}`
+        message: `App language can be either of these: ${APP_LANG_ENUM.toString()}`
       },
       default: APP_LANG_ENUM[0],
       select: false
@@ -78,7 +78,7 @@ const userSchema = new Schema(
       type: String,
       enum: {
         values: STATUS_ENUM,
-        message: `User status can be only one of these: ${STATUS_ENUM.toString()}`
+        message: `User status can be either of these: ${STATUS_ENUM.toString()}`
       },
       default: STATUS_ENUM[0],
       select: false
@@ -87,7 +87,7 @@ const userSchema = new Schema(
       type: String,
       enum: {
         values: LOGIN_ROLE_ENUM,
-        message: `User's last login should be as one of these: ${LOGIN_ROLE_ENUM.toString()}`
+        message: `User last login can be either of these: ${LOGIN_ROLE_ENUM.toString()}`
       },
       select: false
     },

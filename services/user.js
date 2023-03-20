@@ -2,8 +2,9 @@ const User = require('~/models/user')
 const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
-const filterAllowedUserFields = require('~/utils/users/filterAllowedUserFields')
+const filterAllowedFields = require('~/utils/filterAllowedFields')
 
+const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
@@ -95,7 +96,7 @@ const userService = {
   },
 
   updateUser: async (id, param) => {
-    const filteredParam = filterAllowedUserFields(param)
+    const filteredParam = filterAllowedFields(param, allowedUserFieldsForUpdate)
     const user = await User.findByIdAndUpdate(id, filteredParam, { new: true }).exec()
 
     if (!user) {

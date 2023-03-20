@@ -32,6 +32,8 @@ const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const userController = require('~/controllers/user')
 const reviewRouter = require('~/routes/review')
+const { restrictTo } = require('~/middlewares/auth')
+const { roles } = require('~/consts/auth')
 
 const router = express.Router()
 
@@ -41,7 +43,7 @@ router.use('/:id/:role/reviews', reviewRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id/:role', asyncWrapper(userController.getOneUser))
-router.patch('/:id', asyncWrapper(userController.updateUser))
+router.patch('/:id', restrictTo(roles.ADMIN) ,asyncWrapper(userController.updateUser))
 router.delete('/:id', asyncWrapper(userController.deleteUser))
 
 module.exports = router

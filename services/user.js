@@ -3,7 +3,11 @@ const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
-const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
+const { USER_NOT_FOUND, ALREADY_REGISTERED, USER_DEACTIVATED } = require('~/consts/errors')
+
+const {
+  enums: { STATUS_ENUM }
+} = require('~/consts/validation')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -26,12 +30,16 @@ const userService = {
   getOneUser: async (id, role) => {
     const user = await User.findOne({ _id: id, role })
       .populate('categories')
-      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers')
+      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers  +status')
       .lean()
       .exec()
 
     if (!user) {
       throw createError(404, USER_NOT_FOUND)
+    }
+
+    if (user.status === STATUS_ENUM[2]) {
+      throw createError(404, USER_DEACTIVATED)
     }
 
     const reviewStats = await calculateReviewStats(user._id, role)
@@ -99,6 +107,18 @@ const userService = {
     if (!user) {
       throw createError(404, USER_NOT_FOUND)
     }
+  },
+
+  userStatusChange: async (id) => {
+    const user = await User.findByIdAndUpdate(id, { status: STATUS_ENUM[2] }).exec()
+
+    console.log(user)
+
+    if (!user) {
+      throw createError(404, USER_NOT_FOUND)
+    }
+
+    return user
   }
 }
 

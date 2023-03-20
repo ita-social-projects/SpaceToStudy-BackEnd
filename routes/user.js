@@ -14,5 +14,6 @@ router.use('/:id/:role/reviews', reviewRouter)
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id/:role', asyncWrapper(userController.getOneUser))
 router.delete('/:id', asyncWrapper(userController.deleteUser))
+router.post('/:id/deactivation', asyncWrapper(userController.userDeactivation))
 
 module.exports = router

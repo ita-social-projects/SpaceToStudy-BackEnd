@@ -25,8 +25,17 @@ const deleteUser = async (req, res) => {
   res.status(204).end()
 }
 
+const userDeactivation = async (req, res) => {
+  const { id } = req.params
+
+  const user = await userService.userStatusChange(id)
+
+  res.status(200).json(user)
+}
+
 module.exports = {
   getUsers,
   getOneUser,
-  deleteUser
+  deleteUser,
+  userDeactivation
 }

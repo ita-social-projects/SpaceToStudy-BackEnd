@@ -126,6 +126,10 @@ const errors = {
   OFFER_NOT_FOUND: {
     code: 'OFFER_NOT_FOUND',
     message: 'Offer with provided data was not found.'
+  },
+  USER_DEACTIVATED: {
+    code: 'USER_DEACTIVATED',
+    message: 'User with the specified id was deactivated.'
   }
 }
 

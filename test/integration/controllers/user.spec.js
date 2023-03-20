@@ -88,7 +88,7 @@ describe('User controller', () => {
 
   describe(`POST ${endpointUrl}delete`, () => {
     it('should DELETE users by IDs', async () => {
-      const emails = ['harry@gmail.com', 'hermione@gmail.com' ]
+      const emails = ['harry@gmail.com', 'hermione@gmail.com']
       const users =  emails.map( async email => await User.create({ ...testUserForDeleting, email }))
 
       const usersIds = users.map(user => user._id)

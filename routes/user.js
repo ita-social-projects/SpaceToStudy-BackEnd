@@ -13,6 +13,7 @@ router.use('/:id/:role/reviews', reviewRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id/:role', asyncWrapper(userController.getOneUser))
+router.post('/delete', asyncWrapper(userController.deleteUsers))
 router.delete('/:id', asyncWrapper(userController.deleteUser))
 
 module.exports = router

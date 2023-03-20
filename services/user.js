@@ -99,6 +99,10 @@ const userService = {
     if (!user) {
       throw createError(404, USER_NOT_FOUND)
     }
+  },
+
+  deleteUsers: async (ids) => {
+    await User.deleteMany({ _id:{ $in:ids } })
   }
 }
 

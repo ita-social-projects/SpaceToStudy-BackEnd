@@ -13,7 +13,10 @@ let testUser = {
   password: 'supersecretpass'
 }
 
+const testUserForDeleting = testUser
+
 const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
+
 
 describe('User controller', () => {
   let app, server
@@ -83,11 +86,25 @@ describe('User controller', () => {
     })
   })
 
+  describe(`POST ${endpointUrl}delete`, () => {
+    it('should DELETE users by IDs', async () => {
+      const emails = ['harry@gmail.com', 'hermione@gmail.com' ]
+      const users =  emails.map( async email => await User.create({ ...testUserForDeleting, email }))
+
+      const usersIds = users.map(user => user._id)
+      
+      const response = await app.post(endpointUrl + 'delete').send(usersIds)
+
+      expect(response.status).toBe(204)
+    })
+  })
+
   describe(`DELETE ${endpointUrl}:id`, () => {
     it('should DELETE user by ID', async () => {
+      
       const response = await app.delete(endpointUrl + testUser._id)
 
-      expect(response.statusCode).toBe(204)
+      expect(response.status).toBe(204)
     })
 
     it('should throw USER_NOT_FOUND', async () => {

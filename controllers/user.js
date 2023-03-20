@@ -25,8 +25,17 @@ const deleteUser = async (req, res) => {
   res.status(204).end()
 }
 
+const deleteUsers = async (req,res) => {
+  const ids = req.body
+
+  await userService.deleteUsers(ids)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getUsers,
   getOneUser,
-  deleteUser
+  deleteUser,
+  deleteUsers
 }

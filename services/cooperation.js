@@ -40,7 +40,7 @@ const cooperationService = {
   },
 
   deleteCooperation: async (id) => {
-    const cooperation = await Cooperation.findByIdAndRemove(id).exec()
+    const cooperation = await Cooperation.findByIdAndRemove(id).lean().exec()
 
     if (!cooperation) {
       throw createError(404, COOPERATION_NOT_FOUND)

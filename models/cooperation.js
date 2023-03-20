@@ -31,7 +31,7 @@ const cooperationSchema = new Schema(
       required: [true, 'Cooperation status must be selected.']
     }
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 )
 
 module.exports = model('Cooperation', cooperationSchema)

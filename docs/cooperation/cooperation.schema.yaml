@@ -49,7 +49,7 @@ definitions:
            - active
            - closed
            - pending
-  review:
+  cooperation:
     type: object
     properties:
       _id:

@@ -133,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/reviewResponse'
+                $ref: '#/definitions/cooperationResponse'
               example:
                 _id: 8755bc080a00adr9243df106
                 offerId: 64ebc6fbd2f34037d0aba782

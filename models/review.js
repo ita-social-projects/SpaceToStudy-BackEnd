@@ -1,4 +1,8 @@
 const { Schema, model } = require('mongoose')
+const userSchema = require('~/models/user')
+const {
+  roles: { STUDENT }
+} = require('~/consts/auth')
 
 const reviewSchema = new Schema(
   {
@@ -36,6 +40,98 @@ const reviewSchema = new Schema(
   { timestamps: true }
 )
 
-reviewSchema.index({ authorId: 1, targetUserId: 1, offerId: 1 }, { unique: true })
+reviewSchema.index({ author: 1, targetUserId: 1 }, { unique: true })
+
+reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUserRole) {
+  const stats = await this.aggregate([
+    {
+      $match: { targetUserId, targetUserRole }
+    },
+    {
+      $group: {
+        _id: { targetUserId: '$targetUserId', targetUserRole: '$targetUserRole' },
+        totalReviews: { $sum: 1 },
+        averageRating: { $avg: '$rating' }
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        totalReviews: {
+          $push: {
+            role: '$_id.targetUserRole',
+            count: '$totalReviews'
+          }
+        },
+        averageRating: {
+          $push: {
+            role: '$_id.targetUserRole',
+            rating: '$averageRating'
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        totalReviews: {
+          $arrayToObject: {
+            $map: {
+              input: '$totalReviews',
+              in: {
+                k: '$$this.role',
+                v: '$$this.count'
+              }
+            }
+          }
+        },
+        averageRating: {
+          $arrayToObject: {
+            $map: {
+              input: '$averageRating',
+              in: {
+                k: '$$this.role',
+                v: '$$this.rating'
+              }
+            }
+          }
+        }
+      }
+    }
+  ])
+
+  const student = {
+    'totalReviews.student': stats[0].totalReviews.student,
+    'averageRating.student': stats[0].averageRating.student
+  }
+
+  const tutor = {
+    'totalReviews.tutor': stats[0].totalReviews.tutor,
+    'averageRating.tutor': stats[0].averageRating.tutor
+  }
+
+  await userSchema.findOneAndUpdate(
+    { _id: targetUserId, role: targetUserRole },
+    stats.length
+      ? targetUserRole === STUDENT
+        ? student
+        : tutor
+      : { totalReviews: { student: 0, tutor: 0 }, averageRating: { student: 0, tutor: 0 } }
+  )
+}
+
+reviewSchema.post('save', function () {
+  this.constructor.calcAverageRatings(this.targetUserId, this.targetUserRole)
+})
+
+reviewSchema.pre(/^findOneAnd/, async function (next) {
+  this.review = await this.findOne().clone()
+
+  next()
+})
+
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
+})
 
 module.exports = model('Review', reviewSchema)

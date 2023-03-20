@@ -31,7 +31,7 @@ const offerSchema = new Schema(
     },
     authorRole: {
       type: String,
-      enum: [STUDENT, TUTOR],
+      enum: { values: [STUDENT, TUTOR], message: `Author role can be either ${STUDENT} or ${TUTOR}` },
       required: [true, 'Author role must be selected.']
     },
     userId: {

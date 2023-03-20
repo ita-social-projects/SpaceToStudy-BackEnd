@@ -14,10 +14,10 @@ router.use(authMiddleware)
 
 router.param('id', idValidation)
 
-router.use('/:id/:role/reviews', reviewRouter)
+router.use('/:id/reviews', reviewRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
-router.get('/:id/:role', asyncWrapper(userController.getOneUser))
+router.get('/:id', asyncWrapper(userController.getOneUser))
 router.get('/my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.getOneUser))
 router.delete('/:id', asyncWrapper(userController.deleteUser))
 

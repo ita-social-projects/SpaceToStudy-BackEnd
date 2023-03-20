@@ -30,9 +30,7 @@ const calculateReviewStats = async (targetUserId, targetUserRole) => {
                   rating: '$_id.rating',
                   count: '$count'
                 }
-              },
-              totalReviews: { $sum: '$count' },
-              totalRating: { $sum: { $multiply: ['$_id.rating', { $sum: '$count' }] } }
+              }
             }
           }
         ]
@@ -44,8 +42,6 @@ const calculateReviewStats = async (targetUserId, targetUserRole) => {
     {
       $project: {
         _id: 0,
-        averageRating: { $divide: ['$numbers.totalRating', '$numbers.totalReviews'] },
-        totalReviews: '$numbers.totalReviews',
         stats: '$numbers.counts'
       }
     }

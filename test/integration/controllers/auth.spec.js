@@ -8,7 +8,6 @@ const tokenService = require('~/services/token')
 const Token = require('~/models/token')
 const { expectError } = require('~/test/helpers')
 const { OAuth2Client } = require('google-auth-library')
-// const userService = require('~/services/user')
 
 jest.mock('google-auth-library')
 
@@ -127,8 +126,6 @@ describe('Auth controller', () => {
 
   describe('Login endpoint', () => {
     it('should login a user', async () => {
-      console.log(signupResponse.body, 'loginEMAIL')
-
       const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
         user: signupResponse.body.userId
       })
@@ -233,7 +230,6 @@ describe('Auth controller', () => {
     let resetToken
     beforeEach(() => {
       const { firstName, email, role } = user
-
       resetToken = tokenService.generateResetToken({ id: signupResponse.body.userId, firstName, email, role })
 
       Token.findOne = jest.fn().mockResolvedValue({ resetToken })

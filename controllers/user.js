@@ -20,9 +20,9 @@ const getOneUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const { id } = req.params
-  const body = req.body
+  const updateData = req.body
 
-  await userService.updateUser(id, body)
+  await userService.updateUser(id, updateData)
   res.status(204).end()
 }
 

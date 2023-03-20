@@ -61,7 +61,7 @@ paths:
                 status: 401
                 code: 'UNAUTHORIZED'
                 message: 'The requested URL requires user authorization.'
-  /users/delete
+  /users/delete:
     post:
       security:
         - bearerAuth: []

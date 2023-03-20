@@ -43,7 +43,7 @@ router.use('/:id/:role/reviews', reviewRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id/:role', asyncWrapper(userController.getOneUser))
-router.patch('/:id', restrictTo(roles.ADMIN) ,asyncWrapper(userController.updateUser))
+router.patch('/:id', restrictTo(roles.ADMIN), asyncWrapper(userController.updateUser))
 router.delete('/:id', asyncWrapper(userController.deleteUser))
 
 module.exports = router

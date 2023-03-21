@@ -33,7 +33,10 @@ const reviewSchema = new Schema(
       required: true
     }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false
+  }
 )
 
 reviewSchema.index({ authorId: 1, targetUserId: 1, offerId: 1 }, { unique: true })

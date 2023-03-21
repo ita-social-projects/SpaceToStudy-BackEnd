@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { refs: { OFFER } } = require('~/consts/models')
+const { refs: { OFFER, CATEGORY } } = require('~/consts/models')
 
 const categorySchema = new Schema(
   {
@@ -27,4 +27,4 @@ const categorySchema = new Schema(
   }
 )
 
-module.exports = model('Category', categorySchema)
+module.exports = model(CATEGORY, categorySchema)

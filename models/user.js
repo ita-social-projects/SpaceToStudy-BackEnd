@@ -5,7 +5,7 @@ const {
 const {
   roles: { STUDENT, TUTOR, ADMIN, SUPERADMIN }
 } = require('~/consts/auth')
-const { refs: { CATEGORY, OFFER } } = require('~/consts/models')
+const { refs: { CATEGORY, OFFER, USER } } = require('~/consts/models')
 
 const userSchema = new Schema(
   {
@@ -118,4 +118,4 @@ const userSchema = new Schema(
 // TODO:
 // coops(virtuals)
 
-module.exports = model('User', userSchema)
+module.exports = model(USER, userSchema)

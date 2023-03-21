@@ -5,7 +5,7 @@ const {
 const {
   roles: { STUDENT, TUTOR }
 } = require('~/consts/auth')
-const { refs: { USER, SUBJECT, CATEGORY } } = require('~/consts/models')
+const { refs: { USER, SUBJECT, CATEGORY, OFFER } } = require('~/consts/models')
 
 const offerSchema = new Schema(
   {
@@ -62,4 +62,4 @@ const offerSchema = new Schema(
   }
 )
 
-module.exports = model('Offer', offerSchema)
+module.exports = model(OFFER, offerSchema)

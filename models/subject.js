@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { refs: { CATEGORY } } = require('~/consts/models')
+const { refs: { CATEGORY, SUBJECT } } = require('~/consts/models')
 
 const subjectSchema = new Schema(
   {
@@ -21,4 +21,4 @@ const subjectSchema = new Schema(
   { timestamps: true, versionKey: false }
 )
 
-module.exports = model('Subject', subjectSchema)
+module.exports = model(SUBJECT, subjectSchema)

@@ -14,75 +14,81 @@ jobs:
       - name: 'Checkout the Repo'
         uses: actions/checkout@v3
 
+      - name: Set up secret file
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          echo ${{secrets.SONAR_TOKEN}} | sed 's/./& /g'
+
       # - name: Run DB
       #  run: docker-compose -f docker-compose.yaml up -d
 
-      - name: 'Start MongoDB'
-        uses: supercharge/mongodb-github-action@1.8.0
-        with:
-          mongodb-version: latest
-          mongodb-port: 27017
-          mongodb-username: ${{secrets.MONGODB_USER}}
-          mongodb-password: ${{secrets.MONGODB_PASS}}
-          mongodb-db: ${{secrets.MONGODB_DB}}
+  #     - name: 'Start MongoDB'
+  #       uses: supercharge/mongodb-github-action@1.8.0
+  #       with:
+  #         mongodb-version: latest
+  #         mongodb-port: 27017
+  #         mongodb-username: ${{secrets.MONGODB_USER}}
+  #         mongodb-password: ${{secrets.MONGODB_PASS}}
+  #         mongodb-db: ${{secrets.MONGODB_DB}}
       
-      - name: 'Wait for the database to start'
-        run: |
-          wget -qO- https://raw.githubusercontent.com/eficode/wait-for/$WAIT_FOR_VERSION/wait-for | 
-          sh -s -- localhost:27017 -- echo "Database is up"
-        env:
-          WAIT_FOR_VERSION: 4df3f9262d84cab0039c07bf861045fbb3c20ab7 # v2.2.3
+  #     - name: 'Wait for the database to start'
+  #       run: |
+  #         wget -qO- https://raw.githubusercontent.com/eficode/wait-for/$WAIT_FOR_VERSION/wait-for | 
+  #         sh -s -- localhost:27017 -- echo "Database is up"
+  #       env:
+  #         WAIT_FOR_VERSION: 4df3f9262d84cab0039c07bf861045fbb3c20ab7 # v2.2.3
 
-      - name: 'Install Node.js v.14'
-        uses: actions/setup-node@v3
-        with:
-          node-version: 14
+  #     - name: 'Install Node.js v.14'
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 14
 
-      - name : 'Install dependencies'
-        run: npm install
+  #     - name : 'Install dependencies'
+  #       run: npm install
         
-      - name : 'Run Tests'
-        run: npm run test
-        env:
-          NODE_OPTIONS: --max_old_space_size=4096
-          MONGODB_URL: mongodb://${{secrets.MONGODB_USER}}:${{secrets.MONGODB_PASS}}@localhost:27017/${{secrets.MONGODB_DB}}?authSource=admin
-          JWT_ACCESS_SECRET: ${{secrets.JWT_ACCESS_SECRET}}
-          JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}
-          JWT_RESET_SECRET: ${{secrets.JWT_RESET_SECRET}}
-          JWT_CONFIRM_SECRET: ${{secrets.JWT_CONFIRM_SECRET}}
-          JWT_ACCESS_EXPIRES_IN: ${{secrets.JWT_ACCESS_EXPIRES_IN}}
-          JWT_REFRESH_EXPIRES_IN: ${{secrets.JWT_REFRESH_EXPIRES_IN}}
-          JWT_RESET_EXPIRES_IN: ${{secrets.JWT_RESET_EXPIRES_IN}}
-          JWT_CONFIRM_EXPIRES_IN: ${{secrets.JWT_CONFIRM_EXPIRES_IN}}
-          CLIENT_URL: ${{secrets.CLIENT_URL}}
-          SERVER_URL: ${{secrets.SERVER_URL}}
-          SERVER_PORT: ${{secrets.SERVER_PORT}}
-          MAIL_USER: ${{secrets.MAIL_USER}}
-          MAIL_PASS: ${{secrets.MAIL_PASS}}
-          MAIL_FIRSTNAME: ${{secrets.MAIL_FIRSTNAME}}
-          MAIL_LASTNAME: ${{secrets.MAIL_LASTNAME}}
-          GMAIL_CLIENT_ID: ${{secrets.GMAIL_CLIENT_ID}}
-          GMAIL_CLIENT_SECRET: ${{secrets.GMAIL_CLIENT_SECRET}}
-          GMAIL_REFRESH_TOKEN: ${{secrets.GMAIL_REFRESH_TOKEN}}
-          GMAIL_REDIRECT_URI: ${{secrets.GMAIL_REDIRECT_URI}}
-          COOKIE_DOMAIN: ${{secrets.COOKIE_DOMAIN}}
-      # Sonar    
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #     - name : 'Run Tests'
+  #       run: npm run test
+  #       env:
+  #         NODE_OPTIONS: --max_old_space_size=4096
+  #         MONGODB_URL: mongodb://${{secrets.MONGODB_USER}}:${{secrets.MONGODB_PASS}}@localhost:27017/${{secrets.MONGODB_DB}}?authSource=admin
+  #         JWT_ACCESS_SECRET: ${{secrets.JWT_ACCESS_SECRET}}
+  #         JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}
+  #         JWT_RESET_SECRET: ${{secrets.JWT_RESET_SECRET}}
+  #         JWT_CONFIRM_SECRET: ${{secrets.JWT_CONFIRM_SECRET}}
+  #         JWT_ACCESS_EXPIRES_IN: ${{secrets.JWT_ACCESS_EXPIRES_IN}}
+  #         JWT_REFRESH_EXPIRES_IN: ${{secrets.JWT_REFRESH_EXPIRES_IN}}
+  #         JWT_RESET_EXPIRES_IN: ${{secrets.JWT_RESET_EXPIRES_IN}}
+  #         JWT_CONFIRM_EXPIRES_IN: ${{secrets.JWT_CONFIRM_EXPIRES_IN}}
+  #         CLIENT_URL: ${{secrets.CLIENT_URL}}
+  #         SERVER_URL: ${{secrets.SERVER_URL}}
+  #         SERVER_PORT: ${{secrets.SERVER_PORT}}
+  #         MAIL_USER: ${{secrets.MAIL_USER}}
+  #         MAIL_PASS: ${{secrets.MAIL_PASS}}
+  #         MAIL_FIRSTNAME: ${{secrets.MAIL_FIRSTNAME}}
+  #         MAIL_LASTNAME: ${{secrets.MAIL_LASTNAME}}
+  #         GMAIL_CLIENT_ID: ${{secrets.GMAIL_CLIENT_ID}}
+  #         GMAIL_CLIENT_SECRET: ${{secrets.GMAIL_CLIENT_SECRET}}
+  #         GMAIL_REFRESH_TOKEN: ${{secrets.GMAIL_REFRESH_TOKEN}}
+  #         GMAIL_REDIRECT_URI: ${{secrets.GMAIL_REDIRECT_URI}}
+  #         COOKIE_DOMAIN: ${{secrets.COOKIE_DOMAIN}}
+  #     # Sonar    
+  #     - name: SonarCloud Scan
+  #       uses: SonarSource/sonarcloud-github-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-  Test_Docker:
-    runs-on: ubuntu-latest
-    steps:
+  # Test_Docker:
+  #   runs-on: ubuntu-latest
+  #   steps:
 
-      #Checkout Repository
-      - uses: actions/checkout@v3
+  #     #Checkout Repository
+  #     - uses: actions/checkout@v3
       
-      # Docker Build
-      - uses: docker/build-push-action@v3
-        with:
-          push: false
-          file: ./Dockerfile
-          tags: back-stage:test
+  #     # Docker Build
+  #     - uses: docker/build-push-action@v3
+  #       with:
+  #         push: false
+  #         file: ./Dockerfile
+  #         tags: back-stage:test

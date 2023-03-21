@@ -9,6 +9,7 @@ const location = require('~/routes/location')
 const adminInvitation = require('~/routes/adminInvitation')
 const offer = require('~/routes/offer')
 const category = require('~/routes/category')
+const cooperation = require('~/routes/cooperation')
 
 const router = express.Router()
 
@@ -21,5 +22,6 @@ router.use('/location', location)
 router.use('/admin-invitations', adminInvitation)
 router.use('/offers', offer)
 router.use('/categories', category)
+router.use('/cooperations', cooperation)
 
 module.exports = router

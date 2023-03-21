@@ -28,6 +28,7 @@ const cooperationSchema = new Schema(
     status: {
       type: String,
       enum: COOPERATION_STATUS,
+      default: COOPERATION_STATUS[2],
       required: [true, 'Cooperation status must be selected.']
     }
   },

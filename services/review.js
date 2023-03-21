@@ -29,8 +29,15 @@ const reviewService = {
 
   getReviewById: async (id) => {
     const review = await Review.findById(id)
-      .populate('author')
-      .populate({ path: 'offer', populate: { path: 'categoryId subjectId' } })
+      .populate({ path: 'author', select: ['firstName', 'lastName', 'photo'] })
+      .populate({
+        path: 'offer',
+        select: ['subjectId', 'proficiencyLevel', 'categoryId'],
+        populate: [
+          { path: 'categoryId', select: 'name' },
+          { path: 'subjectId', select: 'name' }
+        ]
+      })
       .lean()
       .exec()
 

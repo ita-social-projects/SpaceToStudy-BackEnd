@@ -95,7 +95,7 @@ describe('User controller', () => {
       
       const response = await app.post(endpointUrl + 'delete').send(usersIds)
 
-      expect(response.status).toBe(204)
+      expect(response.statusCode).toBe(204)
     })
   })
 
@@ -104,7 +104,7 @@ describe('User controller', () => {
       
       const response = await app.delete(endpointUrl + testUser._id)
 
-      expect(response.status).toBe(204)
+      expect(response.statusCode).toBe(204)
     })
 
     it('should throw USER_NOT_FOUND', async () => {

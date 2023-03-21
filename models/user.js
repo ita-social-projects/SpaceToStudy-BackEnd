@@ -64,7 +64,10 @@ const userSchema = new Schema(
         set: (val) => Math.round(val * 10) / 10
       }
     },
-    nativeLanguage: { type: String, enum: SPOKEN_LANG_ENUM },
+    nativeLanguage: {
+      type: String,
+      enum: SPOKEN_LANG_ENUM
+    },
     isEmailConfirmed: {
       type: Boolean,
       default: false,
@@ -91,8 +94,16 @@ const userSchema = new Schema(
       default: STATUS_ENUM[0],
       select: false
     },
-    lastLoginAs: { type: String, enum: [STUDENT, TUTOR, ADMIN], select: false },
-    bookmarkedOffers: { type: [Schema.Types.ObjectId], ref: 'Offer', select: false }
+    lastLoginAs: {
+      type: String,
+      enum: [STUDENT, TUTOR, ADMIN],
+      select: false
+    },
+    bookmarkedOffers: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Offer',
+      select: false
+    }
   },
   {
     timestamps: true,

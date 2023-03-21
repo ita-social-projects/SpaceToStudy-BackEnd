@@ -100,24 +100,27 @@ reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUs
     }
   ])
 
-  const student = {
-    'totalReviews.student': stats[0].totalReviews.student,
-    'averageRating.student': stats[0].averageRating.student
-  }
+  if (stats.length) {
+    const student = {
+      'totalReviews.student': stats[0].totalReviews.student,
+      'averageRating.student': stats[0].averageRating.student
+    }
 
-  const tutor = {
-    'totalReviews.tutor': stats[0].totalReviews.tutor,
-    'averageRating.tutor': stats[0].averageRating.tutor
-  }
+    const tutor = {
+      'totalReviews.tutor': stats[0].totalReviews.tutor,
+      'averageRating.tutor': stats[0].averageRating.tutor
+    }
 
-  await userSchema.findOneAndUpdate(
-    { _id: targetUserId, role: targetUserRole },
-    stats.length
-      ? targetUserRole === STUDENT
-        ? student
-        : tutor
-      : { totalReviews: { student: 0, tutor: 0 }, averageRating: { student: 0, tutor: 0 } }
-  )
+    await userSchema.findOneAndUpdate(
+      { _id: targetUserId, role: targetUserRole },
+      targetUserRole === STUDENT ? student : tutor
+    )
+  } else {
+    await userSchema.findOneAndUpdate(
+      { _id: targetUserId, role: targetUserRole },
+      { totalReviews: { student: 0, tutor: 0 }, averageRating: { student: 0, tutor: 0 } }
+    )
+  }
 }
 
 reviewSchema.post('save', function () {

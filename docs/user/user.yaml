@@ -134,61 +134,13 @@ paths:
                 status: 404
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email or id was not found.'
-    delete:
-      security:
-        - bearerAuth: []
-      tags:
-        - Users
-      summary: Find and delete user by ID
-      description: Finds and deletes a user with the specified ID.
-      produces:
-        - application/json
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of the user that needs to be deleted
-          type: string
-      responses:
-        204:
-          description: No Content
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 400
-                code: 'INVALID_ID'
-                message: 'ID is invalid.'
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 401
-                code: 'UNAUTHORIZED'
-                message: 'The requested URL requires user authorization.'
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 404
-                code: 'USER_NOT_FOUND'
-                message: 'User with the specified email or id was not found.'
     patch:
       security:
         - bearerAuth: []
       tags:
         - Users
-      summary: Find and update user by ID
-      description: Finds and updates a user with the specified ID.
+      summary: Find and update user status by ID
+      description: Finds and updates a user status with the specified ID.
       produces:
         - application/json
       parameters:
@@ -205,8 +157,7 @@ paths:
             schema:
               $ref: '#/definitions/user'
             example:
-              nativeLanguage: Ukrainian
-              photo: very-cute-cat-photo.jpg
+              status:'active'
       responses:
         204:
           description: No Content
@@ -250,4 +201,61 @@ paths:
                 status: 404
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email or id was not found.'
-
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Users
+      summary: Find and delete user by ID
+      description: Finds and deletes a user with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user that needs to be deleted
+          type: string
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'User with the specified email or id was not found.'

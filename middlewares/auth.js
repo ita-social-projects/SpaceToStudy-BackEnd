@@ -26,6 +26,7 @@ const restrictTo = (...roles) => {
     if (!roles.includes(req.user.role)) {
       return next(createForbiddenError())
     }
+    next()
   }
 }
 

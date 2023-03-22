@@ -6,6 +6,9 @@
 test-report.xml
 /build
 
+# sonar scanner work
+.scannerwork
+
 # misc
 .DS_Store
 .env

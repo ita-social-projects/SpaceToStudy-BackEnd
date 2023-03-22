@@ -2,8 +2,8 @@ const reviewService = require('~/services/review')
 const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getReviews = async (req, res) => {
-  const { id: targetUserId, role: targetUserRole } = req.params
-  const { rating, skip, limit } = req.query
+  const { id: targetUserId } = req.params
+  const { role: targetUserRole, rating, skip, limit } = req.query
 
   const match = getMatchOptions({ targetUserId, targetUserRole, rating })
 

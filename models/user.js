@@ -44,7 +44,30 @@ const userSchema = new Schema(
     photo: String,
     education: String,
     categories: { type: [Schema.Types.ObjectId], ref: 'Category' },
-    nativeLanguage: { type: String, enum: SPOKEN_LANG_ENUM },
+    totalReviews: {
+      student: { type: Number, default: 0 },
+      tutor: { type: Number, default: 0 }
+    },
+    averageRating: {
+      student: {
+        type: Number,
+        default: 0,
+        min: [0, 'Rating must be above 0'],
+        max: [5, 'Rating must be below 5'],
+        set: (val) => Math.round(val * 10) / 10
+      },
+      tutor: {
+        type: Number,
+        default: 0,
+        min: [0, 'Rating must be above 0'],
+        max: [5, 'Rating must be below 5'],
+        set: (val) => Math.round(val * 10) / 10
+      }
+    },
+    nativeLanguage: {
+      type: String,
+      enum: SPOKEN_LANG_ENUM
+    },
     isEmailConfirmed: {
       type: Boolean,
       default: false,
@@ -71,8 +94,16 @@ const userSchema = new Schema(
       default: STATUS_ENUM[0],
       select: false
     },
-    lastLoginAs: { type: String, enum: [STUDENT, TUTOR, ADMIN], select: false },
-    bookmarkedOffers: { type: [Schema.Types.ObjectId], ref: 'Offer', select: false }
+    lastLoginAs: {
+      type: String,
+      enum: [STUDENT, TUTOR, ADMIN],
+      select: false
+    },
+    bookmarkedOffers: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Offer',
+      select: false
+    }
   },
   {
     timestamps: true,

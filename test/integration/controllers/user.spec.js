@@ -1,8 +1,8 @@
 const { serverInit, serverCleanup } = require('~/test/setup')
 const User = require('~/models/user')
-const { USER_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
+const { USER_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
-const { roles: { TUTOR, STUDENT } } = require('~/consts/auth')
+const { roles: { TUTOR } } = require('~/consts/auth')
 const { enums: { STATUS_ENUM } } = require('~/consts/validation')
 const { createUser } = require('~/services/user')
 
@@ -135,6 +135,16 @@ describe('User controller', () => {
         .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
 
       expectError(403, FORBIDDEN, response)
+    })
+    it('should throw FORBIDDEN', async () => {
+
+      await app.post('/auth/logout')
+
+      const response = await app
+        .patch(endpointUrl + testUser._id)
+        .send(STATUS_ENUM[0])
+
+      expectError(401, UNAUTHORIZED, response)
     })
   })
 

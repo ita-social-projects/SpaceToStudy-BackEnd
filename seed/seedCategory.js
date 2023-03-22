@@ -4,7 +4,7 @@ const logger = require('~/logger/logger')
 const SeedCategory = {
   createCategory: async (category) => {
     try {
-      return await Category.create({ name: category })
+      return await Category.create(category)
     } catch (err) {
       logger.error(err)
     }

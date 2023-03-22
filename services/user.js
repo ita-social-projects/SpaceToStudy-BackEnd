@@ -85,9 +85,21 @@ const userService = {
     return newUser
   },
 
-  updateUser: async (id, param) => {
+  privateUpdateUser: async (id, param) => {
     const user = await User.findByIdAndUpdate(id, param, { new: true }).exec()
 
+    if (!user) {
+      throw createError(404, USER_NOT_FOUND)
+    }
+  },
+
+  updateUser: async (id, updateStatus) => {
+    const statusesForChange = {} 
+    for (const role in updateStatus) {
+      statusesForChange['status.' + role] = updateStatus[role]
+    }
+
+    const user = await User.findByIdAndUpdate(id, { $set:statusesForChange }, { new: true }).exec()
     if (!user) {
       throw createError(404, USER_NOT_FOUND)
     }

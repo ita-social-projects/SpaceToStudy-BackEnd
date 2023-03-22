@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose')
 const {
   enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
 } = require('~/consts/validation')
+const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 
 const offerSchema = new Schema(
   {
@@ -42,17 +43,17 @@ const offerSchema = new Schema(
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: USER,
       required: true
     },
     subjectId: {
       type: Schema.Types.ObjectId,
-      ref: 'Subject',
+      ref: SUBJECT,
       required: true
     },
     categoryId: {
       type: Schema.Types.ObjectId,
-      ref: 'Category',
+      ref: CATEGORY,
       required: true
     },
     isActive: {
@@ -67,4 +68,4 @@ const offerSchema = new Schema(
   }
 )
 
-module.exports = model('Offer', offerSchema)
+module.exports = model(OFFER, offerSchema)

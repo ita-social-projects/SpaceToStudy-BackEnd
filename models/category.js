@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { OFFER, CATEGORY } = require('~/consts/models')
 
 const categorySchema = new Schema(
   {
@@ -9,25 +10,21 @@ const categorySchema = new Schema(
     },
     categoryIcon: {
       type: String,
-      require: true,
-    },
-    subjectsIcon: {
-      type: String,
-      require: true
+      required: true
     },
     totalOffers: {
       type: Number,
-      ref: 'Offer',
+      ref: OFFER,
       required: true,
       default: 0
     }
   },
   {
     timestamps: true,
+    versionKey: false,
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
-
   }
 )
 
-module.exports = model('Category', categorySchema)
+module.exports = model(CATEGORY, categorySchema)

@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose')
 const {
   enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
+const { CATEGORY, OFFER, USER } = require('~/consts/models')
 
 const userSchema = new Schema(
   {
@@ -43,7 +44,27 @@ const userSchema = new Schema(
     },
     photo: String,
     education: String,
-    categories: { type: [Schema.Types.ObjectId], ref: 'Category' },
+    categories: { type: [Schema.Types.ObjectId], ref: CATEGORY },
+    totalReviews: {
+      student: { type: Number, default: 0 },
+      tutor: { type: Number, default: 0 }
+    },
+    averageRating: {
+      student: {
+        type: Number,
+        default: 0,
+        min: [0, 'Rating must be above 0'],
+        max: [5, 'Rating must be below 5'],
+        set: (val) => Math.round(val * 10) / 10
+      },
+      tutor: {
+        type: Number,
+        default: 0,
+        min: [0, 'Rating must be above 0'],
+        max: [5, 'Rating must be below 5'],
+        set: (val) => Math.round(val * 10) / 10
+      }
+    },
     nativeLanguage: {
       type: String,
       enum: {
@@ -75,23 +96,35 @@ const userSchema = new Schema(
       select: false
     },
     status: {
+      student: { 
+        type: String,
+        enum: STATUS_ENUM,
+        default: STATUS_ENUM[0]
+      },
+      tutor: {
+        type: String,
+        enum: STATUS_ENUM,
+        default: STATUS_ENUM[0]
+      },
+      admin: {
+        type: String,
+        enum: STATUS_ENUM,
+        default: STATUS_ENUM[0]
+      }
+    },
+    lastLoginAs: {
       type: String,
       enum: {
         values: STATUS_ENUM,
         message: `User status can be either of these: ${STATUS_ENUM.toString()}`
       },
-      default: STATUS_ENUM[0],
       select: false
     },
-    lastLoginAs: {
-      type: String,
-      enum: {
-        values: LOGIN_ROLE_ENUM,
-        message: `User last login can be either of these: ${LOGIN_ROLE_ENUM.toString()}`
-      },
+    bookmarkedOffers: {
+      type: [Schema.Types.ObjectId],
+      ref: OFFER,
       select: false
-    },
-    bookmarkedOffers: { type: [Schema.Types.ObjectId], ref: 'Offer', select: false }
+    }
   },
   {
     timestamps: true,
@@ -105,4 +138,4 @@ const userSchema = new Schema(
 // TODO:
 // coops(virtuals)
 
-module.exports = model('User', userSchema)
+module.exports = model(USER, userSchema)

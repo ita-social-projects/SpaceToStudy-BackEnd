@@ -10,11 +10,20 @@ const getUsers = async (req, res) => {
 }
 
 const getOneUser = async (req, res) => {
-  const { id, role } = req.params
+  const { id } = req.params
+  const { role } = req.query
 
   const user = await userService.getOneUser(id, role)
 
   res.status(200).json(user)
+}
+
+const updateUser = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
+
+  await userService.updateUser(id, updateData)
+  res.status(204).end()
 }
 
 const deleteUser = async (req, res) => {
@@ -28,5 +37,6 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getUsers,
   getOneUser,
-  deleteUser
+  deleteUser,
+  updateUser
 }

@@ -96,27 +96,36 @@ const userSchema = new Schema(
       select: false
     },
     status: {
-      student: { 
+      student: {
         type: String,
-        enum: STATUS_ENUM,
+        enum: {
+          values: STATUS_ENUM,
+          message: `Student status can be either of these: ${STATUS_ENUM.toString()}`
+        },
         default: STATUS_ENUM[0]
       },
       tutor: {
         type: String,
-        enum: STATUS_ENUM,
+        enum: {
+          values: STATUS_ENUM,
+          message: `Tutor status can be either of these: ${STATUS_ENUM.toString()}`
+        },
         default: STATUS_ENUM[0]
       },
       admin: {
         type: String,
-        enum: STATUS_ENUM,
+        enum: {
+          values: STATUS_ENUM,
+          message: `Admin status can be either of these: ${STATUS_ENUM.toString()}`
+        },
         default: STATUS_ENUM[0]
       }
     },
     lastLoginAs: {
       type: String,
       enum: {
-        values: STATUS_ENUM,
-        message: `User status can be either of these: ${STATUS_ENUM.toString()}`
+        values: LOGIN_ROLE_ENUM,
+        message: `User status can be either of these: ${LOGIN_ROLE_ENUM.toString()}`
       },
       select: false
     },

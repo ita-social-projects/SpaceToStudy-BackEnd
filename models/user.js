@@ -92,12 +92,12 @@ const userSchema = new Schema(
       student: { 
         type: String,
         enum: STATUS_ENUM,
-        default: STATUS_ENUM[0],
+        default: STATUS_ENUM[0]
       },
       tutor: {
         type: String,
         enum: STATUS_ENUM,
-        default: STATUS_ENUM[0],
+        default: STATUS_ENUM[0]
       },
       admin: {
         type: String,

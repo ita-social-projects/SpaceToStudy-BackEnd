@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { ADMIN_INVITATION } = require('~/consts/models')
 
 const adminInvitationSchema = new Schema({
   email: {
@@ -14,4 +15,4 @@ const adminInvitationSchema = new Schema({
   }
 })
 
-module.exports = model('AdminInvitation', adminInvitationSchema)
+module.exports = model(ADMIN_INVITATION, adminInvitationSchema)

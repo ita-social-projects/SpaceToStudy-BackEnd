@@ -5,6 +5,7 @@ const {
 const {
   roles: { STUDENT, TUTOR }
 } = require('~/consts/auth')
+const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 
 const offerSchema = new Schema(
   {
@@ -36,17 +37,17 @@ const offerSchema = new Schema(
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: USER,
       required: true
     },
     subjectId: {
       type: Schema.Types.ObjectId,
-      ref: 'Subject',
+      ref: SUBJECT,
       required: true
     },
     categoryId: {
       type: Schema.Types.ObjectId,
-      ref: 'Category',
+      ref: CATEGORY,
       required: true
     },
     isActive: {
@@ -61,4 +62,4 @@ const offerSchema = new Schema(
   }
 )
 
-module.exports = model('Offer', offerSchema)
+module.exports = model(OFFER, offerSchema)

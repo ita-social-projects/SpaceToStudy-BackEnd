@@ -41,6 +41,7 @@ describe('User controller', () => {
   describe(`GET ${endpointUrl}`, () => {
     it('should GET all users', async () => {
       let user = await User.create(testUser)
+      testUser = user
 
       const response = await app.get(endpointUrl)
 
@@ -48,7 +49,6 @@ describe('User controller', () => {
       expect(Array.isArray(response.body.items)).toBeTruthy()
       expect(response.body.items).toEqual(expect.any(Array))
 
-      testUser = user
     })
 
     it('should GET all users which match query', async () => {
@@ -98,10 +98,13 @@ describe('User controller', () => {
     const mockedStatus = { tutor: STATUS_ENUM[0] }
 
     it('should UPDATE user by ID', async () => {
+      // testUser = await User.create(testUser)
+
       await createUser(...Object.values(adminUser))
 
       const authResponse = await app.post('/auth/login').send({ email: adminUser.email, password: adminUser.password })
 
+      console.log(endpointUrl, testUser._id, testUser)
       const response = await app
         .patch(endpointUrl + testUser._id)
         .send(mockedStatus)
@@ -150,6 +153,7 @@ describe('User controller', () => {
 
   describe(`DELETE ${endpointUrl}:id`, () => {
     let authResponse 
+
     beforeEach(async () => {
       authResponse = await app.post('/auth/login').send({ email: adminUser.email, password: adminUser.password })
     })

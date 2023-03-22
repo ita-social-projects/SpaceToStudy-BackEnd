@@ -7,7 +7,7 @@ const checkCategoryExistence = async () => {
   try {
     await Promise.all(
       Object.values(categories).map(async (category) => {
-        const isCategoryExist = await Category.exists({ name: category })
+        const isCategoryExist = await Category.exists({ name: category.name })
 
         if (isCategoryExist) {
           return

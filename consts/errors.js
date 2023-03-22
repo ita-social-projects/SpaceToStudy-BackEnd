@@ -126,6 +126,10 @@ const errors = {
   OFFER_NOT_FOUND: {
     code: 'OFFER_NOT_FOUND',
     message: 'Offer with provided data was not found.'
+  },
+  CATEGORY_NOT_FOUND: {
+    code: 'CATEGORY_NOT_FOUND',
+    message: 'Category with provided id was not found.'
   }
 }
 

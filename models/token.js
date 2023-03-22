@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { refs: { USER, TOKEN } } = require('~/consts/models')
+const { USER, TOKEN } = require('~/consts/models')
 
 const tokenSchema = new Schema({
   user: {

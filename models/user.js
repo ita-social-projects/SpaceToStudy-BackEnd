@@ -5,7 +5,7 @@ const {
 const {
   roles: { STUDENT, TUTOR, ADMIN, SUPERADMIN }
 } = require('~/consts/auth')
-const { refs: { CATEGORY, OFFER, USER } } = require('~/consts/models')
+const { CATEGORY, OFFER, USER } = require('~/consts/models')
 
 const userSchema = new Schema(
   {
@@ -44,7 +44,7 @@ const userSchema = new Schema(
     },
     photo: String,
     education: String,
-    categories: { type: [Schema.Types.ObjectId], ref: 'Category' },
+    categories: { type: [Schema.Types.ObjectId], ref: CATEGORY },
     totalReviews: {
       student: { type: Number, default: 0 },
       tutor: { type: Number, default: 0 }
@@ -102,7 +102,7 @@ const userSchema = new Schema(
     },
     bookmarkedOffers: {
       type: [Schema.Types.ObjectId],
-      ref: 'Offer',
+      ref: OFFER,
       select: false
     }
   },

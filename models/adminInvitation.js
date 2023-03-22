@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { refs: { ADMIN_INVITATION } } = require('~/consts/models')
+const { ADMIN_INVITATION } = require('~/consts/models')
 
 const adminInvitationSchema = new Schema({
   email: {

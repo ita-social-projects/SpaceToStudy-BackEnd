@@ -3,7 +3,7 @@ const userSchema = require('~/models/user')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
-const { refs: { USER, OFFER } } = require('~/consts/models')
+const { USER, OFFER } = require('~/consts/models')
 
 const reviewSchema = new Schema(
   {

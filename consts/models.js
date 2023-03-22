@@ -8,7 +8,5 @@ const refs = {
   ADMIN_INVITATION:'AdminInvitation'
 }
   
-module.exports = {
-  refs
-}
+module.exports = refs
   

@@ -5,7 +5,7 @@ const {
 const {
   roles: { STUDENT, TUTOR }
 } = require('~/consts/auth')
-const { refs: { USER, SUBJECT, CATEGORY, OFFER } } = require('~/consts/models')
+const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 
 const offerSchema = new Schema(
   {

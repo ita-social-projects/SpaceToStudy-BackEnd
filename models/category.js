@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { refs: { OFFER, CATEGORY } } = require('~/consts/models')
+const { OFFER, CATEGORY } = require('~/consts/models')
 
 const categorySchema = new Schema(
   {

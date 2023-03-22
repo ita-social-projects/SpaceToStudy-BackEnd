@@ -15,7 +15,7 @@ const offerSchema = new Schema(
       type: String,
       enum: {
         values: SUBJECT_LEVEL_ENUM,
-        message: `Proficiency level can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
+        message: `Proficiency level can be either of these: ${SUBJECT_LEVEL_ENUM.toString()}`
       },
       required: [true, 'This field cannot be empty.']
     },

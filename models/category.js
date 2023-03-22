@@ -25,6 +25,4 @@ const categorySchema = new Schema(
   }
 )
 
-categorySchema.virtual('subjects', { ref: 'Subject', foreignField: 'category', localField: '_id' })
-
 module.exports = model('Category', categorySchema)

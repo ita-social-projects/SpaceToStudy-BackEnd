@@ -4,11 +4,11 @@ const { CATEGORY_NOT_FOUND } = require('~/consts/errors')
 
 const categoryService = {
   getCategories: async (searchFilter, skip, limit) => {
-    return await Category.find(searchFilter).populate('subjects').skip(skip).limit(limit).lean().exec()
+    return await Category.find(searchFilter).skip(skip).limit(limit).lean().exec()
   },
 
   getCategoryById: async (id) => {
-    const category = await Category.findById(id).populate('subjects').lean().exec()
+    const category = await Category.findById(id).lean().exec()
 
     if (!category) {
       throw createError(404, CATEGORY_NOT_FOUND)

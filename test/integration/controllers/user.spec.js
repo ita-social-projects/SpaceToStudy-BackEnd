@@ -98,13 +98,11 @@ describe('User controller', () => {
     const mockedStatus = { tutor: STATUS_ENUM[0] }
 
     it('should UPDATE user by ID', async () => {
-      // testUser = await User.create(testUser)
 
       await createUser(...Object.values(adminUser))
 
       const authResponse = await app.post('/auth/login').send({ email: adminUser.email, password: adminUser.password })
 
-      console.log(endpointUrl, testUser._id, testUser)
       const response = await app
         .patch(endpointUrl + testUser._id)
         .send(mockedStatus)

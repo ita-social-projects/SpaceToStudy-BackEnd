@@ -18,6 +18,14 @@ const getOneUser = async (req, res) => {
   res.status(200).json(user)
 }
 
+const updateUser = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
+
+  await userService.updateUser(id, updateData)
+  res.status(204).end()
+}
+
 const deleteUser = async (req, res) => {
   const { id } = req.params
 
@@ -29,5 +37,6 @@ const deleteUser = async (req, res) => {
 module.exports = {
   getUsers,
   getOneUser,
-  deleteUser
+  deleteUser,
+  updateUser
 }

@@ -89,10 +89,21 @@ const userSchema = new Schema(
       select: false
     },
     status: {
-      type: String,
-      enum: STATUS_ENUM,
-      default: STATUS_ENUM[0],
-      select: false
+      student: { 
+        type: String,
+        enum: STATUS_ENUM,
+        default: STATUS_ENUM[0]
+      },
+      tutor: {
+        type: String,
+        enum: STATUS_ENUM,
+        default: STATUS_ENUM[0]
+      },
+      admin: {
+        type: String,
+        enum: STATUS_ENUM,
+        default: STATUS_ENUM[0]
+      }
     },
     lastLoginAs: {
       type: String,

@@ -93,13 +93,16 @@ const userSchema = new Schema(
         type: String,
         enum: STATUS_ENUM,
         default: STATUS_ENUM[0],
-        select: false 
       },
       tutor: {
         type: String,
         enum: STATUS_ENUM,
-        default: STATUS_ENUM[1],
-        select: false
+        default: STATUS_ENUM[0],
+      },
+      admin: {
+        type: String,
+        enum: STATUS_ENUM,
+        default: STATUS_ENUM[0]
       }
     },
     lastLoginAs: {

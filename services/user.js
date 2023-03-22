@@ -3,6 +3,8 @@ const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
+const filterAllowedFields = require('~/utils/filterAllowedFields')
+const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -87,6 +89,15 @@ const userService = {
     }
 
     await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
+  },
+
+  updateUserProfile: async (id, updateData) => {
+    const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
+    const user = await User.findByIdAndUpdate(id, filteredUpdateData, { new: true }).exec()
+
+    if(!user) {
+      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
+    }
   },
 
   deleteUser: async (id) => {

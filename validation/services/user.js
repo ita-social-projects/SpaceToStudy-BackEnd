@@ -9,6 +9,7 @@ const allowedUserFieldsForUpdate = {
   education: true,
   categories: true,
   nativeLanguage: true,
+  appLanguage: true
 }
 
 module.exports = {

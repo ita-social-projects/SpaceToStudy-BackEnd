@@ -1,10 +1,7 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
+  enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
 } = require('~/consts/validation')
-const {
-  roles: { STUDENT, TUTOR }
-} = require('~/consts/auth')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 
 const offerSchema = new Schema(
@@ -16,7 +13,10 @@ const offerSchema = new Schema(
     },
     proficiencyLevel: {
       type: String,
-      enum: SUBJECT_LEVEL_ENUM,
+      enum: {
+        values: SUBJECT_LEVEL_ENUM,
+        message: `Proficiency level can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
+      },
       required: [true, 'This field cannot be empty.']
     },
     description: {
@@ -27,12 +27,18 @@ const offerSchema = new Schema(
     },
     languages: {
       type: [String],
-      enum: SPOKEN_LANG_ENUM,
+      enum: {
+        values: SPOKEN_LANG_ENUM,
+        message: `Language can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
+      },
       required: [true, 'Please select a language(s) that will be used in teaching.']
     },
     authorRole: {
       type: String,
-      enum: { values: [STUDENT, TUTOR], message: `Author role can be either ${STUDENT} or ${TUTOR}` },
+      enum: {
+        values: AUTHOR_ROLE_ENUM,
+        message: `Author role can be either of these: ${AUTHOR_ROLE_ENUM.toString()}`
+      },
       required: [true, 'Author role must be selected.']
     },
     userId: {

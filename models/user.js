@@ -1,17 +1,17 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM }
+  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
-const {
-  roles: { STUDENT, TUTOR, ADMIN, SUPERADMIN }
-} = require('~/consts/auth')
 const { CATEGORY, OFFER, USER } = require('~/consts/models')
 
 const userSchema = new Schema(
   {
     role: {
       type: [String],
-      enum: [STUDENT, TUTOR, ADMIN, SUPERADMIN],
+      enum: {
+        values: ROLE_ENUM,
+        message: `User role can be either of these: ${ROLE_ENUM.toString()}`
+      },
       required: [true, 'User role must be selected.']
     },
     firstName: {
@@ -67,7 +67,10 @@ const userSchema = new Schema(
     },
     nativeLanguage: {
       type: String,
-      enum: SPOKEN_LANG_ENUM
+      enum: {
+        values: SPOKEN_LANG_ENUM,
+        message: `Native language can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
+      }
     },
     isEmailConfirmed: {
       type: Boolean,
@@ -85,7 +88,10 @@ const userSchema = new Schema(
     },
     appLanguage: {
       type: String,
-      enum: APP_LANG_ENUM,
+      enum: {
+        values: APP_LANG_ENUM,
+        message: `App language can be either of these: ${APP_LANG_ENUM.toString()}`
+      },
       default: APP_LANG_ENUM[0],
       select: false
     },
@@ -108,7 +114,10 @@ const userSchema = new Schema(
     },
     lastLoginAs: {
       type: String,
-      enum: [STUDENT, TUTOR, ADMIN],
+      enum: {
+        values: STATUS_ENUM,
+        message: `User status can be either of these: ${STATUS_ENUM.toString()}`
+      },
       select: false
     },
     bookmarkedOffers: {

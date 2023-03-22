@@ -136,7 +136,7 @@ describe('User controller', () => {
 
       expectError(403, FORBIDDEN, response)
     })
-    it('should throw FORBIDDEN', async () => {
+    it('should throw UNAUTHORIZED', async () => {
 
       await app.post('/auth/logout')
 
@@ -164,5 +164,32 @@ describe('User controller', () => {
 
       expectError(404, USER_NOT_FOUND, response)
     })
+    
+    it('should throw FORBIDDEN', async () => {
+      const userWithNoPermissions = { ...adminUser, role: TUTOR, email: 'testTutor@gmail.com' }
+
+      const authResponse = await app
+        .post('/auth/login')
+        .send({ email: userWithNoPermissions.email, password: adminUser.password })
+
+      const response = await app
+        .patch(endpointUrl + testUser._id)
+        .send(STATUS_ENUM[0])
+        .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+    
+    it('should throw UNAUTHORIZED', async () => {
+
+      await app.post('/auth/logout')
+
+      const response = await app
+        .patch(endpointUrl + testUser._id)
+        .send(STATUS_ENUM[0])
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
   })
 })

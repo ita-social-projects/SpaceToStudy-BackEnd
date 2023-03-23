@@ -8,17 +8,17 @@ const cooperationSchema = new Schema(
     offerId: {
       type: Schema.Types.ObjectId,
       ref: 'Offer',
-      required: true
+      required: [true, 'Offer ID must be valid.']
     },
     tutorId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: [true, 'Tutor ID must be valid.']
     },
     studentId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true
+      required: [true, 'Student ID must be valid.']
     },
     price: {
       type: Number,
@@ -27,12 +27,17 @@ const cooperationSchema = new Schema(
     },
     status: {
       type: String,
-      enum: COOPERATION_STATUS,
-      default: COOPERATION_STATUS[2],
-      required: [true, 'Cooperation status must be selected.']
+      enum: {
+        values: COOPERATION_STATUS,
+        message: `Cooperation status can be either of these: ${COOPERATION_STATUS.toString()}`
+      },
+      default: COOPERATION_STATUS[0]
     }
   },
-  { timestamps: true, versionKey: false }
+  {
+    timestamps: true,
+    versionKey: false
+  }
 )
 
 module.exports = model('Cooperation', cooperationSchema)

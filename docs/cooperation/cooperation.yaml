@@ -64,7 +64,6 @@ paths:
               tutorId: 6755bc080a75adf9223df217
               studentId: 6655bc080a75adf9223df108
               price: 300
-              status: closed
       responses:
         201:
           description: Created
@@ -78,7 +77,7 @@ paths:
                 tutorId: 6755bc080a75adf9223df217
                 studentId: 6655bc080a75adf9223df108
                 price: 300
-                status: closed
+                status: pending
                 createdAt: 2021-04-09T11:34:53.243+00:00
                 updatedAt: 2022-09-02T11:59:53.243+00:00
         400:
@@ -101,16 +100,6 @@ paths:
                 status: 401
                 code: UNAUTHORIZED
                 message: The requested URL requires user authorization.
-        403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 403
-                code: FORBIDDEN
-                message: You do not have permission to perform this action.
   /cooperations/{id}:
     get:
       security:
@@ -196,9 +185,6 @@ paths:
             schema:
               $ref: '#/definitions/cooperation'
             example:
-              offerId: 64ebc6fbd2f34037d0aba782
-              tutorId: 6755bc080a75adf9223df210
-              studentId: 6655bc080a75adf9223df108
               price: 150
               status: closed
       responses:
@@ -224,74 +210,6 @@ paths:
                 status: 401
                 code: UNAUTHORIZED
                 message: The requested URL requires user authorization.
-        403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 403
-                code: FORBIDDEN
-                message: You do not have permission to perform this action.
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 404
-                code: COOPERATION_NOT_FOUND
-                message: Cooperation with the specified id was not found.
-    delete:
-      security:
-        - bearerAuth: [ ]
-      tags:
-        - Cooperations
-      summary: Find and delete cooperation by ID
-      description: Finds and deletes a cooperation with the specified ID.
-      produces:
-        - application/json
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of the cooperation that needs to be deleted
-          type: string
-      responses:
-        204:
-          description: No Content
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 400
-                code: INVALID_ID
-                message: ID is invalid.
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 401
-                code: UNAUTHORIZED
-                message: The requested URL requires user authorization.
-        403:
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 403
-                code: FORBIDDEN
-                message: You do not have permission to perform this action.
         404:
           description: Not Found
           content:

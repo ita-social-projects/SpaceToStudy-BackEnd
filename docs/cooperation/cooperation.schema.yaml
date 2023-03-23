@@ -20,9 +20,9 @@ definitions:
         status:
           type: string
           enum:
+           - pending
            - active
            - closed
-           - pending
         createdAt:
           type: string
           format: date-time
@@ -46,9 +46,9 @@ definitions:
       status:
           type: string
           enum:
+           - pending
            - active
            - closed
-           - pending
   cooperation:
     type: object
     properties:
@@ -68,9 +68,9 @@ definitions:
       status:
           type: string
           enum:
+           - pending
            - active
            - closed
-           - pending
       createdAt:
           type: string
           format: date-time

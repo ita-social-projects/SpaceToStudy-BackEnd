@@ -36,18 +36,9 @@ const updateCooperation = async (req, res) => {
   res.status(204).end()
 }
 
-const deleteCooperation = async (req, res) => {
-  const { id } = req.params
-
-  await cooperationService.deleteCooperation(id)
-
-  res.status(204).end()
-}
-
 module.exports = {
   getCooperations,
   getCooperationById,
   createCooperation,
-  updateCooperation,
-  deleteCooperation
+  updateCooperation
 }

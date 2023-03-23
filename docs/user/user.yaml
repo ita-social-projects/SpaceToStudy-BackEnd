@@ -27,12 +27,13 @@ paths:
                       { _id: 6255bc080a75adf9223df444, name: Languages },
                       { _id: 6255bc080a75adf443d7644, name: Biology }
                     ]
-                  totalReviews: 10
-                  averageRating: 4.5
+                  totalReviews: { student: 10, tutor: 8 }
+                  averageRating: { student: 4.5, tutor: 4.9 }
                   nativeLanguage: english
                   address: { country: The USA, city: California }
                   education: KNPU H.S. Skovoroda
                   photo: john-doe-photo.jpg
+                  status: { student: active, tutor: active, admin: active }
                   lastLogin: null
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
@@ -42,12 +43,13 @@ paths:
                   lastName: Doe
                   email: joedoe@outlook.com
                   categories: [{ _id: 6255bc080a75adf9223df444, name: Languages }]
-                  totalReviews: 530
-                  averageRating: 5
+                  totalReviews: { student: 0, tutor: 530 }
+                  averageRating: { student: 0, tutor: 5 }
                   nativeLanguage: ukrainian
                   address: { country: Ukraine, city: Kharkiv }
                   education: KNPU H.S. Skovoroda
                   photo: joe-doe-photo.jpg
+                  status: { student: active, tutor: active, admin: active }
                   lastLogin: 2022-09-02T11:59:53.243+00:00
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
@@ -92,12 +94,13 @@ paths:
                 email: johndoe@gmail.com
                 categories:
                   [{ _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology }]
-                totalReviews: 10
-                averageRating: 4.5
+                totalReviews: { student: 10, tutor: 0 }
+                averageRating: { student: 4.5, tutor: 0 }
                 nativeLanguage: english
                 address: { country: The USA, city: California }
                 education: KNPU H.S. Skovoroda
                 photo: john-doe-photo.jpg
+                status: { student: active, tutor: active, admin: active }
                 isEmailConfirmed: true
                 isFirstLogin: true
                 lastLogin: 2022-09-02T11:59:53.243+00:00

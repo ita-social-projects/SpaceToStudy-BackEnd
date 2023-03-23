@@ -23,9 +23,19 @@ definitions:
           type: array
           $ref: '#/components/category'
         totalReviews:
-          type: number
+          type: object
+          properties:
+            student:
+              type: number
+            tutor:
+              type: number
         averageRating:
-          type: number
+          type: object
+          properties:
+            student:
+              type: number
+            tutor:
+              type: number
         nativeLanguage:
           type: string
         address:
@@ -42,6 +52,15 @@ definitions:
         lastLogin:
           type: string
           format: date-time
+        status:
+          type: object
+          properties:
+            student:
+              type: string
+            tutor:
+              type: string
+            admin:
+              type: string
         createdAt:
           type: string
           format: date-time
@@ -70,9 +89,19 @@ definitions:
         type: array
         $ref: '#/components/category'
       totalReviews:
-        type: number
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
       averageRating:
-        type: number
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
       nativeLanguage:
         type: string
       address:
@@ -93,6 +122,15 @@ definitions:
       lastLogin:
         type: string
         format: date-time
+      status:
+        type: object
+        properties:
+          student:
+            type: string
+          tutor:
+            type: string
+          admin:
+            type: string
       bookmarkedOffers:
         type: array
         $ref: '#/components/offer'

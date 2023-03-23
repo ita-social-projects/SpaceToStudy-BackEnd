@@ -15,12 +15,12 @@ const getCooperationById = async (req, res) => {
 }
 
 const createCooperation = async (req, res) => {
-  const { offerId, tutorId, studentId, price } = req.body
+  const { offerId, initiatorUserId, recipientUserId, price } = req.body
 
   const newCooperation = await cooperationService.createCooperation({
     offerId,
-    tutorId,
-    studentId,
+    initiatorUserId,
+    recipientUserId,
     price
   })
 

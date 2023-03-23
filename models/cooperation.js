@@ -10,15 +10,15 @@ const cooperationSchema = new Schema(
       ref: 'Offer',
       required: [true, 'Offer ID must be valid.']
     },
-    tutorId: {
+    initiatorUserId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'Tutor ID must be valid.']
+      required: [true, 'ID of initiator user must be valid.']
     },
-    studentId: {
+    recipientUserId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'Student ID must be valid.']
+      required: [true, 'ID of recipient user must be valid.']
     },
     price: {
       type: Number,

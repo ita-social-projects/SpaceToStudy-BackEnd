@@ -9,10 +9,10 @@ definitions:
         offerId:
           type: string
           ref: '#components/offer'
-        tutorId:
+        initiatorUserId:
           type: string
           ref: '#/components/user'
-        studentId:
+        recipientUserId:
           type: string
           ref: '#components/user' 
         price:
@@ -35,10 +35,10 @@ definitions:
       offerId:
           type: string
           ref: '#components/offer'
-      tutorId:
+      initiatorUserId:
           type: string
           ref: '#/components/user'
-      studentId:
+      recipientUserId:
           type: string
           ref: '#components/user' 
       price:
@@ -57,10 +57,10 @@ definitions:
       offerId:
           type: string
           ref: '#components/offer'
-      tutorId:
+      initiatorUserId:
           type: string
           ref: '#/components/user'
-      studentId:
+      recipientUserId:
           type: string
           ref: '#components/user' 
       price:

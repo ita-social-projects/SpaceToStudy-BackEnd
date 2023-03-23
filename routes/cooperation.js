@@ -16,6 +16,5 @@ router.get('/', asyncWrapper(cooperationController.getCooperations))
 router.post('/', setCurrentUserId, asyncWrapper(cooperationController.createCooperation))
 router.get('/:id', asyncWrapper(cooperationController.getCooperationById))
 router.patch('/:id', asyncWrapper(cooperationController.updateCooperation))
-router.delete('/:id', asyncWrapper(cooperationController.deleteCooperation))
 
 module.exports = router

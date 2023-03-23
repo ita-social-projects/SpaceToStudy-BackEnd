@@ -19,11 +19,11 @@ const cooperationService = {
     return cooperation
   },
 
-  createCooperation: async (offerId, tutorId, studentId, price) => {
+  createCooperation: async (offerId, initiatorUserId, recipientUserId, price) => {
     const newCooperation = await Cooperation.create({
       offerId,
-      tutorId,
-      studentId,
+      initiatorUserId,
+      recipientUserId,
       price
     })
 
@@ -41,8 +41,6 @@ const cooperationService = {
     if (!cooperation) {
       throw createError(404, COOPERATION_NOT_FOUND)
     }
-
-    return cooperation
   }
 }
 

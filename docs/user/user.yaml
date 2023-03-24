@@ -1,3 +1,13 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    role:
+      type: apiKey
+      name: Authorization
+      in: header
 paths:
   /users:
     get:
@@ -140,7 +150,8 @@ paths:
     patch:
       security:
         - bearerAuth: []
-        - role: ['admin']
+        - role:
+          - admin
       tags:
         - Users
       summary: Find and update user status by ID
@@ -208,7 +219,8 @@ paths:
     delete:
       security:
         - bearerAuth: []
-        - role: ['admin']
+        - role:
+            - admin
       tags:
         - Users
       summary: Find and delete user by ID

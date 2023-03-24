@@ -96,27 +96,53 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/user'
-              example:
-                _id: 6255bc080a75adf9223df100
-                role: student
-                firstName: John
-                lastName: Doe
-                email: johndoe@gmail.com
-                categories:
-                  [{ _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology }]
-                totalReviews: { student: 10, tutor: 0 }
-                averageRating: { student: 4.5, tutor: 0 }
-                nativeLanguage: english
-                address: { country: The USA, city: California }
-                education: KNPU H.S. Skovoroda
-                photo: john-doe-photo.jpg
-                status: { student: active, tutor: active, admin: active }
-                isEmailConfirmed: true
-                isFirstLogin: true
-                lastLogin: 2022-09-02T11:59:53.243+00:00
-                bookmarkedOffers: []
-                createdAt: 2021-04-09T11:34:53.243+00:00
-                updatedAt: 2022-09-02T11:59:53.243+00:00
+              examples:
+                example1:
+                  _id: 6255bc080a75adf9223df100
+                  role: student
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@gmail.com
+                  categories:
+                    [{ _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology }]
+                  totalReviews: { student: 10, tutor: 0 }
+                  averageRating: { student: 4.5, tutor: 0 }
+                  nativeLanguage: english
+                  address: { country: The USA, city: California }
+                  education: KNPU H.S. Skovoroda
+                  photo: john-doe-photo.jpg
+                  status: { student: active, tutor: active, admin: active }
+                  isEmailConfirmed: true
+                  isFirstLogin: true
+                  lastLogin: 2022-09-02T11:59:53.243+00:00
+                  bookmarkedOffers: []
+                  createdAt: 2021-04-09T11:34:53.243+00:00
+                  updatedAt: 2022-09-02T11:59:53.243+00:00
+                  reviewStats: {
+                      stats: [ { rating: 4, count: 5 }, { rating: 5, count: 5 } ]
+                  }
+                example2:
+                  _id: 6255bc080a75adf9223df100
+                  role: student
+                  firstName: John
+                  lastName: Doe
+                  email: johndoe@gmail.com
+                  categories:
+                    [ { _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology } ]
+                  totalReviews: { student: 10, tutor: 0 }
+                  averageRating: { student: 4.5, tutor: 0 }
+                  nativeLanguage: english
+                  address: { country: The USA, city: California }
+                  education: KNPU H.S. Skovoroda
+                  photo: john-doe-photo.jpg
+                  status: { student: active, tutor: active, admin: active }
+                  isEmailConfirmed: true
+                  isFirstLogin: true
+                  lastLogin: 2022-09-02T11:59:53.243+00:00
+                  bookmarkedOffers: []
+                  createdAt: 2021-04-09T11:34:53.243+00:00
+                  updatedAt: 2022-09-02T11:59:53.243+00:00
+                  reviewStats: {}
         400:
           description: Bad Request
           content:

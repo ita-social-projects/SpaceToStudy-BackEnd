@@ -374,11 +374,13 @@ paths:
           name: skip
           schema:
             type: integer
+            default: 0
           required: false
         - in: query
           name: limit
           schema:
             type: integer
+            default: 5
           required: false
       responses:
         200:

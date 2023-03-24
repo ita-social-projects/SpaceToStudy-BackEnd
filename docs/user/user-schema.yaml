@@ -57,10 +57,19 @@ definitions:
           properties:
             student:
               type: string
+              enum:
+                - active
+                - blocked
             tutor:
               type: string
+              enum:
+                - active
+                - blocked
             admin:
               type: string
+              enum:
+                - active
+                - blocked
         createdAt:
           type: string
           format: date-time
@@ -127,10 +136,19 @@ definitions:
         properties:
           student:
             type: string
+            enum:
+              - active
+              - blocked
           tutor:
             type: string
+            enum:
+              - active
+              - blocked
           admin:
             type: string
+            enum:
+              - active
+              - blocked
       bookmarkedOffers:
         type: array
         $ref: '#/components/offer'

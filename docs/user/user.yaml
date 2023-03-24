@@ -140,6 +140,7 @@ paths:
     patch:
       security:
         - bearerAuth: []
+        - role: ['admin']
       tags:
         - Users
       summary: Find and update user status by ID
@@ -207,6 +208,7 @@ paths:
     delete:
       security:
         - bearerAuth: []
+        - role: ['admin']
       tags:
         - Users
       summary: Find and delete user by ID
@@ -262,3 +264,169 @@ paths:
                 status: 404
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email or id was not found.'
+  /users/my-profile:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Users
+      summary: Find information about current user`s profile
+      description: Finds and returns a user`s profile information.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/user'
+              example:
+                _id: 6255bc080a75adf9223df100
+                role: student
+                firstName: John
+                lastName: Doe
+                email: johndoe@gmail.com
+                categories:
+                  [ { _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology } ]
+                totalReviews: { student: 10, tutor: 0 }
+                averageRating: { student: 4.5, tutor: 0 }
+                nativeLanguage: english
+                address: { country: The USA, city: California }
+                education: KNPU H.S. Skovoroda
+                photo: john-doe-photo.jpg
+                status: { student: active, tutor: active, admin: active }
+                isEmailConfirmed: true
+                isFirstLogin: true
+                lastLogin: 2022-09-02T11:59:53.243+00:00
+                bookmarkedOffers: [ ]
+                createdAt: 2021-04-09T11:34:53.243+00:00
+                updatedAt: 2022-09-02T11:59:53.243+00:00
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'User with the specified email or id was not found.'
+  /users/{id}/reviews:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Users
+      summary: Find all reviews for a user with the specified ID
+      description: Finds and returns an array with a list of reviews for a user with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: role
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: rating
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/reviewResponse'
+              example:
+                count: 2
+                reviews:
+                  - _id: 6255bc080a75adf9223df100
+                    comment: Not bad
+                    rating: 4
+                    author:
+                      _id: 6255bc080a75adf9223df100
+                      firstName: John
+                      lastName: Doe
+                      photo: john-doe-photo.jpg
+                    targetUserId: 6255bc080a75adf9223df212
+                    targetUserRole: tutor
+                    offer:
+                      _id: 63ebc6fbd2f34037d0aba791
+                      proficiencyLevel: Beginner
+                      subjectId:
+                        _id: 6255bc080a71adf9223df134
+                        name: English
+                      categoryId:
+                        _id: 64045f98b131dd04d7896af6
+                        name: languages
+                    createdAt: 2022-10-18T13:25:36.292Z
+                    updatedAt: 2022-10-18T13:25:36.292Z
+                  - _id: 8755bc080a00adr9243df104
+                    comment: Best tutor!
+                    rating: 5
+                    author:
+                      _id: 6255bc080a75adf9223df211
+                      firstName: John
+                      lastName: Doe
+                      photo: john-duglas-photo.jpg
+                    targetUserId: 6255bc080a75adf9223df212
+                    targetUserRole: tutor
+                    offer:
+                      _id: 63ebc6fbd2f34037d0aba79
+                      proficiencyLevel: Advanced
+                      subjectId:
+                        _id: 6255bc080a71adf9222df134
+                        name: English
+                      categoryId:
+                        _id: 64045f98b131dd04d7896af6
+                        name: languages
+                    createdAt: 2022-10-18T13:25:36.292Z
+                    updatedAt: 2022-10-18T13:25:36.292Z
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'

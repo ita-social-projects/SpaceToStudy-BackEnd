@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const userService = require('~/services/user')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 

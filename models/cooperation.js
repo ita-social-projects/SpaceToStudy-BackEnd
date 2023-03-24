@@ -8,17 +8,17 @@ const cooperationSchema = new Schema(
     offerId: {
       type: Schema.Types.ObjectId,
       ref: 'Offer',
-      required: [true, 'Offer ID must be valid.']
+      required: [true, 'This field cannot be empty.']
     },
     initiatorUserId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'ID of initiator user must be valid.']
+      required: [true, 'This field cannot be empty.']
     },
     recipientUserId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'ID of recipient user must be valid.']
+      required: [true, 'This field cannot be empty.']
     },
     price: {
       type: Number,

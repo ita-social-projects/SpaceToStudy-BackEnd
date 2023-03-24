@@ -350,8 +350,8 @@ paths:
         - bearerAuth: [ ]
       tags:
         - Users
-      summary: Find all reviews for a user with the specified ID
-      description: Finds and returns an array with a list of reviews for a user with the specified ID.
+      summary: Find all reviews for a user with the specified ID and role
+      description: Finds and returns an array with a list of reviews for a user with the specified ID and role.
       produces:
         - application/json
       parameters:
@@ -360,7 +360,7 @@ paths:
           required: true
           schema:
             type: string
-        - in: path
+        - in: query
           name: role
           required: true
           schema:

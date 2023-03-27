@@ -1,7 +1,13 @@
 const offerService = require('~/services/offer')
 
 const getOffers = async (req, res) => {
-  const offers = await offerService.getOffers()
+  const { catId, subId } = req.params
+
+  const filters = {}
+  if (catId) filters.categoryId = catId
+  if (subId) filters.subjectId = subId
+
+  const offers = await offerService.getOffers(filters)
 
   res.status(200).json(offers)
 }

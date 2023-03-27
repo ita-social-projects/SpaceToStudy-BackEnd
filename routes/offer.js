@@ -6,7 +6,7 @@ const offerController = require('~/controllers/offer')
 const { authMiddleware } = require('~/middlewares/auth')
 const setCurrentUserIdAndRole = require('~/middlewares/setCurrentUserIdAndRole')
 
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 
 router.use(authMiddleware)
 

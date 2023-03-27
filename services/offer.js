@@ -3,8 +3,8 @@ const { createError } = require('~/utils/errorsHelper')
 const { OFFER_NOT_FOUND } = require('~/consts/errors')
 
 const offerService = {
-  getOffers: async () => {
-    const offers = await Offer.find().lean().exec()
+  getOffers: async (filters) => {
+    const offers = await Offer.find(filters).lean().exec()
 
     return offers
   },

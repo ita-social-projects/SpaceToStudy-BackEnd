@@ -23,9 +23,19 @@ definitions:
           type: array
           $ref: '#/components/category'
         totalReviews:
-          type: number
+          type: object
+          properties:
+            student:
+              type: number
+            tutor:
+              type: number
         averageRating:
-          type: number
+          type: object
+          properties:
+            student:
+              type: number
+            tutor:
+              type: number
         nativeLanguage:
           type: string
         address:
@@ -42,6 +52,24 @@ definitions:
         lastLogin:
           type: string
           format: date-time
+        status:
+          type: object
+          properties:
+            student:
+              type: string
+              enum:
+                - active
+                - blocked
+            tutor:
+              type: string
+              enum:
+                - active
+                - blocked
+            admin:
+              type: string
+              enum:
+                - active
+                - blocked
         createdAt:
           type: string
           format: date-time
@@ -70,9 +98,19 @@ definitions:
         type: array
         $ref: '#/components/category'
       totalReviews:
-        type: number
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
       averageRating:
-        type: number
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
       nativeLanguage:
         type: string
       address:
@@ -93,6 +131,24 @@ definitions:
       lastLogin:
         type: string
         format: date-time
+      status:
+        type: object
+        properties:
+          student:
+            type: string
+            enum:
+              - active
+              - blocked
+          tutor:
+            type: string
+            enum:
+              - active
+              - blocked
+          admin:
+            type: string
+            enum:
+              - active
+              - blocked
       bookmarkedOffers:
         type: array
         $ref: '#/components/offer'

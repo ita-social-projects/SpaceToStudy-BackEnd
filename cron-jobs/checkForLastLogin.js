@@ -9,7 +9,7 @@ const DAYS_TO_DELETE_USER = 180
 const EVERY_DAY_AT_3AM = '00 00 03 * * *'
 const timeZone = 'UTC'
 
-const checkUsersForLastLogin = new CronJob(EVERY_DAY_AT_3AM, () => checkLastLogin(), null, true, timeZone)
+const checkUsersForLastLogin = new CronJob(EVERY_DAY_AT_3AM, () => checkLastLogin(), null, false, timeZone)
 
 const checkLastLogin = async () => {
   const users = await userService.getUsers()

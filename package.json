@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --maxWorkers=1",
+    "test": "jest --maxWorkers=1 --detectOpenHandles",
     "start": "nodemon app.js --legacy-watch",
     "lint": "eslint . --fix",
     "prepare": "husky install",

@@ -130,6 +130,10 @@ const errors = {
   CATEGORY_NOT_FOUND: {
     code: 'CATEGORY_NOT_FOUND',
     message: 'Category with provided id was not found.'
+  },
+  COOPERATION_NOT_FOUND: {
+    code: 'COOPERATION_NOT_FOUND',
+    message: 'Cooperation with the specified id was not found.'
   }
 }
 

@@ -117,7 +117,7 @@ describe('User controller', () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app
         .patch(requestUrl)
-        .send({ firstName: mockedFirstName })
+        .send({ firstName: mockedFirstName, lastName: mockedLastName })
 
       expectError(401, UNAUTHORIZED, response)
     })

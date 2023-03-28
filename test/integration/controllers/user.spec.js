@@ -99,27 +99,30 @@ describe('User controller', () => {
       expectError(404, DOCUMENT_NOT_FOUND(User.modelName), response)
     })
   })
-  
+
   describe(`UPDATE ${endpointUrl}update-my-profile`, () => {
     const requestUrl = endpointUrl + 'update-my-profile'
-    const mockedFirstName = 'Albus Dumbledore'
+    const mockedFirstName = 'Albus'
+    const mockedLastName = 'Dumbledore'
     
     it('should UPDATE USER PROFILE by his ID', async () => {
 
       const response = await app.patch(requestUrl).send({
-        firstName:mockedFirstName
+        firstName:mockedFirstName,
+        lastName:mockedLastName
       })
 
-      expect(response.statusCode).toBe(201)
+      expect(response.statusCode).toBe(204)
     })
     it('should throw UNAUTHORIZED', async () => {
       const response = await app
         .patch(requestUrl)
-        .send({ firstName: mockedFirstName})
+        .send({ firstName: mockedFirstName })
 
       expectError(401, UNAUTHORIZED, response)
     })
   })
+
   describe(`UPDATE ${endpointUrl}:id`, () => {
     const mockedStatus = { tutor: STATUS_ENUM[0] }
 

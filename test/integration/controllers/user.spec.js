@@ -31,6 +31,11 @@ let adminUser = {
   isEmailConfirmed: true
 }
 
+const updateUserData = {
+  firstName:'Albus',
+  lastName:'Dumbledore'
+}
+
 const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
 
 describe('User controller', () => {
@@ -102,22 +107,17 @@ describe('User controller', () => {
 
   describe(`UPDATE ${endpointUrl}update-my-profile`, () => {
     const requestUrl = endpointUrl + 'update-my-profile'
-    const mockedFirstName = 'Albus'
-    const mockedLastName = 'Dumbledore'
     
     it('should UPDATE USER PROFILE by his ID', async () => {
 
-      const response = await app.patch(requestUrl).send({
-        firstName:mockedFirstName,
-        lastName:mockedLastName
-      })
+      const response = await app.patch(requestUrl).send(updateUserData)
 
       expect(response.statusCode).toBe(204)
     })
     it('should throw UNAUTHORIZED', async () => {
       const response = await app
         .patch(requestUrl)
-        .send({ firstName: mockedFirstName, lastName: mockedLastName })
+        .send(updateUserData)
 
       expectError(401, UNAUTHORIZED, response)
     })

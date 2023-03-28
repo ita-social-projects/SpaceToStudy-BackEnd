@@ -3,8 +3,8 @@ const { createError } = require('~/utils/errorsHelper')
 const { SUBJECT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const subjectService = {
-  getSubjects: async () => {
-    const subjects = await Subject.find().lean().exec()
+  getSubjects: async ({ skip, limit, sort, filter }) => {
+    const subjects = await Subject.find(filter).skip(skip).limit(limit).sort(sort).lean().exec()
 
     return subjects
   },

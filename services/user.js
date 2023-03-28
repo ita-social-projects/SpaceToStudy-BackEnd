@@ -93,7 +93,7 @@ const userService = {
 
   updateUserProfile: async (id, updateData) => {
     const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
-    const user = await User.findByIdAndUpdate(id, filteredUpdateData, { new: true }).exec()
+    const user = await User.findByIdAndUpdate(id, filteredUpdateData).lean().exec()
 
     if(!user) {
       throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))

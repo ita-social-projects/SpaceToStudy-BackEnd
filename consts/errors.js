@@ -134,7 +134,19 @@ const errors = {
   COOPERATION_NOT_FOUND: {
     code: 'COOPERATION_NOT_FOUND',
     message: 'Cooperation with the specified id was not found.'
-  }
+  },
+  DOCUMENT_ALREADY_EXISTS: (uniqueFields) => ({
+    code: 'DOCUMENT_ALREADY_EXISTS',
+    message: `${uniqueFields} fields must be unique.`
+  }),
+  MONGO_SERVER_ERROR: (message) => ({
+    code: 'MONGO_SERVER_ERROR',
+    message: message
+  }),
+  VALIDATION_ERROR: (message) => ({
+    code: 'VALIDATION_ERROR',
+    message: message
+  })
 }
 
 const validationErrors = {

@@ -5,8 +5,13 @@ const { createError } = require('~/utils/errorsHelper')
 const { OFFER_NOT_FOUND, CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
 
 const offerService = {
-  getOffers: async (match) => {
-    const offers = await Offer.find(match).lean().exec()
+  getOffers: async (match, sort, limit) => {
+    const offers = await Offer.find(match)
+      .populate({ path: 'userId', select: ['totalReviews', '+photo'] })
+      .sort(sort)
+      .limit(limit)
+      .lean()
+      .exec()
 
     return offers
   },

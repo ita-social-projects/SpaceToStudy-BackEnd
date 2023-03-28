@@ -1,12 +1,10 @@
 const offerService = require('~/services/offer')
-const getMatchOptions = require('~/utils/getMatchOptions')
+const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
 
 const getOffers = async (req, res) => {
-  const { categoryId, subjectId } = req.params
+  const { match, sort, limit } = offerAggregateOptions(req.query, req.params)
 
-  const match = getMatchOptions({ categoryId, subjectId })
-
-  const offers = await offerService.getOffers(match)
+  const offers = await offerService.getOffers(match, sort, parseInt(limit))
 
   res.status(200).json(offers)
 }

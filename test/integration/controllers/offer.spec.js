@@ -37,7 +37,7 @@ describe('Offer controller', () => {
 
   describe(`test POST ${endpointUrl}`, () => {
     it('should create new offer', async () => {
-      const { _id, userId } = testOfferResponse.body
+      const { _id, authorId } = testOfferResponse.body
 
       expect(testOfferResponse.statusCode).toBe(201)
       expect(testOfferResponse.body).toEqual(
@@ -48,10 +48,10 @@ describe('Offer controller', () => {
           description: 'TEST 123ASD',
           languages: ['Ukrainian'],
           authorRole: 'student',
-          userId,
+          authorId,
           subjectId: '63da8767c9ad4c9a0b0eacd3',
           categoryId: '63525e23bf163f5ea609ff2b',
-          isActive: false,
+          isActive: 'pending',
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
         })

@@ -99,28 +99,19 @@ describe('User controller', () => {
       expectError(404, DOCUMENT_NOT_FOUND(User.modelName), response)
     })
   })
+  
   describe(`UPDATE ${endpointUrl}update-my-profile`, () => {
-    let authResponse 
     const requestUrl = endpointUrl + 'update-my-profile'
     const mockedFirstName = 'Albus Dumbledore'
     
     it('should UPDATE USER PROFILE by his ID', async () => {
-      // (role, firstName, lastName, email, password, appLanguage, isEmailConfirmed = false)
-      await createUser(...Object.values({role:'student', ...testUser, email:'newTest'}))
-      console.log({ email: testUser.email, password: testUser.password })
-
-      // authResponse = await app.post('/auth/login').send({ email: testUser.email, password: testUser.password })
-
-      console.log(authResponse._body)
 
       const response = await app.patch(requestUrl).send({
         firstName:mockedFirstName
       })
-      // .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
 
       expect(response.statusCode).toBe(201)
     })
-    
     it('should throw UNAUTHORIZED', async () => {
       const response = await app
         .patch(requestUrl)

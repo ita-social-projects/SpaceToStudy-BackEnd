@@ -61,16 +61,23 @@ const offerService = {
     }
   },
 
-  getPriceValues: async (authorRole) => {
-    const offers = await Offer.find().select('price -_id').lean().exec()
-    const minMaxPrices = offers.map((el) => el.price)
-    console.log(offers)
-
+  priceMinMax: async (authorRole) => {
     if (!authorRole) {
       throw createError(404, OFFER_NOT_FOUND)
     }
 
-    return { minPrice: Math.min(...minMaxPrices), maxPrice: Math.max(...minMaxPrices) }
+    const minMaxPrices = await Offer.aggregate([
+      { $match: { authorRole: 'tutor' } },
+      {
+        $group: {
+          _id: null,
+          min: { $min: '$price' },
+          max: { $max: '$price' }
+        }
+      }
+    ])
+
+    return { minPrice: minMaxPrices[0].min, maxPrice: minMaxPrices[0].max }
   }
 }
 

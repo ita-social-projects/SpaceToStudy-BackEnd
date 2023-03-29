@@ -51,7 +51,7 @@ const deleteOffer = async (req, res) => {
 const getPriceValues = async (req, res) => {
   const { role: authorRole } = req.user
 
-  const values = await offerService.getPriceValues(authorRole)
+  const values = await offerService.priceMinMax(authorRole)
 
   res.status(200).json(values)
 }

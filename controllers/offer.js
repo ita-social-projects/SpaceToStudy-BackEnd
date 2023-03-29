@@ -48,10 +48,19 @@ const deleteOffer = async (req, res) => {
   res.status(204).end()
 }
 
+const getPriceValues = async (req, res) => {
+  const { role: authorRole } = req.user
+
+  const values = await offerService.getPriceValues(authorRole)
+
+  res.status(200).json(values)
+}
+
 module.exports = {
   getOffers,
   getOfferById,
   createOffer,
   updateOffer,
-  deleteOffer
+  deleteOffer,
+  getPriceValues
 }

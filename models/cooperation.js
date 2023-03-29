@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { USER, OFFER, COOPERATION } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS }
 } = require('~/consts/validation')
@@ -7,17 +8,17 @@ const cooperationSchema = new Schema(
   {
     offerId: {
       type: Schema.Types.ObjectId,
-      ref: 'Offer',
+      ref: OFFER,
       required: [true, 'This field cannot be empty.']
     },
     initiatorUserId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: USER,
       required: [true, 'This field cannot be empty.']
     },
     recipientUserId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: USER,
       required: [true, 'This field cannot be empty.']
     },
     price: {
@@ -40,4 +41,4 @@ const cooperationSchema = new Schema(
   }
 )
 
-module.exports = model('Cooperation', cooperationSchema)
+module.exports = model(COOPERATION, cooperationSchema)

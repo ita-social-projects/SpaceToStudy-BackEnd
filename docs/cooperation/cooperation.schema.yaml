@@ -22,6 +22,7 @@ definitions:
           enum:
            - pending
            - active
+           - declined
            - closed
         createdAt:
           type: string
@@ -47,7 +48,8 @@ definitions:
           type: string
           enum:
            - pending
-           - active
+           - active           
+           - declined
            - closed
   cooperation:
     type: object
@@ -70,6 +72,7 @@ definitions:
           enum:
            - pending
            - active
+           - declined
            - closed
       createdAt:
           type: string

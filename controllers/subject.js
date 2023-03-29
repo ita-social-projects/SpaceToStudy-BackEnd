@@ -1,12 +1,12 @@
 const subjectService = require('~/services/subject')
-const createAggregateOptions = require('~/utils/users/createAggregateOptions')
+const getRegex = require('~/utils/getRegex')
 
 const getSubjects = async (req, res) => {
-  const { skip, limit, sort, match } = createAggregateOptions(req.query)
-  
-  const filter = match ? { name: { $regex: match } } : {}
+  const { skip, limit, name } = req.query
 
-  const subjects = await subjectService.getSubjects({ skip, limit, sort, match:filter })
+  const searchFilter = { name: getRegex(name) }
+  
+  const subjects = await subjectService.getSubjects({ skip:parseInt(skip), limit:parseInt(limit), searchFilter })
 
   res.status(200).json(subjects)
 }

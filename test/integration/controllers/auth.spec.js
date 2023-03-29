@@ -173,7 +173,6 @@ describe('Auth controller', () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
 
       const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
-      console.log(loginUserResponse.headers)
 
       const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
 
@@ -193,7 +192,6 @@ describe('Auth controller', () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
 
       const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
-      console.log(loginUserResponse.body)
 
       const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
 

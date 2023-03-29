@@ -114,6 +114,7 @@ describe('Category controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
+      // expect(response.body[0]).toBeInstanceOf(String)
     })
   })
 })

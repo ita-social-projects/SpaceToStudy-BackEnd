@@ -7,6 +7,11 @@ const categoryService = {
     return await Category.find(searchFilter).skip(skip).limit(limit).lean().exec()
   },
 
+  getCategoriesNames: async () => {
+    const categories = await Category.find().select('name -_id').lean().exec()
+    return categories.map((category) => category.name)
+  },
+
   getCategoryById: async (id) => {
     const category = await Category.findById(id).lean().exec()
 

@@ -107,4 +107,13 @@ describe('Category controller', () => {
       expect(response.body).toEqual(expect.objectContaining(categoryData))
     })
   })
+
+  describe(`GET ${endpointUrl}names`, () => {
+    it('should return categories names', async () => {
+      const response = await app.get(endpointUrl + 'names').set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body)).toBeTruthy()
+    })
+  })
 })

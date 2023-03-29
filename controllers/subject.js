@@ -1,7 +1,12 @@
 const subjectService = require('~/services/subject')
+const getRegex = require('~/utils/getRegex')
 
 const getSubjects = async (req, res) => {
-  const subjects = await subjectService.getSubjects()
+  const { skip, limit, name } = req.query
+
+  const searchFilter = { name: getRegex(name) }
+  
+  const subjects = await subjectService.getSubjects({ skip:parseInt(skip), limit:parseInt(limit), searchFilter })
 
   res.status(200).json(subjects)
 }

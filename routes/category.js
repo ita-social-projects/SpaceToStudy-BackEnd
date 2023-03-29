@@ -12,6 +12,7 @@ router.use(authMiddleware)
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(categoryController.getCategories))
+router.get('/names', asyncWrapper(categoryController.getCategoriesNames))
 router.get('/:id', asyncWrapper(categoryController.getCategoryById))
 
 //TODO: must be done after offers and cooperations logic

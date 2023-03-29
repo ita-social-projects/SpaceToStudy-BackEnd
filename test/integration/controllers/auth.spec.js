@@ -12,10 +12,11 @@ const { OAuth2Client } = require('google-auth-library')
 jest.mock('google-auth-library')
 
 describe('Auth controller', () => {
-  let app, server
+  let app, server, signupResponse
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
+    signupResponse = await app.post('/auth/signup').send(user)
   })
 
   afterAll(async () => {
@@ -23,20 +24,19 @@ describe('Auth controller', () => {
   })
 
   const user = {
-    _id: null,
     role: 'student',
     firstName: 'test',
     lastName: 'test',
     email: 'test@gmail.com',
     password: 'testpass_135'
   }
+
   describe('Signup endpoint', () => {
     it('should register a user', async () => {
-      const response = await app.post('/auth/signup').send(user)
-      user._id = response.body.userId
+      user._id = signupResponse.body.userId
 
-      expect(response.statusCode).toBe(201)
-      expect(response.body).toEqual(expect.objectContaining({ userEmail: user.email }))
+      expect(signupResponse.statusCode).toBe(201)
+      expect(signupResponse.body).toEqual(expect.objectContaining({ userEmail: user.email }))
     })
 
     it('should throw validation errors for the firstName field', async () => {
@@ -60,10 +60,10 @@ describe('Auth controller', () => {
     })
 
     it('should throw validation error for the role value', async () => {
-      const response = await app.post('/auth/signup').send({ ...user, role: 'test' })
+      const signupResponse = await app.post('/auth/signup').send({ ...user, role: 'test' })
 
       const error = errors.FIELD_IS_NOT_OF_PROPER_ENUM_VALUE('role', ROLE_ENUM)
-      expectError(422, error, response)
+      expectError(422, error, signupResponse)
     })
 
     it("should throw validation errors for the password's length", async () => {
@@ -84,6 +84,8 @@ describe('Auth controller', () => {
     })
 
     it('should throw ALREADY_REGISTERED error', async () => {
+      await app.post('/auth/signup').send(user)
+
       const response = await app.post('/auth/signup').send(user)
 
       expectError(409, errors.ALREADY_REGISTERED, response)
@@ -92,11 +94,15 @@ describe('Auth controller', () => {
 
   describe('Confirm email endpoint', () => {
     let confirmToken
-    beforeAll(() => {
-      confirmToken = tokenService.generateConfirmToken({ id: user._id, role: user.role })
+    beforeEach(async () => {
+      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
+        user: signupResponse.body.userId
+      })
+      confirmToken = findConfirmTokenResponse[0].confirmToken
+
       Token.findOne = jest.fn().mockResolvedValue({ confirmToken })
     })
-    afterAll(() => jest.resetAllMocks())
+    afterEach(() => jest.resetAllMocks())
 
     it('should confirm email', async () => {
       const response = await app.get(`/auth/confirm-email/${confirmToken}`)
@@ -105,6 +111,7 @@ describe('Auth controller', () => {
     })
 
     it('should throw EMAIL_ALREADY_CONFIRMED error', async () => {
+      await app.get(`/auth/confirm-email/${confirmToken}`)
       const response = await app.get(`/auth/confirm-email/${confirmToken}`)
 
       expectError(400, errors.EMAIL_ALREADY_CONFIRMED, response)
@@ -117,14 +124,19 @@ describe('Auth controller', () => {
     })
   })
 
-  let refreshToken
   describe('Login endpoint', () => {
     it('should login a user', async () => {
-      const response = await app.post('/auth/login').send({ email: user.email, password: user.password })
-      refreshToken = response.header['set-cookie'][0].split(';')[0].split('=')[1]
+      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
+        user: signupResponse.body.userId
+      })
+      const confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(
+      await app.get(`/auth/confirm-email/${confirmToken}`)
+
+      const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
+
+      expect(loginUserResponse.statusCode).toBe(200)
+      expect(loginUserResponse.body).toEqual(
         expect.objectContaining({
           accessToken: expect.any(String)
         })
@@ -153,18 +165,40 @@ describe('Auth controller', () => {
 
   describe('Logout endpoint', () => {
     it('should logout user', async () => {
-      const response = await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
+      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
+        user: signupResponse.body.userId
+      })
+      const confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      expect(response.statusCode).toBe(204)
+      await app.get(`/auth/confirm-email/${confirmToken}`)
+
+      const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
+
+      const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+
+      const logoutResponse = await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
+
+      expect(logoutResponse.statusCode).toBe(204)
     })
   })
 
   describe('RefreshAccessToken endpoint', () => {
     it('should refresh access token', async () => {
-      const response = await app.get('/auth/refresh').set('Cookie', `refreshToken=${refreshToken}`)
+      const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
+        user: signupResponse.body.userId
+      })
+      const confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(
+      await app.get(`/auth/confirm-email/${confirmToken}`)
+
+      const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
+
+      const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+
+      const refreshResponse = await app.get('/auth/refresh').set('Cookie', `refreshToken=${refreshToken}`)
+
+      expect(refreshResponse.statusCode).toBe(200)
+      expect(refreshResponse.body).toEqual(
         expect.objectContaining({
           accessToken: expect.any(String)
         })
@@ -192,12 +226,13 @@ describe('Auth controller', () => {
 
   describe('UpdatePassword endpoint', () => {
     let resetToken
-    beforeAll(() => {
-      const { _id: id, firstName, email, role } = user
-      resetToken = tokenService.generateResetToken({ id, firstName, email, role })
+    beforeEach(() => {
+      const { firstName, email, role } = user
+      resetToken = tokenService.generateResetToken({ id: signupResponse.body.userId, firstName, email, role })
+
       Token.findOne = jest.fn().mockResolvedValue({ resetToken })
     })
-    afterAll(() => jest.resetAllMocks())
+    afterEach(() => jest.resetAllMocks())
 
     it('should update a password', async () => {
       const response = await app.patch(`/auth/reset-password/${resetToken}`).send({ password: 'valid_pass1' })
@@ -212,7 +247,7 @@ describe('Auth controller', () => {
   })
 
   describe('GoogleAuth endpoint', () => {
-    beforeAll(() => {
+    beforeEach(() => {
       const googleUser = { given_name: 'test', family_name: 'test', email: 'test@test.com', sub: '123456789' }
 
       const mockVerifyIdToken = jest.fn(() => ({
@@ -225,7 +260,7 @@ describe('Auth controller', () => {
         }
       })
     })
-    afterAll(() => {
+    afterEach(() => {
       jest.resetAllMocks()
     })
 

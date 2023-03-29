@@ -19,6 +19,10 @@ const subjectService = {
     return subject
   },
 
+  getNamesByCategoryId: async (category) => {
+    return await Subject.find({ category }).select('name').lean().exec()
+  },
+
   addSubject: async (name, category) => {
     const duplicatedSubject = await Subject.findOne({ name }).lean().exec()
 

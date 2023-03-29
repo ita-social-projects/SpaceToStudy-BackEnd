@@ -12,6 +12,14 @@ const getSubjectById = async (req, res) => {
 
   res.status(200).json(subject)
 }
+
+const getNamesByCategoryId = async (req, res) => {
+  const { id: category } = req.params
+
+  const names = await subjectService.getNamesByCategoryId(category)
+
+  res.status(200).json(names)
+}
 const addSubject = async (req, res) => {
   const { name, category } = req.body
 
@@ -38,6 +46,7 @@ const deleteSubject = async (req, res) => {
 module.exports = {
   getSubjects,
   getSubjectById,
+  getNamesByCategoryId,
   addSubject,
   updateSubject,
   deleteSubject

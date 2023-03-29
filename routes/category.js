@@ -4,12 +4,15 @@ const { authMiddleware } = require('~/middlewares/auth')
 const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const categoryController = require('~/controllers/category')
+const subjectRouter = require('~/routes/subject')
 
 const router = express.Router()
 
 router.use(authMiddleware)
 
 router.param('id', idValidation)
+
+router.use('/:id/subjects', subjectRouter)
 
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))

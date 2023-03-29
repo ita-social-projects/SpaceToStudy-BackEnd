@@ -20,7 +20,7 @@ paths:
                 - _id: 63ebc6fbd2f34037d0aba791
                   price: 111
                   proficiencyLevel: Beginner
-                  description: this is a new blbsksfmlgksjfglk jlskgjslfgkjsflgk l gks lgsl sjglkgj
+                  description: this is a new description for test purposes
                   languages: English
                   authorRole: tutor
                   authorId: 63e63bb04d1bf3bea00e3d88
@@ -29,7 +29,7 @@ paths:
                 - _id: 63ebc6fbd2f34037d0aba791
                   price: 300
                   proficiencyLevel: Advanced
-                  description: this is a new 123123123123123 text
+                  description: Lorem ipsum dolor sit amet consectetur
                   languages: English, Ukrainian
                   authorRole: tutor
                   authorId: 63e63bb04d1bf3bea00e3d88

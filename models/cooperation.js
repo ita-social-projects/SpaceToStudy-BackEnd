@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { USER, OFFER } = require('~/consts/models')
+const { USER, OFFER, COOPERATION } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS }
 } = require('~/consts/validation')
@@ -41,4 +41,4 @@ const cooperationSchema = new Schema(
   }
 )
 
-module.exports = model('Cooperation', cooperationSchema)
+module.exports = model(COOPERATION, cooperationSchema)

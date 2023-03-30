@@ -156,7 +156,7 @@ describe('Offer controller', () => {
   describe(`shoud return min and mix prices ${endpointUrl}`, () => {
     it('should throw OFFER_NOT_FOUND', async () => {
       const response = await app
-        .get(endpointUrl + 'price-range/?authorRole=')
+        .get(endpointUrl + 'price-range?authorRole=')
         .set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, OFFER_NOT_FOUND, response)
@@ -164,7 +164,7 @@ describe('Offer controller', () => {
 
     it('should return min and max prices for student offers', async () => {
       const response = await app
-        .get(endpointUrl + 'price-range/?authorRole=student')
+        .get(endpointUrl + 'price-range?authorRole=student')
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
@@ -177,7 +177,7 @@ describe('Offer controller', () => {
 
     it('should return min and max prices for tutor offers', async () => {
       const response = await app
-        .get(endpointUrl + 'price-range/?authorRole=tutor')
+        .get(endpointUrl + 'price-range?authorRole=tutor')
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)

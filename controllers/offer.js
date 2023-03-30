@@ -49,7 +49,7 @@ const deleteOffer = async (req, res) => {
 }
 
 const priceMinMax = async (req, res) => {
-  const { role: authorRole } = req.user
+  const { authorRole } = req.query
 
   const values = await offerService.priceMinMax(authorRole)
 

@@ -67,7 +67,7 @@ const offerService = {
     }
 
     const minMaxPrices = await Offer.aggregate([
-      { $match: { authorRole: 'tutor' } },
+      { $match: { authorRole: authorRole } },
       {
         $group: {
           _id: null,

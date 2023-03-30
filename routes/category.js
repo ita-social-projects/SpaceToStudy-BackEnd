@@ -23,7 +23,6 @@ PARAMS.forEach((param) => {
   router.param(param, idValidation)
 })
 
-router.use('/:id/subjects', subjectRouter)
 router.use(
   '/:categoryId?/subjects/:subjectId?/offers',
   isEntityValid([
@@ -32,6 +31,7 @@ router.use(
   ]),
   offerRouter
 )
+router.use('/:id/subjects', subjectRouter)
 
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))

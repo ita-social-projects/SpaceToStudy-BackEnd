@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 const userSchema = require('~/models/user')
+const asyncWrapper = require('~/middlewares/asyncWrapper')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
@@ -137,8 +138,11 @@ reviewSchema.pre(/^findOneAnd/, async function (next) {
   next()
 })
 
-reviewSchema.post(/^findOneAnd/, async function () {
-  await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
-})
+reviewSchema.post(
+  /^findOneAnd/,
+  asyncWrapper(async function () {
+    await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
+  })
+)
 
 module.exports = model('Review', reviewSchema)

@@ -9,8 +9,6 @@ const isEntityValid = (entities) => {
       const id = req.params[idName]
 
       if (id) {
-        console.log('model', model)
-        console.log('modelName', model.modelName)
         const document = await model.findById(id)
         if (!document) {
           next(createError(404, DOCUMENT_NOT_FOUND(model.modelName)))

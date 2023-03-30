@@ -12,6 +12,7 @@ const serverInit = async () => {
 }
 
 const serverCleanup = async (server) => {
+  await mongoose.connection.db.dropDatabase()
   await mongoose.connection.close()
   await server.close()
 }

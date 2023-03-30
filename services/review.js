@@ -58,7 +58,7 @@ const reviewService = {
       offer
     })
 
-    return await newReview
+    return newReview
   },
 
   updateReview: async (id, updateData) => {

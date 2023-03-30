@@ -1,6 +1,6 @@
 const Cooperation = require('~/models/cooperation')
 const { createError } = require('~/utils/errorsHelper')
-const { COOPERATION_NOT_FOUND } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const cooperationService = {
   getCooperations: async () => {
@@ -13,7 +13,7 @@ const cooperationService = {
     const cooperation = await Cooperation.findById(id).lean().exec()
 
     if (!cooperation) {
-      throw createError(404, COOPERATION_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(Cooperation.modelName))
     }
 
     return cooperation
@@ -39,7 +39,7 @@ const cooperationService = {
     const cooperation = await Cooperation.findByIdAndUpdate(id, filteredData, { new: true }).lean().exec()
 
     if (!cooperation) {
-      throw createError(404, COOPERATION_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(Cooperation.modelName))
     }
   }
 }

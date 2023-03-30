@@ -1,7 +1,8 @@
 const { serverCleanup, serverInit } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { SUBJECT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
+const Subject = require('~/models/subject')
 
 const endpointUrl = '/subjects/'
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
@@ -81,10 +82,10 @@ describe('Subject controller', () => {
       )
     })
 
-    it('should throw SUBJECT_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingSubjectId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, SUBJECT_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Subject.modelName), response)
     })
   })
 
@@ -98,13 +99,13 @@ describe('Subject controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
-    it('should throw SUBJECT_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .patch(endpointUrl + nonExistingSubjectId)
         .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Eng' })
 
-      expectError(404, SUBJECT_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Subject.modelName), response)
     })
   })
 
@@ -117,12 +118,12 @@ describe('Subject controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
-    it('should throw SUBJECT_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .delete(endpointUrl + nonExistingSubjectId)
         .set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, SUBJECT_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Subject.modelName), response)
     })
   })
 })

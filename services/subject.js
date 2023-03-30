@@ -1,6 +1,6 @@
 const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
-const { SUBJECT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const subjectService = {
   getSubjects: async ({ skip, limit, searchFilter }) => {
@@ -13,7 +13,7 @@ const subjectService = {
     const subject = await Subject.findById(id).lean().exec()
 
     if (!subject) {
-      throw createError(404, SUBJECT_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(Subject.modelName))
     }
 
     return subject
@@ -38,7 +38,7 @@ const subjectService = {
     const subject = await Subject.findByIdAndUpdate(id, updateData).lean().exec()
 
     if (!subject) {
-      throw createError(404, SUBJECT_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(Subject.modelName))
     }
   },
 
@@ -46,7 +46,7 @@ const subjectService = {
     const subject = await Subject.findByIdAndRemove(id).exec()
 
     if (!subject) {
-      throw createError(404, SUBJECT_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(Subject.modelName))
     }
   }
 }

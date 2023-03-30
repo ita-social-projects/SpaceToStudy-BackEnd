@@ -1,6 +1,6 @@
 const Category = require('~/models/category')
 const { createError } = require('~/utils/errorsHelper')
-const { CATEGORY_NOT_FOUND } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const categoryService = {
   getCategories: async (searchFilter, skip, limit) => {
@@ -15,7 +15,7 @@ const categoryService = {
     const category = await Category.findById(id).lean().exec()
 
     if (!category) {
-      throw createError(404, CATEGORY_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(Category.modelName))
     }
 
     return category

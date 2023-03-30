@@ -2,7 +2,7 @@ paths:
   /cooperations:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Reviews
       summary: Find all cooperations
@@ -45,7 +45,7 @@ paths:
                 message: 'The requested URL requires user authorization.'
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Cooperations
       summary: Create new cooperation.
@@ -103,7 +103,7 @@ paths:
   /cooperations/{id}:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Cooperations
       summary: Find cooperation by ID
@@ -160,11 +160,11 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: COOPERATION_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Cooperation with the specified id was not found.
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Cooperations
       summary: Update cooperation by ID
@@ -218,5 +218,5 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: COOPERATION_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Cooperation with the specified id was not found.

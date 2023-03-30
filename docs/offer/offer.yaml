@@ -84,7 +84,7 @@ paths:
                 authorId": 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
-                isActive: pending
+                status: pending
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

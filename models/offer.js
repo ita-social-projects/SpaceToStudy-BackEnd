@@ -56,7 +56,7 @@ const offerSchema = new Schema(
       ref: CATEGORY,
       required: true
     },
-    isActive: {
+    status: {
       type: String,
       enum: {
         values: OFFER_STATUS,

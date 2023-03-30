@@ -38,7 +38,7 @@ definitions:
           type: string
         categoryId:
           type: string
-        isActive:
+        status:
           type: string
           enum:
             - pending
@@ -85,7 +85,7 @@ definitions:
         type: string
       categoryId:
         type: string
-      isActive:
+      status:
         type: string
         enum:
           - pending
@@ -128,7 +128,7 @@ definitions:
         type: string
       categoryId:
         type: string
-      isActive:
+      status:
         type: string
         enum:
           - pending

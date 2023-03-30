@@ -51,7 +51,7 @@ describe('Offer controller', () => {
           authorId,
           subjectId: '63da8767c9ad4c9a0b0eacd3',
           categoryId: '63525e23bf163f5ea609ff2b',
-          isActive: 'pending',
+          status: 'pending',
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
         })

@@ -13,9 +13,16 @@ const offerService = {
     return offer
   },
 
-  createOffer: async (params) => {
-    const { authorRole, authorId, price, proficiencyLevel, description, languages, subjectId, categoryId } = params
-
+  createOffer: async ({
+    authorRole,
+    authorId,
+    price,
+    proficiencyLevel,
+    description,
+    languages,
+    subjectId,
+    categoryId
+  }) => {
     const newOffer = await Offer.create({
       authorRole,
       authorId,

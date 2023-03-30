@@ -138,7 +138,7 @@ describe('Review controller', () => {
       expectError(401, UNAUTHORIZED, response)
     })
 
-    it('should get a review by id', async () => {
+    it('should get a review by ID', async () => {
       const response = await app.get(endpointUrl + reviewBody._id).set('Authorization', `Bearer ${accessToken}`)
       const { author } = reviewBody
       const { _id } = offerBody
@@ -184,7 +184,7 @@ describe('Review controller', () => {
       expectError(401, UNAUTHORIZED, response)
     })
 
-    it('should UPDATE a review by ID', async () => {
+    it('should update a review by ID', async () => {
       const response = await app
         .patch(endpointUrl + reviewBody._id)
         .set('Authorization', `Bearer ${accessToken}`)

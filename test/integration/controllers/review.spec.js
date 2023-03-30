@@ -131,7 +131,7 @@ describe('Review controller', () => {
     })
   })
 
-  describe(`GET ${endpointUrl}/:id`, () => {
+  describe(`GET ${endpointUrl}:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl + reviewBody._id)
 

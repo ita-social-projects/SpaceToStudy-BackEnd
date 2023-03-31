@@ -68,6 +68,7 @@ const updateStatus = async (req, res) => {
   const updateData = req.body
 
   await userService.updateStatus(id, updateData)
+  
   res.status(204).end()
 }
 

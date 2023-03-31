@@ -30,10 +30,6 @@ const userService = {
       .lean()
       .exec()
 
-    if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
-    }
-
     const reviewStats = await calculateReviewStats(user._id, role)
 
     return { ...user, reviewStats }
@@ -99,18 +95,11 @@ const userService = {
       statusesForChange['status.' + role] = updateStatus[role]
     }
 
-    const user = await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
-    if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
-    }
+    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
   },
 
   deleteUser: async (id) => {
-    const user = await User.findByIdAndRemove(id).exec()
-
-    if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
-    }
+    await User.findByIdAndRemove(id).exec()
   }
 }
 

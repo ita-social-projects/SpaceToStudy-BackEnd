@@ -35,6 +35,6 @@ router.use('/:id/subjects', isEntityValid([{ model: Category, idName: 'id' }]), 
 
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))
-router.get('/:id', asyncWrapper(categoryController.getCategoryById))
+router.get('/:id', isEntityValid([{ model: Category, idName: 'id' }]), asyncWrapper(categoryController.getCategoryById))
 
 module.exports = router

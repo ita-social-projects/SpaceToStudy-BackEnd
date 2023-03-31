@@ -1,6 +1,4 @@
 const Offer = require('~/models/offer')
-const { createError } = require('~/utils/errorsHelper')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const offerService = {
   getOffers: async (match) => {
@@ -11,10 +9,6 @@ const offerService = {
 
   getOfferById: async (id) => {
     const offer = await Offer.findById(id).lean().exec()
-
-    if (!offer) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Offer.modelName))
-    }
 
     return offer
   },
@@ -39,19 +33,11 @@ const offerService = {
   },
 
   updateOffer: async (id, updateData) => {
-    const offer = await Offer.findByIdAndUpdate(id, updateData).lean().exec()
-
-    if (!offer) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Offer.modelName))
-    }
+    await Offer.findByIdAndUpdate(id, updateData).lean().exec()
   },
 
   deleteOffer: async (id) => {
-    const offer = await Offer.findByIdAndRemove(id).exec()
-
-    if (!offer) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Offer.modelName))
-    }
+    await Offer.findByIdAndRemove(id).exec()
   }
 }
 

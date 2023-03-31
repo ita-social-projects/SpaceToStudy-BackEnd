@@ -1,6 +1,4 @@
 const Review = require('~/models/review')
-const { createError } = require('~/utils/errorsHelper')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const reviewService = {
   getReviews: async (match, skip, limit) => {
@@ -41,10 +39,6 @@ const reviewService = {
       .lean()
       .exec()
 
-    if (!review) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Review.modelName))
-    }
-
     return review
   },
 
@@ -62,19 +56,11 @@ const reviewService = {
   },
 
   updateReview: async (id, updateData) => {
-    const review = await Review.findByIdAndUpdate(id, updateData).lean().exec()
-
-    if (!review) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Review.modelName))
-    }
+    await Review.findByIdAndUpdate(id, updateData).lean().exec()
   },
 
   deleteReview: async (id) => {
-    const review = await Review.findByIdAndRemove(id).exec()
-
-    if (!review) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Review.modelName))
-    }
+    await Review.findByIdAndRemove(id).exec()
   }
 }
 

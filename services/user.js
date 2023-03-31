@@ -100,7 +100,6 @@ const userService = {
     await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
   },
 
-
   deleteUser: async (id) => {
     await User.findByIdAndRemove(id).exec()
   }

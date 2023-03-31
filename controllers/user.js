@@ -94,6 +94,6 @@ module.exports = {
   getOneUser,
   deleteUser,
   updateUser,
-  updateStatus,
+  updateStatus
 }
 >>>>>>> a11e7ab (update some routes)

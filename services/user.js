@@ -81,17 +81,8 @@ const userService = {
       throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
     }
   },
-
-  updateUser: async (id, updateStatus) => {
-    const statusesForChange = {}
-    for (const role in updateStatus) {
-      statusesForChange['status.' + role] = updateStatus[role]
-    }
-
-    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
-  },
-
-  updateUserProfile: async (id, updateData) => {
+  
+  updateUser: async (id, updateData) => {
     const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
     const user = await User.findByIdAndUpdate(id, filteredUpdateData).lean().exec()
 
@@ -99,6 +90,16 @@ const userService = {
       throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
     }
   },
+
+  updateStatus: async (id, updateStatus) => {
+    const statusesForChange = {} 
+    for (const role in updateStatus) {
+      statusesForChange['status.' + role] = updateStatus[role]
+    }
+
+    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
+  },
+
 
   deleteUser: async (id) => {
     await User.findByIdAndRemove(id).exec()

@@ -9,7 +9,6 @@ const {
   EMAIL_NOT_CONFIRMED,
   BAD_CONFIRM_TOKEN,
   INCORRECT_CREDENTIALS,
-  EMAIL_NOT_FOUND,
   BAD_RESET_TOKEN,
   BAD_REFRESH_TOKEN,
   USER_NOT_FOUND
@@ -135,7 +134,7 @@ const authService = {
     const user = await getUserByEmail(email)
 
     if (!user) {
-      throw createError(404, EMAIL_NOT_FOUND)
+      throw createError(404, USER_NOT_FOUND)
     }
 
     const { _id, firstName } = user

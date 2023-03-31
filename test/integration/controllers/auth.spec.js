@@ -217,10 +217,10 @@ describe('Auth controller', () => {
 
       expect(response.statusCode).toBe(204)
     })
-    it('should throw EMAIL_NOT_FOUND error', async () => {
+    it('should throw USER_NOT_FOUND error', async () => {
       const response = await app.post('/auth/forgot-password').send({ email: 'invalid@gmail.com' })
 
-      expectError(404, errors.EMAIL_NOT_FOUND, response)
+      expectError(404, errors.USER_NOT_FOUND, response)
     })
   })
 

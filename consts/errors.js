@@ -5,7 +5,7 @@ const {
 const errors = {
   USER_NOT_FOUND: {
     code: 'USER_NOT_FOUND',
-    message: 'User with the specified email or id was not found.'
+    message: 'User with the specified email was not found.'
   },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',
@@ -74,10 +74,6 @@ const errors = {
   TEMPLATE_NOT_FOUND: {
     code: 'TEMPLATE_NOT_FOUND',
     message: 'The requested template was not found.'
-  },
-  EMAIL_NOT_FOUND: {
-    code: 'EMAIL_NOT_FOUND',
-    message: 'There is no user registered with that email.'
   },
   BAD_RESET_TOKEN: {
     code: 'BAD_RESET_TOKEN',

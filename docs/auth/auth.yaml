@@ -154,8 +154,8 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: 'EMAIL_NOT_FOUND'
-                message: 'There is no user registered with that email.'
+                code: 'USER_NOT_FOUND'
+                message: 'User with the specified email was not found.'
   /auth/reset-password/{token}:
     patch:
       tags:

@@ -173,7 +173,7 @@ paths:
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
-                message: Offer with provided data was not found.
+                message: Offer with the specified id was not found.
     patch:
       security:
         - bearerAuth: []
@@ -245,7 +245,7 @@ paths:
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
-                message: Offer with provided data was not found.
+                message: Offer with the specified id was not found.
     delete:
       security:
         - bearerAuth: []
@@ -303,4 +303,4 @@ paths:
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
-                message: Offer with provided data was not found.
+                message: Offer with the specified id was not found.

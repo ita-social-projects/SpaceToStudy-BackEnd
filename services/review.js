@@ -52,7 +52,7 @@ const reviewService = {
       offer
     })
 
-    return await newReview.populate('author offer')
+    return newReview
   },
 
   updateReview: async (id, updateData) => {

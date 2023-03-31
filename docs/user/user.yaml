@@ -140,7 +140,7 @@ paths:
             schema:
               $ref: '#/definitions/user'
             example:
-              status:active
+              status: active
       responses:
         204:
           description: No Content

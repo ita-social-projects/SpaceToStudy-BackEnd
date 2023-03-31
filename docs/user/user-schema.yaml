@@ -164,16 +164,16 @@ definitions:
           tutor: 
             type: string
             enum:
-            - active
-            - blocked
+              - active
+              - blocked
           student: 
             type: string
             enum:
-            - active
-            - blocked
+              - active
+              - blocked
           admin: 
             type: string
             enum:
-            - active
-            - blocked
+              - active
+              - blocked
 

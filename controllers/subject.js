@@ -1,12 +1,13 @@
 const subjectService = require('~/services/subject')
 const getRegex = require('~/utils/getRegex')
+const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getSubjects = async (req, res) => {
   const { skip, limit, name } = req.query
 
   const searchFilter = { name: getRegex(name) }
-  
-  const subjects = await subjectService.getSubjects({ skip:parseInt(skip), limit:parseInt(limit), searchFilter })
+
+  const subjects = await subjectService.getSubjects({ skip: parseInt(skip), limit: parseInt(limit), searchFilter })
 
   res.status(200).json(subjects)
 }
@@ -21,7 +22,9 @@ const getSubjectById = async (req, res) => {
 const getNamesByCategoryId = async (req, res) => {
   const { id: category } = req.params
 
-  const names = await subjectService.getNamesByCategoryId(category)
+  const match = getMatchOptions({ category })
+
+  const names = await subjectService.getNamesByCategoryId(match)
 
   res.status(200).json(names)
 }

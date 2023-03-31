@@ -31,7 +31,7 @@ router.use(
   ]),
   offerRouter
 )
-router.use('/:id/subjects', isEntityValid([{ model: Category, idName: 'id' }]), subjectRouter)
+router.use('/:id?/subjects', isEntityValid([{ model: Category, idName: 'id' }]), subjectRouter)
 
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))

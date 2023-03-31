@@ -1,7 +1,7 @@
 const getRegex = require('../getRegex')
 
 const offerAggregateOptions = (query, params) => {
-  const { price = {}, proficiencyLevel = [], rating, languages, sort = {}, limit = 5 } = query
+  const { price = {}, proficiencyLevel = [], rating, languages, name, sort = {}, limit = 5 } = query
   const { categoryId, subjectId } = params
 
   const { minPrice, maxPrice } = price
@@ -9,7 +9,7 @@ const offerAggregateOptions = (query, params) => {
 
   const match = {}
 
-  if (proficiencyLevel.length) {
+  if (proficiencyLevel) {
     match.proficiencyLevel = {
       $in: proficiencyLevel
     }
@@ -19,11 +19,11 @@ const offerAggregateOptions = (query, params) => {
     match.price = { $gte: minPrice, $lte: maxPrice }
   }
 
-  if (rating) {
-    match['$userId.averageRating.tutor'] = { $gte: rating }
-  }
+  if (rating) match.authorAvgRating = { $gte: rating }
 
   if (languages) match.languages = getRegex(languages)
+
+  if (name) match.authorName = getRegex(name)
 
   const sortOrder = order === 'asc' ? 1 : -1
 
@@ -33,7 +33,7 @@ const offerAggregateOptions = (query, params) => {
 
   if (subjectId) match.subjectId = { $match: subjectId }
 
-  return { match, sort: sortOption, limit: parseInt(limit) }
+  return { match, sort: sortOption, limit }
 }
 
 module.exports = offerAggregateOptions

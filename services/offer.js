@@ -1,6 +1,7 @@
 const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
+const userService = require('~/services/user')
 const { createError } = require('~/utils/errorsHelper')
 const { OFFER_NOT_FOUND, CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
 
@@ -37,9 +38,16 @@ const offerService = {
       throw createError(404, SUBJECT_NOT_FOUND)
     }
 
+    const user = await userService.getUserById(authorId)
+
+    const authorAvgRating = authorRole === 'student' ? user.averageRating.student : user.averageRating.tutor
+    const authorName = `${user.firstName} ${user.lastName}`
+
     const newOffer = await Offer.create({
       authorRole,
       authorId,
+      authorAvgRating,
+      authorName,
       price,
       proficiencyLevel,
       description,

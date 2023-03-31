@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose')
 const userSchema = require('~/models/user')
+const offerSchema = require('~/models/offer')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const {
   roles: { STUDENT }
@@ -117,9 +118,18 @@ reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUs
       'averageRating.tutor': stats[0].averageRating.tutor
     }
 
+    const studentRating = { authorAvgRating: stats[0].averageRating.student }
+
+    const tutorRating = { authorAvgRating: stats[0].averageRating.tutor }
+
     await userSchema.findOneAndUpdate(
       { _id: targetUserId, role: targetUserRole },
       targetUserRole === STUDENT ? student : tutor
+    )
+
+    await offerSchema.updateMany(
+      { userId: targetUserId },
+      { $set: targetUserRole === STUDENT ? studentRating : tutorRating }
     )
   } else {
     await userSchema.findOneAndUpdate(

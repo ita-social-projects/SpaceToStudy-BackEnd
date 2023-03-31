@@ -23,6 +23,7 @@ const updateUser = async (req, res) => {
   const updateData = req.body
 
   await userService.updateUser(id, updateData)
+
   res.status(204).end()
 }
 

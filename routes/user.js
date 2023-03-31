@@ -5,13 +5,13 @@ const asyncWrapper = require('~/middlewares/asyncWrapper')
 const setCurrentUserIdAndRole = require('~/middlewares/setCurrentUserIdAndRole')
 const { restrictTo, authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
-const {
-  roles: { ADMIN }
-} = require('~/consts/auth')
 
 const User = require('~/models/user')
 const userController = require('~/controllers/user')
 const reviewRouter = require('~/routes/review')
+const {
+  roles: { ADMIN }
+} = require('~/consts/auth')
 
 const router = express.Router()
 

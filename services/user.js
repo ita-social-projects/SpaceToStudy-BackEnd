@@ -97,7 +97,11 @@ const userService = {
       statusesForChange['status.' + role] = updateStatus[role]
     }
 
-    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
+    const user = await User.findByIdAndUpdate(id, { $set:statusesForChange } ).lean().exec()
+
+    if (!user) {
+      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
+    }
   },
 
   deleteUser: async (id) => {

@@ -63,20 +63,19 @@ const getOneUser = async (req, res) => {
   res.status(200).json(user)
 }
 
-const updateUser = async (req, res) => {
-  const { id } = req.params
-  const updateData = req.body
-
-  await userService.updateUser(id, updateData)
-
-  res.status(204).end()
-}
-
 const updateStatus = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
 
   await userService.updateStatus(id, updateData)
+  res.status(204).end()
+}
+
+const updateUser = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
+
+  await userService.updateUser(id, updateData)
 
   res.status(204).end()
 }

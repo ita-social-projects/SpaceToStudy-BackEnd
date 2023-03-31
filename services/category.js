@@ -8,8 +8,7 @@ const categoryService = {
   },
 
   getCategoriesNames: async () => {
-    const categories = await Category.find().select('name -_id').lean().exec()
-    return categories.map((category) => category.name)
+    return await Category.find().select('name').lean().exec()
   },
 
   getCategoryById: async (id) => {

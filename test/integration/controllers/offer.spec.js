@@ -1,7 +1,8 @@
 const { serverCleanup, serverInit } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { OFFER_NOT_FOUND } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
+const Offer = require('~/models/offer')
 
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
@@ -76,10 +77,10 @@ describe('Offer controller', () => {
       expect(response.statusCode).toBe(200)
     })
 
-    it('should throw OFFER_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, OFFER_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Offer.modelName), response)
     })
   })
 
@@ -93,13 +94,13 @@ describe('Offer controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
-    it('should throw OFFER_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .patch(endpointUrl + nonExistingOfferId)
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updateData)
 
-      expectError(404, OFFER_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Offer.modelName), response)
     })
   })
 
@@ -110,10 +111,10 @@ describe('Offer controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
-    it('should throw OFFER_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, OFFER_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Offer.modelName), response)
     })
   })
 })

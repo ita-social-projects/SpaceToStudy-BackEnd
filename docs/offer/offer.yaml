@@ -2,7 +2,7 @@ paths:
   /offers:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Offers
       summary: Find all offers
@@ -47,7 +47,7 @@ paths:
                 message: The requested URL requires user authorization.
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Offers
       summary: Create new offer.
@@ -65,7 +65,7 @@ paths:
               price: 300,
               proficiencyLevel: Advanced
               description: this is a new 123123123123123 text
-              languages: [ English , Ukrainian ]
+              languages: [English, Ukrainian]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
               isActive: false
@@ -80,10 +80,7 @@ paths:
                 price: 300
                 proficiencyLevel: Advanced
                 description: this is a new 123123123123123 text
-                languages: [
-                    English,
-                    Ukrainian
-                ]
+                languages: [English, Ukrainian]
                 authorRole: tutor
                 userId": 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
@@ -115,7 +112,7 @@ paths:
   /offers/{id}:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Offers
       summary: Find and return offer by ID
@@ -140,10 +137,7 @@ paths:
                 price: 300,
                 proficiencyLevel: Advanced
                 description: this is a new 123123123123123 text
-                languages: [
-                    English,
-                    Ukrainian
-                ]
+                languages: [English, Ukrainian]
                 authorRole: tutor
                 userId: 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
@@ -178,11 +172,11 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: OFFER_NOT_FOUND
-                message: Offer with provided data was not found.
+                code: DOCUMENT_NOT_FOUND
+                message: Offer with the specified id was not found.
     patch:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Offers
       summary: Find and update offer by ID
@@ -206,7 +200,7 @@ paths:
               price: 300,
               proficiencyLevel: Advanced
               description: this is a test text 123
-              languages: [ Ukrainian, Polish ]
+              languages: [Ukrainian, Polish]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
       responses:
@@ -250,11 +244,11 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: OFFER_NOT_FOUND
-                message: Offer with provided data was not found.
+                code: DOCUMENT_NOT_FOUND
+                message: Offer with the specified id was not found.
     delete:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Offers
       summary: Find and delete offer by ID
@@ -308,5 +302,5 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: OFFER_NOT_FOUND
-                message: Offer with provided data was not found.
+                code: DOCUMENT_NOT_FOUND
+                message: Offer with the specified id was not found.

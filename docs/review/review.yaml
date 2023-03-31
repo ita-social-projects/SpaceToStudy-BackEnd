@@ -299,7 +299,7 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: REVIEW_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Review with the specified id was not found.
     patch:
       security:
@@ -367,7 +367,7 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: REVIEW_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Review with the specified id was not found.
     delete:
       security:
@@ -425,5 +425,5 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: REVIEW_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Review with the specified id was not found.

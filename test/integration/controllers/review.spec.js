@@ -1,7 +1,8 @@
 const { serverInit, serverCleanup } = require('~/test/setup')
-const { REVIEW_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 const testUserAuthentication = require('~/utils/testUserAuth')
+const Review = require('~/models/review')
 
 const endpointUrl = '/reviews/'
 
@@ -81,10 +82,10 @@ describe('Review controller', () => {
       expect(response.body).toEqual(expect.objectContaining(testReview))
     })
 
-    it('should throw REVIEW_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, REVIEW_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Review.modelName), response)
     })
   })
 
@@ -104,13 +105,13 @@ describe('Review controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
-    it('should throw REVIEW_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .patch(endpointUrl + nonExistingReviewId)
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updateData)
 
-      expectError(404, REVIEW_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Review.modelName), response)
     })
   })
 
@@ -127,10 +128,10 @@ describe('Review controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
-    it('should throw REVIEW_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.delete(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, REVIEW_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Review.modelName), response)
     })
   })
 })

@@ -1,7 +1,12 @@
 const offerService = require('~/services/offer')
+const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getOffers = async (req, res) => {
-  const offers = await offerService.getOffers()
+  const { categoryId, subjectId } = req.params
+
+  const match = getMatchOptions({ categoryId, subjectId })
+
+  const offers = await offerService.getOffers(match)
 
   res.status(200).json(offers)
 }

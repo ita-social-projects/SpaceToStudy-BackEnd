@@ -3,7 +3,7 @@ const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
-const { USER_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -30,10 +30,6 @@ const userService = {
       .lean()
       .exec()
 
-    if (!user) {
-      throw createError(404, USER_NOT_FOUND)
-    }
-
     const reviewStats = await calculateReviewStats(user._id, role)
 
     return { ...user, reviewStats }
@@ -43,7 +39,7 @@ const userService = {
     const user = await User.findById(id).select('+lastLoginAs +isEmailConfirmed +isFirstLogin').lean().exec()
 
     if (!user) {
-      throw createError(404, USER_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
     }
 
     return user
@@ -89,28 +85,21 @@ const userService = {
     const user = await User.findByIdAndUpdate(id, param, { new: true }).exec()
 
     if (!user) {
-      throw createError(404, USER_NOT_FOUND)
+      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
     }
   },
 
   updateUser: async (id, updateStatus) => {
-    const statusesForChange = {} 
+    const statusesForChange = {}
     for (const role in updateStatus) {
       statusesForChange['status.' + role] = updateStatus[role]
     }
 
-    const user = await User.findByIdAndUpdate(id, { $set:statusesForChange }, { new: true }).exec()
-    if (!user) {
-      throw createError(404, USER_NOT_FOUND)
-    }
+    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
   },
 
   deleteUser: async (id) => {
-    const user = await User.findByIdAndRemove(id).exec()
-
-    if (!user) {
-      throw createError(404, USER_NOT_FOUND)
-    }
+    await User.findByIdAndRemove(id).exec()
   }
 }
 

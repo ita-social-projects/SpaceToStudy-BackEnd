@@ -104,7 +104,10 @@ paths:
                   lastName: Doe
                   email: johndoe@gmail.com
                   categories:
-                    [{ _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology }]
+                    [
+                      { _id: 6255bc080a75adf9223df444, name: Languages },
+                      { _id: 6255bc080a75adf443d7644, name: Biology }
+                    ]
                   totalReviews: { student: 10, tutor: 0 }
                   averageRating: { student: 4.5, tutor: 0 }
                   nativeLanguage: english
@@ -118,9 +121,7 @@ paths:
                   bookmarkedOffers: []
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
-                  reviewStats: {
-                      stats: [ { rating: 4, count: 5 }, { rating: 5, count: 5 } ]
-                  }
+                  reviewStats: { stats: [{ rating: 4, count: 5 }, { rating: 5, count: 5 }] }
                 example2:
                   _id: 6255bc080a75adf9223df100
                   role: student
@@ -128,7 +129,10 @@ paths:
                   lastName: Doe
                   email: johndoe@gmail.com
                   categories:
-                    [ { _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology } ]
+                    [
+                      { _id: 6255bc080a75adf9223df444, name: Languages },
+                      { _id: 6255bc080a75adf443d7644, name: Biology }
+                    ]
                   totalReviews: { student: 10, tutor: 0 }
                   averageRating: { student: 4.5, tutor: 0 }
                   nativeLanguage: english
@@ -171,13 +175,13 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: 'USER_NOT_FOUND'
-                message: 'User with the specified email or id was not found.'
+                code: 'DOCUMENT_NOT_FOUND'
+                message: 'User with the specified id was not found.'
     patch:
       security:
         - bearerAuth: []
         - role:
-          - admin
+            - admin
       tags:
         - Users
       summary: Find and update user status by ID
@@ -197,8 +201,7 @@ paths:
           application/json:
             schema:
               $ref: '#/definitions/user'
-            example:
-              status:'active'
+            example: status:'active'
       responses:
         204:
           description: No Content
@@ -240,8 +243,8 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: 'USER_NOT_FOUND'
-                message: 'User with the specified email or id was not found.'
+                code: 'DOCUMENT_NOT_FOUND'
+                message: 'User with the specified id was not found.'
     delete:
       security:
         - bearerAuth: []
@@ -300,12 +303,12 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: 'USER_NOT_FOUND'
-                message: 'User with the specified email or id was not found.'
+                code: 'DOCUMENT_NOT_FOUND'
+                message: 'User with the specified id was not found.'
   /users/my-profile:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Users
       summary: Find information about current user`s profile
@@ -326,7 +329,7 @@ paths:
                 lastName: Doe
                 email: johndoe@gmail.com
                 categories:
-                  [ { _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology } ]
+                  [{ _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology }]
                 totalReviews: { student: 10, tutor: 0 }
                 averageRating: { student: 4.5, tutor: 0 }
                 nativeLanguage: english
@@ -337,19 +340,9 @@ paths:
                 isEmailConfirmed: true
                 isFirstLogin: true
                 lastLogin: 2022-09-02T11:59:53.243+00:00
-                bookmarkedOffers: [ ]
+                bookmarkedOffers: []
                 createdAt: 2021-04-09T11:34:53.243+00:00
                 updatedAt: 2022-09-02T11:59:53.243+00:00
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 400
-                code: 'INVALID_ID'
-                message: 'ID is invalid.'
         401:
           description: Unauthorized
           content:
@@ -360,20 +353,10 @@ paths:
                 status: 404
                 code: 'UNAUTHORIZED'
                 message: 'The requested URL requires user authorization.'
-        404:
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 404
-                code: 'USER_NOT_FOUND'
-                message: 'User with the specified email or id was not found.'
   /users/{id}/reviews:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Users
       summary: Find all reviews for a user with the specified ID and role
@@ -460,6 +443,16 @@ paths:
                         name: languages
                     createdAt: 2022-10-18T13:25:36.292Z
                     updatedAt: 2022-10-18T13:25:36.292Z
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
         401:
           description: Unauthorized
           content:
@@ -470,3 +463,13 @@ paths:
                 status: 401
                 code: 'UNAUTHORIZED'
                 message: 'The requested URL requires user authorization.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'DOCUMENT_NOT_FOUND'
+                message: 'User with the specified id was not found.'

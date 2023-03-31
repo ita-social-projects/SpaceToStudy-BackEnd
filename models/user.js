@@ -144,7 +144,4 @@ const userSchema = new Schema(
   }
 )
 
-// TODO:
-// coops(virtuals)
-
 module.exports = model(USER, userSchema)

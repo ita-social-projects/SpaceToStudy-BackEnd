@@ -2,7 +2,7 @@ paths:
   /categories:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Categories
       summary: Find all categories
@@ -107,7 +107,7 @@ paths:
   /categories/{id}:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Categories
       summary: Find category by ID
@@ -162,5 +162,5 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: CATEGORY_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Category with the specified id was not found.

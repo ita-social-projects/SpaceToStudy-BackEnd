@@ -1,7 +1,7 @@
 const { serverInit, serverCleanup } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
-const { CATEGORY_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
 const Category = require('~/models/category')
 
 const endpointUrl = '/categories/'
@@ -94,10 +94,10 @@ describe('Category controller', () => {
       expectError(401, UNAUTHORIZED, response)
     })
 
-    it('should throw CATEGORY_NOT_FOUND', async () => {
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, CATEGORY_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND(Category.modelName), response)
     })
 
     it('should get a category by id', async () => {

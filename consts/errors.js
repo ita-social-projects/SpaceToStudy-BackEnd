@@ -5,15 +5,7 @@ const {
 const errors = {
   USER_NOT_FOUND: {
     code: 'USER_NOT_FOUND',
-    message: 'User with the specified email or id was not found.'
-  },
-  USER_ALREADY_BLOCKED: {
-    code: 'USER_ALREADY_BLOCKED',
-    message: 'User with the specified id is already blocked.'
-  },
-  USER_ALREADY_UNBLOCKED: {
-    code: 'USER_ALREADY_UNBLOCKED',
-    message: 'User with the specified id is already unblocked.'
+    message: 'User with the specified email was not found.'
   },
   INCORRECT_CREDENTIALS: {
     code: 'INCORRECT_CREDENTIALS',
@@ -83,10 +75,6 @@ const errors = {
     code: 'TEMPLATE_NOT_FOUND',
     message: 'The requested template was not found.'
   },
-  EMAIL_NOT_FOUND: {
-    code: 'EMAIL_NOT_FOUND',
-    message: 'There is no user registered with that email.'
-  },
   BAD_RESET_TOKEN: {
     code: 'BAD_RESET_TOKEN',
     message: 'The reset token is either invalid or has expired.'
@@ -111,30 +99,14 @@ const errors = {
     code: 'INVALID_LANGUAGE',
     message: `The language name is invalid. Possible options: ${APP_LANG_ENUM.join(', ')}.`
   },
-  REVIEW_NOT_FOUND: {
-    code: 'REVIEW_NOT_FOUND',
-    message: 'Review with the specified id was not found.'
-  },
-  SUBJECT_NOT_FOUND: {
-    code: 'SUBJECT_NOT_FOUND',
-    message: 'Subject with the specified id was not found.'
-  },
   SUBJECT_ALREADY_EXISTS: {
     code: 'SUBJECT_ALREADY_EXISTS',
     message: 'Subject with the specified name already exists.'
   },
-  OFFER_NOT_FOUND: {
-    code: 'OFFER_NOT_FOUND',
-    message: 'Offer with provided data was not found.'
-  },
-  CATEGORY_NOT_FOUND: {
-    code: 'CATEGORY_NOT_FOUND',
-    message: 'Category with provided id was not found.'
-  },
-  COOPERATION_NOT_FOUND: {
-    code: 'COOPERATION_NOT_FOUND',
-    message: 'Cooperation with the specified id was not found.'
-  }
+  DOCUMENT_NOT_FOUND: (document) => ({
+    code: 'DOCUMENT_NOT_FOUND',
+    message: `${document} with the specified id was not found`
+  })
 }
 
 const validationErrors = {

@@ -22,7 +22,7 @@ paths:
                   category: 63525e23bf163f5ea609ff27
                   totalOffers: 2167
                   createdAt: 2023-20-01T13:25:36.292Z
-                  updatedAt: 2023-20-01T13:25:36.292Z                  
+                  updatedAt: 2023-20-01T13:25:36.292Z
                 - _id: 6255bc080a71adf9223df135
                   name: Algebra
                   category: 63525e23bf163f5ea609ff29
@@ -160,7 +160,7 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: SUBJECT_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Subject with the specified id was not found.
     patch:
       security:
@@ -229,7 +229,7 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: SUBJECT_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Subject with the specified id was not found.
     delete:
       security:
@@ -287,5 +287,5 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 404
-                code: SUBJECT_NOT_FOUND
+                code: DOCUMENT_NOT_FOUND
                 message: Subject with the specified id was not found.

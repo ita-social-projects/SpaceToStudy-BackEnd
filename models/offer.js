@@ -3,6 +3,7 @@ const {
   enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
+const Category = require('./category')
 
 const offerSchema = new Schema(
   {
@@ -67,5 +68,13 @@ const offerSchema = new Schema(
     id: false
   }
 )
+
+offerSchema.post(/^create/, async function () {
+  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: 1 } })
+})
+
+offerSchema.post(/^findByIdAndRemove/, async function () {
+  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: -1 } })
+})
 
 module.exports = model(OFFER, offerSchema)

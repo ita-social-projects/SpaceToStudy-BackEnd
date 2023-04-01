@@ -28,7 +28,7 @@ router.get('/my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.g
 router.patch('/update-my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.updateUser))
 
 router.use(restrictTo(ADMIN))
-router.patch('/:id/change-status', asyncWrapper(userController.updateStatus))
+router.patch('/:id/change-status', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.updateStatus))
 router.delete('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.deleteUser))
 
 module.exports = router

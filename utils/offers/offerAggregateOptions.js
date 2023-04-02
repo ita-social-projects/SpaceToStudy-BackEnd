@@ -1,7 +1,7 @@
 const getRegex = require('../getRegex')
 
 const offerAggregateOptions = (query, params) => {
-  const { price = {}, proficiencyLevel = [], rating, languages, name, sort = {}, limit = 5 } = query
+  const { price = {}, proficiencyLevel, rating, languages, name, sort = {}, limit = 5 } = query
   const { categoryId, subjectId } = params
 
   const { minPrice, maxPrice } = price

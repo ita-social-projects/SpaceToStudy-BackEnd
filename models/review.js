@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose')
 const userSchema = require('~/models/user')
 const offerSchema = require('~/models/offer')
-const asyncWrapper = require('~/middlewares/asyncWrapper')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
@@ -136,6 +135,8 @@ reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUs
       { _id: targetUserId, role: targetUserRole },
       { totalReviews: { student: 0, tutor: 0 }, averageRating: { student: 0, tutor: 0 } }
     )
+
+    await offerSchema.updateMany({ userId: targetUserId }, { $set: { authorAvgRating: 0 } })
   }
 }
 
@@ -149,11 +150,12 @@ reviewSchema.pre(/^findOneAnd/, async function (next) {
   next()
 })
 
-reviewSchema.post(
-  /^findOneAnd/,
-  asyncWrapper(async function () {
-    await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
-  })
-)
+reviewSchema.post(/^findOneAnd/, function (next) {
+  try {
+    this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
+  } catch (err) {
+    next(err)
+  }
+})
 
 module.exports = model('Review', reviewSchema)

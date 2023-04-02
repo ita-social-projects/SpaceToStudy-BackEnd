@@ -1,4 +1,8 @@
 const Offer = require('~/models/offer')
+const Category = require('~/models/category')
+const Subject = require('~/models/subject')
+const { createError } = require('~/utils/errorsHelper')
+const { OFFER_NOT_FOUND, CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
 
 const offerService = {
   getOffers: async (match) => {
@@ -13,31 +17,48 @@ const offerService = {
     return offer
   },
 
-  createOffer: async (params) => {
-    const { authorRole, userId, price, proficiencyLevel, description, languages, subjectId, categoryId, isActive } =
-      params
+  createOffer: async (authorRole, authorId, offer) => {
+    const { price, proficiencyLevel, description, languages, subjectId, categoryId } = offer
+
+    const category = await Category.findById(categoryId).lean().exec()
+
+    if (!category) {
+      throw createError(404, CATEGORY_NOT_FOUND)
+    }
+
+    const subject = await Subject.findById(subjectId).lean().exec()
+
+    if (!subject) {
+      throw createError(404, SUBJECT_NOT_FOUND)
+    }
 
     const newOffer = await Offer.create({
       authorRole,
-      userId,
+      authorId,
       price,
       proficiencyLevel,
       description,
       languages,
       subjectId,
-      categoryId,
-      isActive
+      categoryId
     })
 
     return newOffer
   },
 
-  updateOffer: async (id, updateData) => {
-    await Offer.findByIdAndUpdate(id, updateData).lean().exec()
+  updateOffer: async (id, filteredFields) => {
+    const offer = await Offer.findByIdAndUpdate(id, filteredFields, { new: true, runValidators: true }).lean().exec()
+
+    if (!offer) {
+      throw createError(404, OFFER_NOT_FOUND)
+    }
   },
 
   deleteOffer: async (id) => {
-    await Offer.findByIdAndRemove(id).exec()
+    const offer = await Offer.findByIdAndRemove(id).exec()
+    if (!offer) {
+      throw createError(404, OFFER_NOT_FOUND)
+    }
   }
 }
 

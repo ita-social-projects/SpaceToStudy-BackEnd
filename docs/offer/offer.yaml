@@ -20,19 +20,19 @@ paths:
                 - _id: 63ebc6fbd2f34037d0aba791
                   price: 111
                   proficiencyLevel: Beginner
-                  description: this is a new blbsksfmlgksjfglk jlskgjslfgkjsflgk l gks lgsl sjglkgj
+                  description: this is a new description for test purposes
                   languages: English
                   authorRole: tutor
-                  userId: 63e63bb04d1bf3bea00e3d88
+                  authorId: 63e63bb04d1bf3bea00e3d88
                   subjectId: 63da8767c9ad4c9a0b0eacd3
                   categoryId: 63525e23bf163f5ea609ff2b
                 - _id: 63ebc6fbd2f34037d0aba791
                   price: 300
                   proficiencyLevel: Advanced
-                  description: this is a new 123123123123123 text
+                  description: Lorem ipsum dolor sit amet consectetur
                   languages: English, Ukrainian
                   authorRole: tutor
-                  userId: 63e63bb04d1bf3bea00e3d88
+                  authorId: 63e63bb04d1bf3bea00e3d88
                   subjectId: 63da8767c9ad4c9a0b0eacd3
                   categoryId: 63525e23bf163f5ea609ff2b
         401:
@@ -64,11 +64,10 @@ paths:
             example:
               price: 300,
               proficiencyLevel: Advanced
-              description: this is a new 123123123123123 text
+              description: Lorem ipsum dolor sit amet consectetur
               languages: [English, Ukrainian]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
-              isActive: false
       responses:
         201:
           description: Created
@@ -79,13 +78,13 @@ paths:
               example:
                 price: 300
                 proficiencyLevel: Advanced
-                description: this is a new 123123123123123 text
+                description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                userId": 63e63bb04d1bf3bea00e3d88
+                authorId": 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
-                isActive: false
+                status: pending
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -136,10 +135,10 @@ paths:
                 _id: 63ec1cd51e9d781cdb6f4b14
                 price: 300,
                 proficiencyLevel: Advanced
-                description: this is a new 123123123123123 text
+                description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                userId: 63e63bb04d1bf3bea00e3d88
+                authorId: 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
                 createdAt: 2023-02-14T23:44:21.334Z
@@ -165,7 +164,7 @@ paths:
                 code: UNAUTHORIZED
                 message: The requested URL requires user authorization.
         404:
-          description: Not Found
+          description: Not Found Offer
           content:
             application/json:
               schema:
@@ -174,6 +173,26 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Offer with the specified id was not found.
+        405:
+          description: Not Found Category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 405
+                code: CATEGORY_NOT_FOUND
+                message: Category with provided id was not found.
+        406:
+          description: Not Found Subject
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 406
+                code: SUBJECT_NOT_FOUND
+                message: Subject with the specified id was not found.
     patch:
       security:
         - bearerAuth: []
@@ -200,7 +219,7 @@ paths:
               price: 300,
               proficiencyLevel: Advanced
               description: this is a test text 123
-              languages: [Ukrainian, Polish]
+              languages: [ Ukrainian, Polish ]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
       responses:

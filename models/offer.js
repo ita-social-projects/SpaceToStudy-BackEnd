@@ -4,6 +4,7 @@ const {
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 const Category = require('./category')
+const Subject = require('./subject')
 
 const offerSchema = new Schema(
   {
@@ -69,12 +70,19 @@ const offerSchema = new Schema(
   }
 )
 
-offerSchema.post(/^create/, async function () {
-  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: 1 } }).exec()
+offerSchema.statics.calcTotalOffers = async function (categoryId, subjectId) {
+  const categoryTotalOffersQty = await this.countDocuments({ categoryId })
+  await Category.findByIdAndUpdate(categoryId, { totalOffers: categoryTotalOffersQty }).exec()
+  const subjectTotalOffersQty = await this.countDocuments({ subjectId })
+  await Subject.findByIdAndUpdate(subjectId, { totalOffers: subjectTotalOffersQty }).exec()
+}
+
+offerSchema.post('save', async function (doc) {
+  doc.constructor.calcTotalOffers(doc.categoryId, doc.subjectId)
 })
 
-offerSchema.post(/^findByIdAndRemove/, async function () {
-  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: -1 } }).exec()
+offerSchema.post('findOneAndRemove', async function (doc) {
+  doc.constructor.calcTotalOffers(doc.categoryId, doc.subjectId)
 })
 
 module.exports = model(OFFER, offerSchema)

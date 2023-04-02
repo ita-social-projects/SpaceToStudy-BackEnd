@@ -2,7 +2,7 @@ const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
-const { CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
+const { OFFER_NOT_FOUND, CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
 
 const offerService = {
   getOffers: async (match) => {
@@ -46,12 +46,19 @@ const offerService = {
     return newOffer
   },
 
-  updateOffer: async (id, updateData) => {
-    await Offer.findByIdAndUpdate(id, updateData).lean().exec()
+  updateOffer: async (id, filteredFields) => {
+    const offer = await Offer.findByIdAndUpdate(id, filteredFields, { new: true, runValidators: true }).lean().exec()
+
+    if (!offer) {
+      throw createError(404, OFFER_NOT_FOUND)
+    }
   },
 
   deleteOffer: async (id) => {
-    await Offer.findByIdAndRemove(id).exec()
+    const offer = await Offer.findByIdAndRemove(id).exec()
+    if (!offer) {
+      throw createError(404, OFFER_NOT_FOUND)
+    }
   }
 }
 

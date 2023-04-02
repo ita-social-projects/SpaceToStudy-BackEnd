@@ -31,9 +31,11 @@ const createOffer = async (req, res) => {
 
 const updateOffer = async (req, res) => {
   const { id } = req.params
-  const updateData = req.body
+  const { price, proficiencyLevel, description, languages } = req.body
 
-  await offerService.updateOffer(id, updateData)
+  const filteredFields = getMatchOptions({ price, proficiencyLevel, description, languages })
+
+  await offerService.updateOffer(id, filteredFields)
 
   res.status(204).end()
 }

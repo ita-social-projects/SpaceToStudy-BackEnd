@@ -164,7 +164,7 @@ paths:
                 code: UNAUTHORIZED
                 message: The requested URL requires user authorization.
         404:
-          description: Not Found
+          description: Not Found Offer
           content:
             application/json:
               schema:
@@ -173,6 +173,26 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Offer with the specified id was not found.
+        405:
+          description: Not Found Category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 405
+                code: CATEGORY_NOT_FOUND
+                message: Category with provided id was not found.
+        406:
+          description: Not Found Subject
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 406
+                code: SUBJECT_NOT_FOUND
+                message: Subject with the specified id was not found.
     patch:
       security:
         - bearerAuth: []
@@ -199,7 +219,7 @@ paths:
               price: 300,
               proficiencyLevel: Advanced
               description: this is a test text 123
-              languages: [Ukrainian, Polish]
+              languages: [ Ukrainian, Polish ]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
       responses:

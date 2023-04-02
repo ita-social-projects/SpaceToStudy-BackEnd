@@ -15,7 +15,6 @@ const categorySchema = new Schema(
     totalOffers: {
       type: Number,
       ref: OFFER,
-      required: true,
       default: 0
     }
   },

@@ -47,7 +47,7 @@ describe('Category controller', () => {
 
     it('should get all categories that contain "lan" in their name', async () => {
       const params = new URLSearchParams()
-      params.set('match', 'lan')
+      params.set('name', 'lan')
       const response = await app
         .get(endpointUrl + '?' + params.toString())
         .set('Authorization', `Bearer ${accessToken}`)
@@ -114,7 +114,7 @@ describe('Category controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toBeInstanceOf(String)
+      expect(typeof response.body[0]).toBe('string')
     })
   })
 })

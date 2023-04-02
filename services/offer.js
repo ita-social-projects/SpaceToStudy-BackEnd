@@ -22,9 +22,7 @@ const offerService = {
   },
 
   getOfferById: async (id) => {
-    const offer = await Offer.findById(id).lean().exec()
-
-    return offer
+    return await Offer.findById(id).lean().exec()
   },
 
   createOffer: async (authorRole, authorId, offer) => {

@@ -32,7 +32,7 @@ const userService = {
       .exec()
 
     if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
+      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
 
     return user
@@ -60,7 +60,7 @@ const userService = {
 
     const hashedPassword = await hashPassword(password)
 
-    const newUser = await User.create({
+    return await User.create({
       role,
       firstName,
       lastName,
@@ -70,15 +70,13 @@ const userService = {
       appLanguage,
       isEmailConfirmed
     })
-
-    return newUser
   },
 
   privateUpdateUser: async (id, param) => {
     const user = await User.findByIdAndUpdate(id, param, { new: true }).exec()
 
     if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
+      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
   },
   

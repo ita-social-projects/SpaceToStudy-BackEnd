@@ -85,7 +85,7 @@ describe('Subject controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingSubjectId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Subject.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Subject.modelName]), response)
     })
   })
 
@@ -105,7 +105,7 @@ describe('Subject controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send({ name: 'Eng' })
 
-      expectError(404, DOCUMENT_NOT_FOUND(Subject.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Subject.modelName]), response)
     })
   })
 
@@ -123,7 +123,7 @@ describe('Subject controller', () => {
         .delete(endpointUrl + nonExistingSubjectId)
         .set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Subject.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Subject.modelName]), response)
     })
   })
 })

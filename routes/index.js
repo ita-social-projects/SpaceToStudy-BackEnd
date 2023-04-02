@@ -1,4 +1,4 @@
-const express = require('express')
+const router = require('express').Router()
 
 const auth = require('~/routes/auth')
 const user = require('~/routes/user')
@@ -10,8 +10,6 @@ const adminInvitation = require('~/routes/adminInvitation')
 const offer = require('~/routes/offer')
 const category = require('~/routes/category')
 const cooperation = require('~/routes/cooperation')
-
-const router = express.Router()
 
 router.use('/auth', auth)
 router.use('/users', user)

@@ -1,8 +1,8 @@
-const express = require('express')
-const asyncWrapper = require('~/middlewares/asyncWrapper')
-const locationController = require('~/controllers/location')
+const router = require('express').Router()
 
-const router = express.Router()
+const asyncWrapper = require('~/middlewares/asyncWrapper')
+
+const locationController = require('~/controllers/location')
 
 router.get('/countries', asyncWrapper(locationController.getCountries))
 router.get('/cities/:country', asyncWrapper(locationController.getCities))

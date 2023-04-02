@@ -105,7 +105,9 @@ const errors = {
   },
   DOCUMENT_NOT_FOUND: (document) => ({
     code: 'DOCUMENT_NOT_FOUND',
-    message: `${document} with the specified id was not found`
+    message: `${document} with the specified ${document.length > 1 ? 'IDs' : 'ID'} ${
+      document.length > 1 ? 'were' : 'was'
+    } not found.`
   }),
   FIELD_CANNOT_BE_EMPTY: (field) => `The ${field} field cannot be empty.`,
   DOCUMENT_ALREADY_EXISTS: (uniqueFields) => ({

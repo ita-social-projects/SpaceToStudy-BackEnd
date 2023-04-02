@@ -1,63 +1,63 @@
 const categories = {
   LANGUAGES: {
     name: 'languages',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   MATHEMATICS: {
     name: 'mathematics',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   COMPUTER_SCIENCE: {
     name: 'computer science',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   MUSIC: {
     name: 'music',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   DESIGN: {
     name: 'design',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   HISTORY: {
     name: 'history',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   BIOLOGY: {
     name: 'biology',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   PAINTING: {
     name: 'painting',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   FINANCES: {
     name: 'finances',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   MARKETING: {
     name: 'marketing',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   AUDIT: {
     name: 'audit',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   CHEMISTRY: {
     name: 'chemistry',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   ASTRONOMY: {
     name: 'astronomy',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   PHYSICS: {
     name: 'physics',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   },
   PSYCHOLOGY: {
     name: 'psychology',
-    categoryIcon: 'mocked-path-to-icon'
+    categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C'}
   }
 }
 

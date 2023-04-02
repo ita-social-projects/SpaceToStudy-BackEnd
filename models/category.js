@@ -9,14 +9,12 @@ const categorySchema = new Schema(
       required: true
     },
     categoryIcon: {
-      color:{
-        type:String,
-        required:true
-      },
-      path:{
-        type: String,
-        required: true
-      }
+      type: String,
+      required: true
+    },
+    categoryColor:{
+      type: String,
+      required: true
     },
     totalOffers: {
       type: Number,

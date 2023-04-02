@@ -20,7 +20,8 @@ const enums = {
   AUTHOR_ROLE_ENUM: ['student', 'tutor'],
   STATUS_ENUM: ['active', 'blocked'],
   COOPERATION_STATUS: ['pending', 'active', 'declined', 'closed'],
-  PARAMS: ['id', 'categoryId', 'subjectId']
+  PARAMS: ['id', 'categoryId', 'subjectId'],
+  OFFER_STATUS: ['pending', 'active', 'closed']
 }
 
 module.exports = {

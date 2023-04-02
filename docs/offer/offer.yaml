@@ -23,7 +23,7 @@ paths:
                   description: this is a new blbsksfmlgksjfglk jlskgjslfgkjsflgk l gks lgsl sjglkgj
                   languages: English
                   authorRole: tutor
-                  userId: 63e63bb04d1bf3bea00e3d88
+                  authorId: 63e63bb04d1bf3bea00e3d88
                   subjectId: 63da8767c9ad4c9a0b0eacd3
                   categoryId: 63525e23bf163f5ea609ff2b
                 - _id: 63ebc6fbd2f34037d0aba791
@@ -32,7 +32,7 @@ paths:
                   description: this is a new 123123123123123 text
                   languages: English, Ukrainian
                   authorRole: tutor
-                  userId: 63e63bb04d1bf3bea00e3d88
+                  authorId: 63e63bb04d1bf3bea00e3d88
                   subjectId: 63da8767c9ad4c9a0b0eacd3
                   categoryId: 63525e23bf163f5ea609ff2b
         401:
@@ -68,7 +68,6 @@ paths:
               languages: [English, Ukrainian]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
-              isActive: false
       responses:
         201:
           description: Created
@@ -82,10 +81,10 @@ paths:
                 description: this is a new 123123123123123 text
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                userId": 63e63bb04d1bf3bea00e3d88
+                authorId": 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
-                isActive: false
+                isActive: pending
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -139,7 +138,7 @@ paths:
                 description: this is a new 123123123123123 text
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                userId: 63e63bb04d1bf3bea00e3d88
+                authorId: 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
                 createdAt: 2023-02-14T23:44:21.334Z

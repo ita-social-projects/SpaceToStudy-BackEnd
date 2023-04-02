@@ -32,14 +32,18 @@ definitions:
               - Arabic
         authorRole:
           type: string
-        userId:
+        authorId:
           type: string
         subjectId:
           type: string
         categoryId:
           type: string
         isActive:
-          type: boolean
+          type: string
+          enum:
+            - pending
+            - active
+            - closed
         createdAt:
           type: string
           format: date-time
@@ -75,14 +79,18 @@ definitions:
             - Arabic
       authorRole:
         type: string
-      userId:
+      authorId:
         type: string
       subjectId:
         type: string
       categoryId:
         type: string
       isActive:
-        type: boolean
+        type: string
+        enum:
+          - pending
+          - active
+          - closed
   offer:
     type: object
     properties:
@@ -114,14 +122,18 @@ definitions:
             - Arabic
       authorRole:
         type: string
-      userId:
+      authorId:
         type: string
       subjectId:
         type: string
       categoryId:
         type: string
       isActive:
-        type: boolean
+        type: string
+        enum:
+          - pending
+          - active
+          - closed
       createdAt:
         type: string
         format: date-time

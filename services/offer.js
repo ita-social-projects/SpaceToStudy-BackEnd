@@ -9,6 +9,7 @@ const offerService = {
   getOffers: async (match, sort, limit) => {
     const offers = await Offer.find(match)
       .populate({ path: 'userId', select: ['totalReviews', '+photo'] })
+      .populate({ path: 'subjectId', select: 'name' })
       .sort(sort)
       .limit(limit)
       .lean()

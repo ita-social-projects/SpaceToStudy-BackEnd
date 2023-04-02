@@ -310,14 +310,14 @@ paths:
                 status: 404
                 code: OFFER_NOT_FOUND
                 message: Offer with provided data was not found.
-  /offers/price-range{?authorRole}:
+  /offers/price-range:
     get:
       security:
         - bearerAuth: [ ]
       tags:
         - Offers
-      summary: Find and return min and mix price.
-      description: Find and return min and mix price for specific role.
+      summary: Find and return min and max price.
+      description: Find and return min and max prices of offers in accordance with specific role.
       produces:
         - application/json
       parameters:

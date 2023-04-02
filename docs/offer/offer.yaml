@@ -9,6 +9,54 @@ paths:
       description: Finds and returns an array with a list of all offers.
       produces:
         - application/json
+      parameters:
+        - in: query
+          name: price
+          schema:
+            type: object
+            properties:
+              minPrice:
+                type: integer
+              maxPrice:
+                type: integer
+          required: false
+        - in: query
+          name: proficiencyLevel
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: rating
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: languages
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: sort
+          schema:
+            type: object
+            properties:
+              orderBy:
+                type: string
+              order:
+                type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
       responses:
         200:
           description: OK
@@ -24,6 +72,8 @@ paths:
                   languages: English
                   authorRole: tutor
                   authorId: 63e63bb04d1bf3bea00e3d88
+                  authorName: Amanda Smith
+                  authorAvgRating: 4
                   subjectId: 63da8767c9ad4c9a0b0eacd3
                   categoryId: 63525e23bf163f5ea609ff2b
                 - _id: 63ebc6fbd2f34037d0aba791
@@ -33,6 +83,8 @@ paths:
                   languages: English, Ukrainian
                   authorRole: tutor
                   authorId: 63e63bb04d1bf3bea00e3d88
+                  authorName: John Smith
+                  authorAvgRating: 5
                   subjectId: 63da8767c9ad4c9a0b0eacd3
                   categoryId: 63525e23bf163f5ea609ff2b
         401:
@@ -81,7 +133,9 @@ paths:
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                authorId": 63e63bb04d1bf3bea00e3d88
+                authorId: 63e63bb04d1bf3bea00e3d88
+                authorName: John Smith
+                authorAvgRating: 5
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
                 status: pending
@@ -138,6 +192,8 @@ paths:
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
+                authorName: John Smith
+                authorAvgRating: 5
                 authorId: 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b

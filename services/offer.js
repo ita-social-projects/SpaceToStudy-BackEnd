@@ -1,7 +1,7 @@
 const Offer = require('~/models/offer')
+const userService = require('~/services/user')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
-const userService = require('~/services/user')
 const { createError } = require('~/utils/errorsHelper')
 const { OFFER_NOT_FOUND, CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
 

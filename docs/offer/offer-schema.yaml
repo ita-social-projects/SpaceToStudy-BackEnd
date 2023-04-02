@@ -32,6 +32,10 @@ definitions:
               - Arabic
         authorRole:
           type: string
+        authorName:
+          type: string
+        authorAvgRating:
+          type: integer
         authorId:
           type: string
         subjectId:
@@ -79,6 +83,10 @@ definitions:
             - Arabic
       authorRole:
         type: string
+      authorName:
+        type: string
+      authorAvgRating:
+        type: integer
       authorId:
         type: string
       subjectId:
@@ -122,6 +130,10 @@ definitions:
             - Arabic
       authorRole:
         type: string
+      authorName:
+        type: string
+      authorAvgRating:
+        type: integer
       authorId:
         type: string
       subjectId:

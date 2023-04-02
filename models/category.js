@@ -12,7 +12,7 @@ const categorySchema = new Schema(
       type: String,
       required: true
     },
-    categoryColor:{
+    color:{
       type: String,
       required: true
     },

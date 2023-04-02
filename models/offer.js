@@ -70,11 +70,11 @@ const offerSchema = new Schema(
 )
 
 offerSchema.post(/^create/, async function () {
-  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: 1 } })
+  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: 1 } }).exec()
 })
 
 offerSchema.post(/^findByIdAndRemove/, async function () {
-  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: -1 } })
+  await Category.findByIdAndUpdate(this.categoryId, { $inc: { totalOffers: -1 } }).exec()
 })
 
 module.exports = model(OFFER, offerSchema)

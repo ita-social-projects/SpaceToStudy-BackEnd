@@ -126,17 +126,14 @@ reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUs
       targetUserRole === STUDENT ? student : tutor
     )
 
-    await offerSchema.updateMany(
-      { userId: targetUserId },
-      { $set: targetUserRole === STUDENT ? studentRating : tutorRating }
-    )
+    await offerSchema.updateMany({ userId: targetUserId }, targetUserRole === STUDENT ? studentRating : tutorRating)
   } else {
     await userSchema.findOneAndUpdate(
       { _id: targetUserId, role: targetUserRole },
       { totalReviews: { student: 0, tutor: 0 }, averageRating: { student: 0, tutor: 0 } }
     )
 
-    await offerSchema.updateMany({ userId: targetUserId }, { $set: { authorAvgRating: 0 } })
+    await offerSchema.updateMany({ userId: targetUserId }, { authorAvgRating: 0 })
   }
 }
 

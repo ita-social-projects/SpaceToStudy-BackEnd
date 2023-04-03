@@ -20,34 +20,31 @@ const categoryService = {
   },
 
   priceMinMax: async (searchParams) => {
-    if (!searchParams) {
-      throw createError(404, OFFER_NOT_FOUND)
-    }
-
     const condition = (data) => {
       if (!data.catid && !data.subid) {
         return { authorRole: searchParams.authorRole }
       } else if (!data.subid) {
         return {
-          $and: [{ authorRole: searchParams.authorRole }, { categoryId: mongoose.Types.ObjectId(searchParams.catid) }]
+          authorRole: searchParams.authorRole,
+          categoryId: mongoose.Types.ObjectId(searchParams.catid)
         }
       } else if (!data.catid) {
-        return {
-          $and: [{ authorRole: searchParams.authorRole }, { subjectId: mongoose.Types.ObjectId(searchParams.subid) }]
-        }
+        return { authorRole: searchParams.authorRole, subjectId: mongoose.Types.ObjectId(searchParams.subid) }
+      } else if (!searchParams) {
+        throw createError(404, OFFER_NOT_FOUND)
       } else {
         return {
-          $and: [
-            { authorRole: searchParams.authorRole },
-            { categoryId: mongoose.Types.ObjectId(searchParams.catid) },
-            { subjectId: mongoose.Types.ObjectId(searchParams.subid) }
-          ]
+          authorRole: searchParams.authorRole,
+          categoryId: mongoose.Types.ObjectId(searchParams.catid),
+          subjectId: mongoose.Types.ObjectId(searchParams.subid)
         }
       }
     }
 
+    const usedCondition = condition(searchParams)
+
     const minMaxPrices = await Offer.aggregate([
-      { $match: condition(searchParams) },
+      { $match: usedCondition },
       {
         $group: {
           _id: null,

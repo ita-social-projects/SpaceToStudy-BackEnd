@@ -6,16 +6,16 @@ const categorySchema = new Schema(
     name: {
       type: String,
       unique: true,
-      required: [true, 'User role must be selected.']
+      required: [true, 'Please, enter a category name']
     },
     categoryIcon: {
       path: {
         type: String,
-        required: [true, 'User role must be selected.']
+        required: [true, 'Please, enter a category icon.']
       },
       color: {
         type: String,
-        required: [true, 'User role must be selected.']
+        required: [true, 'Please, enter a color of category icon.']
       }
     },
     totalOffers: {

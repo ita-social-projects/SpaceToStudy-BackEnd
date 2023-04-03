@@ -11,6 +11,11 @@ paths:
         - application/json
       parameters:
         - in: query
+          name: role
+          schema:
+            type: string
+          required: false
+        - in: query
           name: price
           schema:
             type: object

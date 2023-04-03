@@ -6,16 +6,19 @@ const { createError } = require('~/utils/errorsHelper')
 const { OFFER_NOT_FOUND, CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
 
 const offerService = {
-  getOffers: async (match, sort, limit) => {
+  getOffers: async (match, sort, skip, limit) => {
+    const count = await Offer.countDocuments(match)
+
     const offers = await Offer.find(match)
-      .populate({ path: 'userId', select: ['totalReviews', '+photo'] })
+      .populate({ path: 'authorId', select: ['totalReviews', '+photo'] })
       .populate({ path: 'subjectId', select: 'name' })
       .sort(sort)
+      .skip(skip)
       .limit(limit)
       .lean()
       .exec()
 
-    return offers
+    return { offers, count }
   },
 
   getOfferById: async (id) => {

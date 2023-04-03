@@ -3,8 +3,8 @@ const {
   enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
-const Category = require('./category')
-const Subject = require('./subject')
+const Category = require('~/models/category')
+const Subject = require('~/models/subject')
 
 const offerSchema = new Schema(
   {

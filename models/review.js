@@ -150,12 +150,8 @@ reviewSchema.pre(/^findOneAnd/, async function (next) {
   next()
 })
 
-reviewSchema.post(/^findOneAnd/, function (next) {
-  try {
-    this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
-  } catch (err) {
-    next(err)
-  }
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
 })
 
 module.exports = model('Review', reviewSchema)

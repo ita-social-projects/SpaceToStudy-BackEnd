@@ -48,19 +48,10 @@ const deleteOffer = async (req, res) => {
   res.status(204).end()
 }
 
-const priceMinMax = async (req, res) => {
-  const { authorRole } = req.query
-
-  const values = await offerService.priceMinMax(authorRole)
-
-  res.status(200).json(values)
-}
-
 module.exports = {
   getOffers,
   getOfferById,
   createOffer,
   updateOffer,
-  deleteOffer,
-  priceMinMax
+  deleteOffer
 }

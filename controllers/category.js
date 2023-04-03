@@ -23,6 +23,16 @@ const getCategoryById = async (req, res) => {
   res.status(200).json(category)
 }
 
+const priceMinMax = async (req, res) => {
+  const { catid } = req.params
+  const { subid } = req.params
+  const { authorRole } = req.query
+
+  const values = await categoryService.priceMinMax({ catid, subid, authorRole })
+
+  res.status(200).json(values)
+}
+
 //TODO: must be done after offers and cooperations logic
 //const addCategory = async (req, res) => {}
 //const updateCategory = async (req, res) => {}
@@ -30,6 +40,7 @@ const getCategoryById = async (req, res) => {
 
 module.exports = {
   getCategories,
+  getCategoryById,
+  priceMinMax,
   getCategoriesNames,
-  getCategoryById
 }

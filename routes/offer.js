@@ -16,7 +16,6 @@ router.use(authMiddleware)
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(offerController.getOffers))
-router.get('/price-range', asyncWrapper(offerController.priceMinMax))
 router.post('/', setCurrentUserIdAndRole, asyncWrapper(offerController.createOffer))
 router.get('/:id', isEntityValid([{ model: Offer, idName: 'id' }]), asyncWrapper(offerController.getOfferById))
 router.patch('/:id', isEntityValid([{ model: Offer, idName: 'id' }]), asyncWrapper(offerController.updateOffer))

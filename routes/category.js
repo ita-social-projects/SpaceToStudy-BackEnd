@@ -36,5 +36,13 @@ router.use('/:id?/subjects', isEntityValid([{ model: Category, idName: 'id' }]),
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))
 router.get('/:id', isEntityValid([{ model: Category, idName: 'id' }]), asyncWrapper(categoryController.getCategoryById))
+router.get('/:catid?/subject/:subid?/price-range', asyncWrapper(categoryController.priceMinMax))
+router.get('/:id', asyncWrapper(categoryController.getCategoryById))
+
+// :catid/subject/:subid
+//TODO: must be done after offers and cooperations logic
+//router.post('/', asyncWrapper(categoryController.addCategory))
+//router.patch('/:id', asyncWrapper(categoryController.updateCategory))
+//router.delete('/:id', asyncWrapper(categoryController.deleteCategory))
 
 module.exports = router

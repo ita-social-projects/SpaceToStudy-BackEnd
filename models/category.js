@@ -11,11 +11,11 @@ const categorySchema = new Schema(
     categoryIcon: {
       path: {
         type: String,
-        required: [true, 'Please, enter a category icon.']
+        required: [true, 'Please, enter a category icon']
       },
       color: {
         type: String,
-        required: [true, 'Please, enter a color of category icon.']
+        required: [true, 'Please, enter a color of category icon']
       }
     },
     totalOffers: {

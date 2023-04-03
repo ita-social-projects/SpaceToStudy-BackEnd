@@ -2,11 +2,15 @@ const Category = require('~/models/category')
 
 const categoryService = {
   getCategories: async (searchFilter, skip, limit) => {
-    return await Category.find(searchFilter).skip(skip).limit(limit).lean().exec()
+    const categories = await Category.find(searchFilter).skip(skip).limit(limit).lean().exec()
+    
+    return categories
   },
 
   getCategoriesNames: async () => {
-    return await Category.find().select('name').lean().exec()
+    const categoriesNames = await Category.find().select('name').lean().exec()
+  
+    return categoriesNames
   },
 
   getCategoryById: async (id) => {

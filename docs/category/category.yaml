@@ -115,3 +115,42 @@ paths:
                 status: 404
                 code: CATEGORY_NOT_FOUND
                 message: Category with the specified id was not found.
+  /categories/{categoryId}/subject/{subjectId}/price-range:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Offers
+      summary: Find and return min and max price.
+      description: Find and return min and max prices of offers in accordance with specific role.
+      produces:
+        - application/json
+      parameters:
+        - name: query
+          in: path
+          required: true
+          description: The query with the role "?authorRole=tutor" or "?authorRole=student"
+          type: string
+          enum:
+           - student
+           - tutor
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/offer'
+              example:
+                minPrice: 300
+                minPrice: 500
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: OFFER_NOT_FOUND
+                message: Offer with provided data was not found.

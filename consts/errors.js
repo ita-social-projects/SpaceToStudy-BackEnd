@@ -106,6 +106,10 @@ const errors = {
   DOCUMENT_NOT_FOUND: (document) => ({
     code: 'DOCUMENT_NOT_FOUND',
     message: `${document} with the specified id was not found`
+  }),
+  FIELD_CAN_NOT_BE_EMPTY: (field) => ({
+    code: 'FIELD_CANNOT_BE_EMPTY',
+    message: `Field ${field} can not be empty.`
   })
 }
 

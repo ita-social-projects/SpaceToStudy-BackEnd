@@ -310,4 +310,3 @@ paths:
                 status: 404
                 code: OFFER_NOT_FOUND
                 message: Offer with provided data was not found.
-  

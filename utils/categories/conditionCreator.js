@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const condition = (data) => {
-  console.log(data)
   const condition = {}
 
   if (data.catid) {

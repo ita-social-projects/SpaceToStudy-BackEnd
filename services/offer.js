@@ -59,25 +59,6 @@ const offerService = {
     if (!offer) {
       throw createError(404, OFFER_NOT_FOUND)
     }
-  },
-
-  priceMinMax: async (authorRole) => {
-    if (!authorRole) {
-      throw createError(404, OFFER_NOT_FOUND)
-    }
-
-    const minMaxPrices = await Offer.aggregate([
-      { $match: { authorRole: authorRole } },
-      {
-        $group: {
-          _id: null,
-          min: { $min: '$price' },
-          max: { $max: '$price' }
-        }
-      }
-    ])
-
-    return { minPrice: minMaxPrices[0].min, maxPrice: minMaxPrices[0].max }
   }
 }
 

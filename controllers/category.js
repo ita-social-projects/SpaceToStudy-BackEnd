@@ -24,10 +24,10 @@ const getCategoryById = async (req, res) => {
 }
 
 const priceMinMax = async (req, res) => {
-  const { catid, subid } = req.params
+  const { categoryId, subjectId } = req.params
   const { authorRole } = req.query
 
-  const values = await categoryService.priceMinMax({ catid, subid, authorRole })
+  const values = await categoryService.priceMinMax({ categoryId, subjectId, authorRole })
 
   res.status(200).json(values)
 }
@@ -41,5 +41,5 @@ module.exports = {
   getCategories,
   getCategoryById,
   priceMinMax,
-  getCategoriesNames,
+  getCategoriesNames
 }

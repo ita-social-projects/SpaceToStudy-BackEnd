@@ -10,7 +10,7 @@ const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
 let accessToken
 let categoryData = {
   name: 'languages',
-  categoryIcon: 'mocked-path-to-icon'
+  categoryIcon: { path: 'mocked-path-to-icon', color: '#66c42c' }
 }
 
 describe('Category controller', () => {

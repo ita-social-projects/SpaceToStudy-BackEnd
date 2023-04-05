@@ -35,13 +35,17 @@ paths:
               example:
                 - _id: 64045f98b131dd04d7896af6
                   name: languages
-                  categoryIcon: categories-icons/link-to-icon.png
+                  categoryIcon: 
+                    path: categories-icons/link-to-icon.png
+                    color: "#66c42c"
                   totalOffers: 9
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
                 - _id: 640461e3cfdda3f3d16dcac5
                   name: music
-                  categoryIcon: categories-icons/link-to-icon.png
+                  categoryIcon: 
+                    path: categories-icons/link-to-icon.png
+                    color: "#66c42c"
                   totalOffers: 1
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
@@ -130,7 +134,9 @@ paths:
               example:
                 _id: 64045f98b131dd04d7896af6
                 name: languages
-                categoryIcon: categories-icons/link-to-icon.png
+                categoryIcon: 
+                    path: categories-icons/link-to-icon.png
+                    color: "#66c42c"
                 totalOffers: 9
                 createdAt: 2023-20-01T13:25:36.292Z
                 updatedAt: 2023-20-01T13:25:36.292Z

@@ -9,7 +9,12 @@ definitions:
         name:
           type: string
         categoryIcon:
-          type: string
+          type: object
+          properties:
+            path:
+              type: string
+            color:
+              type: string
         subjectsIcon:
           type: string
         totalOffers:
@@ -28,7 +33,12 @@ definitions:
       name:
         type: string
       categoryIcon:
-        type: string
+        type: object
+        properties:
+          path:
+            type: string
+          color:
+            type: string
       subjectsIcon:
         type: string
   category:
@@ -39,7 +49,12 @@ definitions:
       name:
         type: string
       categoryIcon:
-        type: string
+        type: object
+        properties:
+          path:
+            type: string
+          color:
+            type: string
       subjectsIcon:
         type: string
       totalOffers:

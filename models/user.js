@@ -3,6 +3,7 @@ const {
   enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
 const { CATEGORY, OFFER, USER } = require('~/consts/models')
+const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 
 const userSchema = new Schema(
   {
@@ -16,25 +17,25 @@ const userSchema = new Schema(
     },
     firstName: {
       type: String,
-      required: [true, 'This field cannot be empty.'],
+      required: [true, FIELD_CANNOT_BE_EMPTY('first name')],
       minlength: [1, 'First Name cannot be shorter than 1 symbol.'],
       maxlength: [30, 'First Name cannot be longer than 30 symbols.']
     },
     lastName: {
       type: String,
-      required: [true, 'This field cannot be empty.'],
+      required: [true, FIELD_CANNOT_BE_EMPTY('last name')],
       minlength: [1, 'Last Name cannot be shorter than 1 symbol.'],
       maxlength: [30, 'Last Name cannot be longer than 30 symbols.']
     },
     email: {
       type: String,
-      required: [true, 'This field cannot be empty.'],
+      required: [true, FIELD_CANNOT_BE_EMPTY('email')],
       unique: true,
       lowercase: true
     },
     password: {
       type: String,
-      required: [true, 'This field cannot be empty.'],
+      required: [true, FIELD_CANNOT_BE_EMPTY('password')],
       minlength: [8, 'Password cannot be shorter than 8 symbols.'],
       select: false
     },

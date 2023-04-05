@@ -1,16 +1,17 @@
 const { Schema, model } = require('mongoose')
+const Category = require('~/models/category')
+const Subject = require('~/models/subject')
 const {
   enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM, OFFER_STATUS }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
-const Category = require('~/models/category')
-const Subject = require('~/models/subject')
+const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 
 const offerSchema = new Schema(
   {
     price: {
       type: Number,
-      required: [true, 'This field cannot be empty.'],
+      required: [true, FIELD_CANNOT_BE_EMPTY('price')],
       min: [1, 'Price must be positive number']
     },
     proficiencyLevel: {
@@ -19,13 +20,13 @@ const offerSchema = new Schema(
         values: SUBJECT_LEVEL_ENUM,
         message: `Proficiency level can be either of these: ${SUBJECT_LEVEL_ENUM.toString()}`
       },
-      required: [true, 'This field cannot be empty.']
+      required: [true, FIELD_CANNOT_BE_EMPTY('proficiency level')]
     },
     description: {
       type: String,
       minlength: [1, 'Description cannot be shorter than 1 symbol.'],
       maxlength: [200, 'Description cannot be longer than 300 symbols.'],
-      required: [true, 'This field cannot be empty.']
+      required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {
       type: [String],

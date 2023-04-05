@@ -10,9 +10,7 @@ const categoryService = {
   },
 
   getCategoryById: async (id) => {
-    const category = await Category.findById(id).lean().exec()
-
-    return category
+    return await Category.findById(id).lean().exec()
   }
 }
 

@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 const { OFFER, CATEGORY } = require('~/consts/models')
 
 const categorySchema = new Schema(
@@ -6,16 +7,16 @@ const categorySchema = new Schema(
     name: {
       type: String,
       unique: true,
-      required: [true, 'Please, enter a category name']
+      required: [true, FIELD_CANNOT_BE_EMPTY('name')]
     },
     categoryIcon: {
       path: {
         type: String,
-        required: [true, 'Please, enter a category icon']
+        required: [true, FIELD_CANNOT_BE_EMPTY('category icon')]
       },
       color: {
         type: String,
-        required: [true, 'Please, enter a color of category icon']
+        required: [true, FIELD_CANNOT_BE_EMPTY('icon color')]
       }
     },
     totalOffers: {
@@ -26,9 +27,7 @@ const categorySchema = new Schema(
   },
   {
     timestamps: true,
-    versionKey: false,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    versionKey: false
   }
 )
 

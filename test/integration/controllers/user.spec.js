@@ -105,12 +105,10 @@ describe('User controller', () => {
     })
   })
 
-  describe(`UPDATE ${endpointUrl}update-my-profile`, () => {
-    const requestUrl = endpointUrl + 'update-my-profile'
-    
+  describe(`UPDATE ${endpointUrl}:id`, () => {
     it('should UPDATE USER PROFILE by his ID', async () => {
 
-      const response = await app.patch(requestUrl).send(updateUserData)
+      const response = await app.patch(endpointUrl + testUser._id).send(updateUserData)
 
       expect(response.statusCode).toBe(204)
     })

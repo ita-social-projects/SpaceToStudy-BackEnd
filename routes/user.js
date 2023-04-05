@@ -23,12 +23,13 @@ router.use('/:id/reviews', isEntityValid([{ model: User, idName: 'id' }]), revie
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.getUserById))
+router.patch('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.updateUser))
 
 router.get('/my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.getOneUser))
-router.patch('/update-my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.updateUser))
+
 
 router.use(restrictTo(ADMIN))
-router.patch('/:id/change-status', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.updateStatus))
+router.patch('/:id/change-status', asyncWrapper(userController.updateStatus))
 router.delete('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.deleteUser))
 
 module.exports = router

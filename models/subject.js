@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 const { CATEGORY, SUBJECT } = require('~/consts/models')
 
 const subjectSchema = new Schema(
@@ -6,12 +7,12 @@ const subjectSchema = new Schema(
     name: {
       type: String,
       unique: true,
-      required: [true, 'Please, enter a subject name']
+      required: [true, FIELD_CANNOT_BE_EMPTY('name')]
     },
     category: {
       type: Schema.Types.ObjectId,
       ref: CATEGORY,
-      required: [true, 'Please, choose a subject category']
+      required: [true, FIELD_CANNOT_BE_EMPTY('category')]
     },
     totalOffers: {
       type: Number,

@@ -5,6 +5,7 @@ const {
   roles: { STUDENT }
 } = require('~/consts/auth')
 const { USER, OFFER } = require('~/consts/models')
+const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 
 const reviewSchema = new Schema(
   {
@@ -15,7 +16,7 @@ const reviewSchema = new Schema(
     },
     rating: {
       type: Number,
-      required: true,
+      required: [true, FIELD_CANNOT_BE_EMPTY('rating')],
       min: [1, 'Rating must be above 1'],
       max: [5, 'Rating must be below 5']
     },
@@ -26,7 +27,7 @@ const reviewSchema = new Schema(
     },
     targetUserId: {
       type: Schema.Types.ObjectId,
-      ref: USER,
+      ref: USER, 
       required: true
     },
     targetUserRole: {

@@ -2,7 +2,6 @@ const express = require('express')
 
 const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
-const setCurrentUserIdAndRole = require('~/middlewares/setCurrentUserIdAndRole')
 const { restrictTo, authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
 
@@ -23,7 +22,6 @@ router.use('/:id/reviews', isEntityValid([{ model: User, idName: 'id' }]), revie
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.getOneUser))
-router.get('/my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.getOneUser))
 
 router.use(restrictTo(ADMIN))
 

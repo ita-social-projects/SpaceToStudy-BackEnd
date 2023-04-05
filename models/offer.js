@@ -3,6 +3,8 @@ const {
   enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM, OFFER_STATUS }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
+const Category = require('~/models/category')
+const Subject = require('~/models/subject')
 
 const offerSchema = new Schema(
   {
@@ -71,5 +73,20 @@ const offerSchema = new Schema(
     id: false
   }
 )
+
+offerSchema.statics.calcTotalOffers = async function (categoryId, subjectId) {
+  const categoryTotalOffersQty = await this.countDocuments({ categoryId })
+  await Category.findByIdAndUpdate(categoryId, { totalOffers: categoryTotalOffersQty }).exec()
+  const subjectTotalOffersQty = await this.countDocuments({ subjectId })
+  await Subject.findByIdAndUpdate(subjectId, { totalOffers: subjectTotalOffersQty }).exec()
+}
+
+offerSchema.post('save', async function (doc) {
+  doc.constructor.calcTotalOffers(doc.categoryId, doc.subjectId)
+})
+
+offerSchema.post('findOneAndRemove', async function (doc) {
+  doc.constructor.calcTotalOffers(doc.categoryId, doc.subjectId)
+})
 
 module.exports = model(OFFER, offerSchema)

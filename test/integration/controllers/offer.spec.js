@@ -16,19 +16,54 @@ let testOffer = {
   categoryId: '63525e23bf163f5ea609ff2b'
 }
 
+let testOffer2 = {
+  price: 500,
+  proficiencyLevel: 'Beginner',
+  description: 'TEST 123ASD',
+  languages: ['Ukrainian'],
+  subjectId: '63da8767c9ad4c9a0b0eacd3',
+  categoryId: '63525e23bf163f5ea609ff2b'
+}
+
+let testOffer3 = {
+  price: 250,
+  authorRole: 'tutor',
+  proficiencyLevel: 'Beginner',
+  description: 'TEST 123ASD',
+  languages: ['Ukrainian'],
+  subjectId: '63da8767c9ad4c9a0b0eacd3',
+  categoryId: '63525e23bf163f5ea609ff2b'
+}
+
+let testOffer4 = {
+  price: 500,
+  authorRole: 'tutor',
+  proficiencyLevel: 'Beginner',
+  description: 'TEST 123ASD',
+  languages: ['Ukrainian'],
+  subjectId: '63da8767c9ad4c9a0b0eacd3',
+  categoryId: '63525e23bf163f5ea609ff2b'
+}
+
 const updateData = {
   price: 555
 }
 
 describe('Offer controller', () => {
-  let app, server, accessToken, testOfferResponse
+  let app, server, accessToken, testOfferResponse, testOfferResponse2, testOfferResponse3, testOfferResponse4
 
   beforeEach(async () => {
     ;({ app, server } = await serverInit())
     accessToken = await testUserAuthentication(app)
     testOfferResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer)
+    testOfferResponse2 = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer2)
+    testOfferResponse3 = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer3)
+    testOfferResponse4 = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer4)
 
     testOffer = testOfferResponse.body
+    testOffer2 = testOfferResponse2.body
+    testOffer3 = testOfferResponse3.body
+    testOffer4 = testOfferResponse4.body
   })
 
   afterEach(async () => {
@@ -115,6 +150,42 @@ describe('Offer controller', () => {
       const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, DOCUMENT_NOT_FOUND(Offer.modelName), response)
+    })
+  })
+
+  describe(`shoud return min and mix prices ${endpointUrl}`, () => {
+    it('should throw OFFER_NOT_FOUND', async () => {
+      const response = await app
+        .get(endpointUrl + 'price-range?authorRole=')
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, OFFER_NOT_FOUND, response)
+    })
+
+    it('should return min and max prices for student offers', async () => {
+      const response = await app
+        .get(endpointUrl + 'price-range?authorRole=student')
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body && typeof response.body === 'object').toBe(true)
+      expect(response.body).toHaveProperty('minPrice')
+      expect(response.body).toHaveProperty('maxPrice')
+      expect(typeof response.body.minPrice).toBe('number')
+      expect(typeof response.body.maxPrice).toBe('number')
+    })
+
+    it('should return min and max prices for tutor offers', async () => {
+      const response = await app
+        .get(endpointUrl + 'price-range?authorRole=tutor')
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body && typeof response.body === 'object').toBe(true)
+      expect(response.body).toHaveProperty('minPrice')
+      expect(response.body).toHaveProperty('maxPrice')
+      expect(typeof response.body.minPrice).toBe('number')
+      expect(typeof response.body.maxPrice).toBe('number')
     })
   })
 })

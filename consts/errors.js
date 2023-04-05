@@ -107,7 +107,7 @@ const errors = {
     code: 'DOCUMENT_NOT_FOUND',
     message: `${document} with the specified id was not found`
   }),
-  FIELD_CAN_NOT_BE_EMPTY: 'This field can not be empty.'
+  FIELD_CANNOT_BE_EMPTY: (field) => `The ${field} field cannot be empty.`
 }
 
 const validationErrors = {

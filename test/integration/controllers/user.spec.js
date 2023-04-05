@@ -114,7 +114,7 @@ describe('User controller', () => {
     })
     it('should throw UNAUTHORIZED', async () => {
       const response = await app
-        .patch(requestUrl)
+        .patch(endpointUrl + testUser._id)
         .send(updateUserData)
 
       expectError(401, UNAUTHORIZED, response)

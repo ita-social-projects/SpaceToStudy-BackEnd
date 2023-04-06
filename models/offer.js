@@ -44,14 +44,19 @@ const offerSchema = new Schema(
       },
       required: [true, 'Author role must be selected.']
     },
-    authorName: {
+    authorFirstName: {
       type: String,
-      minlength: [1, 'Author name cannot be shorter than 1 symbol.'],
-      maxlength: [60, 'Author name cannot be longer than 60 symbols.']
+      minlength: [1, 'Author first name cannot be shorter than 1 symbol.'],
+      maxlength: [30, 'Author first name cannot be longer than 30 symbols.']
+    },
+    authorLastName: {
+      type: String,
+      minlength: [1, 'Author last name cannot be shorter than 1 symbol.'],
+      maxlength: [30, 'Author last name cannot be longer than 30 symbols.']
     },
     authorAvgRating: {
       type: Number,
-      min: [1, 'Rating must be above 1'],
+      min: [0, 'Rating must be a positive number'],
       max: [5, 'Rating must be below 5']
     },
     authorId: {

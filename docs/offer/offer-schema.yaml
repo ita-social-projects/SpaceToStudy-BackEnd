@@ -32,7 +32,9 @@ definitions:
               - Arabic
         authorRole:
           type: string
-        authorName:
+        authorFirstName:
+          type: string
+        authorLastName:
           type: string
         authorAvgRating:
           type: integer
@@ -83,7 +85,9 @@ definitions:
             - Arabic
       authorRole:
         type: string
-      authorName:
+      authorFirstName:
+        type: string
+      authorLastName:
         type: string
       authorAvgRating:
         type: integer
@@ -130,7 +134,9 @@ definitions:
             - Arabic
       authorRole:
         type: string
-      authorName:
+      authorFirstName:
+        type: string
+      authorLastName:
         type: string
       authorAvgRating:
         type: integer

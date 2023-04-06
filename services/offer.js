@@ -18,7 +18,7 @@ const offerService = {
       .lean()
       .exec()
 
-    return { offers, count }
+    return { count, offers }
   },
 
   getOfferById: async (id) => {
@@ -45,13 +45,15 @@ const offerService = {
     const user = await userService.getUserById(authorId)
 
     const authorAvgRating = authorRole === 'student' ? user.averageRating.student : user.averageRating.tutor
-    const authorName = `${user.firstName} ${user.lastName}`
+    const authorFirstName = user.firstName
+    const authorLastName = user.lastName
 
     const newOffer = await Offer.create({
       authorRole,
       authorId,
       authorAvgRating,
-      authorName,
+      authorFirstName,
+      authorLastName,
       price,
       proficiencyLevel,
       description,

@@ -1,13 +1,24 @@
 const getRegex = require('../getRegex')
 
 const offerAggregateOptions = (query, params) => {
-  const { role, price = {}, proficiencyLevel, rating, languages, name, sort = {}, skip = 0, limit = 5 } = query
+  const { role, price = [], proficiencyLevel, rating, language, name = '', sort, skip = 0, limit = 5 } = query
   const { categoryId, subjectId } = params
 
-  const { minPrice, maxPrice } = price
-  const { orderBy, order } = sort
+  const [minPrice, maxPrice] = price
+  const nameArray = name.trim().split(' ')
+  const firstNameRegex = getRegex(nameArray[0])
+  const lastNameRegex = getRegex(nameArray[1])
 
-  const match = {}
+  const nameQuery = {
+    $or: [
+      { authorFirstName: firstNameRegex, authorLastName: lastNameRegex },
+      { authorFirstName: lastNameRegex, authorLastName: firstNameRegex }
+    ]
+  }
+
+  const match = { ...nameQuery }
+
+  const sortOption = {}
 
   if (role) {
     match.authorRole = role
@@ -22,15 +33,11 @@ const offerAggregateOptions = (query, params) => {
   }
 
   if (rating) {
-    match.authorAvgRating = { $gte: rating }
+    match.authorAvgRating = { $gte: parseInt(rating) }
   }
 
-  if (languages) {
-    match.languages = getRegex(languages)
-  }
-
-  if (name) {
-    match.authorName = getRegex(name)
+  if (language) {
+    match.languages = getRegex(language)
   }
 
   if (categoryId) {
@@ -41,9 +48,15 @@ const offerAggregateOptions = (query, params) => {
     match.subjectId = { $match: subjectId }
   }
 
-  const sortOrder = order === 'asc' ? 1 : -1
-
-  const sortOption = { [orderBy]: sortOrder }
+  if (sort) {
+    if (sort === 'priceAsc') {
+      sortOption['price'] = 1
+    } else if (sort === 'priceDesc') {
+      sortOption['price'] = -1
+    } else {
+      sortOption[sort] = 1
+    }
+  }
 
   return { match, sort: sortOption, skip, limit }
 }

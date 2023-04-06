@@ -18,12 +18,9 @@ paths:
         - in: query
           name: price
           schema:
-            type: object
-            properties:
-              minPrice:
-                type: integer
-              maxPrice:
-                type: integer
+            type: array
+            items:
+              type: integer
           required: false
         - in: query
           name: proficiencyLevel
@@ -38,7 +35,7 @@ paths:
             type: integer
           required: false
         - in: query
-          name: languages
+          name: language
           schema:
             type: string
           required: false
@@ -50,15 +47,15 @@ paths:
         - in: query
           name: sort
           schema:
-            type: object
-            properties:
-              orderBy:
-                type: string
-              order:
-                type: string
+            type: string
           required: false
         - in: query
           name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: skip
           schema:
             type: integer
           required: false
@@ -70,28 +67,32 @@ paths:
               schema:
                 $ref: '#/definitions/offers'
               example:
-                - _id: 63ebc6fbd2f34037d0aba791
-                  price: 111
-                  proficiencyLevel: Beginner
-                  description: this is a new description for test purposes
-                  languages: English
-                  authorRole: tutor
-                  authorId: 63e63bb04d1bf3bea00e3d88
-                  authorName: Amanda Smith
-                  authorAvgRating: 4
-                  subjectId: 63da8767c9ad4c9a0b0eacd3
-                  categoryId: 63525e23bf163f5ea609ff2b
-                - _id: 63ebc6fbd2f34037d0aba791
-                  price: 300
-                  proficiencyLevel: Advanced
-                  description: Lorem ipsum dolor sit amet consectetur
-                  languages: English, Ukrainian
-                  authorRole: tutor
-                  authorId: 63e63bb04d1bf3bea00e3d88
-                  authorName: John Smith
-                  authorAvgRating: 5
-                  subjectId: 63da8767c9ad4c9a0b0eacd3
-                  categoryId: 63525e23bf163f5ea609ff2b
+                count: 2
+                offers:
+                  - _id: 63ebc6fbd2f34037d0aba791
+                    price: 111
+                    proficiencyLevel: Beginner
+                    description: this is a new description for test purposes
+                    languages: English
+                    authorRole: tutor
+                    authorId: 63e63bb04d1bf3bea00e3d88
+                    authorFirstName: Amanda
+                    authorLastName: Smith
+                    authorAvgRating: 4
+                    subjectId: 63da8767c9ad4c9a0b0eacd3
+                    categoryId: 63525e23bf163f5ea609ff2b
+                  - _id: 63ebc6fbd2f34037d0aba791
+                    price: 300
+                    proficiencyLevel: Advanced
+                    description: Lorem ipsum dolor sit amet consectetur
+                    languages: English, Ukrainian
+                    authorRole: tutor
+                    authorId: 63e63bb04d1bf3bea00e3d88
+                    authorFirstName: John
+                    authorLastName: Smith
+                    authorAvgRating: 5
+                    subjectId: 63da8767c9ad4c9a0b0eacd3
+                    categoryId: 63525e23bf163f5ea609ff2b
         401:
           description: Unauthorized
           content:
@@ -139,7 +140,8 @@ paths:
                 languages: [English, Ukrainian]
                 authorRole: tutor
                 authorId: 63e63bb04d1bf3bea00e3d88
-                authorName: John Smith
+                authorFirstName: John
+                authorLastName: Smith
                 authorAvgRating: 5
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
@@ -197,7 +199,8 @@ paths:
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                authorName: John Smith
+                authorFirstName: John
+                authorLastName: Smith
                 authorAvgRating: 5
                 authorId: 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3

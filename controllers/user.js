@@ -1,4 +1,5 @@
 const userService = require('~/services/user')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 
 const getUsers = async (req, res) => {
@@ -22,7 +23,18 @@ const updateUser = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
 
+  if(id !== req.user.id) throw createForbiddenError()
+  
   await userService.updateUser(id, updateData)
+
+  res.status(204).end()
+}
+
+const updateStatus = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
+
+  await userService.updateStatus(id, updateData)
 
   res.status(204).end()
 }
@@ -39,5 +51,6 @@ module.exports = {
   getUsers,
   getUserById,
   deleteUser,
-  updateUser
+  updateUser,
+  updateStatus
 }

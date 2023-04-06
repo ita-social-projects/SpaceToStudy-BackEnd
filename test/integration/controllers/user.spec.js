@@ -17,7 +17,9 @@ let testUser = {
   firstName: 'john',
   lastName: 'doe',
   email: 'johndoe@gmail.com',
-  password: 'supersecretpass'
+  password: 'supersecretpass',
+  appLanguage:'en',
+  isEmailConfirmed: true
 }
 let adminUser = {
   role: 'admin',
@@ -27,6 +29,11 @@ let adminUser = {
   password: 'supersecretpass123',
   appLanguage: 'en',
   isEmailConfirmed: true
+}
+
+const updateUserData = {
+  firstName:'Albus',
+  lastName:'Dumbledore'
 }
 
 const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
@@ -97,6 +104,23 @@ describe('User controller', () => {
       expectError(404, DOCUMENT_NOT_FOUND(User.modelName), response)
     })
   })
+
+  describe(`UPDATE ${endpointUrl}:id`, () => {
+    it('should UPDATE USER PROFILE by his ID', async () => {
+
+      const response = await app.patch(endpointUrl + testUser._id).send(updateUserData)
+
+      expect(response.statusCode).toBe(204)
+    })
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app
+        .patch(endpointUrl + testUser._id)
+        .send(updateUserData)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
   describe(`UPDATE ${endpointUrl}:id`, () => {
     const mockedStatus = { tutor: STATUS_ENUM[0] }
 

@@ -3,6 +3,8 @@ const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
+const filterAllowedFields = require('~/utils/filterAllowedFields')
+const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -79,14 +81,27 @@ const userService = {
       throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
     }
   },
+  
+  updateUser: async (id, updateData) => {
+    const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
+    const user = await User.findByIdAndUpdate(id, filteredUpdateData).lean().exec()
 
-  updateUser: async (id, updateStatus) => {
-    const statusesForChange = {}
+    if(!user) {
+      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
+    }
+  },
+
+  updateStatus: async (id, updateStatus) => {
+    const statusesForChange = {} 
     for (const role in updateStatus) {
       statusesForChange['status.' + role] = updateStatus[role]
     }
 
-    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).exec()
+    const user = await User.findByIdAndUpdate(id, { $set:statusesForChange } ).lean().exec()
+
+    if (!user) {
+      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
+    }
   },
 
   deleteUser: async (id) => {

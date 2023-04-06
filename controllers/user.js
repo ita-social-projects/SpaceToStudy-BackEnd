@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const userService = require('~/services/user')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')

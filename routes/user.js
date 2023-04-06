@@ -27,7 +27,6 @@ router.patch('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrappe
 
 router.get('/my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.getOneUser))
 
-
 router.use(restrictTo(ADMIN))
 router.patch('/:id/change-status', asyncWrapper(userController.updateStatus))
 router.delete('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.deleteUser))

@@ -257,6 +257,12 @@ paths:
       description: Finds and updates current user info.
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user that needs to be updated
+          type: string
       requestBody:
         required: true
         description: Provide required data to update user.
@@ -266,7 +272,7 @@ paths:
               $ref: '#/definitions/user'
             example:
               firstName: Albus
-              lastName: Dumbledore  
+              lastName: Dumbledore
       responses:
         204:
           description: No Content

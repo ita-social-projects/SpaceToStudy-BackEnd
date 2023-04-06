@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const userSchema = require('~/models/user')
-const asyncWrapper = require('~/middlewares/asyncWrapper')
+const offerSchema = require('~/models/offer')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
@@ -117,15 +117,23 @@ reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUs
       'averageRating.tutor': stats[0].averageRating.tutor
     }
 
+    const studentRating = { authorAvgRating: stats[0].averageRating.student }
+
+    const tutorRating = { authorAvgRating: stats[0].averageRating.tutor }
+
     await userSchema.findOneAndUpdate(
       { _id: targetUserId, role: targetUserRole },
       targetUserRole === STUDENT ? student : tutor
     )
+
+    await offerSchema.updateMany({ userId: targetUserId }, targetUserRole === STUDENT ? studentRating : tutorRating)
   } else {
     await userSchema.findOneAndUpdate(
       { _id: targetUserId, role: targetUserRole },
       { totalReviews: { student: 0, tutor: 0 }, averageRating: { student: 0, tutor: 0 } }
     )
+
+    await offerSchema.updateMany({ userId: targetUserId }, { authorAvgRating: 0 })
   }
 }
 
@@ -139,11 +147,8 @@ reviewSchema.pre(/^findOneAnd/, async function (next) {
   next()
 })
 
-reviewSchema.post(
-  /^findOneAnd/,
-  asyncWrapper(async function () {
-    await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
-  })
-)
+reviewSchema.post(/^findOneAnd/, async function () {
+  await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
+})
 
 module.exports = model('Review', reviewSchema)

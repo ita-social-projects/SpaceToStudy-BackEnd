@@ -1,14 +1,24 @@
 const Offer = require('~/models/offer')
+const userService = require('~/services/user')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const { createError } = require('~/utils/errorsHelper')
 const { OFFER_NOT_FOUND, CATEGORY_NOT_FOUND, SUBJECT_NOT_FOUND } = require('~/consts/errors')
 
 const offerService = {
-  getOffers: async (match) => {
-    const offers = await Offer.find(match).lean().exec()
+  getOffers: async (match, sort, skip, limit) => {
+    const count = await Offer.countDocuments(match)
 
-    return offers
+    const offers = await Offer.find(match)
+      .populate({ path: 'authorId', select: ['totalReviews', '+photo'] })
+      .populate({ path: 'subjectId', select: 'name' })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec()
+
+    return { count, offers }
   },
 
   getOfferById: async (id) => {
@@ -32,9 +42,18 @@ const offerService = {
       throw createError(404, SUBJECT_NOT_FOUND)
     }
 
+    const user = await userService.getUserById(authorId)
+
+    const authorAvgRating = authorRole === 'student' ? user.averageRating.student : user.averageRating.tutor
+    const authorFirstName = user.firstName
+    const authorLastName = user.lastName
+
     const newOffer = await Offer.create({
       authorRole,
       authorId,
+      authorAvgRating,
+      authorFirstName,
+      authorLastName,
       price,
       proficiencyLevel,
       description,

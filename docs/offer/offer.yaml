@@ -9,6 +9,56 @@ paths:
       description: Finds and returns an array with a list of all offers.
       produces:
         - application/json
+      parameters:
+        - in: query
+          name: role
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: price
+          schema:
+            type: array
+            items:
+              type: integer
+          required: false
+        - in: query
+          name: proficiencyLevel
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: rating
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: language
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
       responses:
         200:
           description: OK
@@ -17,24 +67,32 @@ paths:
               schema:
                 $ref: '#/definitions/offers'
               example:
-                - _id: 63ebc6fbd2f34037d0aba791
-                  price: 111
-                  proficiencyLevel: Beginner
-                  description: this is a new description for test purposes
-                  languages: English
-                  authorRole: tutor
-                  authorId: 63e63bb04d1bf3bea00e3d88
-                  subjectId: 63da8767c9ad4c9a0b0eacd3
-                  categoryId: 63525e23bf163f5ea609ff2b
-                - _id: 63ebc6fbd2f34037d0aba791
-                  price: 300
-                  proficiencyLevel: Advanced
-                  description: Lorem ipsum dolor sit amet consectetur
-                  languages: English, Ukrainian
-                  authorRole: tutor
-                  authorId: 63e63bb04d1bf3bea00e3d88
-                  subjectId: 63da8767c9ad4c9a0b0eacd3
-                  categoryId: 63525e23bf163f5ea609ff2b
+                count: 2
+                offers:
+                  - _id: 63ebc6fbd2f34037d0aba791
+                    price: 111
+                    proficiencyLevel: Beginner
+                    description: this is a new description for test purposes
+                    languages: English
+                    authorRole: tutor
+                    authorId: 63e63bb04d1bf3bea00e3d88
+                    authorFirstName: Amanda
+                    authorLastName: Smith
+                    authorAvgRating: 4
+                    subjectId: 63da8767c9ad4c9a0b0eacd3
+                    categoryId: 63525e23bf163f5ea609ff2b
+                  - _id: 63ebc6fbd2f34037d0aba791
+                    price: 300
+                    proficiencyLevel: Advanced
+                    description: Lorem ipsum dolor sit amet consectetur
+                    languages: English, Ukrainian
+                    authorRole: tutor
+                    authorId: 63e63bb04d1bf3bea00e3d88
+                    authorFirstName: John
+                    authorLastName: Smith
+                    authorAvgRating: 5
+                    subjectId: 63da8767c9ad4c9a0b0eacd3
+                    categoryId: 63525e23bf163f5ea609ff2b
         401:
           description: Unauthorized
           content:
@@ -81,7 +139,10 @@ paths:
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                authorId": 63e63bb04d1bf3bea00e3d88
+                authorId: 63e63bb04d1bf3bea00e3d88
+                authorFirstName: John
+                authorLastName: Smith
+                authorAvgRating: 5
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b
                 status: pending
@@ -138,6 +199,9 @@ paths:
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
+                authorFirstName: John
+                authorLastName: Smith
+                authorAvgRating: 5
                 authorId: 63e63bb04d1bf3bea00e3d88
                 subjectId: 63da8767c9ad4c9a0b0eacd3
                 categoryId: 63525e23bf163f5ea609ff2b

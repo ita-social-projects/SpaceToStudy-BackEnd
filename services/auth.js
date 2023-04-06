@@ -1,7 +1,7 @@
 const { OAuth2Client } = require('google-auth-library')
 const tokenService = require('~/services/token')
 const emailService = require('~/services/email')
-const { getUserByEmail, createUser, privateUpdateUser, getOneUser } = require('~/services/user')
+const { getUserByEmail, createUser, privateUpdateUser, getUserById } = require('~/services/user')
 const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 const {
@@ -105,7 +105,7 @@ const authService = {
       throw createError(400, BAD_CONFIRM_TOKEN)
     }
 
-    const { _id, isEmailConfirmed } = await getOneUser(tokenData.id)
+    const { _id, isEmailConfirmed } = await getUserById(tokenData.id)
 
     if (isEmailConfirmed) {
       throw createError(400, EMAIL_ALREADY_CONFIRMED)
@@ -122,7 +122,7 @@ const authService = {
       throw createError(400, BAD_REFRESH_TOKEN)
     }
 
-    const { _id, lastLoginAs, isFirstLogin } = await getOneUser(tokenData.id)
+    const { _id, lastLoginAs, isFirstLogin } = await getUserById(tokenData.id)
 
     const tokens = tokenService.generateTokens({ id: _id, role: lastLoginAs, isFirstLogin })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)

@@ -22,8 +22,8 @@ const userService = {
     }
   },
 
-  getOneUser: async (id, role) => {
-    const user = await User.findOne({ _id: id, ...(role && role) })
+  getUserById: async (id, role) => {
+    const user = await User.findOne({ _id: id, ...(role && { role }) })
       .populate('categories')
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers')
       .lean()

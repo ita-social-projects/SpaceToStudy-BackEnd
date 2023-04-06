@@ -21,7 +21,7 @@ router.param('id', idValidation)
 router.use('/:id/reviews', isEntityValid([{ model: User, idName: 'id' }]), reviewRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
-router.get('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.getOneUser))
+router.get('/:id', isEntityValid([{ model: User, idName: 'id' }]), asyncWrapper(userController.getUserById))
 
 router.use(restrictTo(ADMIN))
 

@@ -480,3 +480,4 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: User with the specified id was not found.
+                

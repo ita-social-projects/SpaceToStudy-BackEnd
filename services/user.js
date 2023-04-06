@@ -1,5 +1,4 @@
 const User = require('~/models/user')
-const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
@@ -23,20 +22,12 @@ const userService = {
     }
   },
 
-  getOneUser: async (id, role) => {
-    const user = await User.findOne({ _id: id, role })
+  getUserById: async (id, role) => {
+    const user = await User.findOne({ _id: id, ...(role && { role }) })
       .populate('categories')
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers')
       .lean()
       .exec()
-
-    const reviewStats = await calculateReviewStats(user._id, role)
-
-    return { ...user, reviewStats }
-  },
-
-  getUserById: async (id) => {
-    const user = await User.findById(id).select('+lastLoginAs +isEmailConfirmed +isFirstLogin').lean().exec()
 
     if (!user) {
       throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))

@@ -15,6 +15,8 @@ router.use(authMiddleware)
 
 router.param('id', idValidation)
 
+router.get('/stats', asyncWrapper(reviewController.getReviewStatsByUserId))
+
 router.get('/', asyncWrapper(reviewController.getReviews))
 router.post('/', setCurrentUserIdAndRole, asyncWrapper(reviewController.addReview))
 router.get('/:id', isEntityValid([{ model: Review, idName: 'id' }]), asyncWrapper(reviewController.getReviewById))

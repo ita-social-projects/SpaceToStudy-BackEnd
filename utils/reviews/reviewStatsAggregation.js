@@ -1,10 +1,11 @@
+const mongoose = require('mongoose')
 const Review = require('~/models/review')
 
 const calculateReviewStats = async (targetUserId, targetUserRole) => {
   const [reviews] = await Review.aggregate([
     {
       $match: {
-        targetUserId,
+        targetUserId: mongoose.Types.ObjectId(targetUserId),
         targetUserRole
       }
     },

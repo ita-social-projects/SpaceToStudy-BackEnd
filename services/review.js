@@ -1,4 +1,5 @@
 const Review = require('~/models/review')
+const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 
 const reviewService = {
   getReviews: async (match, skip, limit) => {
@@ -23,6 +24,10 @@ const reviewService = {
       count,
       reviews
     }
+  },
+
+  getReviewStatsByUserId: async (id, role) => {
+    return await calculateReviewStats(id, role)
   },
 
   getReviewById: async (id) => {

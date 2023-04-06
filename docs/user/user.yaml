@@ -89,6 +89,11 @@ paths:
           required: true
           description: ID of the user that needs to be fetched
           type: string
+        - name: role
+          in: query
+          required: false
+          description: Role of the user that needs to be fetched
+          type: string
       responses:
         200:
           description: OK
@@ -121,7 +126,6 @@ paths:
                   bookmarkedOffers: []
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
-                  reviewStats: { stats: [{ rating: 4, count: 5 }, { rating: 5, count: 5 }] }
                 example2:
                   _id: 6255bc080a75adf9223df100
                   role: student
@@ -146,7 +150,6 @@ paths:
                   bookmarkedOffers: []
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
-                  reviewStats: {}
         400:
           description: Bad Request
           content:
@@ -305,54 +308,6 @@ paths:
                 status: 404
                 code: 'DOCUMENT_NOT_FOUND'
                 message: 'User with the specified id was not found.'
-  /users/my-profile:
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - Users
-      summary: Find information about current user`s profile
-      description: Finds and returns a user`s profile information.
-      produces:
-        - application/json
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/definitions/user'
-              example:
-                _id: 6255bc080a75adf9223df100
-                role: student
-                firstName: John
-                lastName: Doe
-                email: johndoe@gmail.com
-                categories:
-                  [{ _id: 6255bc080a75adf9223df444, name: Languages }, { _id: 6255bc080a75adf443d7644, name: Biology }]
-                totalReviews: { student: 10, tutor: 0 }
-                averageRating: { student: 4.5, tutor: 0 }
-                nativeLanguage: english
-                address: { country: The USA, city: California }
-                education: KNPU H.S. Skovoroda
-                photo: john-doe-photo.jpg
-                status: { student: active, tutor: active, admin: active }
-                isEmailConfirmed: true
-                isFirstLogin: true
-                lastLogin: 2022-09-02T11:59:53.243+00:00
-                bookmarkedOffers: []
-                createdAt: 2021-04-09T11:34:53.243+00:00
-                updatedAt: 2022-09-02T11:59:53.243+00:00
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 404
-                code: 'UNAUTHORIZED'
-                message: 'The requested URL requires user authorization.'
   /users/{id}/reviews:
     get:
       security:
@@ -473,3 +428,56 @@ paths:
                 status: 404
                 code: 'DOCUMENT_NOT_FOUND'
                 message: 'User with the specified id was not found.'
+  /users/{id}/reviews/stats:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Users
+      summary: Find review statistics for a user with the specified ID and role
+      description: Finds and returns a review statistics for a user with the specified ID and role.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/reviewResponse'
+              example:
+                stats: [
+                  { rating: 5, count: 1 },
+                  { rating: 3, count: 1 }
+                ]
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: User with the specified id was not found.
+                

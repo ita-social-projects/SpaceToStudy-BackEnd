@@ -4,7 +4,6 @@ const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { restrictTo, authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
-const setCurrentUserIdAndRole = require('~/middlewares/setCurrentUserIdAndRole')
 
 const userController = require('~/controllers/user')
 const reviewRouter = require('~/routes/review')
@@ -24,8 +23,6 @@ router.use('/:id/reviews', isEntityValid(param), reviewRouter)
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', isEntityValid(param), asyncWrapper(userController.getUserById))
 router.patch('/:id', isEntityValid(param), asyncWrapper(userController.updateUser))
-
-router.get('/my-profile', setCurrentUserIdAndRole, asyncWrapper(userController.getOneUser))
 
 router.use(restrictTo(ADMIN))
 router.patch('/:id/change-status', isEntityValid(param), asyncWrapper(userController.updateStatus))

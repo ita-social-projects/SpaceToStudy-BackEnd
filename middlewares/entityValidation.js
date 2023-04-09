@@ -3,9 +3,8 @@ const { createError } = require('~/utils/errorsHelper')
 
 const isEntityValid = (entities, idSource = 'params') => {
   return async (req, res, next) => {
-    const models = []
-
-    for (const { model, idName } of entities) {
+    const models = await entities.reduce(async (accPromise, { model, idName }) => {
+      const acc = await accPromise
       let id = null
 
       if (idSource === 'params') {
@@ -16,14 +15,19 @@ const isEntityValid = (entities, idSource = 'params') => {
         id = req.body[idName]
       }
 
-      if (!id) continue
+      if (!id) {
+        return acc
+      }
 
       const document = await model.findById(id)
 
       if (!document) {
-        models.push(model.modelName)
+        const modelName = model.modelName
+        return [...acc, modelName]
       }
-    }
+
+      return acc
+    }, [])
 
     if (models.length > 0) {
       next(createError(404, DOCUMENT_NOT_FOUND(models)))

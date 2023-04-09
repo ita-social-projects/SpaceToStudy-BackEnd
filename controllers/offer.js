@@ -20,9 +20,9 @@ const getOfferById = async (req, res) => {
 
 const createOffer = async (req, res) => {
   const { id: authorId, role: authorRole } = req.user
-  const offer = req.body
+  const data = req.body
 
-  const newOffer = await offerService.createOffer(authorId, authorRole, offer)
+  const newOffer = await offerService.createOffer(authorId, authorRole, data)
 
   res.status(201).json(newOffer)
 }

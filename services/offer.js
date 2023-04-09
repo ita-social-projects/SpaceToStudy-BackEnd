@@ -21,8 +21,8 @@ const offerService = {
     return await Offer.findById(id).lean().exec()
   },
 
-  createOffer: async (authorId, authorRole, offer) => {
-    const { price, proficiencyLevel, description, languages, subjectId, categoryId } = offer
+  createOffer: async (authorId, authorRole, data) => {
+    const { price, proficiencyLevel, description, languages, subjectId, categoryId } = data
 
     const user = await userService.getUserById(authorId)
 

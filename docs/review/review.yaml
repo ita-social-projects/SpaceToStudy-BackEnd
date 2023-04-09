@@ -309,7 +309,7 @@ paths:
       tags:
         - Reviews
       summary: Update review by ID
-      description: Finds and update a review with the specified ID.
+      description: Finds and updates a review with the specified ID.
       produces:
         - application/json
       parameters:
@@ -320,11 +320,11 @@ paths:
           type: string
       requestBody:
         required: true
-        description: Provide required data to reset a password.
+        description: Provide required data to update a review.
         content:
           application/json:
             schema:
-              $ref: '#/definitions/review'
+              $ref: '#/definitions/update-review'
             example:
               comment: Best tutor!
               rating: 5

@@ -107,7 +107,19 @@ const errors = {
     code: 'DOCUMENT_NOT_FOUND',
     message: `${document} with the specified id was not found`
   }),
-  FIELD_CANNOT_BE_EMPTY: (field) => `The ${field} field cannot be empty.`
+  FIELD_CANNOT_BE_EMPTY: (field) => `The ${field} field cannot be empty.`,
+  DOCUMENT_ALREADY_EXISTS: (uniqueFields) => ({
+    code: 'DOCUMENT_ALREADY_EXISTS',
+    message: `${uniqueFields} fields must be unique.`
+  }),
+  MONGO_SERVER_ERROR: (message) => ({
+    code: 'MONGO_SERVER_ERROR',
+    message: message
+  }),
+  VALIDATION_ERROR: (message) => ({
+    code: 'VALIDATION_ERROR',
+    message: message
+  })
 }
 
 const validationErrors = {

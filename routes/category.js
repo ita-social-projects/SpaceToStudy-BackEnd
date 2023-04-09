@@ -27,7 +27,7 @@ PARAMS.forEach((param) => {
 })
 
 router.get(
-  '/:categoryId?/subject/:subjectId?/price-range',
+  '/:categoryId?/subjects/:subjectId?/price-range',
   isEntityValid(nestedParam),
   asyncWrapper(categoryController.priceMinMax)
 )

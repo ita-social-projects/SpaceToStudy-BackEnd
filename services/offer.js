@@ -1,5 +1,8 @@
 const Offer = require('~/models/offer')
 const userService = require('~/services/user')
+const {
+  roles: { STUDENT }
+} = require('~/consts/auth')
 
 const offerService = {
   getOffers: async (match, sort, skip, limit) => {
@@ -26,7 +29,7 @@ const offerService = {
 
     const user = await userService.getUserById(authorId)
 
-    const authorAvgRating = authorRole === 'student' ? user.averageRating.student : user.averageRating.tutor
+    const authorAvgRating = authorRole === STUDENT ? user.averageRating.student : user.averageRating.tutor
     const authorFirstName = user.firstName
     const authorLastName = user.lastName
 

@@ -26,7 +26,11 @@ PARAMS.forEach((param) => {
   router.param(param, idValidation)
 })
 
-router.get('/:categoryId?/subject/:subjectId?/price-range', asyncWrapper(categoryController.priceMinMax))
+router.get(
+  '/:categoryId?/subject/:subjectId?/price-range',
+  isEntityValid(nestedParam),
+  asyncWrapper(categoryController.priceMinMax)
+)
 router.use('/:categoryId?/subjects/:subjectId?/offers', isEntityValid(nestedParam), offerRouter)
 router.use('/:id?/subjects', isEntityValid(param), subjectRouter)
 router.get('/', asyncWrapper(categoryController.getCategories))

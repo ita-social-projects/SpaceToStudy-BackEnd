@@ -158,22 +158,3 @@ definitions:
       updatedAt:
         type: string
         format: date-time
-      status:
-        type: object
-        properties:
-          tutor: 
-            type: string
-            enum:
-              - active
-              - blocked
-          student: 
-            type: string
-            enum:
-              - active
-              - blocked
-          admin: 
-            type: string
-            enum:
-              - active
-              - blocked
-

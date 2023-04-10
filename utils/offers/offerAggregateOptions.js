@@ -41,11 +41,11 @@ const offerAggregateOptions = (query, params) => {
   }
 
   if (categoryId) {
-    match.categoryId = { $match: categoryId }
+    match.categoryId = categoryId
   }
 
   if (subjectId) {
-    match.subjectId = { $match: subjectId }
+    match.subjectId = subjectId
   }
 
   if (sort) {

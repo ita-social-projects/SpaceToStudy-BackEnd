@@ -4,30 +4,27 @@ const { SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const subjectService = {
   getSubjects: async ({ skip, limit, searchFilter }) => {
-    const subjects = await Subject.find(searchFilter).skip(skip).limit(limit).sort({ totalOffers: -1 }).lean().exec()
-
-    return subjects
+    return await Subject.find(searchFilter).skip(skip).limit(limit).sort({ totalOffers: -1 }).lean().exec()
   },
 
   getSubjectById: async (id) => {
-    const subject = await Subject.findById(id).lean().exec()
-
-    return subject
+    return await Subject.findById(id).lean().exec()
   },
 
   getNamesByCategoryId: async (match) => {
     return await Subject.find(match).select('name').lean().exec()
   },
 
-  addSubject: async (name, category) => {
+  addSubject: async (data) => {
+    const { name, category } = data
+
     const duplicatedSubject = await Subject.findOne({ name }).lean().exec()
 
     if (duplicatedSubject) {
       throw createError(409, SUBJECT_ALREADY_EXISTS)
     }
 
-    const newSubject = await Subject.create({ name, category })
-    return newSubject
+    return await Subject.create({ name, category })
   },
 
   updateSubject: async (id, updateData) => {

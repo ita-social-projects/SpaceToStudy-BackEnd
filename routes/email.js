@@ -1,10 +1,9 @@
-const express = require('express')
+const router = require('express').Router()
 
 const asyncWrapper = require('~/middlewares/asyncWrapper')
-const emailController = require('~/controllers/email')
 const langMiddleware = require('~/middlewares/appLanguage')
 
-const router = express.Router()
+const emailController = require('~/controllers/email')
 
 router.post('/', langMiddleware, asyncWrapper(emailController.sendEmail))
 

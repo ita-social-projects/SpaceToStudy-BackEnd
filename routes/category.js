@@ -1,4 +1,4 @@
-const express = require('express')
+const router = require('express').Router()
 
 const { authMiddleware } = require('~/middlewares/auth')
 const idValidation = require('~/middlewares/idValidation')
@@ -8,14 +8,17 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const categoryController = require('~/controllers/category')
 const subjectRouter = require('~/routes/subject')
 const offerRouter = require('~/routes/offer')
+const Category = require('~/models/category')
+const Subject = require('~/models/subject')
 const {
   enums: { PARAMS }
 } = require('~/consts/validation')
 
-const Category = require('~/models/category')
-const Subject = require('~/models/subject')
-
-const router = express.Router()
+const nestedParam = [
+  { model: Category, idName: 'categoryId' },
+  { model: Subject, idName: 'subjectId' }
+]
+const param = [{ model: Category, idName: 'id' }]
 
 router.use(authMiddleware)
 
@@ -23,24 +26,15 @@ PARAMS.forEach((param) => {
   router.param(param, idValidation)
 })
 
-router.get('/:categoryId?/subject/:subjectId?/price-range', asyncWrapper(categoryController.priceMinMax))
-router.use(
-  '/:categoryId?/subjects/:subjectId?/offers',
-  isEntityValid([
-    { model: Category, idName: 'categoryId' },
-    { model: Subject, idName: 'subjectId' }
-  ]),
-  offerRouter
+router.get(
+  '/:categoryId?/subjects/:subjectId?/price-range',
+  isEntityValid(nestedParam),
+  asyncWrapper(categoryController.priceMinMax)
 )
-router.use('/:id?/subjects', isEntityValid([{ model: Category, idName: 'id' }]), subjectRouter)
+router.use('/:categoryId?/subjects/:subjectId?/offers', isEntityValid(nestedParam), offerRouter)
+router.use('/:id?/subjects', isEntityValid(param), subjectRouter)
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))
-router.get('/:id', isEntityValid([{ model: Category, idName: 'id' }]), asyncWrapper(categoryController.getCategoryById))
-router.get('/:id', asyncWrapper(categoryController.getCategoryById))
-
-//TODO: must be done after offers and cooperations logic
-//router.post('/', asyncWrapper(categoryController.addCategory))
-//router.patch('/:id', asyncWrapper(categoryController.updateCategory))
-//router.delete('/:id', asyncWrapper(categoryController.deleteCategory))
+router.get('/:id', isEntityValid(param), asyncWrapper(categoryController.getCategoryById))
 
 module.exports = router

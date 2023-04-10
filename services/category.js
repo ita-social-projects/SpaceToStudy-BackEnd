@@ -12,10 +12,7 @@ const categoryService = {
   },
 
   getCategoryById: async (id) => {
-
-    const category = await Category.findById(id).lean().exec()
-
-    return category
+    return await Category.findById(id).lean().exec()
   },
 
   priceMinMax: async (searchParams) => {
@@ -33,7 +30,6 @@ const categoryService = {
     ])
 
     return { minPrice: minMaxPrices[0].min, maxPrice: minMaxPrices[0].max }
-
   }
 }
 

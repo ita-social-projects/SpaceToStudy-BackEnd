@@ -174,7 +174,7 @@ describe('Review controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Review.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
     })
   })
 
@@ -200,7 +200,7 @@ describe('Review controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updateData)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Review.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
     })
   })
 
@@ -220,7 +220,7 @@ describe('Review controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.delete(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Review.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
     })
   })
 })

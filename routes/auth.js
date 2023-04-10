@@ -1,15 +1,14 @@
-const express = require('express')
+const router = require('express').Router()
 
 const asyncWrapper = require('~/middlewares/asyncWrapper')
-const authController = require('~/controllers/auth')
 const validationMiddleware = require('~/middlewares/validation')
+const langMiddleware = require('~/middlewares/appLanguage')
+
+const authController = require('~/controllers/auth')
 const signupValidationSchema = require('~/validation/schemas/signup')
 const { loginValidationSchema, googleAuthValidationSchema } = require('~/validation/schemas/login')
 const resetPasswordValidationSchema = require('~/validation/schemas/resetPassword')
 const forgotPasswordValidationSchema = require('~/validation/schemas/forgotPassword')
-const langMiddleware = require('~/middlewares/appLanguage')
-
-const router = express.Router()
 
 router.post(
   '/signup',

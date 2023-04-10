@@ -16,9 +16,7 @@ const adminInvitationService = {
   },
 
   getAdminInvitations: async () => {
-    const adminInvitations = await AdminInvitation.find().lean().exec()
-
-    return adminInvitations
+    return await AdminInvitation.find().lean().exec()
   }
 }
 

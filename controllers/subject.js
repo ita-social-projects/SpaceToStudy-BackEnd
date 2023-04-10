@@ -11,6 +11,7 @@ const getSubjects = async (req, res) => {
 
   res.status(200).json(subjects)
 }
+
 const getSubjectById = async (req, res) => {
   const { id } = req.params
 
@@ -28,13 +29,15 @@ const getNamesByCategoryId = async (req, res) => {
 
   res.status(200).json(names)
 }
-const addSubject = async (req, res) => {
-  const { name, category } = req.body
 
-  const newSubject = await subjectService.addSubject(name, category)
+const addSubject = async (req, res) => {
+  const data = req.body
+
+  const newSubject = await subjectService.addSubject(data)
 
   res.status(201).json(newSubject)
 }
+
 const updateSubject = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
@@ -43,6 +46,7 @@ const updateSubject = async (req, res) => {
 
   res.status(204).end()
 }
+
 const deleteSubject = async (req, res) => {
   const { id } = req.params
 

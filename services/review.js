@@ -31,7 +31,7 @@ const reviewService = {
   },
 
   getReviewById: async (id) => {
-    const review = await Review.findById(id)
+    return await Review.findById(id)
       .populate({ path: 'author', select: ['firstName', 'lastName', 'photo'] })
       .populate({
         path: 'offer',
@@ -43,12 +43,12 @@ const reviewService = {
       })
       .lean()
       .exec()
-
-    return review
   },
 
-  addReview: async (comment, rating, author, targetUserId, targetUserRole, offer) => {
-    const newReview = await Review.create({
+  addReview: async (author, data) => {
+    const { comment, rating, targetUserId, targetUserRole, offer } = data
+
+    return await Review.create({
       comment,
       rating,
       author,
@@ -56,8 +56,6 @@ const reviewService = {
       targetUserRole,
       offer
     })
-
-    return newReview
   },
 
   updateReview: async (id, updateData) => {

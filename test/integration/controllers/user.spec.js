@@ -101,7 +101,7 @@ describe('User controller', () => {
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingUserId)
-      expectError(404, DOCUMENT_NOT_FOUND(User.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
     })
   })
 
@@ -145,7 +145,7 @@ describe('User controller', () => {
         .send(mockedStatus)
         .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(User.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
     })
 
     it('should throw FORBIDDEN', async () => {
@@ -191,7 +191,7 @@ describe('User controller', () => {
         .delete(endpointUrl + nonExistingUserId)
         .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(User.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
     })
 
     it('should throw FORBIDDEN', async () => {

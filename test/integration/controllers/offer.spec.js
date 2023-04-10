@@ -115,7 +115,7 @@ describe('Offer controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Offer.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
   })
 
@@ -135,7 +135,7 @@ describe('Offer controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updateData)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Offer.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
   })
 
@@ -149,7 +149,7 @@ describe('Offer controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Offer.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
   })
 

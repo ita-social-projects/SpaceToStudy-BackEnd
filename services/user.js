@@ -25,17 +25,11 @@ const userService = {
   },
 
   getUserById: async (id, role) => {
-    const user = await User.findOne({ _id: id, ...(role && { role }) })
+    return await User.findOne({ _id: id, ...(role && { role }) })
       .populate('categories')
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers')
       .lean()
       .exec()
-
-    if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
-    }
-
-    return user
   },
 
   getUserByEmail: async (email) => {
@@ -60,7 +54,7 @@ const userService = {
 
     const hashedPassword = await hashPassword(password)
 
-    const newUser = await User.create({
+    return await User.create({
       role,
       firstName,
       lastName,
@@ -70,38 +64,30 @@ const userService = {
       appLanguage,
       isEmailConfirmed
     })
-
-    return newUser
   },
 
   privateUpdateUser: async (id, param) => {
     const user = await User.findByIdAndUpdate(id, param, { new: true }).exec()
 
     if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
+      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
   },
-  
+
   updateUser: async (id, updateData) => {
     const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
-    const user = await User.findByIdAndUpdate(id, filteredUpdateData).lean().exec()
 
-    if(!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
-    }
+    await User.findByIdAndUpdate(id, filteredUpdateData, { new: true }).lean().exec()
   },
 
   updateStatus: async (id, updateStatus) => {
-    const statusesForChange = {} 
+    const statusesForChange = {}
+
     for (const role in updateStatus) {
       statusesForChange['status.' + role] = updateStatus[role]
     }
 
-    const user = await User.findByIdAndUpdate(id, { $set:statusesForChange } ).lean().exec()
-
-    if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND(User.modelName))
-    }
+    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).lean().exec()
   },
 
   deleteUser: async (id) => {

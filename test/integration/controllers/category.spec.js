@@ -97,7 +97,7 @@ describe('Category controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app.get(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, DOCUMENT_NOT_FOUND(Category.modelName), response)
+      expectError(404, DOCUMENT_NOT_FOUND([Category.modelName]), response)
     })
 
     it('should get a category by id', async () => {

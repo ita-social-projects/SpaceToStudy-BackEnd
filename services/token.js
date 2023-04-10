@@ -33,24 +33,20 @@ const tokenService = {
   },
 
   generateResetToken: (payload) => {
-    const resetToken = jwt.sign(payload, JWT_RESET_SECRET, {
+    return jwt.sign(payload, JWT_RESET_SECRET, {
       expiresIn: JWT_RESET_EXPIRES_IN
     })
-    return resetToken
   },
 
   generateConfirmToken: (payload) => {
-    const confirmToken = jwt.sign(payload, JWT_CONFIRM_SECRET, {
+    return jwt.sign(payload, JWT_CONFIRM_SECRET, {
       expiresIn: JWT_CONFIRM_EXPIRES_IN
     })
-    return confirmToken
   },
 
   validateToken: (token, secret) => {
     try {
-      const data = jwt.verify(token, secret)
-
-      return data
+      return jwt.verify(token, secret)
     } catch (e) {
       return null
     }
@@ -81,20 +77,19 @@ const tokenService = {
 
     if (tokenData) {
       tokenData[tokenName] = tokenValue
+
       return tokenData.save()
     }
-    const token = await Token.create({ user: userId, [tokenName]: tokenValue })
 
-    return token
+    return await Token.create({ user: userId, [tokenName]: tokenValue })
   },
 
   findToken: async (tokenValue, tokenName) => {
     if (!Object.values(tokenNames).includes(tokenName)) {
       throw createError(404, INVALID_TOKEN_NAME)
     }
-    const tokenData = await Token.findOne({ [tokenName]: tokenValue })
 
-    return tokenData
+    return await Token.findOne({ [tokenName]: tokenValue })
   },
 
   findTokensWithUsersByParams: async (params) => {
@@ -102,9 +97,7 @@ const tokenService = {
   },
 
   removeRefreshToken: async (refreshToken) => {
-    const deleteInfo = await Token.deleteOne({ refreshToken })
-
-    return deleteInfo
+    await Token.deleteOne({ refreshToken })
   },
 
   removeResetToken: async (userId) => {

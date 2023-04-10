@@ -30,10 +30,10 @@ const getReviewById = async (req, res) => {
 }
 
 const addReview = async (req, res) => {
-  const { id: author } = req.params
-  const { comment, rating, targetUserId, targetUserRole, offer } = req.body
+  const { id: author } = req.user
+  const data = req.body
 
-  const newReview = await reviewService.addReview(comment, rating, author, targetUserId, targetUserRole, offer)
+  const newReview = await reviewService.addReview(author, data)
 
   res.status(201).json(newReview)
 }

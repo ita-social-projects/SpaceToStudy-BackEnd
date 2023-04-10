@@ -6,6 +6,7 @@ const locationService = {
   getCountries: async () => {
     const res = await request({ url: `${API_URL}/countries/states` })
     const countries = res.data.data.map((country) => country.name)
+
     return [...new Set(countries)]
   },
 

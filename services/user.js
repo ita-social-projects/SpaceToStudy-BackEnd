@@ -77,7 +77,11 @@ const userService = {
   updateUser: async (id, updateData) => {
     const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
 
-    await User.findByIdAndUpdate(id, filteredUpdateData, { new: true }).lean().exec()
+    const user = await User.findByIdAndUpdate(id, filteredUpdateData, { new: true }).lean().exec()
+
+    if (!user) {
+      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
+    }
   },
 
   updateStatus: async (id, updateStatus) => {
@@ -87,7 +91,11 @@ const userService = {
       statusesForChange['status.' + role] = updateStatus[role]
     }
 
-    await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).lean().exec()
+    const user = await User.findByIdAndUpdate(id, { $set: statusesForChange }, { new: true }).lean().exec()
+
+    if (!user) {
+      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
+    }
   },
 
   deleteUser: async (id) => {

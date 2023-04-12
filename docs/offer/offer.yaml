@@ -71,9 +71,9 @@ paths:
                 offers:
                   - _id: 63ebc6fbd2f34037d0aba791
                     price: 111
-                    proficiencyLevel: Beginner
+                    proficiencyLevel: [Beginner]
                     description: this is a new description for test purposes
-                    languages: English
+                    languages: [English]
                     authorRole: tutor
                     authorId: 63e63bb04d1bf3bea00e3d88
                     authorFirstName: Amanda
@@ -83,9 +83,9 @@ paths:
                     categoryId: 63525e23bf163f5ea609ff2b
                   - _id: 63ebc6fbd2f34037d0aba791
                     price: 300
-                    proficiencyLevel: Advanced
+                    proficiencyLevel: [Intermediate, Advanced]
                     description: Lorem ipsum dolor sit amet consectetur
-                    languages: English, Ukrainian
+                    languages: [English, Ukrainian]
                     authorRole: tutor
                     authorId: 63e63bb04d1bf3bea00e3d88
                     authorFirstName: John
@@ -121,7 +121,7 @@ paths:
               $ref: '#/definitions/offerBody'
             example:
               price: 300,
-              proficiencyLevel: Advanced
+              proficiencyLevel: [Advanced]
               description: Lorem ipsum dolor sit amet consectetur
               languages: [English, Ukrainian]
               subjectId: 63da8767c9ad4c9a0b0eacd3
@@ -135,7 +135,7 @@ paths:
                 $ref: '#/definitions/offer'
               example:
                 price: 300
-                proficiencyLevel: Advanced
+                proficiencyLevel: [Advanced]
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
@@ -195,7 +195,7 @@ paths:
               example:
                 _id: 63ec1cd51e9d781cdb6f4b14
                 price: 300,
-                proficiencyLevel: Advanced
+                proficiencyLevel: [Advanced]
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
@@ -281,9 +281,9 @@ paths:
               $ref: '#/definitions/offer'
             example:
               price: 300,
-              proficiencyLevel: Advanced
+              proficiencyLevel: [Advanced]
               description: this is a test text 123
-              languages: [ Ukrainian, Polish ]
+              languages: [Ukrainian, Polish]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
       responses:

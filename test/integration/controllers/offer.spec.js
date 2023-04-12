@@ -9,40 +9,11 @@ const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
 
 let testOffer = {
   price: 330,
-  proficiencyLevel: 'Beginner',
+  proficiencyLevel: ['Beginner'],
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
-  subjectId: '63da8767c9ad4c9a0b0eacd3',
-  categoryId: '63525e23bf163f5ea609ff2b'
-}
-
-let testOffer2 = {
-  price: 500,
-  proficiencyLevel: 'Beginner',
-  description: 'TEST 123ASD',
-  languages: ['Ukrainian'],
-  subjectId: '63da8767c9ad4c9a0b0eacd3',
-  categoryId: '63525e23bf163f5ea609ff2b'
-}
-
-let testOffer3 = {
-  price: 250,
-  authorRole: 'tutor',
-  proficiencyLevel: 'Beginner',
-  description: 'TEST 123ASD',
-  languages: ['Ukrainian'],
-  subjectId: '63da8767c9ad4c9a0b0eacd3',
-  categoryId: '63525e23bf163f5ea609ff2b'
-}
-
-let testOffer4 = {
-  price: 500,
-  authorRole: 'tutor',
-  proficiencyLevel: 'Beginner',
-  description: 'TEST 123ASD',
-  languages: ['Ukrainian'],
-  subjectId: '63da8767c9ad4c9a0b0eacd3',
-  categoryId: '63525e23bf163f5ea609ff2b'
+  subjectId: '',
+  categoryId: ''
 }
 
 const updateData = {
@@ -50,20 +21,27 @@ const updateData = {
 }
 
 describe('Offer controller', () => {
-  let app, server, accessToken, testOfferResponse, testOfferResponse2, testOfferResponse3, testOfferResponse4
+  let app, server, accessToken, testOfferResponse
 
   beforeEach(async () => {
     ;({ app, server } = await serverInit())
     accessToken = await testUserAuthentication(app)
+
+    const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
+    const categoryId = categoryResponse.body[0]._id
+
+    const subjectResponse = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send({
+      name: 'testSubject',
+      category: categoryId
+    })
+    const subjectId = subjectResponse.body._id
+
+    testOffer.categoryId = categoryId
+    testOffer.subjectId = subjectId
+
     testOfferResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer)
-    testOfferResponse2 = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer2)
-    testOfferResponse3 = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer3)
-    testOfferResponse4 = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer4)
 
     testOffer = testOfferResponse.body
-    testOffer2 = testOfferResponse2.body
-    testOffer3 = testOfferResponse3.body
-    testOffer4 = testOfferResponse4.body
   })
 
   afterEach(async () => {
@@ -72,20 +50,20 @@ describe('Offer controller', () => {
 
   describe(`test POST ${endpointUrl}`, () => {
     it('should create new offer', async () => {
-      const { _id, authorId } = testOfferResponse.body
+      const { _id, authorId, categoryId, subjectId } = testOffer
 
       expect(testOfferResponse.statusCode).toBe(201)
       expect(testOfferResponse.body).toEqual(
         expect.objectContaining({
           _id,
           price: 330,
-          proficiencyLevel: 'Beginner',
+          proficiencyLevel: ['Beginner'],
           description: 'TEST 123ASD',
           languages: ['Ukrainian'],
           authorRole: 'student',
           authorId,
-          subjectId: '63da8767c9ad4c9a0b0eacd3',
-          categoryId: '63525e23bf163f5ea609ff2b',
+          subjectId,
+          categoryId,
           status: 'pending',
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
@@ -99,8 +77,7 @@ describe('Offer controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(expect.objectContaining(testOffer))
+      expect(response.body).toEqual(expect.objectContaining({ count: 1, offers: [expect.any(Object)] }))
     })
   })
 
@@ -159,7 +136,7 @@ describe('Offer controller', () => {
         .get(endpointUrl + 'price-range?authorRole=')
         .set('Authorization', `Bearer ${accessToken}`)
 
-      expectError(404, OFFER_NOT_FOUND, response)
+      expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
 
     it('should return min and max prices for student offers', async () => {

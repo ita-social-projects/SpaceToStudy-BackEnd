@@ -15,7 +15,7 @@ const offerSchema = new Schema(
       min: [1, 'Price must be positive number']
     },
     proficiencyLevel: {
-      type: String,
+      type: [String],
       enum: {
         values: SUBJECT_LEVEL_ENUM,
         message: `Proficiency level can be either of these: ${SUBJECT_LEVEL_ENUM.toString()}`

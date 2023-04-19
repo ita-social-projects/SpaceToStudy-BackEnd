@@ -9,13 +9,15 @@ definitions:
         price:
           type: number
         proficiencyLevel:
-          type: string
-          enum:
-            - Beginner
-            - Intermediate
-            - Advanced
-            - Test Preparation
-            - Professional
+          type: array
+          items:
+            type: string
+            enum:
+              - Beginner
+              - Intermediate
+              - Advanced
+              - Test Preparation
+              - Professional
         description:
           type: string
         languages:
@@ -62,13 +64,15 @@ definitions:
       price:
         type: number
       proficiencyLevel:
-        type: string
-        enum:
-          - Beginner
-          - Intermediate
-          - Advanced
-          - Test Preparation
-          - Professional
+        type: array
+        items:
+          type: string
+          enum:
+            - Beginner
+            - Intermediate
+            - Advanced
+            - Test Preparation
+            - Professional
       description:
         type: string
       languages:
@@ -111,13 +115,15 @@ definitions:
       price:
         type: number
       proficiencyLevel:
-        type: string
-        enum:
-          - Beginner
-          - Intermediate
-          - Advanced
-          - Test Preparation
-          - Professional
+        type: array
+        items:
+          type: string
+          enum:
+            - Beginner
+            - Intermediate
+            - Advanced
+            - Test Preparation
+            - Professional
       description:
         type: string
       languages:

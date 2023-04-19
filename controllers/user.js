@@ -23,8 +23,8 @@ const updateUser = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
 
-  if(id !== req.user.id) throw createForbiddenError()
-  
+  if (id !== req.user.id) throw createForbiddenError()
+
   await userService.updateUser(id, updateData)
 
   res.status(204).end()

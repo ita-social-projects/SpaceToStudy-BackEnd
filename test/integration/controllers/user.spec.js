@@ -8,19 +8,23 @@ const {
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
-const { createUser } = require('~/services/user')
+const testUserAuthentication = require('~/utils/testUserAuth')
+const TokenService = require('~/services/token')
 
 const endpointUrl = '/users/'
+const logoutEndpoint = '/auth/logout'
 
 let testUser = {
   role: ['student'],
   firstName: 'john',
   lastName: 'doe',
   email: 'johndoe@gmail.com',
-  password: 'supersecretpass',
-  appLanguage:'en',
-  isEmailConfirmed: true
+  password: 'supersecretpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON()
 }
+
 let adminUser = {
   role: 'admin',
   firstName: 'TestAdmin',
@@ -32,8 +36,8 @@ let adminUser = {
 }
 
 const updateUserData = {
-  firstName:'Albus',
-  lastName:'Dumbledore'
+  firstName: 'Albus',
+  lastName: 'Dumbledore'
 }
 
 const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
@@ -41,180 +45,278 @@ const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
 describe('User controller', () => {
   let app, server
 
-  beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+  beforeEach(async () => {
+    ; ({ app, server } = await serverInit())
   })
 
-  afterAll(async () => {
+  afterEach(async () => {
     await serverCleanup(server)
   })
 
-  describe(`GET ${endpointUrl}`, () => {
-    it('should GET all users', async () => {
-      let user = await User.create(testUser)
-      testUser = user
+  describe('Allowed endpoints', () => {
+    let accessToken
 
-      const response = await app.get(endpointUrl)
-
-      expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body.items)).toBeTruthy()
-      expect(response.body.items).toEqual(expect.any(Array))
+    beforeEach(async () => {
+      accessToken = await testUserAuthentication(app)
     })
 
-    it('should GET all users which match query', async () => {
-      const query = {
-        email: testUser.email,
-        isEmailConfirmed: 'false',
-        role: testUser.role[0]
-      }
-
-      const response = await app.get(endpointUrl).query(query)
-
-      expect(response.status).toBe(200)
-      expect(Array.isArray(response.body.items)).toBeTruthy()
-      expect(response.body.items.length).toBe(1)
-      expect(response.body.count).toBe(1)
+    afterEach(async () => {
+      await app.post('/auth/logout')
     })
-  })
 
-  describe(`GET ${endpointUrl}:id`, () => {
-    it('should GET user by ID', async () => {
-      const response = await app.get(endpointUrl + testUser._id)
+    describe(`GET ${endpointUrl}`, () => {
+      let user
 
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toMatchObject({
-        _id: expect.any(String),
-        role: expect.any(Array),
-        firstName: expect.any(String),
-        lastName: expect.any(String),
-        email: expect.any(String),
-        totalReviews: expect.any(Number),
-        averageRating: expect.any(Number),
-        categories: expect.any(Array),
-        isEmailConfirmed: expect.any(Boolean),
-        isFirstLogin: expect.any(Boolean),
-        bookmarkedOffers: expect.any(Array),
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String)
+      beforeEach(async () => {
+        user = await User.create(testUser)
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.get(endpointUrl + user._id)
+
+        expectError(401, UNAUTHORIZED, response)
+      })
+
+      it('should GET all users', async () => {
+        const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+        expect(response.statusCode).toBe(200)
+        expect(Array.isArray(response.body.items)).toBeTruthy()
+        expect(response.body.items[response.body.items.length - 1]).toMatchObject({
+          totalReviews: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          averageRating: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          status: expect.objectContaining({
+            student: expect.any(String),
+            tutor: expect.any(String),
+            admin: expect.any(String)
+          }),
+          _id: expect.any(String),
+          role: expect.any(Array),
+          firstName: testUser.firstName,
+          lastName: testUser.lastName,
+          email: testUser.email,
+          categories: expect.any(Array),
+          lastLogin: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+      })
+
+      it('should GET all users which match query', async () => {
+        const query = {
+          email: testUser.email
+        }
+
+        const response = await app.get(endpointUrl).query(query).set('Authorization', `Bearer ${accessToken}`)
+
+        expect(response.status).toBe(200)
+        expect(Array.isArray(response.body.items)).toBeTruthy()
+        expect(response.body.items.length).toBe(1)
+        expect(response.body.items[0]).toMatchObject({
+          totalReviews: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          averageRating: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          status: expect.objectContaining({
+            student: expect.any(String),
+            tutor: expect.any(String),
+            admin: expect.any(String)
+          }),
+          _id: expect.any(String),
+          role: expect.any(Array),
+          firstName: testUser.firstName,
+          lastName: testUser.lastName,
+          email: testUser.email,
+          categories: expect.any(Array),
+          lastLogin: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+        expect(response.body.count).toBe(1)
       })
     })
 
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingUserId)
-      expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+    describe(`GET ${endpointUrl}:id`, () => {
+      let user
+
+      beforeEach(async () => {
+        user = await User.create(testUser)
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.get(endpointUrl + user._id)
+
+        expectError(401, UNAUTHORIZED, response)
+      })
+
+      it('should GET user by ID', async () => {
+        const response = await app.get(endpointUrl + user._id).set('Authorization', `Bearer ${accessToken}`)
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toMatchObject({
+          totalReviews: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          averageRating: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          status: expect.objectContaining({
+            student: expect.any(String),
+            tutor: expect.any(String),
+            admin: expect.any(String)
+          }),
+          _id: expect.any(String),
+          role: expect.any(Array),
+          firstName: testUser.firstName,
+          lastName: testUser.lastName,
+          email: testUser.email,
+          categories: expect.any(Array),
+          lastLogin: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+      })
+
+      it('should throw DOCUMENT_NOT_FOUND', async () => {
+        const response = await app.get(endpointUrl + nonExistingUserId).set('Authorization', `Bearer ${accessToken}`)
+        expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+      })
+    })
+
+    describe(`UPDATE ${endpointUrl}:id`, () => {
+      it('should UPDATE USER PROFILE by his ID', async () => {
+        const { id: currentUserId } = TokenService.validateAccessToken(accessToken)
+
+        const response = await app
+          .patch(endpointUrl + currentUserId)
+          .send(updateUserData)
+          .set('Authorization', `Bearer ${accessToken}`)
+
+        expect(response.statusCode).toBe(204)
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.patch(endpointUrl + nonExistingUserId).send(updateUserData)
+
+        expectError(401, UNAUTHORIZED, response)
+      })
+
+      it('should throw FORBIDDEN', async () => {
+        const user = (await User.find())[0]
+
+        const response = await app
+          .patch(endpointUrl + user._id)
+          .send(updateUserData)
+          .set('Authorization', `Bearer ${accessToken}`)
+
+        expectError(403, FORBIDDEN, response)
+      })
     })
   })
-
-  describe(`UPDATE ${endpointUrl}:id`, () => {
-    it('should UPDATE USER PROFILE by his ID', async () => {
-
-      const response = await app.patch(endpointUrl + testUser._id).send(updateUserData)
-
-      expect(response.statusCode).toBe(204)
-    })
-    it('should throw UNAUTHORIZED', async () => {
-      const response = await app
-        .patch(endpointUrl + testUser._id)
-        .send(updateUserData)
-
-      expectError(401, UNAUTHORIZED, response)
-    })
-  })
-
-  describe(`UPDATE ${endpointUrl}:id`, () => {
-    const mockedStatus = { tutor: STATUS_ENUM[0] }
-
-    it('should UPDATE user by ID', async () => {
-      await createUser(...Object.values(adminUser))
-
-      const authResponse = await app.post('/auth/login').send({ email: adminUser.email, password: adminUser.password })
-
-      const response = await app
-        .patch(endpointUrl + testUser._id)
-        .send(mockedStatus)
-        .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
-
-      expect(response.statusCode).toBe(204)
-    })
-
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const authResponse = await app.post('/auth/login').send({ email: adminUser.email, password: adminUser.password })
-
-      const response = await app
-        .patch(endpointUrl + nonExistingUserId)
-        .send(mockedStatus)
-        .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
-
-      expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
-    })
-
-    it('should throw FORBIDDEN', async () => {
-      const userWithNoPermissions = { ...adminUser, role: TUTOR, email: 'testTutor@gmail.com' }
-      await createUser(...Object.values(userWithNoPermissions))
-
-      const authResponse = await app
-        .post('/auth/login')
-        .send({ email: userWithNoPermissions.email, password: adminUser.password })
-
-      const response = await app
-        .patch(endpointUrl + testUser._id)
-        .send(STATUS_ENUM[0])
-        .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
-
-      expectError(403, FORBIDDEN, response)
-    })
-    it('should throw UNAUTHORIZED', async () => {
-      await app.post('/auth/logout')
-
-      const response = await app.patch(endpointUrl + testUser._id).send(STATUS_ENUM[0])
-
-      expectError(401, UNAUTHORIZED, response)
-    })
-  })
-
-  describe(`DELETE ${endpointUrl}:id`, () => {
-    let authResponse
+  describe('Restricted endpoints only by admin access rights', () => {
+    let accessToken, currentUser
 
     beforeEach(async () => {
-      authResponse = await app.post('/auth/login').send({ email: adminUser.email, password: adminUser.password })
-    })
-    it('should DELETE user by ID', async () => {
-      const response = await app
-        .delete(endpointUrl + testUser._id)
-        .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
-
-      expect(response.statusCode).toBe(204)
+      accessToken = await testUserAuthentication(app, adminUser)
+      currentUser = TokenService.validateAccessToken(accessToken)
     })
 
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app
-        .delete(endpointUrl + nonExistingUserId)
-        .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
-
-      expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+    afterEach(async () => {
+      await app.post(logoutEndpoint)
     })
 
-    it('should throw FORBIDDEN', async () => {
-      const userWithNoPermissions = { ...adminUser, role: TUTOR, email: 'testTutor@gmail.com' }
+    describe(`UPDATE ${endpointUrl}:id/change-status`, () => {
+      const changeStatusPath = '/change-status'
+      const mockedStatus = { tutor: STATUS_ENUM[0] }
 
-      const authResponse = await app
-        .post('/auth/login')
-        .send({ email: userWithNoPermissions.email, password: adminUser.password })
+      it('should UPDATE user by ID', async () => {
+        const response = await app
+          .patch(endpointUrl + currentUser.id + changeStatusPath)
+          .send(mockedStatus)
+          .set('Authorization', `Bearer ${accessToken}`)
 
-      const response = await app
-        .patch(endpointUrl + testUser._id)
-        .send(STATUS_ENUM[0])
-        .set('Authorization', `Bearer ${authResponse._body.accessToken}`)
+        expect(response.statusCode).toBe(204)
+      })
 
-      expectError(403, FORBIDDEN, response)
+      it('should throw DOCUMENT_NOT_FOUND', async () => {
+        const response = await app
+          .patch(endpointUrl + nonExistingUserId + changeStatusPath)
+          .send(mockedStatus)
+          .set('Authorization', `Bearer ${accessToken}`)
+
+        expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+      })
+
+      it('should throw FORBIDDEN', async () => {
+        await app.post(logoutEndpoint)
+
+        const noPermissionsAccessToken = await testUserAuthentication(app, {
+          ...testUser,
+          role: TUTOR
+        })
+        const userWithNoPermissions = TokenService.validateAccessToken(noPermissionsAccessToken)
+
+        const response = await app
+          .patch(endpointUrl + userWithNoPermissions.id + changeStatusPath)
+          .send(mockedStatus)
+          .set('Authorization', `Bearer ${noPermissionsAccessToken}`)
+
+        expectError(403, FORBIDDEN, response)
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.patch(endpointUrl + currentUser._id + changeStatusPath).send(mockedStatus)
+
+        expectError(401, UNAUTHORIZED, response)
+      })
     })
 
-    it('should throw UNAUTHORIZED', async () => {
-      await app.post('/auth/logout')
+    describe(`DELETE ${endpointUrl}:id`, () => {
+      it('should DELETE user by ID', async () => {
+        const response = await app.delete(endpointUrl + currentUser.id).set('Authorization', `Bearer ${accessToken}`)
 
-      const response = await app.patch(endpointUrl + testUser._id).send(STATUS_ENUM[0])
+        expect(response.statusCode).toBe(204)
+      })
 
-      expectError(401, UNAUTHORIZED, response)
+      it('should throw DOCUMENT_NOT_FOUND', async () => {
+        const response = await app.delete(endpointUrl + nonExistingUserId).set('Authorization', `Bearer ${accessToken}`)
+
+        expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+      })
+
+      it('should throw FORBIDDEN', async () => {
+        await app.post(logoutEndpoint)
+
+        const noPermissionsAccessToken = await testUserAuthentication(app, {
+          ...testUser,
+          role: TUTOR
+        })
+        const userWithNoPermissions = TokenService.validateAccessToken(noPermissionsAccessToken)
+
+        const response = await app
+          .delete(endpointUrl + userWithNoPermissions.id)
+          .set('Authorization', `Bearer ${noPermissionsAccessToken}`)
+
+        expectError(403, FORBIDDEN, response)
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.delete(endpointUrl + testUser._id)
+
+        expectError(401, UNAUTHORIZED, response)
+      })
     })
   })
 })

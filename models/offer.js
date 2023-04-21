@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const {
-  enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, SUBJECT_LEVEL_ENUM, OFFER_STATUS }
+  enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
@@ -17,8 +17,8 @@ const offerSchema = new Schema(
     proficiencyLevel: {
       type: [String],
       enum: {
-        values: SUBJECT_LEVEL_ENUM,
-        message: `Proficiency level can be either of these: ${SUBJECT_LEVEL_ENUM.toString()}`
+        values: PROFICIENCY_LEVEL_ENUM,
+        message: `Proficiency level can be either of these: ${PROFICIENCY_LEVEL_ENUM.toString()}`
       },
       required: [true, FIELD_CANNOT_BE_EMPTY('proficiency level')]
     },

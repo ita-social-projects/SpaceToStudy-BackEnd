@@ -99,10 +99,6 @@ const errors = {
     code: 'INVALID_LANGUAGE',
     message: `The language name is invalid. Possible options: ${APP_LANG_ENUM.join(', ')}.`
   },
-  SUBJECT_ALREADY_EXISTS: {
-    code: 'SUBJECT_ALREADY_EXISTS',
-    message: 'Subject with the specified name already exists.'
-  },
   DOCUMENT_NOT_FOUND: (document) => ({
     code: 'DOCUMENT_NOT_FOUND',
     message: `${document} with the specified ${document.length > 1 ? 'IDs were' : 'ID was'} not found.`
@@ -110,7 +106,7 @@ const errors = {
   FIELD_CANNOT_BE_EMPTY: (field) => `The ${field} field cannot be empty.`,
   DOCUMENT_ALREADY_EXISTS: (uniqueFields) => ({
     code: 'DOCUMENT_ALREADY_EXISTS',
-    message: `${uniqueFields} fields must be unique.`
+    message: `'${uniqueFields}' field(s) must be unique.`
   }),
   MONGO_SERVER_ERROR: (message) => ({
     code: 'MONGO_SERVER_ERROR',

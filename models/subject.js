@@ -22,4 +22,6 @@ const subjectSchema = new Schema(
   { timestamps: true, versionKey: false }
 )
 
+subjectSchema.index({ name: 1 }, { unique: true })
+
 module.exports = model(SUBJECT, subjectSchema)

@@ -1,6 +1,4 @@
 const Subject = require('~/models/subject')
-const { createError } = require('~/utils/errorsHelper')
-const { SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const subjectService = {
   getSubjects: async ({ skip, limit, searchFilter }) => {
@@ -17,12 +15,6 @@ const subjectService = {
 
   addSubject: async (data) => {
     const { name, category } = data
-
-    const duplicatedSubject = await Subject.findOne({ name }).lean().exec()
-
-    if (duplicatedSubject) {
-      throw createError(409, SUBJECT_ALREADY_EXISTS)
-    }
 
     return await Subject.create({ name, category })
   },

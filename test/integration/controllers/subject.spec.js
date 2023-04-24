@@ -1,13 +1,13 @@
 const { serverCleanup, serverInit } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, SUBJECT_ALREADY_EXISTS } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, DOCUMENT_ALREADY_EXISTS } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Subject = require('~/models/subject')
 
 const endpointUrl = '/subjects/'
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
 
-const subjectBody = { name: 'English', category: '63525e23bf163f5ea609ff27' }
+const subjectBody = { name: 'English' }
 
 describe('Subject controller', () => {
   let app, server, accessToken, testSubject
@@ -15,6 +15,11 @@ describe('Subject controller', () => {
   beforeEach(async () => {
     ;({ app, server } = await serverInit())
     accessToken = await testUserAuthentication(app)
+
+    const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
+    const category = categoryResponse.body[0]._id
+    subjectBody.category = category
+
     testSubject = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
   })
 
@@ -36,14 +41,12 @@ describe('Subject controller', () => {
         })
       )
     })
-  })
 
-  it('should throw SUBJECT_ALREADY_EXISTS', async () => {
-    expect(testSubject.statusCode).toBe(201)
+    it('should throw DOCUMENT_ALREADY_EXISTS', async () => {
+      const error = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
 
-    const error = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
-
-    expectError(409, SUBJECT_ALREADY_EXISTS, error)
+      expectError(409, DOCUMENT_ALREADY_EXISTS('name'), error)
+    })
   })
 
   describe(`GET ${endpointUrl}`, () => {

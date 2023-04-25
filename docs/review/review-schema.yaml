@@ -77,3 +77,10 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  update-review:
+    type: object
+    properties:
+      comment:
+        type: string
+      rating:
+        type: number

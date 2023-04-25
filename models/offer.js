@@ -59,17 +59,17 @@ const offerSchema = new Schema(
       min: [0, 'Rating must be a positive number'],
       max: [5, 'Rating must be below 5']
     },
-    authorId: {
+    author: {
       type: Schema.Types.ObjectId,
       ref: USER,
       required: true
     },
-    subjectId: {
+    subject: {
       type: Schema.Types.ObjectId,
       ref: SUBJECT,
       required: true
     },
-    categoryId: {
+    category: {
       type: Schema.Types.ObjectId,
       ref: CATEGORY,
       required: true

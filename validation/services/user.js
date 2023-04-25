@@ -6,7 +6,7 @@ const allowedUserFieldsForUpdate = {
     country: true,
     city: true
   },
-  education: true,
+  professionalSummary: true,
   categories: true,
   nativeLanguage: true,
   appLanguage: true

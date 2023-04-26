@@ -41,11 +41,11 @@ definitions:
           type: string
         authorAvgRating:
           type: integer
-        authorId:
-          type: string
-        subjectId:
-          type: string
-        categoryId:
+        author:
+          type: object
+        subject:
+          type: object
+        category:
           type: string
         status:
           type: string
@@ -91,17 +91,9 @@ definitions:
             - Arabic
       authorRole:
         type: string
-      authorFirstName:
+      subject:
         type: string
-      authorLastName:
-        type: string
-      authorAvgRating:
-        type: integer
-      authorId:
-        type: string
-      subjectId:
-        type: string
-      categoryId:
+      category:
         type: string
       status:
         type: string
@@ -149,11 +141,11 @@ definitions:
         type: string
       authorAvgRating:
         type: integer
-      authorId:
+      author:
         type: string
-      subjectId:
+      subject:
         type: string
-      categoryId:
+      category:
         type: string
       status:
         type: string

@@ -9,8 +9,8 @@ const offerService = {
     const count = await Offer.countDocuments(match)
 
     const offers = await Offer.find(match)
-      .populate({ path: 'authorId', select: ['totalReviews', '+photo'] })
-      .populate({ path: 'subjectId', select: 'name' })
+      .populate({ path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] })
+      .populate({ path: 'subject', select: 'name' })
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -21,20 +21,24 @@ const offerService = {
   },
 
   getOfferById: async (id) => {
-    return await Offer.findById(id).lean().exec()
+    return await Offer.findById(id)
+      .populate({ path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] })
+      .populate({ path: 'subject', select: 'name' })
+      .lean()
+      .exec()
   },
 
-  createOffer: async (authorId, authorRole, data) => {
-    const { price, proficiencyLevel, description, languages, subjectId, categoryId } = data
+  createOffer: async (author, authorRole, data) => {
+    const { price, proficiencyLevel, description, languages, subject, category } = data
 
-    const user = await userService.getUserById(authorId)
+    const user = await userService.getUserById(author)
 
     const authorAvgRating = authorRole === STUDENT ? user.averageRating.student : user.averageRating.tutor
     const authorFirstName = user.firstName
     const authorLastName = user.lastName
 
     return await Offer.create({
-      authorId,
+      author,
       authorRole,
       authorAvgRating,
       authorFirstName,
@@ -43,8 +47,8 @@ const offerService = {
       proficiencyLevel,
       description,
       languages,
-      subjectId,
-      categoryId
+      subject,
+      category
     })
   },
 

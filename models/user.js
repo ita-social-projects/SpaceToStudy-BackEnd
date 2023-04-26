@@ -44,7 +44,7 @@ const userSchema = new Schema(
       city: { type: String }
     },
     photo: String,
-    education: String,
+    professionalSummary: String,
     categories: { type: [Schema.Types.ObjectId], ref: CATEGORY },
     totalReviews: {
       student: { type: Number, default: 0 },

@@ -12,8 +12,8 @@ let testOffer = {
   proficiencyLevel: ['Beginner'],
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
-  subjectId: '',
-  categoryId: ''
+  subject: '',
+  category: ''
 }
 
 const updateData = {
@@ -28,16 +28,16 @@ describe('Offer controller', () => {
     accessToken = await testUserAuthentication(app)
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
-    const categoryId = categoryResponse.body[0]._id
+    const category = categoryResponse.body[0]._id
 
     const subjectResponse = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send({
       name: 'testSubject',
-      category: categoryId
+      category: category
     })
-    const subjectId = subjectResponse.body._id
+    const subject = subjectResponse.body._id
 
-    testOffer.categoryId = categoryId
-    testOffer.subjectId = subjectId
+    testOffer.category = category
+    testOffer.subject = subject
 
     testOfferResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer)
 
@@ -50,7 +50,7 @@ describe('Offer controller', () => {
 
   describe(`test POST ${endpointUrl}`, () => {
     it('should create new offer', async () => {
-      const { _id, authorId, categoryId, subjectId } = testOffer
+      const { _id, author, category, subject } = testOffer
 
       expect(testOfferResponse.statusCode).toBe(201)
       expect(testOfferResponse.body).toEqual(
@@ -61,9 +61,9 @@ describe('Offer controller', () => {
           description: 'TEST 123ASD',
           languages: ['Ukrainian'],
           authorRole: 'student',
-          authorId,
-          subjectId,
-          categoryId,
+          author,
+          subject,
+          category,
           status: 'pending',
           createdAt: expect.any(String),
           updatedAt: expect.any(String)

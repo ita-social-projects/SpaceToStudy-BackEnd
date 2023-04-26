@@ -45,7 +45,7 @@ definitions:
               type: string
             city:
               type: string
-        education:
+        professionalSummary:
           type: string
         photo:
           type: string
@@ -120,7 +120,7 @@ definitions:
             type: string
           city:
             type: string
-      education:
+      professionalSummary:
         type: string
       photo:
         type: string

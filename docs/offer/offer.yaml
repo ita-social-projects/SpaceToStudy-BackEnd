@@ -75,24 +75,40 @@ paths:
                     description: this is a new description for test purposes
                     languages: [English]
                     authorRole: tutor
-                    authorId: 63e63bb04d1bf3bea00e3d88
                     authorFirstName: Amanda
                     authorLastName: Smith
                     authorAvgRating: 4
-                    subjectId: 63da8767c9ad4c9a0b0eacd3
-                    categoryId: 63525e23bf163f5ea609ff2b
+                    author:
+                      _id: 63e63bb04d1bf3bea00e3d88
+                      totalReviews:
+                        student: 0
+                        tutor: 0
+                      professionalSummary: My professional summary
+                      photo: link-to-photo.png
+                    subject:
+                      _id: 63da8767c9ad4c9a0b0eacd3
+                      name: english
+                    category: 63525e23bf163f5ea609ff2b
                   - _id: 63ebc6fbd2f34037d0aba791
                     price: 300
                     proficiencyLevel: [Intermediate, Advanced]
                     description: Lorem ipsum dolor sit amet consectetur
                     languages: [English, Ukrainian]
                     authorRole: tutor
-                    authorId: 63e63bb04d1bf3bea00e3d88
                     authorFirstName: John
                     authorLastName: Smith
                     authorAvgRating: 5
-                    subjectId: 63da8767c9ad4c9a0b0eacd3
-                    categoryId: 63525e23bf163f5ea609ff2b
+                    author:
+                      _id: 63e63bb04d1bf3bea00e3d88
+                      totalReviews:
+                        student: 0
+                        tutor: 0
+                      professionalSummary: My professional summary
+                      photo: link-to-photo.png
+                    subject:
+                      _id: 63da8767c9ad4c9a0b0eacd3
+                      name: bass
+                    category: 63525e23bf163f5ea609ff2b
         401:
           description: Unauthorized
           content:
@@ -139,12 +155,12 @@ paths:
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                authorId: 63e63bb04d1bf3bea00e3d88
+                author: 63e63bb04d1bf3bea00e3d88
                 authorFirstName: John
                 authorLastName: Smith
                 authorAvgRating: 5
-                subjectId: 63da8767c9ad4c9a0b0eacd3
-                categoryId: 63525e23bf163f5ea609ff2b
+                subject: 63da8767c9ad4c9a0b0eacd3
+                category: 63525e23bf163f5ea609ff2b
                 status: pending
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
@@ -202,9 +218,17 @@ paths:
                 authorFirstName: John
                 authorLastName: Smith
                 authorAvgRating: 5
-                authorId: 63e63bb04d1bf3bea00e3d88
-                subjectId: 63da8767c9ad4c9a0b0eacd3
-                categoryId: 63525e23bf163f5ea609ff2b
+                author:
+                  _id: 63e63bb04d1bf3bea00e3d88
+                  totalReviews:
+                    student: 0
+                    tutor: 0
+                  professionalSummary: My professional summary
+                  photo: link-to-photo.png
+                subject:
+                  _id: 63da8767c9ad4c9a0b0eacd3
+                  name: piano
+                category: 63525e23bf163f5ea609ff2b
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
         400:

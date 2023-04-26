@@ -41,7 +41,7 @@ paths:
                   averageRating: { student: 4.5, tutor: 4.9 }
                   nativeLanguage: english
                   address: { country: The USA, city: California }
-                  education: KNPU H.S. Skovoroda
+                  professionalSummary: KNPU H.S. Skovoroda
                   photo: john-doe-photo.jpg
                   status: { student: active, tutor: active, admin: active }
                   lastLogin: null
@@ -57,7 +57,7 @@ paths:
                   averageRating: { student: 0, tutor: 5 }
                   nativeLanguage: ukrainian
                   address: { country: Ukraine, city: Kharkiv }
-                  education: KNPU H.S. Skovoroda
+                  professionalSummary: KNPU H.S. Skovoroda
                   photo: joe-doe-photo.jpg
                   status: { student: active, tutor: active, admin: active }
                   lastLogin: 2022-09-02T11:59:53.243+00:00
@@ -185,7 +185,7 @@ paths:
                   averageRating: { student: 4.5, tutor: 0 }
                   nativeLanguage: english
                   address: { country: The USA, city: California }
-                  education: KNPU H.S. Skovoroda
+                  ProfessionalSummary: KNPU H.S. Skovoroda
                   photo: john-doe-photo.jpg
                   status: { student: active, tutor: active, admin: active }
                   isEmailConfirmed: true
@@ -209,7 +209,7 @@ paths:
                   averageRating: { student: 4.5, tutor: 0 }
                   nativeLanguage: english
                   address: { country: The USA, city: California }
-                  education: KNPU H.S. Skovoroda
+                  professionalSummary: KNPU H.S. Skovoroda
                   photo: john-doe-photo.jpg
                   status: { student: active, tutor: active, admin: active }
                   isEmailConfirmed: true

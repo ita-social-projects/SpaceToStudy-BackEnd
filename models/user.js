@@ -4,6 +4,7 @@ const {
 } = require('~/consts/validation')
 const { CATEGORY, OFFER, USER } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
+const offerSchema = require('~/models/offer')
 
 const userSchema = new Schema(
   {
@@ -144,5 +145,17 @@ const userSchema = new Schema(
     id: false
   }
 )
+
+userSchema.post('findOneAndRemove', async (doc) => {
+  await offerSchema.deleteMany({ author: doc._id })
+})
+
+userSchema.post('findOneAndUpdate', async (doc) => {
+  for (const [key, value] of Object.entries(doc.status)) {
+    if (value === 'blocked') {
+      await offerSchema.deleteMany({ author: doc._id, authorRole: key })
+    }
+  }
+})
 
 module.exports = model(USER, userSchema)

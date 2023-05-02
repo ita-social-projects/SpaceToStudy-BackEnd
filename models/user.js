@@ -153,7 +153,7 @@ userSchema.post('findOneAndRemove', async (doc) => {
 userSchema.post('findOneAndUpdate', async (doc) => {
   for (const [key, value] of Object.entries(doc.status)) {
     if (value === 'blocked') {
-      await offerSchema.deleteMany({ author: doc._id, authorRole: key })
+      await offerSchema.updateMany({ author: doc._id, authorRole: key }, { status: 'closed' })
     }
   }
 })

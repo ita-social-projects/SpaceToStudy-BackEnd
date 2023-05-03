@@ -3,9 +3,10 @@ const getRegex = require('~/utils/getRegex')
 const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getSubjects = async (req, res) => {
+  const { id: category } = req.params
   const { skip, limit, name } = req.query
 
-  const searchFilter = { name: getRegex(name) }
+  const searchFilter = { name: getRegex(name), ...(category && { category }) }
 
   const subjects = await subjectService.getSubjects({ skip: parseInt(skip), limit: parseInt(limit), searchFilter })
 

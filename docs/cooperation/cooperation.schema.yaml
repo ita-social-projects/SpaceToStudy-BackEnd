@@ -14,16 +14,16 @@ definitions:
           ref: '#/components/user'
         recipientUserId:
           type: string
-          ref: '#components/user' 
+          ref: '#components/user'
         price:
           type: number
         status:
           type: string
           enum:
-           - pending
-           - active
-           - declined
-           - closed
+            - pending
+            - active
+            - declined
+            - closed
         createdAt:
           type: string
           format: date-time
@@ -34,49 +34,49 @@ definitions:
     type: object
     properties:
       offerId:
-          type: string
-          ref: '#components/offer'
+        type: string
+        ref: '#components/offer'
       initiatorUserId:
-          type: string
-          ref: '#/components/user'
+        type: string
+        ref: '#/components/user'
       recipientUserId:
-          type: string
-          ref: '#components/user' 
+        type: string
+        ref: '#components/user'
       price:
-          type: number
+        type: number
       status:
-          type: string
-          enum:
-           - pending
-           - active           
-           - declined
-           - closed
+        type: string
+        enum:
+          - pending
+          - active
+          - declined
+          - closed
   cooperation:
     type: object
     properties:
       _id:
-          type: string
+        type: string
       offerId:
-          type: string
-          ref: '#components/offer'
+        type: string
+        ref: '#components/offer'
       initiatorUserId:
-          type: string
-          ref: '#/components/user'
+        type: string
+        ref: '#/components/user'
       recipientUserId:
-          type: string
-          ref: '#components/user' 
+        type: string
+        ref: '#components/user'
       price:
-          type: number
+        type: number
       status:
-          type: string
-          enum:
-           - pending
-           - active
-           - declined
-           - closed
+        type: string
+        enum:
+          - pending
+          - active
+          - declined
+          - closed
       createdAt:
-          type: string
-          format: date-time
+        type: string
+        format: date-time
       updatedAt:
-          type: string
-          format: date-time
+        type: string
+        format: date-time

@@ -97,7 +97,7 @@ paths:
             schema:
               $ref: '#/definitions/user'
             example:
-              student: active
+              tutor: active
       responses:
         204:
           description: No Content

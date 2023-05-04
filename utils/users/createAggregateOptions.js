@@ -57,10 +57,8 @@ const createAggregateOptions = (query) => {
     }
   }
 
-  if (status.length) {
-    match.status = {
-      $in: status
-    }
+  if (status.length && role) {
+    match['status.' + role] = { $in: status }
   }
 
   const sortOrder = order === 'asc' ? 1 : -1

@@ -28,6 +28,7 @@ const categoryService = {
         }
       }
     ])
+    if (!minMaxPrices.length) minMaxPrices[0] = { min: 0, max: 0 }
 
     return { minPrice: minMaxPrices[0].min, maxPrice: minMaxPrices[0].max }
   }

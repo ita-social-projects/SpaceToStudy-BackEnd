@@ -4,7 +4,12 @@ const conditionCreator = require('~/utils/categories/conditionCreator')
 
 const categoryService = {
   getCategories: async (searchFilter, skip, limit) => {
-    return await Category.find(searchFilter).skip(skip).limit(limit).lean().exec()
+    return await Category.find(searchFilter)
+      .skip(skip)
+      .limit(limit)
+      .sort([['totalOffers', -1]])
+      .lean()
+      .exec()
   },
 
   getCategoriesNames: async () => {

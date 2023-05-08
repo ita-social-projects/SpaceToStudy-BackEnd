@@ -31,4 +31,10 @@ const categorySchema = new Schema(
   }
 )
 
+categorySchema.pre('save', function () {
+  if (this.name[0].toLowerCase() === this.name[0]) {
+    this.name = this.name[0].toUpperCase() + this.name.slice(1)
+  }
+})
+
 module.exports = model(CATEGORY, categorySchema)

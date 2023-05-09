@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 const {
   enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
-const { CATEGORY, OFFER, USER } = require('~/consts/models')
+const { SUBJECT, OFFER, USER } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 const offerSchema = require('~/models/offer')
 
@@ -46,7 +46,7 @@ const userSchema = new Schema(
     },
     photo: String,
     professionalSummary: String,
-    categories: { type: [Schema.Types.ObjectId], ref: CATEGORY },
+    mainSubjects: { type: [Schema.Types.ObjectId], ref: SUBJECT },
     totalReviews: {
       student: { type: Number, default: 0 },
       tutor: { type: Number, default: 0 }

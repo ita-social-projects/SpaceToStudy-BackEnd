@@ -32,10 +32,20 @@ paths:
                   firstName: John
                   lastName: Doe
                   email: johndoe@gmail.com
-                  categories:
-                    [
-                      { _id: 6255bc080a75adf9223df444, name: Languages },
-                      { _id: 6255bc080a75adf443d7644, name: Biology }
+                  mainSubjects:
+                   [
+                      {
+                        _id: 64593435163b62124ce4c3ab,
+                        name: Cybersecurity,
+                        category: '6421ed8ed991d46a84721df2',
+                        totalOffers: 15
+                      },
+                      {
+                        _id: 6422d995d898aa732d038e8f,
+                        name: Guitar,
+                        category: '6421ed8ed991d46a84721dfa',
+                        totalOffers: 0
+                      }
                     ]
                   totalReviews: { student: 10, tutor: 8 }
                   averageRating: { student: 4.5, tutor: 4.9 }
@@ -52,7 +62,12 @@ paths:
                   firstName: Joe
                   lastName: Doe
                   email: joedoe@outlook.com
-                  categories: [{ _id: 6255bc080a75adf9223df444, name: Languages }]
+                  mainSubjects: [{
+                        _id: 64593435163b62124ce4c3ab,
+                        name: Cybersecurity,
+                        category: '6421ed8ed991d46a84721df2',
+                        totalOffers: 0
+                      }]
                   totalReviews: { student: 0, tutor: 530 }
                   averageRating: { student: 0, tutor: 5 }
                   nativeLanguage: ukrainian
@@ -176,10 +191,20 @@ paths:
                   firstName: John
                   lastName: Doe
                   email: johndoe@gmail.com
-                  categories:
+                  mainSubjects:
                     [
-                      { _id: 6255bc080a75adf9223df444, name: Languages },
-                      { _id: 6255bc080a75adf443d7644, name: Biology }
+                      {
+                        _id: 64593435163b62124ce4c3ab,
+                        name: Cybersecurity,
+                        category: '6421ed8ed991d46a84721df2',
+                        totalOffers: 0
+                      },
+                      {
+                        _id: 6422d995d898aa732d038e8f,
+                        name: Guitar,
+                        category: '6421ed8ed991d46a84721dfa',
+                        totalOffers: 0
+                      }
                     ]
                   totalReviews: { student: 10, tutor: 0 }
                   averageRating: { student: 4.5, tutor: 0 }
@@ -200,10 +225,20 @@ paths:
                   firstName: John
                   lastName: Doe
                   email: johndoe@gmail.com
-                  categories:
+                  mainSubjects:
                     [
-                      { _id: 6255bc080a75adf9223df444, name: Languages },
-                      { _id: 6255bc080a75adf443d7644, name: Biology }
+                      {
+                        _id: 64593435163b62124ce4c3ab,
+                        name: Cybersecurity,
+                        category: '6421ed8ed991d46a84721df2',
+                        totalOffers: 0
+                      },
+                      {
+                        _id: 6422d995d898aa732d038e8f,
+                        name: Guitar,
+                        category: '6421ed8ed991d46a84721dfa',
+                        totalOffers: 0
+                      }
                     ]
                   totalReviews: { student: 10, tutor: 0 }
                   averageRating: { student: 4.5, tutor: 0 }

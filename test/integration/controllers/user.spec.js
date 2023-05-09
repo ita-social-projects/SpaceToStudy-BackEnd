@@ -105,7 +105,7 @@ describe('User controller', () => {
           firstName: testUser.firstName,
           lastName: testUser.lastName,
           email: testUser.email,
-          categories: expect.any(Array),
+          mainSubjects: expect.any(Array),
           lastLogin: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
@@ -141,7 +141,7 @@ describe('User controller', () => {
           firstName: testUser.firstName,
           lastName: testUser.lastName,
           email: testUser.email,
-          categories: expect.any(Array),
+          mainSubjects: expect.any(Array),
           lastLogin: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
@@ -186,7 +186,7 @@ describe('User controller', () => {
           firstName: testUser.firstName,
           lastName: testUser.lastName,
           email: testUser.email,
-          categories: expect.any(Array),
+          mainSubjects: expect.any(Array),
           lastLogin: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String)

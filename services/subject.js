@@ -1,4 +1,5 @@
 const Subject = require('~/models/subject')
+const capitalizeFirstLetter = require('~/utils/capitalizeFirstLetter')
 
 const subjectService = {
   getSubjects: async ({ skip, limit, searchFilter }) => {
@@ -14,12 +15,18 @@ const subjectService = {
   },
 
   addSubject: async (data) => {
-    const { name, category } = data
+    let { name, category } = data
+
+    name = capitalizeFirstLetter(name)
 
     return await Subject.create({ name, category })
   },
 
   updateSubject: async (id, updateData) => {
+    if ('name' in updateData) {
+      updateData.name = capitalizeFirstLetter(updateData.name)
+    }
+
     await Subject.findByIdAndUpdate(id, updateData).lean().exec()
   },
 

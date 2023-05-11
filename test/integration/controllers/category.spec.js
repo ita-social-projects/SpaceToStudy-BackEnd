@@ -28,7 +28,6 @@ describe('Category controller', () => {
 
     const categoriesResponse = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
-    console.log(categoriesResponse.body)
     categoryData._id = categoriesResponse.body[0]._id
   })
 

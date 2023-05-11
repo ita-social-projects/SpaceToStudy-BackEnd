@@ -1,8 +1,9 @@
-const { serverCleanup, serverInit } = require('~/test/setup')
+const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { DOCUMENT_NOT_FOUND, DOCUMENT_ALREADY_EXISTS } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Subject = require('~/models/subject')
+const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 
 const endpointUrl = '/subjects/'
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
@@ -12,8 +13,12 @@ const subjectBody = { name: 'English' }
 describe('Subject controller', () => {
   let app, server, accessToken, testSubject
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     ;({ app, server } = await serverInit())
+  })
+
+  beforeEach(async () => {
+    await checkCategoryExistence()
     accessToken = await testUserAuthentication(app)
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
@@ -24,7 +29,11 @@ describe('Subject controller', () => {
   })
 
   afterEach(async () => {
-    await serverCleanup(server)
+    await serverCleanup()
+  })
+
+  afterAll(async () => {
+    await stopServer(server)
   })
 
   describe(`POST ${endpointUrl}`, () => {

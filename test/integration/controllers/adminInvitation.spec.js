@@ -1,18 +1,24 @@
-const { serverInit, serverCleanup } = require('~/test/setup')
+const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 
 const emails = ['test1@gmail.com', 'test2@gmail.com']
 const endpointURL = '/admin-invitations'
 
 describe('Admin invitation controller', () => {
   let app, server, response
+  beforeAll(async () => {
+    ;({ app, server } = await serverInit())
+  })
 
   beforeEach(async () => {
-    ;({ app, server } = await serverInit())
     response = await app.post(endpointURL).send({ emails }).set('Accept-Language', 'en')
   })
 
   afterEach(async () => {
-    await serverCleanup(server)
+    await serverCleanup()
+  })
+
+  afterAll(async () => {
+    await stopServer(server)
   })
 
   describe('admin-invitations endpoint', () => {

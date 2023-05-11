@@ -1,8 +1,9 @@
-const { serverInit, serverCleanup } = require('~/test/setup')
+const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
 const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
 const Category = require('~/models/category')
+const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 
 const endpointUrl = '/categories/'
 const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
@@ -16,18 +17,27 @@ let categoryData = {
 describe('Category controller', () => {
   let app, server
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     ;({ app, server } = await serverInit())
+  })
+
+  beforeEach(async () => {
+    await checkCategoryExistence()
 
     accessToken = await testUserAuthentication(app)
 
     const categoriesResponse = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
+    console.log(categoriesResponse.body)
     categoryData._id = categoriesResponse.body[0]._id
   })
 
   afterEach(async () => {
-    await serverCleanup(server)
+    await serverCleanup()
+  })
+
+  afterAll(async () => {
+    await stopServer(server)
   })
 
   describe(`GET ${endpointUrl}`, () => {

@@ -1,4 +1,4 @@
-const { serverInit, serverCleanup } = require('~/test/setup')
+const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const errors = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
@@ -6,12 +6,16 @@ const emailSubject = require('~/consts/emailSubject')
 describe('Email controller', () => {
   let app, server
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     ;({ app, server } = await serverInit())
   })
 
   afterEach(async () => {
-    await serverCleanup(server)
+    await serverCleanup()
+  })
+
+  afterAll(async () => {
+    await stopServer(server)
   })
 
   describe('Send email endpoint', () => {

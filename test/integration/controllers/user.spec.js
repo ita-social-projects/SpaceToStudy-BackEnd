@@ -1,4 +1,4 @@
-const { serverInit, serverCleanup } = require('~/test/setup')
+const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const User = require('~/models/user')
 const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
@@ -45,12 +45,16 @@ const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
 describe('User controller', () => {
   let app, server
 
-  beforeEach(async () => {
-    ; ({ app, server } = await serverInit())
+  beforeAll(async () => {
+    ;({ app, server } = await serverInit())
   })
 
   afterEach(async () => {
     await serverCleanup(server)
+  })
+
+  afterAll(async () => {
+    await stopServer()
   })
 
   describe('Allowed endpoints', () => {

@@ -33,20 +33,32 @@ paths:
                   lastName: Doe
                   email: johndoe@gmail.com
                   mainSubjects:
-                   [
-                      {
-                        _id: 64593435163b62124ce4c3ab,
-                        name: Cybersecurity,
-                        category: '6421ed8ed991d46a84721df2',
-                        totalOffers: 15
-                      },
-                      {
-                        _id: 6422d995d898aa732d038e8f,
-                        name: Guitar,
-                        category: '6421ed8ed991d46a84721dfa',
-                        totalOffers: 0
-                      }
-                    ]
+                    {
+                      student:
+                        [
+                          {
+                            _id: 64593435163b62124ce4c3ab,
+                            name: Cybersecurity,
+                            category: '6421ed8ed991d46a84721df2',
+                            totalOffers: 15
+                          },
+                          {
+                            _id: 6422d995d898aa732d038e8f,
+                            name: Guitar,
+                            category: '6421ed8ed991d46a84721dfa',
+                            totalOffers: 0
+                          }
+                        ],
+                      tutor:
+                        [
+                          {
+                            _id: 6422d995d898aa732d038e8f,
+                            name: Guitar,
+                            category: '6421ed8ed991d46a84721dfa',
+                            totalOffers: 0
+                          }
+                        ]
+                    }
                   totalReviews: { student: 10, tutor: 8 }
                   averageRating: { student: 4.5, tutor: 4.9 }
                   nativeLanguage: english
@@ -62,12 +74,18 @@ paths:
                   firstName: Joe
                   lastName: Doe
                   email: joedoe@outlook.com
-                  mainSubjects: [{
-                        _id: 64593435163b62124ce4c3ab,
-                        name: Cybersecurity,
-                        category: '6421ed8ed991d46a84721df2',
-                        totalOffers: 0
-                      }]
+                  mainSubjects:
+                    {
+                      tutor:
+                        [
+                          {
+                            _id: 64593435163b62124ce4c3ab,
+                            name: Cybersecurity,
+                            category: '6421ed8ed991d46a84721df2',
+                            totalOffers: 0
+                          }
+                        ]
+                    }
                   totalReviews: { student: 0, tutor: 530 }
                   averageRating: { student: 0, tutor: 5 }
                   nativeLanguage: ukrainian
@@ -192,20 +210,23 @@ paths:
                   lastName: Doe
                   email: johndoe@gmail.com
                   mainSubjects:
-                    [
-                      {
-                        _id: 64593435163b62124ce4c3ab,
-                        name: Cybersecurity,
-                        category: '6421ed8ed991d46a84721df2',
-                        totalOffers: 0
-                      },
-                      {
-                        _id: 6422d995d898aa732d038e8f,
-                        name: Guitar,
-                        category: '6421ed8ed991d46a84721dfa',
-                        totalOffers: 0
-                      }
-                    ]
+                    {
+                      student:
+                        [
+                          {
+                            _id: 64593435163b62124ce4c3ab,
+                            name: Cybersecurity,
+                            category: '6421ed8ed991d46a84721df2',
+                            totalOffers: 0
+                          },
+                          {
+                            _id: 6422d995d898aa732d038e8f,
+                            name: Guitar,
+                            category: '6421ed8ed991d46a84721dfa',
+                            totalOffers: 0
+                          }
+                        ]
+                    }
                   totalReviews: { student: 10, tutor: 0 }
                   averageRating: { student: 4.5, tutor: 0 }
                   nativeLanguage: english
@@ -226,20 +247,23 @@ paths:
                   lastName: Doe
                   email: johndoe@gmail.com
                   mainSubjects:
-                    [
-                      {
-                        _id: 64593435163b62124ce4c3ab,
-                        name: Cybersecurity,
-                        category: '6421ed8ed991d46a84721df2',
-                        totalOffers: 0
-                      },
-                      {
-                        _id: 6422d995d898aa732d038e8f,
-                        name: Guitar,
-                        category: '6421ed8ed991d46a84721dfa',
-                        totalOffers: 0
-                      }
-                    ]
+                    {
+                      student:
+                        [
+                          {
+                            _id: 64593435163b62124ce4c3ab,
+                            name: Cybersecurity,
+                            category: '6421ed8ed991d46a84721df2',
+                            totalOffers: 0
+                          },
+                          {
+                            _id: 6422d995d898aa732d038e8f,
+                            name: Guitar,
+                            category: '6421ed8ed991d46a84721dfa',
+                            totalOffers: 0
+                          }
+                        ]
+                    }
                   totalReviews: { student: 10, tutor: 0 }
                   averageRating: { student: 4.5, tutor: 0 }
                   nativeLanguage: english
@@ -514,7 +538,7 @@ paths:
   /users/{id}/reviews/stats:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Users
       summary: Find review statistics for a user with the specified ID and role
@@ -529,10 +553,7 @@ paths:
               schema:
                 $ref: '#/definitions/reviewResponse'
               example:
-                stats: [
-                  { rating: 5, count: 1 },
-                  { rating: 3, count: 1 }
-                ]
+                stats: [{ rating: 5, count: 1 }, { rating: 3, count: 1 }]
         400:
           description: Bad Request
           content:
@@ -563,4 +584,3 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: User with the specified id was not found.
-                

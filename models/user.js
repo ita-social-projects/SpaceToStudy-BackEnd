@@ -46,7 +46,16 @@ const userSchema = new Schema(
     },
     photo: String,
     professionalSummary: String,
-    mainSubjects: { type: [Schema.Types.ObjectId], ref: SUBJECT },
+    mainSubjects: {
+      student: {
+        type: [Schema.Types.ObjectId],
+        ref: SUBJECT
+      },
+      tutor: {
+        type: [Schema.Types.ObjectId],
+        ref: SUBJECT
+      }
+    },
     totalReviews: {
       student: { type: Number, default: 0 },
       tutor: { type: Number, default: 0 }

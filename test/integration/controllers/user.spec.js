@@ -50,11 +50,11 @@ describe('User controller', () => {
   })
 
   afterEach(async () => {
-    await serverCleanup(server)
+    await serverCleanup()
   })
 
   afterAll(async () => {
-    await stopServer()
+    await stopServer(server)
   })
 
   describe('Allowed endpoints', () => {

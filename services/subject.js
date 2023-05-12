@@ -17,13 +17,15 @@ const subjectService = {
   addSubject: async (data) => {
     let { name, category } = data
 
-    name = capitalizeFirstLetter(name)
+    if (name[0] === name[0].toLowerCase()) {
+      name = capitalizeFirstLetter(name)
+    }
 
     return await Subject.create({ name, category })
   },
 
   updateSubject: async (id, updateData) => {
-    if ('name' in updateData) {
+    if ('name' in updateData && updateData.name[0] === updateData.name[0].toLowerCase()) {
       updateData.name = capitalizeFirstLetter(updateData.name)
     }
 

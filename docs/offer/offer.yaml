@@ -411,3 +411,156 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Offer with the specified id was not found.
+  /offers/{id}/related:
+    get:
+      security:
+        - bearerAuth: [ ]
+      tags:
+        - Offers
+      summary: Find and return related offers by ID
+      description: Finds and returns related offers associated with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the offer for which related offers are being searched
+          type: string
+        - in: query
+          name: authorRole
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: proficiencyLevel
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: language
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: subject
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/offer'
+              example:
+                - _id: 63ebc6fbd2f34037d0aba791
+                  price: 111
+                  proficiencyLevel: [ Beginner ]
+                  description: this is a new description for test purposes
+                  languages: [ English ]
+                  authorRole: tutor
+                  authorFirstName: Amanda
+                  authorLastName: Smith
+                  authorAvgRating: 4
+                  author:
+                    _id: 63e63bb04d1bf3bea00e3d88
+                    totalReviews:
+                      student: 0
+                      tutor: 0
+                    professionalSummary: My professional summary
+                    photo: link-to-photo.png
+                  subject:
+                    _id: 63da8767c9ad4c9a0b0eacd3
+                    name: english
+                  category: 63525e23bf163f5ea609ff2b
+                - _id: 63ebc6fbd2f34037d0aba791
+                  price: 300
+                  proficiencyLevel: [ Beginner, Advanced ]
+                  description: Lorem ipsum dolor sit amet consectetur
+                  languages: [ English, Ukrainian ]
+                  authorRole: tutor
+                  authorFirstName: John
+                  authorLastName: Smith
+                  authorAvgRating: 5
+                  author:
+                    _id: 63e63bb04d1bf3bea00e3d88
+                    totalReviews:
+                      student: 0
+                      tutor: 0
+                    professionalSummary: My professional summary
+                    photo: link-to-photo.png
+                  subject:
+                    _id: 63da8767c9ad4c9a0b0eacd3
+                    name: english
+                  category: 63525e23bf163f5ea609ff2b
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        404:
+          description: Not Found Offer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Offer with the specified id was not found.
+        405:
+          description: Not Found Category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 405
+                code: CATEGORY_NOT_FOUND
+                message: Category with provided id was not found.
+        406:
+          description: Not Found Subject
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 406
+                code: SUBJECT_NOT_FOUND
+                message: Subject with the specified id was not found.

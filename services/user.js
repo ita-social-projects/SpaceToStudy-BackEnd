@@ -26,8 +26,10 @@ const userService = {
 
   getUserById: async (id, role) => {
     return await User.findOne({ _id: id, ...(role && { role }) })
-      .populate({ path: 'mainSubjects.tutor', select: ['-createdAt', '-udpdatedAt'] })
-      .populate({ path: 'mainSubjects.student', select: ['-createdAt', '-udpdatedAt'] })
+      .populate([
+        { path: 'mainSubjects.tutor', select: ['-createdAt', '-updatedAt'] },
+        { path: 'mainSubjects.student', select: ['-createdAt', '-updatedAt'] }
+      ])
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers')
       .lean()
       .exec()
@@ -84,9 +86,9 @@ const userService = {
       throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
 
-    if (role === 'student') {
+    if (role !== 'student') {
       filteredUpdateData.mainSubjects = { student: updateData.mainSubjects, tutor: user.mainSubjects?.tutor }
-    } else if (role === 'tutor') {
+    } else if (role !== 'tutor') {
       filteredUpdateData.mainSubjects = { student: user.mainSubjects?.student, tutor: updateData.mainSubjects }
     }
 

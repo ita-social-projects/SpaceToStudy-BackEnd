@@ -25,5 +25,6 @@ router.post('/', isEntityValid(body, 'body'), asyncWrapper(offerController.creat
 router.get('/:id', isEntityValid(param), asyncWrapper(offerController.getOfferById))
 router.patch('/:id', isEntityValid(param), asyncWrapper(offerController.updateOffer))
 router.delete('/:id', isEntityValid(param), asyncWrapper(offerController.deleteOffer))
+router.get('/:id/related', isEntityValid(param), asyncWrapper(offerController.getRelatedOffers))
 
 module.exports = router

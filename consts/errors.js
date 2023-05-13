@@ -104,6 +104,8 @@ const errors = {
     message: `${document} with the specified ${document.length > 1 ? 'IDs were' : 'ID was'} not found.`
   }),
   FIELD_CANNOT_BE_EMPTY: (field) => `The ${field} field cannot be empty.`,
+  ENUM_CAN_BE_ONE_OF: (field, enums) =>
+    `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}`,
   DOCUMENT_ALREADY_EXISTS: (uniqueFields) => ({
     code: 'DOCUMENT_ALREADY_EXISTS',
     message: `'${uniqueFields}' field(s) must be unique.`

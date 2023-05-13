@@ -5,7 +5,7 @@ const {
   enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
-const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
+const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
 
 const offerSchema = new Schema(
   {
@@ -18,7 +18,7 @@ const offerSchema = new Schema(
       type: [String],
       enum: {
         values: PROFICIENCY_LEVEL_ENUM,
-        message: `Proficiency level can be either of these: ${PROFICIENCY_LEVEL_ENUM.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('proficiency level', PROFICIENCY_LEVEL_ENUM)
       },
       required: [true, FIELD_CANNOT_BE_EMPTY('proficiency level')]
     },
@@ -32,7 +32,7 @@ const offerSchema = new Schema(
       type: [String],
       enum: {
         values: SPOKEN_LANG_ENUM,
-        message: `Language can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('language', SPOKEN_LANG_ENUM)
       },
       required: [true, 'Please select a language(s) that will be used in teaching.']
     },
@@ -40,7 +40,7 @@ const offerSchema = new Schema(
       type: String,
       enum: {
         values: AUTHOR_ROLE_ENUM,
-        message: `Author role can be either of these: ${AUTHOR_ROLE_ENUM.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('author role', AUTHOR_ROLE_ENUM)
       },
       required: [true, 'Author role must be selected.']
     },
@@ -78,7 +78,7 @@ const offerSchema = new Schema(
       type: String,
       enum: {
         values: OFFER_STATUS,
-        message: `Offer status can be either of these: ${OFFER_STATUS.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('offer status', OFFER_STATUS)
       },
       default: 'pending'
     }
@@ -95,7 +95,6 @@ offerSchema.statics.calcTotalOffers = async function (category, subject) {
   await Category.findByIdAndUpdate(category, { totalOffers: categoryTotalOffersQty }).exec()
   const subjectTotalOffersQty = await this.countDocuments({ subject })
   await Subject.findByIdAndUpdate(subject, { totalOffers: subjectTotalOffersQty }).exec()
-}
 
 offerSchema.post('save', async function (doc) {
   doc.constructor.calcTotalOffers(doc.category, doc.subject)

@@ -3,7 +3,8 @@ const {
   enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
 const { SUBJECT, OFFER, USER } = require('~/consts/models')
-const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
+const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+
 const offerSchema = require('~/models/offer')
 
 const userSchema = new Schema(
@@ -12,7 +13,7 @@ const userSchema = new Schema(
       type: [String],
       enum: {
         values: ROLE_ENUM,
-        message: `User role can be either of these: ${ROLE_ENUM.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('user role', ROLE_ENUM)
       },
       required: [true, 'User role must be selected.']
     },
@@ -80,7 +81,7 @@ const userSchema = new Schema(
       type: String,
       enum: {
         values: SPOKEN_LANG_ENUM,
-        message: `Native language can be either of these: ${SPOKEN_LANG_ENUM.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('native language', SPOKEN_LANG_ENUM)
       }
     },
     isEmailConfirmed: {
@@ -101,7 +102,7 @@ const userSchema = new Schema(
       type: String,
       enum: {
         values: APP_LANG_ENUM,
-        message: `App language can be either of these: ${APP_LANG_ENUM.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('app language', APP_LANG_ENUM)
       },
       default: APP_LANG_ENUM[0],
       select: false
@@ -111,7 +112,7 @@ const userSchema = new Schema(
         type: String,
         enum: {
           values: STATUS_ENUM,
-          message: `Student status can be either of these: ${STATUS_ENUM.toString()}`
+          message: ENUM_CAN_BE_ONE_OF('student status', STATUS_ENUM)
         },
         default: STATUS_ENUM[0]
       },
@@ -119,7 +120,7 @@ const userSchema = new Schema(
         type: String,
         enum: {
           values: STATUS_ENUM,
-          message: `Tutor status can be either of these: ${STATUS_ENUM.toString()}`
+          message: ENUM_CAN_BE_ONE_OF('tutor status', STATUS_ENUM)
         },
         default: STATUS_ENUM[0]
       },
@@ -127,7 +128,7 @@ const userSchema = new Schema(
         type: String,
         enum: {
           values: STATUS_ENUM,
-          message: `Admin status can be either of these: ${STATUS_ENUM.toString()}`
+          message: ENUM_CAN_BE_ONE_OF('admin status', STATUS_ENUM)
         },
         default: STATUS_ENUM[0]
       }
@@ -136,7 +137,7 @@ const userSchema = new Schema(
       type: String,
       enum: {
         values: LOGIN_ROLE_ENUM,
-        message: `User status can be either of these: ${LOGIN_ROLE_ENUM.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('user status', LOGIN_ROLE_ENUM)
       },
       select: false
     },

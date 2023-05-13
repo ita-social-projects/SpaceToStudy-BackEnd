@@ -7,10 +7,10 @@ const {
 
 const cooperationSchema = new Schema(
   {
-    offerId: {
+    offer: {
       type: Schema.Types.ObjectId,
       ref: OFFER,
-      required: [true, FIELD_CANNOT_BE_EMPTY('offer id')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('offer')]
     },
     initiatorUserId: {
       type: Schema.Types.ObjectId,
@@ -19,21 +19,25 @@ const cooperationSchema = new Schema(
     },
     additionalInfo: {
       type: String,
-      required: false
+      min: [30, 'Please provide at least 30 symbols'],
+      max: [1000, "You can't provide more than 1000 symbols"]
+      // required: true
     },
     requiredTutoringLevel: {
       type: String,
       enum: {
         values: PROFICIENCY_LEVEL_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('required tutoring level', PROFICIENCY_LEVEL_ENUM)
-      }
+        message: ENUM_CAN_BE_ONE_OF('tutoring level', PROFICIENCY_LEVEL_ENUM)
+      },
+      required: true
     },
     requiredLanguage: {
       type: String,
       enum: {
         values: SPOKEN_LANG_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('required language', SPOKEN_LANG_ENUM)
-      }
+        message: ENUM_CAN_BE_ONE_OF('tutoring language', SPOKEN_LANG_ENUM)
+      },
+      required: true
     },
     status: {
       type: String,

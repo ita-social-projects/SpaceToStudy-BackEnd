@@ -17,8 +17,8 @@ const reviewSchema = new Schema(
     rating: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('rating')],
-      min: [1, 'Rating must be above 1'],
-      max: [5, 'Rating must be below 5']
+      minLength: [1, 'Rating must be above 1'],
+      maxLength: [5, 'Rating must be below 5']
     },
     author: {
       type: Schema.Types.ObjectId,
@@ -27,7 +27,7 @@ const reviewSchema = new Schema(
     },
     targetUserId: {
       type: Schema.Types.ObjectId,
-      ref: USER, 
+      ref: USER,
       required: true
     },
     targetUserRole: {

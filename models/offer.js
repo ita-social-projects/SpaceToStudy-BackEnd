@@ -24,8 +24,8 @@ const offerSchema = new Schema(
     },
     description: {
       type: String,
-      minlength: [1, 'Description cannot be shorter than 1 symbol.'],
-      maxlength: [200, 'Description cannot be longer than 200 symbols.'],
+      minLength: [1, 'Description cannot be shorter than 1 symbol.'],
+      maxLength: [200, 'Description cannot be longer than 200 symbols.'],
       required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {
@@ -46,18 +46,18 @@ const offerSchema = new Schema(
     },
     authorFirstName: {
       type: String,
-      minlength: [1, 'Author first name cannot be shorter than 1 symbol.'],
-      maxlength: [30, 'Author first name cannot be longer than 30 symbols.']
+      minLength: [1, 'Author first name cannot be shorter than 1 symbol.'],
+      maxLength: [30, 'Author first name cannot be longer than 30 symbols.']
     },
     authorLastName: {
       type: String,
-      minlength: [1, 'Author last name cannot be shorter than 1 symbol.'],
-      maxlength: [30, 'Author last name cannot be longer than 30 symbols.']
+      minLength: [1, 'Author last name cannot be shorter than 1 symbol.'],
+      maxLength: [30, 'Author last name cannot be longer than 30 symbols.']
     },
     authorAvgRating: {
       type: Number,
-      min: [0, 'Rating must be a positive number'],
-      max: [5, 'Rating must be below 5']
+      minLength: [0, 'Rating must be a positive number'],
+      maxLength: [5, 'Rating must be below 5']
     },
     author: {
       type: Schema.Types.ObjectId,
@@ -95,6 +95,7 @@ offerSchema.statics.calcTotalOffers = async function (category, subject) {
   await Category.findByIdAndUpdate(category, { totalOffers: categoryTotalOffersQty }).exec()
   const subjectTotalOffersQty = await this.countDocuments({ subject })
   await Subject.findByIdAndUpdate(subject, { totalOffers: subjectTotalOffersQty }).exec()
+}
 
 offerSchema.post('save', async function (doc) {
   doc.constructor.calcTotalOffers(doc.category, doc.subject)

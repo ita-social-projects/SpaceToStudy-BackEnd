@@ -19,9 +19,8 @@ const cooperationSchema = new Schema(
     },
     additionalInfo: {
       type: String,
-      min: [30, 'Please provide at least 30 symbols'],
-      max: [1000, "You can't provide more than 1000 symbols"]
-      // required: true
+      minLength: [30, 'Please provide more than 30 symbols'],
+      maxLength: [1000, 'Please provide less than 1000 symbols']
     },
     requiredTutoringLevel: {
       type: String,

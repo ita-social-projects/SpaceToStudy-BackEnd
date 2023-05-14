@@ -19,10 +19,10 @@ const cooperationSchema = new Schema(
     },
     additionalInfo: {
       type: String,
-      minLength: [30, 'Please provide more than 30 symbols'],
-      maxLength: [1000, 'Please provide less than 1000 symbols']
+      minLength: [30, 'Additional info cannot be shorter than 30 symbol.'],
+      maxLength: [1000, 'Additional info cannot be longer than 1000 symbol.']
     },
-    requiredTutoringLevel: {
+    requiredProficiencyLevel: {
       type: String,
       enum: {
         values: PROFICIENCY_LEVEL_ENUM,

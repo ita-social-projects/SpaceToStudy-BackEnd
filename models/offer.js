@@ -56,8 +56,8 @@ const offerSchema = new Schema(
     },
     authorAvgRating: {
       type: Number,
-      minLength: [0, 'Rating must be a positive number'],
-      maxLength: [5, 'Rating must be below 5']
+      min: [0, 'Rating must be a positive number'],
+      max: [5, 'Rating must be below 5']
     },
     author: {
       type: Schema.Types.ObjectId,

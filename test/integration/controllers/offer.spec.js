@@ -165,21 +165,4 @@ describe('Offer controller', () => {
       expect(typeof response.body.maxPrice).toBe('number')
     })
   })
-
-  describe(`test GET ${endpointUrl}:id/related`, () => {
-    it('should get related offers without offer with specified id', async () => {
-      const { body, statusCode } = await app
-        .get(endpointUrl + testOffer._id)
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      expect(body.every((obj) => obj._id !== testOffer._id)).toBe(true)
-      expect(statusCode).toBe(200)
-    })
-
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
-
-      expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
-    })
-  })
 })

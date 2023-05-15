@@ -32,19 +32,6 @@ const offerService = {
       .exec()
   },
 
-  getRelatedOffers: async (match, sort, skip, limit) => {
-    return await Offer.find(match)
-      .populate([
-        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] },
-        { path: 'subject', select: 'name' }
-      ])
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean()
-      .exec()
-  },
-
   createOffer: async (author, authorRole, data) => {
     const { price, proficiencyLevel, description, languages, subject, category } = data
 

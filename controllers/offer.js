@@ -1,6 +1,5 @@
 const offerService = require('~/services/offer')
 const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
-const relatedOfferAggrOptions = require('~/utils/offers/relatedOfferAggrOptions')
 const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getOffers = async (req, res) => {
@@ -17,14 +16,6 @@ const getOfferById = async (req, res) => {
   const offer = await offerService.getOfferById(id)
 
   res.status(200).json(offer)
-}
-
-const getRelatedOffers = async (req, res) => {
-  const { match, sort, skip, limit } = relatedOfferAggrOptions(req.query, req.params)
-
-  const offers = await offerService.getRelatedOffers(match, sort, parseInt(skip), parseInt(limit))
-
-  res.status(200).json(offers)
 }
 
 const createOffer = async (req, res) => {
@@ -58,7 +49,6 @@ const deleteOffer = async (req, res) => {
 module.exports = {
   getOffers,
   getOfferById,
-  getRelatedOffers,
   createOffer,
   updateOffer,
   deleteOffer

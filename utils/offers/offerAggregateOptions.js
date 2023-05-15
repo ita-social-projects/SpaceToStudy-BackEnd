@@ -1,7 +1,19 @@
 const getRegex = require('../getRegex')
 
 const offerAggregateOptions = (query, params) => {
-  const { authorRole, price, level, rating, language, name, sort, skip = 0, limit = 5 } = query
+  const {
+    authorRole,
+    price,
+    level,
+    rating,
+    language,
+    name,
+    languages,
+    excludedOfferId,
+    sort,
+    skip = 0,
+    limit = 5
+  } = query
   const { categoryId, subjectId } = params
 
   const match = {}
@@ -38,12 +50,20 @@ const offerAggregateOptions = (query, params) => {
     match.languages = getRegex(language)
   }
 
+  if (languages) {
+    match.languages = { $in: languages }
+  }
+
   if (categoryId) {
     match.category = categoryId
   }
 
   if (subjectId) {
     match.subject = subjectId
+  }
+
+  if (excludedOfferId) {
+    match._id = { $ne: excludedOfferId }
   }
 
   const sortOption = {}

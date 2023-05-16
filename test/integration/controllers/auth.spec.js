@@ -1,4 +1,4 @@
-const { serverInit, serverCleanup } = require('~/test/setup')
+const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const {
   lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
   enums: { ROLE_ENUM }
@@ -16,11 +16,18 @@ describe('Auth controller', () => {
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
+  })
+
+  beforeEach(async () => {
     signupResponse = await app.post('/auth/signup').send(user)
   })
 
+  afterEach(async () => {
+    await serverCleanup()
+  })
+
   afterAll(async () => {
-    await serverCleanup(server)
+    await stopServer(server)
   })
 
   const user = {

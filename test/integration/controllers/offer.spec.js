@@ -1,8 +1,9 @@
-const { serverCleanup, serverInit } = require('~/test/setup')
+const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Offer = require('~/models/offer')
+const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
@@ -23,8 +24,13 @@ const updateData = {
 describe('Offer controller', () => {
   let app, server, accessToken, testOfferResponse
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     ;({ app, server } = await serverInit())
+  })
+
+  beforeEach(async () => {
+    await checkCategoryExistence()
+
     accessToken = await testUserAuthentication(app)
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
@@ -45,7 +51,11 @@ describe('Offer controller', () => {
   })
 
   afterEach(async () => {
-    await serverCleanup(server)
+    await serverCleanup()
+  })
+
+  afterAll(async () => {
+    await stopServer(server)
   })
 
   describe(`test POST ${endpointUrl}`, () => {
@@ -85,7 +95,22 @@ describe('Offer controller', () => {
     it('should get an offer by ID', async () => {
       const response = await app.get(endpointUrl + testOffer._id).set('Authorization', `Bearer ${accessToken}`)
 
-      expect(response.body).toEqual(expect.objectContaining(testOffer))
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          ...testOffer,
+          author: {
+            _id: expect.any(String),
+            totalReviews: {
+              student: 0,
+              tutor: 0
+            }
+          },
+          subject: {
+            _id: testOffer.subject,
+            name: 'testSubject'
+          }
+        })
+      )
       expect(response.statusCode).toBe(200)
     })
 

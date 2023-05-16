@@ -1,4 +1,4 @@
-const { serverInit, serverCleanup } = require('~/test/setup')
+const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 const testUserAuthentication = require('~/utils/testUserAuth')
@@ -35,8 +35,11 @@ const updateData = {
 describe('Review controller', () => {
   let app, server, accessToken, testOffer, testReview, testSubject
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     ;({ app, server } = await serverInit())
+  })
+
+  beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
 
     testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
@@ -58,7 +61,11 @@ describe('Review controller', () => {
   })
 
   afterEach(async () => {
-    await serverCleanup(server)
+    await serverCleanup()
+  })
+
+  afterAll(async () => {
+    await stopServer(server)
   })
 
   describe(`POST ${endpointUrl}`, () => {

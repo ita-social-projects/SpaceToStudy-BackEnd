@@ -12,11 +12,13 @@ const categorySchema = new Schema(
     categoryIcon: {
       path: {
         type: String,
-        required: [true, FIELD_CANNOT_BE_EMPTY('category icon')]
+        required: [true, FIELD_CANNOT_BE_EMPTY('category icon')],
+        default: 'mocked-path-to-icon'
       },
       color: {
         type: String,
-        required: [true, FIELD_CANNOT_BE_EMPTY('icon color')]
+        required: [true, FIELD_CANNOT_BE_EMPTY('icon color')],
+        default: '#66C42C'
       }
     },
     totalOffers: {

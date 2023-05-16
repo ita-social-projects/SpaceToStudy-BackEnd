@@ -15,6 +15,12 @@ const categoryService = {
     return await Category.findById(id).lean().exec()
   },
 
+  addCategory: async (data) => {
+    const { name, categoryIcon } = data
+
+    return await Category.create({ name, categoryIcon })
+  },
+
   priceMinMax: async (searchParams) => {
     const matchCondition = conditionCreator.condition(searchParams)
 

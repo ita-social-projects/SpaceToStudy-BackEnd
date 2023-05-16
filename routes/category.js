@@ -34,6 +34,7 @@ router.get(
 router.use('/:categoryId?/subjects/:subjectId?/offers', isEntityValid(nestedParam), offerRouter)
 router.use('/:id?/subjects', isEntityValid(param), subjectRouter)
 router.get('/', asyncWrapper(categoryController.getCategories))
+router.post('/', asyncWrapper(categoryController.addCategory))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))
 router.get('/:id', isEntityValid(param), asyncWrapper(categoryController.getCategoryById))
 

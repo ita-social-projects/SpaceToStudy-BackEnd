@@ -10,10 +10,15 @@ const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
 
 let accessToken
 
+let categoryBody = {
+  name: 'languages',
+  categoryIcon: { path: 'mocked-path-to-icon', color: '#66c42c' }
+}
+
 const categoryData = {
   _id: expect.any(String),
-  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' },
-  name: expect.any(String),
+  categoryIcon: categoryBody.categoryIcon,
+  name: categoryBody.name,
   totalOffers: expect.any(Number),
   updatedAt: expect.any(String),
   createdAt: expect.any(String)
@@ -22,7 +27,7 @@ const categoryData = {
 const subjectBody = { name: 'English' }
 
 describe('Category controller', () => {
-  let app, server, testSubject
+  let app, server, testCategory, testSubject
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -37,6 +42,8 @@ describe('Category controller', () => {
 
     categoryData._id = categoriesResponse.body[0]._id
 
+    testCategory = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(categoryBody)
+
     subjectBody.category = categoryData._id
 
     testSubject = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
@@ -50,6 +57,15 @@ describe('Category controller', () => {
 
   afterAll(async () => {
     await stopServer(server)
+  })
+
+  describe(`POST ${endpointUrl}`, () => {
+    it('should create a new category', async () => {
+      expect(testCategory.statusCode).toBe(201)
+      expect(testCategory.body).toEqual(
+        expect.objectContaining(categoryData)
+      )
+    })
   })
 
   describe(`GET ${endpointUrl}`, () => {

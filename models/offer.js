@@ -12,7 +12,7 @@ const offerSchema = new Schema(
     price: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],
-      min: [1, 'Price must be positive number']
+      min: [1, 'Price must be a positive number']
     },
     proficiencyLevel: {
       type: [String],
@@ -25,7 +25,7 @@ const offerSchema = new Schema(
     description: {
       type: String,
       minlength: [1, 'Description cannot be shorter than 1 symbol.'],
-      maxlength: [200, 'Description cannot be longer than 300 symbols.'],
+      maxlength: [200, 'Description cannot be longer than 200 symbols.'],
       required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {
@@ -90,19 +90,19 @@ const offerSchema = new Schema(
   }
 )
 
-offerSchema.statics.calcTotalOffers = async function (categoryId, subjectId) {
-  const categoryTotalOffersQty = await this.countDocuments({ categoryId })
-  await Category.findByIdAndUpdate(categoryId, { totalOffers: categoryTotalOffersQty }).exec()
-  const subjectTotalOffersQty = await this.countDocuments({ subjectId })
-  await Subject.findByIdAndUpdate(subjectId, { totalOffers: subjectTotalOffersQty }).exec()
+offerSchema.statics.calcTotalOffers = async function (category, subject) {
+  const categoryTotalOffersQty = await this.countDocuments({ category })
+  await Category.findByIdAndUpdate(category, { totalOffers: categoryTotalOffersQty }).exec()
+  const subjectTotalOffersQty = await this.countDocuments({ subject })
+  await Subject.findByIdAndUpdate(subject, { totalOffers: subjectTotalOffersQty }).exec()
 }
 
 offerSchema.post('save', async function (doc) {
-  doc.constructor.calcTotalOffers(doc.categoryId, doc.subjectId)
+  doc.constructor.calcTotalOffers(doc.category, doc.subject)
 })
 
 offerSchema.post('findOneAndRemove', async function (doc) {
-  doc.constructor.calcTotalOffers(doc.categoryId, doc.subjectId)
+  doc.constructor.calcTotalOffers(doc.category, doc.subject)
 })
 
 module.exports = model(OFFER, offerSchema)

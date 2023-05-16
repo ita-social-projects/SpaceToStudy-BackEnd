@@ -4,7 +4,7 @@ const offerAggregateOptions = (query, params) => {
   const {
     authorRole,
     price,
-    level,
+    proficiencyLevel,
     rating,
     language,
     name,
@@ -33,8 +33,8 @@ const offerAggregateOptions = (query, params) => {
     match.authorRole = authorRole
   }
 
-  if (level) {
-    match.proficiencyLevel = { $in: level }
+  if (proficiencyLevel) {
+    match.proficiencyLevel = { $in: proficiencyLevel }
   }
 
   if (price) {

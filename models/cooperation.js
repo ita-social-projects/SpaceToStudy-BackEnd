@@ -38,6 +38,11 @@ const cooperationSchema = new Schema(
       },
       required: true
     },
+    price: {
+      type: Number,
+      required: [true, FIELD_CANNOT_BE_EMPTY('price')],
+      min: [1, 'Price must be positive number']
+    },
     status: {
       type: String,
       enum: {

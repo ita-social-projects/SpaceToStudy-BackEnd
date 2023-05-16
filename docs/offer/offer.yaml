@@ -11,7 +11,7 @@ paths:
         - application/json
       parameters:
         - in: query
-          name: role
+          name: authorRole
           schema:
             type: string
           required: false
@@ -41,6 +41,18 @@ paths:
           required: false
         - in: query
           name: name
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: languages
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: excludedOfferId
           schema:
             type: string
           required: false

@@ -9,8 +9,10 @@ const offerService = {
     const count = await Offer.countDocuments(match)
 
     const offers = await Offer.find(match)
-      .populate({ path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] })
-      .populate({ path: 'subject', select: 'name' })
+      .populate([
+        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] },
+        { path: 'subject', select: 'name' }
+      ])
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -22,8 +24,10 @@ const offerService = {
 
   getOfferById: async (id) => {
     return await Offer.findById(id)
-      .populate({ path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] })
-      .populate({ path: 'subject', select: 'name' })
+      .populate([
+        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] },
+        { path: 'subject', select: 'name' }
+      ])
       .lean()
       .exec()
   },

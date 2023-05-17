@@ -33,7 +33,7 @@ const offerService = {
   },
 
   createOffer: async (author, authorRole, data) => {
-    const { price, proficiencyLevel, description, languages, subject, category } = data
+    const { price, proficiencyLevel, title, description, languages, subject, category } = data
 
     const user = await userService.getUserById(author)
 
@@ -49,6 +49,7 @@ const offerService = {
       authorLastName,
       price,
       proficiencyLevel,
+      title,
       description,
       languages,
       subject,

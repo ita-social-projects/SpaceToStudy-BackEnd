@@ -22,10 +22,16 @@ const offerSchema = new Schema(
       },
       required: [true, FIELD_CANNOT_BE_EMPTY('proficiency level')]
     },
+    title: {
+      type: String,
+      minlength: [1, 'Title cannot be shorter than 1 symbol.'],
+      maxlength: [100, 'Title cannot be longer than 100 symbols.'],
+      required: [true, FIELD_CANNOT_BE_EMPTY('title')]
+    },
     description: {
       type: String,
       minlength: [1, 'Description cannot be shorter than 1 symbol.'],
-      maxlength: [200, 'Description cannot be longer than 200 symbols.'],
+      maxlength: [1000, 'Description cannot be longer than 1000 symbols.'],
       required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {

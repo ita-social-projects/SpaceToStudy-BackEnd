@@ -60,6 +60,12 @@ describe('Category controller', () => {
   })
 
   describe(`POST ${endpointUrl}`, () => {
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.post(endpointUrl).send(categoryData)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
     it('should create a new category', async () => {
       expect(testCategory.statusCode).toBe(201)
       expect(testCategory.body).toEqual(

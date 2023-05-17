@@ -19,6 +19,8 @@ definitions:
               - Test Preparation
               - Professional
               - Specialized
+        title:
+          type: string
         description:
           type: string
         languages:
@@ -75,6 +77,8 @@ definitions:
             - Test Preparation
             - Professional
             - Specialized
+      title:
+        type: string
       description:
         type: string
       languages:
@@ -119,6 +123,8 @@ definitions:
             - Test Preparation
             - Professional
             - Specialized
+      title:
+        type: string
       description:
         type: string
       languages:

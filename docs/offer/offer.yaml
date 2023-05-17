@@ -84,6 +84,7 @@ paths:
                   - _id: 63ebc6fbd2f34037d0aba791
                     price: 111
                     proficiencyLevel: [Beginner]
+                    title: this is a new title for test purposes
                     description: this is a new description for test purposes
                     languages: [English]
                     authorRole: tutor
@@ -104,6 +105,7 @@ paths:
                   - _id: 63ebc6fbd2f34037d0aba791
                     price: 300
                     proficiencyLevel: [Intermediate, Advanced]
+                    title: this is a new title for test purposes
                     description: Lorem ipsum dolor sit amet consectetur
                     languages: [English, Ukrainian]
                     authorRole: tutor
@@ -150,6 +152,7 @@ paths:
             example:
               price: 300,
               proficiencyLevel: [Advanced]
+              title: this is a new title for test purposes
               description: Lorem ipsum dolor sit amet consectetur
               languages: [English, Ukrainian]
               subjectId: 63da8767c9ad4c9a0b0eacd3
@@ -164,6 +167,7 @@ paths:
               example:
                 price: 300
                 proficiencyLevel: [Advanced]
+                title: this is a new title for test purposes
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
@@ -224,6 +228,7 @@ paths:
                 _id: 63ec1cd51e9d781cdb6f4b14
                 price: 300,
                 proficiencyLevel: [Advanced]
+                title: this is a new title for test purposes
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
                 authorRole: tutor
@@ -318,6 +323,7 @@ paths:
             example:
               price: 300,
               proficiencyLevel: [Advanced]
+              title: this is a new title for test purposes
               description: this is a test text 123
               languages: [Ukrainian, Polish]
               subjectId: 63da8767c9ad4c9a0b0eacd3

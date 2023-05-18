@@ -144,6 +144,32 @@ const userSchema = new Schema(
       type: [Schema.Types.ObjectId],
       ref: OFFER,
       select: false
+    },
+    FAQ: {
+      type: [
+        {
+          question: {
+            type: String,
+            required: [true, 'You must specify the question'],
+            validate: {
+              validator: (question) => {
+                return question.trim().length > 0
+              },
+              message: 'Question cannot contain only whitespace'
+            }
+          },
+          answer: {
+            type: String,
+            required: [true, 'You must specify the answer'],
+            validate: {
+              validator: (answer) => {
+                return answer.trim().length > 0
+              },
+              message: 'Answer cannot contain only whitespace'
+            }
+          }
+        }
+      ]
     }
   },
   {

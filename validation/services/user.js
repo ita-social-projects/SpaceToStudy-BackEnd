@@ -9,7 +9,8 @@ const allowedUserFieldsForUpdate = {
   professionalSummary: true,
   mainSubjects: true,
   nativeLanguage: true,
-  appLanguage: true
+  appLanguage: true,
+  FAQ: true
 }
 
 module.exports = {

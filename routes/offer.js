@@ -9,6 +9,7 @@ const offerController = require('~/controllers/offer')
 const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
+const roleValidation = require('~/middlewares/offer/roleValidation')
 
 const body = [
   { model: Category, idName: 'categoryId' },
@@ -21,9 +22,9 @@ router.use(authMiddleware)
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(offerController.getOffers))
-router.post('/', isEntityValid(body, 'body'), asyncWrapper(offerController.createOffer))
+router.post('/', isEntityValid(body, 'body'), roleValidation, asyncWrapper(offerController.createOffer))
 router.get('/:id', isEntityValid(param), asyncWrapper(offerController.getOfferById))
-router.patch('/:id', isEntityValid(param), asyncWrapper(offerController.updateOffer))
+router.patch('/:id', isEntityValid(param), roleValidation, asyncWrapper(offerController.updateOffer))
 router.delete('/:id', isEntityValid(param), asyncWrapper(offerController.deleteOffer))
 
 module.exports = router

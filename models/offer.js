@@ -24,8 +24,8 @@ const offerSchema = new Schema(
     },
     description: {
       type: String,
-      minLength: [1, 'Description cannot be shorter than 1 symbol.'],
-      maxLength: [200, 'Description cannot be longer than 200 symbols.'],
+      minlength: [1, 'Description cannot be shorter than 1 symbol.'],
+      maxlength: [200, 'Description cannot be longer than 200 symbols.'],
       required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {
@@ -46,13 +46,13 @@ const offerSchema = new Schema(
     },
     authorFirstName: {
       type: String,
-      minLength: [1, 'Author first name cannot be shorter than 1 symbol.'],
-      maxLength: [30, 'Author first name cannot be longer than 30 symbols.']
+      minlength: [1, 'Author first name cannot be shorter than 1 symbol.'],
+      maxlength: [30, 'Author first name cannot be longer than 30 symbols.']
     },
     authorLastName: {
       type: String,
-      minLength: [1, 'Author last name cannot be shorter than 1 symbol.'],
-      maxLength: [30, 'Author last name cannot be longer than 30 symbols.']
+      minlength: [1, 'Author last name cannot be shorter than 1 symbol.'],
+      maxlength: [30, 'Author last name cannot be longer than 30 symbols.']
     },
     authorAvgRating: {
       type: Number,

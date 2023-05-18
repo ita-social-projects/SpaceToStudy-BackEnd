@@ -25,13 +25,17 @@ const offerService = {
   },
 
   getOfferById: async (id) => {
-    return await Offer.findById(id)
+    const offer = await Offer.findById(id)
       .populate([
         { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary', 'FAQ'] },
         { path: 'subject', select: 'name' }
       ])
       .lean()
       .exec()
+
+    offer.author.FAQ = offer.author.FAQ[offer.authorRole]
+
+    return offer
   },
 
   createOffer: async (author, authorRole, data) => {

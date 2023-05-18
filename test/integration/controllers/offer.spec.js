@@ -154,40 +154,4 @@ describe('Offer controller', () => {
       expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
   })
-
-  describe(`shoud return min and mix prices ${endpointUrl}`, () => {
-    it('should throw OFFER_NOT_FOUND', async () => {
-      const response = await app
-        .get(endpointUrl + 'price-range?authorRole=')
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
-    })
-
-    it('should return min and max prices for student offers', async () => {
-      const response = await app
-        .get(endpointUrl + 'price-range?authorRole=student')
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body && typeof response.body === 'object').toBe(true)
-      expect(response.body).toHaveProperty('minPrice')
-      expect(response.body).toHaveProperty('maxPrice')
-      expect(typeof response.body.minPrice).toBe('number')
-      expect(typeof response.body.maxPrice).toBe('number')
-    })
-
-    it('should return min and max prices for tutor offers', async () => {
-      const response = await app
-        .get(endpointUrl + 'price-range?authorRole=tutor')
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body && typeof response.body === 'object').toBe(true)
-      expect(response.body).toHaveProperty('minPrice')
-      expect(response.body).toHaveProperty('maxPrice')
-      expect(typeof response.body.minPrice).toBe('number')
-      expect(typeof response.body.maxPrice).toBe('number')
-    })
-  })
 })

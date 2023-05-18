@@ -1,7 +1,7 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, NOT_FOUND } = require('~/consts/errors')
 const Category = require('~/models/category')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 
@@ -14,8 +14,10 @@ let categoryData = {
   categoryIcon: { path: 'mocked-path-to-icon', color: '#66c42c' }
 }
 
+const subjectBody = { name: 'English' }
+
 describe('Category controller', () => {
-  let app, server
+  let app, server, testSubject
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -29,6 +31,12 @@ describe('Category controller', () => {
     const categoriesResponse = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
     categoryData._id = categoriesResponse.body[0]._id
+
+    subjectBody.category = categoryData._id
+
+    testSubject = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
+
+    testSubject._id = testSubject.body._id
   })
 
   afterEach(async () => {
@@ -124,6 +132,42 @@ describe('Category controller', () => {
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
       expect(typeof response.body[0]).toBe('string')
+    })
+  })
+
+  describe(`shoud return min and mix prices ${endpointUrl}`, () => {
+    it('should throw OFFER_NOT_FOUND', async () => {
+      const response = await app
+        .get(endpointUrl + `${categoryData._id}/price-range?authorRole=student`)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, NOT_FOUND, response)
+    })
+
+    it('should return min and max prices for student offers', async () => {
+      const response = await app
+        .get(endpointUrl + `${categoryData._id}/subjects/${testSubject._id}/price-range?authorRole=student`)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body && typeof response.body === 'object').toBe(true)
+      expect(response.body).toHaveProperty('minPrice')
+      expect(response.body).toHaveProperty('maxPrice')
+      expect(typeof response.body.minPrice).toBe('number')
+      expect(typeof response.body.maxPrice).toBe('number')
+    })
+
+    it('should return min and max prices for tutor offers', async () => {
+      const response = await app
+        .get(endpointUrl + `${categoryData._id}/subjects/${testSubject._id}/price-range?authorRole=student`)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body && typeof response.body === 'object').toBe(true)
+      expect(response.body).toHaveProperty('minPrice')
+      expect(response.body).toHaveProperty('maxPrice')
+      expect(typeof response.body.minPrice).toBe('number')
+      expect(typeof response.body.maxPrice).toBe('number')
     })
   })
 })

@@ -58,10 +58,10 @@ paths:
                     offer:
                       _id: 63ebc6fbd2f34037d0aba791
                       proficiencyLevel: Beginner
-                      subjectId:
+                      subject:
                         _id: 6255bc080a71adf9223df134
                         name: English
-                      categoryId:
+                      category:
                         _id: 64045f98b131dd04d7896af6
                         name: languages
                     createdAt: 2022-10-18T13:25:36.292Z
@@ -79,10 +79,10 @@ paths:
                     offer:
                       _id: 63ebc6fbd2f34037d0aba79
                       proficiencyLevel: Advanced
-                      subjectId:
+                      subject:
                         _id: 6255bc080a71adf9222df134
                         name: English
-                      categoryId:
+                      category:
                         _id: 64045f98b131dd04d7896af6
                         name: languages
                     createdAt: 2022-10-18T13:25:36.292Z
@@ -139,11 +139,18 @@ paths:
                   firstName: John
                   lastName: Doe
                   email: johndoe@gmail.com
-                  categories:
-                    [
-                      { _id: 6255bc080a75adf9223df444, name: Languages },
-                      { _id: 6255bc080a75adf443d7644, name: Biology }
-                    ]
+                  mainSubjects:
+                    {
+                      student:
+                        [
+                          { _id: 6255bc080a75adf9223df444, name: Languages },
+                          { _id: 6255bc080a75adf443d7644, name: Biology }
+                        ],
+                      tutor:
+                        [
+                          { _id: 6255bc080a75adf9223df444, name: English }
+                        ]
+                    }
                   totalReviews: 10
                   averageRating: 4.5
                   nativeLanguage: english
@@ -162,9 +169,9 @@ paths:
                   description: Extended English language course
                   languages: English, Ukrainian
                   authorRole: tutor
-                  userId: 63e63bb04d1bf3bea00e3d88
-                  subjectId: 6255bc080a71adf9222df134
-                  categoryId: 64045f98b131dd04d7896af6
+                  author: 63e63bb04d1bf3bea00e3d88
+                  subject: 6255bc080a71adf9222df134
+                  category: 64045f98b131dd04d7896af6
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:
@@ -230,11 +237,18 @@ paths:
                   firstName: John
                   lastName: Doe
                   email: johndoe@gmail.com
-                  categories:
-                    [
-                      { _id: 6255bc080a75adf9223df444, name: Languages },
-                      { _id: 6255bc080a75adf443d7644, name: Biology }
-                    ]
+                  mainSubjects:
+                    {
+                      student:
+                        [
+                          { _id: 6255bc080a75adf9223df444, name: Languages },
+                          { _id: 6255bc080a75adf443d7644, name: Biology }
+                        ],
+                      tutor:
+                        [
+                          { _id: 6255bc080a75adf9223df444, name: English }
+                        ]
+                    }
                   totalReviews: 10
                   averageRating: 4.5
                   nativeLanguage: english
@@ -253,15 +267,15 @@ paths:
                   description: This is a new course for those who want to start learning English
                   languages: English
                   authorRole: tutor
-                  userId: 6255bc080a75adf9223df212
-                  subjectId:
+                  author: 6255bc080a75adf9223df212
+                  subject:
                     _id: 6255bc080a71adf9222df134
                     name: English
                     category: 63525e23bf163f5ea609ff27
                     totalOffers: 3
                     createdAt: 2023-20-01T13:25:36.292Z
                     updatedAt: 2023-20-01T13:25:36.292Z
-                  categoryId:
+                  category:
                     _id: 64045f98b131dd04d7896af6
                     name: languages
                     categoryIcon: 

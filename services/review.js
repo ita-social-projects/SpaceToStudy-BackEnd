@@ -13,10 +13,10 @@ const reviewService = {
       .populate({ path: 'author', select: ['firstName', 'lastName', 'photo'] })
       .populate({
         path: 'offer',
-        select: ['subjectId', 'proficiencyLevel', 'categoryId'],
+        select: ['subject', 'proficiencyLevel', 'category'],
         populate: [
-          { path: 'categoryId', select: 'name' },
-          { path: 'subjectId', select: 'name' }
+          { path: 'category', select: 'name' },
+          { path: 'subject', select: 'name' }
         ]
       })
       .skip(skip)
@@ -39,10 +39,10 @@ const reviewService = {
       .populate({ path: 'author', select: ['firstName', 'lastName', 'photo'] })
       .populate({
         path: 'offer',
-        select: ['subjectId', 'proficiencyLevel', 'categoryId'],
+        select: ['subject', 'proficiencyLevel', 'category'],
         populate: [
-          { path: 'categoryId', select: 'name' },
-          { path: 'subjectId', select: 'name' }
+          { path: 'category', select: 'name' },
+          { path: 'subject', select: 'name' }
         ]
       })
       .lean()

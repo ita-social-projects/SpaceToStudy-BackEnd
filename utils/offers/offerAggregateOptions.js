@@ -74,7 +74,7 @@ const offerAggregateOptions = (query, params) => {
     } else if (sort === 'priceDesc') {
       sortOption['price'] = -1
     } else {
-      sortOption[sort] = 1
+      sortOption[sort] = -1
     }
   }
 

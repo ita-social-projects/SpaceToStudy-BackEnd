@@ -67,6 +67,22 @@ paths:
                   photo: john-doe-photo.jpg
                   status: { student: active, tutor: active, admin: active }
                   lastLogin: null
+                  FAQ: {
+                    student: [
+                      {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
+                    ],
+                    tutor: [
+                      {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
+                    ]
+                  }
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
                 - _id: 8755bc080a00adr9243df104
@@ -93,6 +109,22 @@ paths:
                   professionalSummary: KNPU H.S. Skovoroda
                   photo: joe-doe-photo.jpg
                   status: { student: active, tutor: active, admin: active }
+                  FAQ: {
+                    student: [
+                      {
+                        question: student question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: student answer
+                      }
+                    ],
+                    tutor: [
+                      {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
+                    ]
+                  }
                   lastLogin: 2022-09-02T11:59:53.243+00:00
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
@@ -238,6 +270,22 @@ paths:
                   isFirstLogin: true
                   lastLogin: 2022-09-02T11:59:53.243+00:00
                   bookmarkedOffers: []
+                  FAQ: {
+                    student: [
+                      {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
+                    ],
+                    tutor: [
+                      {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
+                    ]
+                  }
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
                 example2:
@@ -275,6 +323,22 @@ paths:
                   isFirstLogin: true
                   lastLogin: 2022-09-02T11:59:53.243+00:00
                   bookmarkedOffers: []
+                  FAQ: {
+                    student: [
+                      {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
+                    ],
+                    tutor: [
+                      {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
+                    ]
+                  }
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
         400:

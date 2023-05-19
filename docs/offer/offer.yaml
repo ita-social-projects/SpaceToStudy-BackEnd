@@ -96,12 +96,22 @@ paths:
                       totalReviews:
                         student: 0
                         tutor: 0
+                      FAQ: {
+                        question: tutor question,
+                        _id: 63525e23bf163f5ea609ff2b,
+                        answer: tutor answer
+                      }
                       professionalSummary: My professional summary
                       photo: link-to-photo.png
                     subject:
                       _id: 63da8767c9ad4c9a0b0eacd3
                       name: english
                     category: 63525e23bf163f5ea609ff2b
+                    FAQ: {
+                      question: offer question,
+                      _id: 63525e23bf163f5ea609ff2b,
+                      answer: offer answer
+                    }
                   - _id: 63ebc6fbd2f34037d0aba791
                     price: 300
                     proficiencyLevel: [Intermediate, Advanced]
@@ -117,12 +127,20 @@ paths:
                       totalReviews:
                         student: 0
                         tutor: 0
+                      FAQ:
+                        - question: tutor question
+                          _id: 63525e23bf163f5ea609ff2b
+                          answer: tutor answer
                       professionalSummary: My professional summary
                       photo: link-to-photo.png
                     subject:
                       _id: 63da8767c9ad4c9a0b0eacd3
                       name: bass
                     category: 63525e23bf163f5ea609ff2b
+                    FAQ:
+                      - question: offer question
+                        _id: 63525e23bf163f5ea609ff2b
+                        answer: offer answer
         401:
           description: Unauthorized
           content:
@@ -155,8 +173,11 @@ paths:
               title: this is a new title for test purposes
               description: Lorem ipsum dolor sit amet consectetur
               languages: [English, Ukrainian]
-              subjectId: 63da8767c9ad4c9a0b0eacd3
-              categoryId: 63525e23bf163f5ea609ff2b
+              subject: 63da8767c9ad4c9a0b0eacd3
+              category: 63525e23bf163f5ea609ff2b
+              FAQ:
+                - question: offer question
+                  answer: offer answer
       responses:
         201:
           description: Created
@@ -178,6 +199,11 @@ paths:
                 subject: 63da8767c9ad4c9a0b0eacd3
                 category: 63525e23bf163f5ea609ff2b
                 status: pending
+                FAQ: {
+                  question: tutor question,
+                  _id: 63525e23bf163f5ea609ff2b,
+                  answer: tutor answer
+                }
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -240,12 +266,22 @@ paths:
                   totalReviews:
                     student: 0
                     tutor: 0
+                  FAQ: {
+                    question: tutor question,
+                    _id: 63525e23bf163f5ea609ff2b,
+                    answer: tutor answer
+                  }
                   professionalSummary: My professional summary
                   photo: link-to-photo.png
                 subject:
                   _id: 63da8767c9ad4c9a0b0eacd3
                   name: piano
                 category: 63525e23bf163f5ea609ff2b
+                FAQ: {
+                  question: tutor question,
+                  _id: 63525e23bf163f5ea609ff2b,
+                  answer: tutor answer
+                }
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
         400:

@@ -36,7 +36,7 @@ describe('Category controller', () => {
 
     testSubject = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
 
-    testSubject._id = testSubject.body._id
+    subjectBody._id = testSubject.body._id
   })
 
   afterEach(async () => {
@@ -135,7 +135,7 @@ describe('Category controller', () => {
   })
 
   describe(`shoud return min and mix prices ${endpointUrl}`, () => {
-    it('should throw OFFER_NOT_FOUND', async () => {
+    it('should throw NOT_FOUND', async () => {
       const response = await app
         .get(endpointUrl + `${categoryData._id}/price-range?authorRole=student`)
         .set('Authorization', `Bearer ${accessToken}`)
@@ -145,11 +145,11 @@ describe('Category controller', () => {
 
     it('should return min and max prices for student offers', async () => {
       const response = await app
-        .get(endpointUrl + `${categoryData._id}/subjects/${testSubject._id}/price-range?authorRole=student`)
+        .get(endpointUrl + `${categoryData._id}/subjects/${subjectBody._id}/price-range?authorRole=student`)
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body && typeof response.body === 'object').toBe(true)
+      expect(typeof response.body).toBe('object')
       expect(response.body).toHaveProperty('minPrice')
       expect(response.body).toHaveProperty('maxPrice')
       expect(typeof response.body.minPrice).toBe('number')
@@ -158,11 +158,11 @@ describe('Category controller', () => {
 
     it('should return min and max prices for tutor offers', async () => {
       const response = await app
-        .get(endpointUrl + `${categoryData._id}/subjects/${testSubject._id}/price-range?authorRole=student`)
+        .get(endpointUrl + `${categoryData._id}/subjects/${subjectBody._id}/price-range?authorRole=student`)
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body && typeof response.body === 'object').toBe(true)
+      expect(typeof response.body).toBe('object')
       expect(response.body).toHaveProperty('minPrice')
       expect(response.body).toHaveProperty('maxPrice')
       expect(typeof response.body.minPrice).toBe('number')

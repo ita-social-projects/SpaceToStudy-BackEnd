@@ -1,12 +1,19 @@
 const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
-  getCooperations: async (match) => {
-    const count = await Cooperation.countDocuments(match)
-
-    const cooperations = await Cooperation.find(match).populate('offer', ['id', 'author', 'price']).lean().exec()
-
-    return { count, cooperations }
+  getCooperations: async ({ skip, limit, match, sortOptions }) => {
+    return await Cooperation.find(match)
+      .populate([
+        {
+          path: 'offerId',
+          options: {
+            ...(sortOptions.firstName && { authorFirstName: sortOptions.firstName })
+          }
+        }
+      ])
+      .sort({ ...(sortOptions.updatedAt && { updatedAt: sortOptions.updatedAt }) })
+      .skip(skip)
+      .limit(limit)
   },
 
   getCooperationById: async (id) => {

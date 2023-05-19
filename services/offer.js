@@ -3,6 +3,8 @@ const userService = require('~/services/user')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
+const filterAllowedFields = require('~/utils/filterAllowedFields')
+const { allowedOfferFieldsForUpdate } = require('~/validation/services/offer')
 
 const offerService = {
   getOffers: async (match, sort, skip, limit) => {
@@ -10,7 +12,7 @@ const offerService = {
 
     const offers = await Offer.find(match)
       .populate([
-        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] },
+        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary', 'FAQ'] },
         { path: 'subject', select: 'name' }
       ])
       .sort(sort)
@@ -23,17 +25,21 @@ const offerService = {
   },
 
   getOfferById: async (id) => {
-    return await Offer.findById(id)
+    const offer = await Offer.findById(id)
       .populate([
-        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary'] },
+        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary', 'FAQ'] },
         { path: 'subject', select: 'name' }
       ])
       .lean()
       .exec()
+
+    offer.author.FAQ = offer.author.FAQ[offer.authorRole]
+
+    return offer
   },
 
   createOffer: async (author, authorRole, data) => {
-    const { price, proficiencyLevel, description, languages, subject, category } = data
+    const { price, proficiencyLevel, description, languages, subject, category, FAQ } = data
 
     const user = await userService.getUserById(author)
 
@@ -52,12 +58,15 @@ const offerService = {
       description,
       languages,
       subject,
-      category
+      category,
+      FAQ
     })
   },
 
-  updateOffer: async (id, filteredFields) => {
-    await Offer.findByIdAndUpdate(id, filteredFields, { new: true, runValidators: true }).lean().exec()
+  updateOffer: async (id, updateData) => {
+    const filteredUpdateData = filterAllowedFields(updateData, allowedOfferFieldsForUpdate)
+
+    await Offer.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },
 
   deleteOffer: async (id) => {

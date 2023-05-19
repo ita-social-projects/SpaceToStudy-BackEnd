@@ -25,7 +25,7 @@ const offerSchema = new Schema(
     description: {
       type: String,
       minlength: [1, 'Description cannot be shorter than 1 symbol.'],
-      maxlength: [200, 'Description cannot be longer than 200 symbols.'],
+      maxlength: [1000, 'Description cannot be longer than 1000 symbols.'],
       required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {
@@ -81,12 +81,40 @@ const offerSchema = new Schema(
         message: `Offer status can be either of these: ${OFFER_STATUS.toString()}`
       },
       default: 'pending'
+    },
+    FAQ: {
+      type: [
+        {
+          question: {
+            type: String,
+            required: [true, 'You must specify the question'],
+            validate: {
+              validator: (question) => {
+                return question.trim().length > 0
+              },
+              message: 'Question cannot contain only whitespace'
+            }
+          },
+          answer: {
+            type: String,
+            required: [true, 'You must specify the answer'],
+            validate: {
+              validator: (answer) => {
+                return answer.trim().length > 0
+              },
+              message: 'Answer cannot contain only whitespace'
+            }
+          }
+        }
+      ]
     }
   },
   {
     timestamps: true,
     versionKey: false,
-    id: false
+    id: false,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
   }
 )
 

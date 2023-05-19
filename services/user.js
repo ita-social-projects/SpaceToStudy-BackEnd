@@ -92,11 +92,7 @@ const userService = {
       filteredUpdateData.mainSubjects = { student: user.mainSubjects?.student, tutor: updateData.mainSubjects }
     }
 
-    const updatedUser = await User.findByIdAndUpdate(id, filteredUpdateData, { new: true }).lean().exec()
-
-    if (!updatedUser) {
-      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
-    }
+    await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },
 
   updateStatus: async (id, updateStatus) => {

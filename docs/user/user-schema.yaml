@@ -70,6 +70,31 @@ definitions:
               enum:
                 - active
                 - blocked
+        FAQ:
+          type: object
+          properties:
+            student:
+              type: array
+              items:
+                type: object
+                properties:
+                  question:
+                    type: string
+                  _id:
+                    type: string
+                  answer:
+                    type: string
+            tutor:
+              type: array
+              items:
+                type: object
+                properties:
+                  question:
+                    type: string
+                  _id:
+                    type: string
+                  answer:
+                    type: string
         createdAt:
           type: string
           format: date-time
@@ -152,6 +177,31 @@ definitions:
       bookmarkedOffers:
         type: array
         $ref: '#/components/offer'
+      FAQ:
+        type: object
+        properties:
+          student:
+            type: array
+            items:
+              type: object
+              properties:
+                question:
+                  type: string
+                _id:
+                  type: string
+                answer:
+                  type: string
+          tutor:
+            type: array
+            items:
+              type: object
+              properties:
+                question:
+                  type: string
+                _id:
+                  type: string
+                answer:
+                  type: string
       createdAt:
         type: string
         format: date-time

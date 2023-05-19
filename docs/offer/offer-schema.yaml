@@ -53,6 +53,15 @@ definitions:
             - pending
             - active
             - closed
+        FAQ:
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: string
+              answer:
+                type: string
         createdAt:
           type: string
           format: date-time
@@ -101,6 +110,15 @@ definitions:
           - pending
           - active
           - closed
+      FAQ:
+        type: array
+        items:
+          type: object
+          properties:
+            question:
+              type: string
+            answer:
+              type: string
   offer:
     type: object
     properties:
@@ -153,6 +171,15 @@ definitions:
           - pending
           - active
           - closed
+      FAQ:
+        type: array
+        items:
+          type: object
+          properties:
+            question:
+              type: string
+            answer:
+              type: string
       createdAt:
         type: string
         format: date-time

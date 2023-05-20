@@ -1,8 +1,8 @@
 const { Schema, model } = require('mongoose')
-const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
+const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
 const { USER, OFFER, COOPERATION, SUBJECT } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS }
+  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, SPOKEN_LANG_ENUM }
 } = require('~/consts/validation')
 const User = require('./user')
 const Subject = require('./subject')
@@ -34,7 +34,7 @@ const cooperationSchema = new Schema(
       type: String,
       enum: {
         values: PROFICIENCY_LEVEL_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('tutoring level', PROFICIENCY_LEVEL_ENUM)
+        message: ENUM_CAN_BE_ONE_OF('proficiency level', PROFICIENCY_LEVEL_ENUM)
       },
       required: true
     },
@@ -42,7 +42,7 @@ const cooperationSchema = new Schema(
       type: String,
       enum: {
         values: SPOKEN_LANG_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('tutoring language', SPOKEN_LANG_ENUM)
+        message: ENUM_CAN_BE_ONE_OF('language', SPOKEN_LANG_ENUM)
       },
       required: true
     },

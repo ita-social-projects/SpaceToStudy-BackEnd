@@ -56,9 +56,9 @@ const cooperationSchema = new Schema(
 )
 
 cooperationSchema.pre('save', async function (next) {
-  const offer = await Offer.findById(this.offer)
-  const user = await User.findById(this.initiator)
-  const subject = await Subject.findById(offer.subject)
+  const offer = await Offer.findById(this.offer).exec()
+  const user = await User.findById(this.initiator).exec()
+  const subject = await Subject.findById(offer.subject).exec()
 
   this.initiatorFullName = `${user.firstName} ${user.lastName}`
   this.subjectName = subject.name

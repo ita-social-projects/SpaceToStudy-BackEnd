@@ -25,6 +25,27 @@ const cooperationSchema = new Schema(
       ref: USER,
       required: [true, FIELD_CANNOT_BE_EMPTY('recipient id')]
     },
+    additionalInfo: {
+      type: String,
+      minLength: [30, 'Additional info cannot be shorter than 30 symbol.'],
+      maxLength: [1000, 'Additional info cannot be longer than 1000 symbol.']
+    },
+    requiredProficiencyLevel: {
+      type: String,
+      enum: {
+        values: PROFICIENCY_LEVEL_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('tutoring level', PROFICIENCY_LEVEL_ENUM)
+      },
+      required: true
+    },
+    requiredLanguage: {
+      type: String,
+      enum: {
+        values: SPOKEN_LANG_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('tutoring language', SPOKEN_LANG_ENUM)
+      },
+      required: true
+    },
     price: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],

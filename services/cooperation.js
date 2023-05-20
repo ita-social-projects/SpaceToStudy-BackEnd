@@ -1,6 +1,7 @@
 const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
+<<<<<<< HEAD
   getCooperations: async ({ skip, limit, match, sortOptions }) => {
     return await Cooperation.find(match)
       .populate([
@@ -12,6 +13,13 @@ const cooperationService = {
         }
       ])
       .sort({ ...(sortOptions.updatedAt && { updatedAt: sortOptions.updatedAt }) })
+=======
+  getCooperations: async ({ skip = 0, limit = 5, match, sort }) => {
+    return await Cooperation
+      .find(match)
+      .populate({ path: 'offerId', select: ['price', 'authorFirstName'] })
+      .sort(sort)
+>>>>>>> 42e662d (added separate function)
       .skip(skip)
       .limit(limit)
   },

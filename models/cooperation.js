@@ -1,11 +1,10 @@
 const { Schema, model } = require('mongoose')
-const { FIELD_CANNOT_BE_EMPTY, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 const { USER, OFFER, COOPERATION, SUBJECT } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS }
 } = require('~/consts/validation')
 const User = require('./user')
-const { createNotFoundError } = require('~/utils/errorsHelper')
 const Subject = require('./subject')
 const Offer = require('./offer')
 

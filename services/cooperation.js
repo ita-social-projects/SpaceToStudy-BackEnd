@@ -17,7 +17,6 @@ const cooperationService = {
   getCooperations: async ({ skip = 0, limit = 5, match, sort }) => {
     return await Cooperation
       .find(match)
-      .populate({ path: 'offerId', select: ['price', 'authorFirstName'] })
       .sort(sort)
 >>>>>>> 42e662d (added separate function)
       .skip(skip)

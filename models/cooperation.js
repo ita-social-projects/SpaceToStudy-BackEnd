@@ -6,6 +6,8 @@ const {
 } = require('~/consts/validation')
 const User = require('./user')
 const { createNotFoundError } = require('~/utils/errorsHelper')
+const Subject = require('./subject')
+const Offer = require('./offer')
 
 const cooperationSchema = new Schema(
   {
@@ -29,10 +31,10 @@ const cooperationSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],
       min: [1, 'Price must be positive number']
     },
-    subject: {
-      type: Schema.Types.ObjectId,
+    subjectName: {
+      type: String,
       ref: SUBJECT,
-      required: [true, FIELD_CANNOT_BE_EMPTY('subject id')]
+      required: false
     },
     initiatorFullName: {
       type: String,
@@ -54,11 +56,13 @@ const cooperationSchema = new Schema(
 )
 
 cooperationSchema.pre('save', async function (next) {
+  const offer = await Offer.findById(this.offer)
   const user = await User.findById(this.initiator)
-  if (user) {
-    this.initiatorFullName = `${user.firstName} ${user.lastName}`
-    next()
-  } else throw createNotFoundError(DOCUMENT_NOT_FOUND(User.modelName))
+  const subject = await Subject.findById(offer.subject)
+
+  this.initiatorFullName = `${user.firstName} ${user.lastName}`
+  this.subjectName = subject.name
+  next()
 })
 
 module.exports = model(COOPERATION, cooperationSchema)

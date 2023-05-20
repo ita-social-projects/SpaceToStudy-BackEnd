@@ -34,11 +34,7 @@ const cooperationSchema = new Schema(
       ref: SUBJECT,
       required: [true, FIELD_CANNOT_BE_EMPTY('subject id')]
     },
-    initiatorFirstName: {
-      type: String,
-      required: false
-    },
-    initiatorLastName: {
+    initiatorFullName: {
       type: String,
       required: false
     },
@@ -60,8 +56,7 @@ const cooperationSchema = new Schema(
 cooperationSchema.pre('save', async function (next) {
   const user = await User.findById(this.initiator)
   if (user) {
-    this.initiatorFirstName = user.firstName
-    this.initiatorLastName = user.lastName
+    this.initiatorFullName = `${user.firstName} ${user.lastName}`
     next()
   } else throw createNotFoundError(DOCUMENT_NOT_FOUND(User.modelName))
 })

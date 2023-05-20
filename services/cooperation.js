@@ -2,21 +2,25 @@ const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
   getCooperations: async () => {
-    return await Cooperation.find().lean().exec()
+    return await Cooperation.find().populate('offer', ['id', 'author', 'price']).lean().exec()
   },
 
   getCooperationById: async (id) => {
-    return await Cooperation.findById(id).lean().exec()
+    return await Cooperation.findById(id).populate('offer', ['id', 'author', 'price']).lean().exec()
   },
 
-  createCooperation: async (initiatorUserId, data) => {
-    const { offerId, recipientUserId, price } = data
+  createCooperation: async (initiator, data) => {
+    const { offer, requiredTutoringLevel, requiredLanguage, additionalInfo, receiver, subject, price } = data
 
     return await Cooperation.create({
-      initiatorUserId,
-      offerId,
-      recipientUserId,
-      price
+      initiator,
+      receiver,
+      offer,
+      subject,
+      price,
+      requiredLanguage,
+      requiredTutoringLevel,
+      additionalInfo
     })
   },
 

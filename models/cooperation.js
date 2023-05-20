@@ -1,53 +1,48 @@
 const { Schema, model } = require('mongoose')
-const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION } = require('~/consts/models')
+const { FIELD_CANNOT_BE_EMPTY, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { USER, OFFER, COOPERATION, SUBJECT } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, SPOKEN_LANG_ENUM }
+  enums: { COOPERATION_STATUS }
 } = require('~/consts/validation')
+const User = require('./user')
+const { createNotFoundError } = require('~/utils/errorsHelper')
 
 const cooperationSchema = new Schema(
   {
     offer: {
       type: Schema.Types.ObjectId,
       ref: OFFER,
-      required: [true, FIELD_CANNOT_BE_EMPTY('offer')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('offer id')]
     },
-    initiatorUserId: {
+    initiator: {
       type: Schema.Types.ObjectId,
       ref: USER,
-      required: [true, FIELD_CANNOT_BE_EMPTY('initiator user id')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('initiator id')]
     },
-    additionalInfo: {
-      type: String,
-      minLength: [30, 'Additional info cannot be shorter than 30 symbol.'],
-      maxLength: [1000, 'Additional info cannot be longer than 1000 symbol.']
-    },
-    requiredProficiencyLevel: {
-      type: String,
-      enum: {
-        values: PROFICIENCY_LEVEL_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('tutoring level', PROFICIENCY_LEVEL_ENUM)
-      },
-      required: true
-    },
-    requiredLanguage: {
-      type: String,
-      enum: {
-        values: SPOKEN_LANG_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('tutoring language', SPOKEN_LANG_ENUM)
-      },
-      required: true
+    receiver: {
+      type: Schema.Types.ObjectId,
+      ref: USER,
+      required: [true, FIELD_CANNOT_BE_EMPTY('recipient id')]
     },
     price: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],
       min: [1, 'Price must be positive number']
     },
+    subject: {
+      type: Schema.Types.ObjectId,
+      ref: SUBJECT,
+      required: [true, FIELD_CANNOT_BE_EMPTY('subject id')]
+    },
+    authorFirstName: {
+      type: String,
+      required: [false, FIELD_CANNOT_BE_EMPTY('author first name')]
+    },
     status: {
       type: String,
       enum: {
         values: COOPERATION_STATUS,
-        message: ENUM_CAN_BE_ONE_OF('cooperation status', COOPERATION_STATUS)
+        message: `Cooperation status can be either of these: ${COOPERATION_STATUS.toString()}`
       },
       default: COOPERATION_STATUS[0]
     }
@@ -57,5 +52,14 @@ const cooperationSchema = new Schema(
     versionKey: false
   }
 )
+
+cooperationSchema.pre('save', async function (next) {
+  const user = await User.findById(this.initiator)
+
+  if (user) {
+    this.authorFirstName = user.firstName
+    next()
+  } else throw createNotFoundError(DOCUMENT_NOT_FOUND(User.modelName))
+})
 
 module.exports = model(COOPERATION, cooperationSchema)

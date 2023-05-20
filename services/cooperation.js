@@ -9,12 +9,15 @@ const cooperationService = {
     return await Cooperation.findById(id).populate('offer', ['id', 'author', 'price']).lean().exec()
   },
 
-  createCooperation: async (initiatorUserId, data) => {
-    const { offer, requiredTutoringLevel, requiredLanguage, additionalInfo } = data
+  createCooperation: async (initiator, data) => {
+    const { offer, requiredTutoringLevel, requiredLanguage, additionalInfo, receiver, subject, price } = data
 
     return await Cooperation.create({
-      initiatorUserId,
+      initiator,
+      receiver,
       offer,
+      subject,
+      price,
       requiredLanguage,
       requiredTutoringLevel,
       additionalInfo

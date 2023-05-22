@@ -51,11 +51,6 @@ const cooperationSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],
       min: [1, 'Price must be positive number']
     },
-    subjectName: {
-      type: String,
-      ref: SUBJECT,
-      required: false
-    },
     initiatorFullName: {
       type: String,
       required: false

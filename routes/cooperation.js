@@ -1,4 +1,4 @@
-const router = require('express').Router()
+const router = require('express').Router({ mergeParams: true })
 
 const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')

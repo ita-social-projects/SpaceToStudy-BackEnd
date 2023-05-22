@@ -7,6 +7,7 @@ const isEntityValid = require('~/middlewares/entityValidation')
 
 const userController = require('~/controllers/user')
 const reviewRouter = require('~/routes/review')
+const cooperationRouter = require('~/routes/cooperation')
 const User = require('~/models/user')
 const {
   roles: { ADMIN }
@@ -19,6 +20,7 @@ router.use(authMiddleware)
 router.param('id', idValidation)
 
 router.use('/:id/reviews', isEntityValid(param), reviewRouter)
+router.use('/:id/cooperations', isEntityValid(param), cooperationRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', isEntityValid(param), asyncWrapper(userController.getUserById))

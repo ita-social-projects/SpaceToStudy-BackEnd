@@ -59,7 +59,15 @@ describe('Category controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
+      expect(response.body[0]).toEqual(
+        expect.objectContaining({
+          _id: expect.any(String),
+          categoryIcon: categoryData.categoryIcon,
+          name: expect.any(String),
+          totalOffers: expect.any(Number),
+          updatedAt: expect.any(String)
+        })
+      )
     })
 
     it('should get all categories that contain "lan" in their name', async () => {

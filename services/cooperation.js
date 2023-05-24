@@ -1,8 +1,13 @@
 const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
+<<<<<<< HEAD
   getCooperations: async ({ skip, limit, match, sortOptions }) => {
     return await Cooperation.find(match).sort(sort).skip(skip).limit(limit)
+=======
+  getCooperations: async ({ skip = 0, limit = 5, match, sort }) => {
+    return await Cooperation.find(match).sort(sort).skip(skip).limit(limit).lean().exec()
+>>>>>>> e1441bb (sorting and filtering)
   },
 
   getCooperationById: async (id) => {

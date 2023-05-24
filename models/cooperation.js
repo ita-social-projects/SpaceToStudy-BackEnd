@@ -20,6 +20,11 @@ const cooperationSchema = new Schema(
       ref: USER,
       required: [true, FIELD_CANNOT_BE_EMPTY('initiator id')]
     },
+    receiver: {
+      type: Schema.Types.ObjectId,
+      ref: USER,
+      required: [true, FIELD_CANNOT_BE_EMPTY('recipient id')]
+    },
     additionalInfo: {
       type: String,
       minLength: [30, 'Additional info cannot be shorter than 30 symbol.'],
@@ -72,10 +77,12 @@ const cooperationSchema = new Schema(
 
 cooperationSchema.pre('save', async function (next) {
   const offer = await Offer.findById(this.offer).exec()
-  const user = await User.findById(this.initiator).exec()
+  const initiator = await User.findById(this.initiator).exec()
+  const receiver = await User.findById(this.receiver).exec()
   const subject = await Subject.findById(offer.subject).exec()
 
-  this.initiatorFullName = `${user.firstName} ${user.lastName}`
+  this.initiatorFullName = `${initiator.firstName} ${initiator.lastName}`
+  this.receiverFullName = `${receiver.firstName} ${receiver.lastName}`
   this.subjectName = subject.name
   next()
 })

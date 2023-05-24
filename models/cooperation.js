@@ -20,11 +20,6 @@ const cooperationSchema = new Schema(
       ref: USER,
       required: [true, FIELD_CANNOT_BE_EMPTY('initiator id')]
     },
-    receiver: {
-      type: Schema.Types.ObjectId,
-      ref: USER,
-      required: [true, FIELD_CANNOT_BE_EMPTY('recipient id')]
-    },
     additionalInfo: {
       type: String,
       minLength: [30, 'Additional info cannot be shorter than 30 symbol.'],

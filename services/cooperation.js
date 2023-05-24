@@ -26,14 +26,13 @@ const cooperationService = {
   },
 
   createCooperation: async (initiator, data) => {
-    const { offer, requiredProficiencyLevel, requiredLanguage, additionalInfo, receiver, price } = data
+    const { offer, requiredProficiencyLevel, additionalInfo, receiver, price } = data
 
     return await Cooperation.create({
       initiator,
       receiver,
       offer,
       price,
-      requiredLanguage,
       requiredProficiencyLevel,
       additionalInfo
     })

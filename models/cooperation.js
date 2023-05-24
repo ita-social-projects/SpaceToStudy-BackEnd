@@ -38,14 +38,6 @@ const cooperationSchema = new Schema(
       },
       required: true
     },
-    requiredLanguage: {
-      type: String,
-      enum: {
-        values: SPOKEN_LANG_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('language', SPOKEN_LANG_ENUM)
-      },
-      required: true
-    },
     price: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],

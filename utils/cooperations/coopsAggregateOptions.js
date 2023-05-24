@@ -6,7 +6,7 @@ const coopsAggregateOptions = (params = {}, query) => {
   const match = {}
   const sort = {}
 
-  if (order === 'name') sort.initiatorFullName = orderBy
+  if (order === 'name') sort.fullName = orderBy
   else if (order === 'subject') sort.subjectName = orderBy
   else if (order === 'updatedAt') sort.updatedAt = orderBy
   else sort.updatedAt = 'asc'
@@ -16,7 +16,7 @@ const coopsAggregateOptions = (params = {}, query) => {
     match['$or'] = [{ initiatorUserId: id }, { recipientUserId: id }]
   }
 
-  if (search) match.initiatorFullName = search
+  if (search) match.fullName = getRegex(search)
 
   return { skip, limit, match, sort }
 }

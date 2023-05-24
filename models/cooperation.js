@@ -60,6 +60,10 @@ const cooperationSchema = new Schema(
       type: String,
       required: false
     },
+    receiverFullName: {
+      type: String,
+      required: false
+    },
     status: {
       type: String,
       enum: {
@@ -80,6 +84,7 @@ cooperationSchema.pre('save', async function (next) {
   const initiator = await User.findById(this.initiator).exec()
   const receiver = await User.findById(this.receiver).exec()
   const subject = await Subject.findById(offer.subject).exec()
+  console.log(receiver)
 
   this.initiatorFullName = `${initiator.firstName} ${initiator.lastName}`
   this.receiverFullName = `${receiver.firstName} ${receiver.lastName}`

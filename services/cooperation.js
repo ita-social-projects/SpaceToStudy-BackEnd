@@ -1,13 +1,24 @@
 const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
-<<<<<<< HEAD
-  getCooperations: async ({ skip, limit, match, sortOptions }) => {
-    return await Cooperation.find(match).sort(sort).skip(skip).limit(limit)
-=======
-  getCooperations: async ({ skip = 0, limit = 5, match, sort }) => {
-    return await Cooperation.find(match).sort(sort).skip(skip).limit(limit).lean().exec()
->>>>>>> e1441bb (sorting and filtering)
+  getCooperations: async ({ skip = 0, limit = 5, match, sort, currentUser }) => {
+    return await Cooperation.aggregate()
+      .addFields({
+        fullName: {
+          $cond: [
+            {
+              $eq: ['$initiator', currentUser]
+            },
+            '$initiatorFullName',
+            '$receiverFullName'
+          ]
+        }
+      })
+      .match(match)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec()
   },
 
   getCooperationById: async (id) => {

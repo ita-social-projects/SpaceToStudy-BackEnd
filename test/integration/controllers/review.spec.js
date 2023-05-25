@@ -3,6 +3,11 @@ const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Review = require('~/models/review')
+const checkCategoryExistence = require('~/seed/checkCategoryExistence')
+const jwt = require('jsonwebtoken')
+const {
+  config: { JWT_ACCESS_SECRET }
+} = require('~/configs/config')
 
 const endpointUrl = '/reviews/'
 const offerEndpointUrl = '/offers/'
@@ -13,15 +18,14 @@ const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
 let reviewBody = {
   comment: 'Good mentor and learning program',
   rating: 5,
-  targetUserId: '6424a09cde0a9091d01120a7',
   targetUserRole: 'student'
 }
 let offerBody = {
   price: 330,
-  proficiencyLevel: 'Beginner',
+  proficiencyLevel: ['Beginner'],
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
-  categoryId: '63525e23bf163f5ea609ff27'
+  category: '63525e23bf163f5ea609ff27'
 }
 let subjectBody = {
   name: 'English',
@@ -33,14 +37,23 @@ const updateData = {
 }
 
 describe('Review controller', () => {
-  let app, server, accessToken, testOffer, testReview, testSubject
+  let app, server, accessToken, testOffer, testReview, testSubject, userId
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
+    await checkCategoryExistence()
     accessToken = await testUserAuthentication(app)
+
+    const decoded = jwt.verify(accessToken, JWT_ACCESS_SECRET)
+    userId = decoded.id
+    reviewBody.targetUserId = userId
+
+    const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
+    const category = categoryResponse.body[0]._id
+    subjectBody.category = category
 
     testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
     subjectBody = testSubject.body
@@ -48,7 +61,7 @@ describe('Review controller', () => {
     testOffer = await app
       .post(offerEndpointUrl)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({ ...offerBody, subjectId: subjectBody._id })
+      .send({ ...offerBody, subject: subjectBody._id })
 
     offerBody = testOffer.body
 
@@ -84,7 +97,7 @@ describe('Review controller', () => {
         comment: 'Good mentor and learning program',
         rating: 5,
         author: expect.any(String),
-        targetUserId: '6424a09cde0a9091d01120a7',
+        targetUserId: userId,
         targetUserRole: 'student',
         offer: _id,
         createdAt: expect.any(String),
@@ -104,7 +117,7 @@ describe('Review controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
       const { author } = reviewBody
       const { _id } = offerBody
-      const { _id: subjectId } = subjectBody
+      const { _id: subject } = subjectBody
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body.reviews)).toBeTruthy()
@@ -120,14 +133,14 @@ describe('Review controller', () => {
               firstName: 'Tart',
               lastName: 'Drilling'
             },
-            targetUserId: '6424a09cde0a9091d01120a7',
+            targetUserId: userId,
             targetUserRole: 'student',
             offer: {
               _id,
-              categoryId: null,
-              proficiencyLevel: 'Beginner',
-              subjectId: {
-                _id: subjectId,
+              category: null,
+              proficiencyLevel: ['Beginner'],
+              subject: {
+                _id: subject,
                 name: 'English'
               }
             },
@@ -150,7 +163,7 @@ describe('Review controller', () => {
       const response = await app.get(endpointUrl + reviewBody._id).set('Authorization', `Bearer ${accessToken}`)
       const { author } = reviewBody
       const { _id } = offerBody
-      const { _id: subjectId } = subjectBody
+      const { _id: subject } = subjectBody
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual({
@@ -162,14 +175,14 @@ describe('Review controller', () => {
           firstName: 'Tart',
           lastName: 'Drilling'
         },
-        targetUserId: '6424a09cde0a9091d01120a7',
+        targetUserId: userId,
         targetUserRole: 'student',
         offer: {
           _id,
-          categoryId: null,
-          proficiencyLevel: 'Beginner',
-          subjectId: {
-            _id: subjectId,
+          category: null,
+          proficiencyLevel: ['Beginner'],
+          subject: {
+            _id: subject,
             name: 'English'
           }
         },

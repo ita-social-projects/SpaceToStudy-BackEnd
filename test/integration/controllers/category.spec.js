@@ -9,9 +9,14 @@ const endpointUrl = '/categories/'
 const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
 
 let accessToken
-let categoryData = {
-  name: 'languages',
-  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' }
+
+const categoryData = {
+  _id: expect.any(String),
+  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' },
+  name: expect.any(String),
+  totalOffers: expect.any(Number),
+  updatedAt: expect.any(String),
+  createdAt: expect.any(String)
 }
 
 const subjectBody = { name: 'English' }
@@ -59,15 +64,7 @@ describe('Category controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(
-        expect.objectContaining({
-          _id: expect.any(String),
-          categoryIcon: categoryData.categoryIcon,
-          name: expect.any(String),
-          totalOffers: expect.any(Number),
-          updatedAt: expect.any(String)
-        })
-      )
+      expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
     })
 
     it('should get all categories that contain "lan" in their name', async () => {

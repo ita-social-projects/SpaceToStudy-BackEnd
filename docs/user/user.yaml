@@ -664,7 +664,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/reviewResponse'
+                $ref: '#/definitions/cooperations'
               example:
                 - _id: 63ebc6fbd2f34037d0aba314
                   offerId: 63ebc6fbd2f34037d0aba791

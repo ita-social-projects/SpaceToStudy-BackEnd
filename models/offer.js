@@ -5,7 +5,12 @@ const {
   enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
-const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+const {
+  FIELD_CANNOT_BE_EMPTY,
+  ENUM_CAN_BE_ONE_OF,
+  FIELD_CANNOT_BE_SHORTER,
+  FIELD_CANNOT_BE_LONGER
+} = require('~/consts/errors')
 
 const offerSchema = new Schema(
   {
@@ -24,14 +29,14 @@ const offerSchema = new Schema(
     },
     title: {
       type: String,
-      minlength: [1, 'Title cannot be shorter than 1 symbol.'],
-      maxlength: [100, 'Title cannot be longer than 100 symbols.'],
+      minlength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
+      maxlength: [100, FIELD_CANNOT_BE_LONGER('title', 100)],
       required: [true, FIELD_CANNOT_BE_EMPTY('title')]
     },
     description: {
       type: String,
-      minlength: [1, 'Description cannot be shorter than 1 symbol.'],
-      maxlength: [1000, 'Description cannot be longer than 1000 symbols.'],
+      minlength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
+      maxlength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
       required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {
@@ -52,13 +57,13 @@ const offerSchema = new Schema(
     },
     authorFirstName: {
       type: String,
-      minlength: [1, 'Author first name cannot be shorter than 1 symbol.'],
-      maxlength: [30, 'Author first name cannot be longer than 30 symbols.']
+      minlength: [1, FIELD_CANNOT_BE_SHORTER('author first name', 1)],
+      maxlength: [30, FIELD_CANNOT_BE_LONGER('author first name', 30)]
     },
     authorLastName: {
       type: String,
-      minlength: [1, 'Author last name cannot be shorter than 1 symbol.'],
-      maxlength: [30, 'Author last name cannot be longer than 30 symbols.']
+      minlength: [1, FIELD_CANNOT_BE_SHORTER('author last name', 1)],
+      maxlength: [30, FIELD_CANNOT_BE_LONGER('author last name', 30)]
     },
     authorAvgRating: {
       type: Number,

@@ -1,5 +1,10 @@
 const { Schema, model } = require('mongoose')
-const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+const {
+  FIELD_CANNOT_BE_EMPTY,
+  ENUM_CAN_BE_ONE_OF,
+  FIELD_CANNOT_BE_LONGER,
+  FIELD_CANNOT_BE_SHORTER
+} = require('~/consts/errors')
 const { USER, OFFER, COOPERATION, SUBJECT } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, SPOKEN_LANG_ENUM }
@@ -27,8 +32,8 @@ const cooperationSchema = new Schema(
     },
     additionalInfo: {
       type: String,
-      minLength: [30, 'Additional info cannot be shorter than 30 symbol.'],
-      maxLength: [1000, 'Additional info cannot be longer than 1000 symbol.']
+      minLength: [30, FIELD_CANNOT_BE_SHORTER('additional info', 30)],
+      maxLength: [1000, FIELD_CANNOT_BE_LONGER('additional info', 1000)]
     },
     requiredProficiencyLevel: {
       type: String,
@@ -76,7 +81,6 @@ cooperationSchema.pre('save', async function (next) {
   const initiator = await User.findById(this.initiator).exec()
   const receiver = await User.findById(this.receiver).exec()
   const subject = await Subject.findById(offer.subject).exec()
-  console.log(receiver)
 
   this.initiatorFullName = `${initiator.firstName} ${initiator.lastName}`
   this.receiverFullName = `${receiver.firstName} ${receiver.lastName}`

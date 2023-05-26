@@ -21,6 +21,7 @@ let reviewBody = {
   targetUserRole: 'student'
 }
 let offerBody = {
+  title: 'Test title',
   price: 330,
   proficiencyLevel: ['Beginner'],
   description: 'TEST 123ASD',

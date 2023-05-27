@@ -1,5 +1,7 @@
 const Offer = require('~/models/offer')
 const userService = require('~/services/user')
+const subjectService = require('~/services/subject')
+
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
@@ -39,13 +41,15 @@ const offerService = {
   },
 
   createOffer: async (author, authorRole, data) => {
-    const { price, proficiencyLevel, title, description, languages, subject, category, FAQ } = data
+    const { price, proficiencyLevel, title, description, languages, subject: subjectId, category, FAQ } = data
 
     const user = await userService.getUserById(author)
+    const subject = await subjectService.getSubjectById(subjectId)
 
     const authorAvgRating = authorRole === STUDENT ? user.averageRating.student : user.averageRating.tutor
     const authorFirstName = user.firstName
     const authorLastName = user.lastName
+    const subjectName = subject.name
 
     return await Offer.create({
       author,
@@ -58,7 +62,8 @@ const offerService = {
       title,
       description,
       languages,
-      subject,
+      subjectName,
+      subject: subjectId,
       category,
       FAQ
     })

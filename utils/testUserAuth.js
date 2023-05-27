@@ -10,6 +10,7 @@ const testUserAuthentication = async (app, testUser = {}) => {
       lastName: 'Drilling',
       email: 'tartdrilling@gmail.com',
       password: 'Qwerty123@',
+      FAQ: { student: [{ question: 'question1', answer: 'answer1' }] },
       isEmailConfirmed: true,
       lastLoginAs: 'student'
     }

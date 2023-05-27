@@ -7,26 +7,35 @@ const offerAggregateOptions = (query, params) => {
     proficiencyLevel,
     rating,
     language,
-    name,
+    search,
     languages,
     excludedOfferId,
     sort,
+    status = [],
     skip = 0,
     limit = 5
   } = query
-  const { categoryId, subjectId } = params
+  const { categoryId, subjectId, id: authorId } = params
 
   const match = {}
 
-  if (name) {
-    const nameArray = name.trim().split(' ')
-    const firstNameRegex = getRegex(nameArray[0])
-    const lastNameRegex = getRegex(nameArray[1])
+  if (search) {
+    const searchArray = search.trim().split(' ')
+    const firstNameRegex = getRegex(searchArray[0])
+    const lastNameRegex = getRegex(searchArray[1])
 
-    match['$or'] = [
-      { authorFirstName: firstNameRegex, authorLastName: lastNameRegex },
-      { authorFirstName: lastNameRegex, authorLastName: firstNameRegex }
-    ]
+    const additionalFields = authorId
+      ? [{ subjectName: getRegex(search) }]
+      : [
+          { authorFirstName: firstNameRegex, authorLastName: lastNameRegex },
+          { authorFirstName: lastNameRegex, authorLastName: firstNameRegex }
+        ]
+
+    match['$or'] = [{ title: getRegex(search) }, ...additionalFields]
+  }
+
+  if (authorId) {
+    match.author = authorId
   }
 
   if (authorRole) {
@@ -52,6 +61,10 @@ const offerAggregateOptions = (query, params) => {
 
   if (languages) {
     match.languages = { $in: languages }
+  }
+
+  if (status.length) {
+    match.status = { $in: status }
   }
 
   if (categoryId) {

@@ -11,6 +11,9 @@ const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
 let testOffer = {
   price: 330,
   proficiencyLevel: ['Beginner'],
+  title: 'Test Title',
+  authorRole: 'student',
+  FAQ: [{ question: 'question1', answer: 'answer1' }],
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
   subject: '',
@@ -68,6 +71,7 @@ describe('Offer controller', () => {
           _id,
           price: 330,
           proficiencyLevel: ['Beginner'],
+          title: 'Test Title',
           description: 'TEST 123ASD',
           languages: ['Ukrainian'],
           authorRole: 'student',
@@ -100,6 +104,7 @@ describe('Offer controller', () => {
           ...testOffer,
           author: {
             _id: expect.any(String),
+            FAQ: [{ _id: expect.any(String), answer: 'answer1', question: 'question1' }],
             totalReviews: {
               student: 0,
               tutor: 0
@@ -107,7 +112,7 @@ describe('Offer controller', () => {
           },
           subject: {
             _id: testOffer.subject,
-            name: 'testSubject'
+            name: 'TestSubject'
           }
         })
       )

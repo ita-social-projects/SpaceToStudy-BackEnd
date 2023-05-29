@@ -6,10 +6,7 @@ const coopsAggregateOptions = (params = {}, query) => {
   const match = {}
   const sort = {}
 
-  if (order === 'name') sort.fullName = orderBy
-  else if (order === 'subject') sort.subjectName = orderBy
-  else if (order === 'updatedAt') sort.updatedAt = orderBy
-  else sort.updatedAt = 'asc'
+  if (order) sort[order] = orderBy
 
   if (status) match.status = getRegex(status)
   if (id) {

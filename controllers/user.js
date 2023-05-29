@@ -20,7 +20,8 @@ const getUserById = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-  const { id, role } = req.user
+  const { id } = req.params
+  const { role } = req.user
   const updateData = req.body
 
   if (id !== req.user.id) throw createForbiddenError()

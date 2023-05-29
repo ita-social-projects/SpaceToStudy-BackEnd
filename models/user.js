@@ -3,7 +3,12 @@ const {
   enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
 const { SUBJECT, OFFER, USER } = require('~/consts/models')
-const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+const {
+  FIELD_CANNOT_BE_EMPTY,
+  ENUM_CAN_BE_ONE_OF,
+  FIELD_CANNOT_BE_SHORTER,
+  FIELD_CANNOT_BE_LONGER
+} = require('~/consts/errors')
 
 const offerSchema = require('~/models/offer')
 
@@ -20,14 +25,14 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('first name')],
-      minlength: [1, 'First Name cannot be shorter than 1 symbol.'],
-      maxlength: [30, 'First Name cannot be longer than 30 symbols.']
+      minlength: [1, FIELD_CANNOT_BE_SHORTER('first name', 1)],
+      maxlength: [30, FIELD_CANNOT_BE_LONGER('first name', 30)]
     },
     lastName: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('last name')],
-      minlength: [1, 'Last Name cannot be shorter than 1 symbol.'],
-      maxlength: [30, 'Last Name cannot be longer than 30 symbols.']
+      minlength: [1, FIELD_CANNOT_BE_SHORTER('last name', 1)],
+      maxlength: [30, FIELD_CANNOT_BE_LONGER('last name', 30)]
     },
     email: {
       type: String,
@@ -38,7 +43,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('password')],
-      minlength: [8, 'Password cannot be shorter than 8 symbols.'],
+      minlength: [8, FIELD_CANNOT_BE_SHORTER('password', 8)],
       select: false
     },
     address: {

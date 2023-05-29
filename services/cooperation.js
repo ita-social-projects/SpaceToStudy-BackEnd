@@ -1,12 +1,24 @@
 const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
-  getCooperations: async (match) => {
-    const count = await Cooperation.countDocuments(match)
-
-    const cooperations = await Cooperation.find(match).populate('offer', ['id', 'author', 'price']).lean().exec()
-
-    return { count, cooperations }
+  getCooperations: async ({ skip = 0, limit = 5, match, sort, currentUser }) => {
+    return await Cooperation.aggregate()
+      .addFields({
+        fullName: {
+          $cond: [
+            {
+              $eq: ['$initiator', currentUser]
+            },
+            '$initiatorFullName',
+            '$receiverFullName'
+          ]
+        }
+      })
+      .match(match)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec()
   },
 
   getCooperationById: async (id) => {
@@ -14,16 +26,14 @@ const cooperationService = {
   },
 
   createCooperation: async (initiator, data) => {
-    const { offer, requiredTutoringLevel, requiredLanguage, additionalInfo, receiver, subject, price } = data
+    const { offer, requiredProficiencyLevel, additionalInfo, receiver, price } = data
 
     return await Cooperation.create({
       initiator,
       receiver,
       offer,
-      subject,
       price,
-      requiredLanguage,
-      requiredTutoringLevel,
+      requiredProficiencyLevel,
       additionalInfo
     })
   },

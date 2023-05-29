@@ -2,9 +2,16 @@ const cooperationService = require('~/services/cooperation')
 const coopsAggregateOptions = require('~/utils/cooperations/coopsAggregateOptions')
 
 const getCooperations = async (req, res) => {
-  const { match } = coopsAggregateOptions(req.query, req.params)
+  const { id: currentUser } = req.user
+  const { skip, limit, sort, match } = coopsAggregateOptions(req.query)
 
-  const cooperations = await cooperationService.getCooperations(match)
+  const cooperations = await cooperationService.getCooperations({
+    skip,
+    limit,
+    match,
+    sort,
+    currentUser
+  })
 
   res.status(200).json(cooperations)
 }

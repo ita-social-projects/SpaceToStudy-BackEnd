@@ -11,7 +11,7 @@ const offerAggregateOptions = (query, params) => {
     languages,
     excludedOfferId,
     sort,
-    status = [],
+    status,
     skip = 0,
     limit = 5
   } = query
@@ -63,8 +63,8 @@ const offerAggregateOptions = (query, params) => {
     match.languages = { $in: languages }
   }
 
-  if (status.length) {
-    match.status = { $in: status }
+  if (status) {
+    match.status = status
   }
 
   if (categoryId) {

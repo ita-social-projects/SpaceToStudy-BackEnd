@@ -78,7 +78,7 @@ const offerSchema = new Schema(
     subjectName: {
       type: String,
       minlength: [1, FIELD_CANNOT_BE_SHORTER('subject name', 1)],
-      maxlength: [100, FIELD_CANNOT_BE_LONGER('subject name', 30)]
+      maxlength: [30, FIELD_CANNOT_BE_LONGER('subject name', 30)]
     },
     subject: {
       type: Schema.Types.ObjectId,

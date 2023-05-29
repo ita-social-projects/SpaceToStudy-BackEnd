@@ -9,9 +9,14 @@ const endpointUrl = '/categories/'
 const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
 
 let accessToken
-let categoryData = {
-  name: 'languages',
-  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' }
+
+const categoryData = {
+  _id: expect.any(String),
+  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' },
+  name: expect.any(String),
+  totalOffers: expect.any(Number),
+  updatedAt: expect.any(String),
+  createdAt: expect.any(String)
 }
 
 const subjectBody = { name: 'English' }

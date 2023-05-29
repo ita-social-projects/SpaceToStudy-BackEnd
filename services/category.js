@@ -19,9 +19,7 @@ const categoryService = {
   addCategory: async (data) => {
     let { name, categoryIcon } = data
 
-    if (name[0] === name[0].toLowerCase()) {
-      name = capitalizeFirstLetter(name)
-    }
+    name = capitalizeFirstLetter(name)
 
     return await Category.create({ name, categoryIcon })
   },

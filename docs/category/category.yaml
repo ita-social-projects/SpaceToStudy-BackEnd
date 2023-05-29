@@ -76,7 +76,10 @@ paths:
             schema:
               $ref: '#/definitions/categoryBody'
             example:
-              name: Ukrainian
+              name: Languages
+              categoryIcon:
+                path: categories-icons/link-to-icon.png
+                color: "#66C42C"
       responses:
         201:
           description: Created
@@ -86,7 +89,7 @@ paths:
                 $ref: '#/definitions/categories'
               example:
                 _id: 6255bc080a71adf9223df136
-                name: Ukrainian
+                name: Languages
                 categoryIcon:
                   path: categories-icons/link-to-icon.png
                   color: "#66C42C"
@@ -196,7 +199,7 @@ paths:
                 $ref: '#/definitions/categories'
               example:
                 _id: 64045f98b131dd04d7896af6
-                name: languages
+                name: Languages
                 categoryIcon: 
                     path: categories-icons/link-to-icon.png
                     color: "#66c42c"

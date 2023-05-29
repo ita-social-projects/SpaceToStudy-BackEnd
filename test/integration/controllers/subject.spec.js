@@ -37,6 +37,12 @@ describe('Subject controller', () => {
   })
 
   describe(`POST ${endpointUrl}`, () => {
+    it('should throw DOCUMENT_ALREADY_EXISTS', async () => {
+      const error = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
+
+      expectError(409, DOCUMENT_ALREADY_EXISTS('name'), error)
+    })
+
     it('should create a subject', async () => {
       expect(testSubject.statusCode).toBe(201)
       expect(testSubject.body).toEqual(
@@ -49,12 +55,6 @@ describe('Subject controller', () => {
           updatedAt: expect.any(String)
         })
       )
-    })
-
-    it('should throw DOCUMENT_ALREADY_EXISTS', async () => {
-      const error = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
-
-      expectError(409, DOCUMENT_ALREADY_EXISTS('name'), error)
     })
   })
 

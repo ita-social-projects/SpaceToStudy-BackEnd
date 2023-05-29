@@ -703,14 +703,18 @@ paths:
                       totalReviews:
                         student: 0
                         tutor: 0
-                      FAQ: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
+                      FAQ:
+                        {
+                          student: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }],
+                          tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
+                        }
                       professionalSummary: My professional summary
                       photo: link-to-photo.png
                     subject:
                       _id: 63da8767c9ad4c9a0b0eacd3
                       name: english
                     category: 63525e23bf163f5ea609ff2b
-                    FAQ: [{ question: offer question, _id: 63525e23bf163f5ea609ff2b, answer: offer answer }]
+                    FAQ: [{ _id: 63525e23bf163f5ea609ff2b, question: offer question, answer: offer answer }]
         400:
           description: Bad Request
           content:

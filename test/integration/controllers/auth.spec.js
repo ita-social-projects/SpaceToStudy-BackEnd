@@ -139,7 +139,6 @@ describe('Auth controller', () => {
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      // Token.findOne = jest.fn().mockResolvedValue({ confirmToken })
       Token.findOne = jest
         .fn()
         .mockResolvedValue({ ...{ confirmToken }, save: jest.fn().mockResolvedValue(confirmToken) })

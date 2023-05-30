@@ -7,7 +7,7 @@ const {
 } = require('~/consts/errors')
 const { USER, OFFER, COOPERATION, SUBJECT } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, SPOKEN_LANG_ENUM }
+  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM }
 } = require('~/consts/validation')
 const User = require('./user')
 const Subject = require('./subject')
@@ -35,7 +35,7 @@ const cooperationSchema = new Schema(
       minLength: [30, FIELD_CANNOT_BE_SHORTER('additional info', 30)],
       maxLength: [1000, FIELD_CANNOT_BE_LONGER('additional info', 1000)]
     },
-    requiredProficiencyLevel: {
+    proficiencyLevel: {
       type: String,
       enum: {
         values: PROFICIENCY_LEVEL_ENUM,

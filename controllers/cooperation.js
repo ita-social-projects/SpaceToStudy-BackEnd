@@ -3,7 +3,7 @@ const coopsAggregateOptions = require('~/utils/cooperations/coopsAggregateOption
 
 const getCooperations = async (req, res) => {
   const { id: currentUser } = req.user
-  const { skip, limit, sort, match } = coopsAggregateOptions(req.query)
+  const { skip, limit, sort, match } = coopsAggregateOptions(req.user, req.query)
 
   const cooperations = await cooperationService.getCooperations({
     skip,

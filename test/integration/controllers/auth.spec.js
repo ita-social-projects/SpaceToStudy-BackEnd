@@ -132,12 +132,21 @@ describe('Auth controller', () => {
   })
 
   describe('Login endpoint', () => {
-    it('should login a user', async () => {
+    let confirmToken
+    beforeEach(async () => {
       const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
         user: signupResponse.body.userId
       })
-      const confirmToken = findConfirmTokenResponse[0].confirmToken
+      confirmToken = findConfirmTokenResponse[0].confirmToken
 
+      // Token.findOne = jest.fn().mockResolvedValue({ confirmToken })
+      Token.findOne = jest
+        .fn()
+        .mockResolvedValue({ ...{ confirmToken }, save: jest.fn().mockResolvedValue(confirmToken) })
+    })
+    afterEach(() => jest.resetAllMocks())
+
+    it('should login a user', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
 
       const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
@@ -171,12 +180,20 @@ describe('Auth controller', () => {
   })
 
   describe('Logout endpoint', () => {
-    it('should logout user', async () => {
+    let confirmToken
+    beforeEach(async () => {
       const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
         user: signupResponse.body.userId
       })
-      const confirmToken = findConfirmTokenResponse[0].confirmToken
+      confirmToken = findConfirmTokenResponse[0].confirmToken
 
+      Token.findOne = jest
+        .fn()
+        .mockResolvedValue({ ...{ confirmToken }, save: jest.fn().mockResolvedValue(confirmToken) })
+    })
+    afterEach(() => jest.resetAllMocks())
+
+    it('should logout user', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
 
       const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
@@ -190,12 +207,20 @@ describe('Auth controller', () => {
   })
 
   describe('RefreshAccessToken endpoint', () => {
-    it('should refresh access token', async () => {
+    let confirmToken
+    beforeEach(async () => {
       const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
         user: signupResponse.body.userId
       })
-      const confirmToken = findConfirmTokenResponse[0].confirmToken
+      confirmToken = findConfirmTokenResponse[0].confirmToken
 
+      Token.findOne = jest
+        .fn()
+        .mockResolvedValue({ ...{ confirmToken }, save: jest.fn().mockResolvedValue(confirmToken) })
+    })
+    afterEach(() => jest.resetAllMocks())
+
+    it('should refresh access token', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
 
       const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
@@ -237,7 +262,7 @@ describe('Auth controller', () => {
       const { firstName, email, role } = user
       resetToken = tokenService.generateResetToken({ id: signupResponse.body.userId, firstName, email, role })
 
-      Token.findOne = jest.fn().mockResolvedValue({ resetToken })
+      Token.findOne = jest.fn().mockResolvedValue({ ...{ resetToken }, save: jest.fn().mockResolvedValue(resetToken) })
     })
     afterEach(() => jest.resetAllMocks())
 

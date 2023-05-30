@@ -1,6 +1,7 @@
 const Category = require('~/models/category')
 const Offer = require('~/models/offer')
 const conditionCreator = require('~/utils/categories/conditionCreator')
+const capitalizeFirstLetter = require('~/utils/capitalizeFirstLetter')
 
 const categoryService = {
   getCategories: async (searchFilter, skip, limit) => {
@@ -13,6 +14,14 @@ const categoryService = {
 
   getCategoryById: async (id) => {
     return await Category.findById(id).lean().exec()
+  },
+
+  addCategory: async (data) => {
+    let { name, categoryIcon } = data
+
+    name = capitalizeFirstLetter(name)
+
+    return await Category.create({ name, categoryIcon })
   },
 
   priceMinMax: async (searchParams) => {

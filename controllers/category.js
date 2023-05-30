@@ -25,6 +25,14 @@ const getCategoryById = async (req, res) => {
   res.status(200).json(category)
 }
 
+const addCategory = async (req, res) => {
+  const data = req.body
+
+  const newCategory = await categoryService.addCategory(data)
+
+  res.status(201).json(newCategory)
+}
+
 const priceMinMax = async (req, res) => {
   const { categoryId, subjectId } = req.params
   const { authorRole } = req.query
@@ -37,6 +45,7 @@ const priceMinMax = async (req, res) => {
 module.exports = {
   getCategories,
   getCategoryById,
+  addCategory,
   priceMinMax,
   getCategoriesNames
 }

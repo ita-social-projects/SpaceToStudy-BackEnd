@@ -10,9 +10,14 @@ const nonExistingReviewId = '63bed9ef260f18d04ab15da2'
 
 let accessToken
 
+let categoryBody = {
+  name: 'Languages',
+  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' }
+}
+
 const categoryData = {
   _id: expect.any(String),
-  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' },
+  categoryIcon: categoryBody.categoryIcon,
   name: expect.any(String),
   totalOffers: expect.any(Number),
   updatedAt: expect.any(String),
@@ -22,7 +27,7 @@ const categoryData = {
 const subjectBody = { name: 'English' }
 
 describe('Category controller', () => {
-  let app, server, testSubject
+  let app, server, testCategory, testSubject
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -33,11 +38,10 @@ describe('Category controller', () => {
 
     accessToken = await testUserAuthentication(app)
 
-    const categoriesResponse = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+    testCategory = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(categoryBody)
 
-    categoryData._id = categoriesResponse.body[0]._id
-
-    subjectBody.category = categoryData._id
+    subjectBody.category = testCategory.body._id
+    categoryBody._id = testCategory.body._id
 
     testSubject = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
 
@@ -52,6 +56,19 @@ describe('Category controller', () => {
     await stopServer(server)
   })
 
+  describe(`POST ${endpointUrl}`, () => {
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.post(endpointUrl).send(categoryBody)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should create a new category', async () => {
+      expect(testCategory.statusCode).toBe(201)
+      expect(testCategory.body).toEqual(expect.objectContaining(categoryData))
+    })
+  })
+
   describe(`GET ${endpointUrl}`, () => {
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl)
@@ -64,7 +81,7 @@ describe('Category controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
+      expect(response.body[0]).toEqual(categoryData)
     })
 
     it('should get all categories that contain "lan" in their name', async () => {
@@ -76,7 +93,7 @@ describe('Category controller', () => {
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(expect.objectContaining(categoryData))
+      expect(response.body[0]).toEqual(categoryData)
     })
 
     it('should get 5 categories', async () => {
@@ -122,7 +139,7 @@ describe('Category controller', () => {
     })
 
     it('should get a category by id', async () => {
-      const response = await app.get(endpointUrl + categoryData._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + categoryBody._id).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining(categoryData))
@@ -139,7 +156,7 @@ describe('Category controller', () => {
     })
   })
 
-  describe(`shoud return min and mix prices ${endpointUrl}`, () => {
+  describe(`GET min and mix prices ${endpointUrl}`, () => {
     it('should throw NOT_FOUND', async () => {
       const response = await app
         .get(endpointUrl + `${categoryData._id}/price-range?authorRole=student`)
@@ -150,7 +167,7 @@ describe('Category controller', () => {
 
     it('should return min and max prices for student offers', async () => {
       const response = await app
-        .get(endpointUrl + `${categoryData._id}/subjects/${subjectBody._id}/price-range?authorRole=student`)
+        .get(endpointUrl + `${categoryBody._id}/subjects/${subjectBody._id}/price-range?authorRole=student`)
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
@@ -163,7 +180,7 @@ describe('Category controller', () => {
 
     it('should return min and max prices for tutor offers', async () => {
       const response = await app
-        .get(endpointUrl + `${categoryData._id}/subjects/${subjectBody._id}/price-range?authorRole=student`)
+        .get(endpointUrl + `${categoryBody._id}/subjects/${subjectBody._id}/price-range?authorRole=student`)
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)

@@ -8,8 +8,8 @@ const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 const {
   FIELD_CANNOT_BE_EMPTY,
   ENUM_CAN_BE_ONE_OF,
-  FIELD_CANNOT_BE_SHORTER,
-  FIELD_CANNOT_BE_LONGER
+  FIELD_CANNOT_BE_LONGER,
+  FIELD_CANNOT_BE_SHORTER
 } = require('~/consts/errors')
 
 const offerSchema = new Schema(
@@ -74,6 +74,11 @@ const offerSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: USER,
       required: true
+    },
+    subjectName: {
+      type: String,
+      minlength: [1, FIELD_CANNOT_BE_SHORTER('subject name', 1)],
+      maxlength: [30, FIELD_CANNOT_BE_LONGER('subject name', 30)]
     },
     subject: {
       type: Schema.Types.ObjectId,

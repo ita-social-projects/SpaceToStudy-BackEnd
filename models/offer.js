@@ -55,21 +55,6 @@ const offerSchema = new Schema(
         required: [true, 'Author role must be selected.']
       }
     },
-    authorFirstName: {
-      type: String,
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('author first name', 1)],
-      maxlength: [30, FIELD_CANNOT_BE_LONGER('author first name', 30)]
-    },
-    authorLastName: {
-      type: String,
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('author last name', 1)],
-      maxlength: [30, FIELD_CANNOT_BE_LONGER('author last name', 30)]
-    },
-    authorAvgRating: {
-      type: Number,
-      min: [0, 'Rating must be a positive number'],
-      max: [5, 'Rating must be below 5']
-    },
     author: {
       type: Schema.Types.ObjectId,
       ref: USER,

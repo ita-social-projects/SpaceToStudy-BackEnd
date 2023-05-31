@@ -10,7 +10,7 @@ const offerAggregateOptions = (query, params) => {
     search,
     languages,
     excludedOfferId,
-    sort,
+    sort = { createdAt: 1 },
     status,
     skip = 0,
     limit = 5
@@ -25,10 +25,10 @@ const offerAggregateOptions = (query, params) => {
     const lastNameRegex = getRegex(searchArray[1])
 
     const additionalFields = authorId
-      ? [{ subjectName: getRegex(search) }]
+      ? [{ 'subject.name': getRegex(search) }]
       : [
-          { authorFirstName: firstNameRegex, authorLastName: lastNameRegex },
-          { authorFirstName: lastNameRegex, authorLastName: firstNameRegex }
+          { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
+          { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
         ]
 
     match['$or'] = [{ title: getRegex(search) }, ...additionalFields]
@@ -48,11 +48,15 @@ const offerAggregateOptions = (query, params) => {
 
   if (price) {
     const [minPrice, maxPrice] = price
-    match.price = { $gte: minPrice, $lte: maxPrice }
+    match.price = { $gte: parseInt(minPrice), $lte: parseInt(maxPrice) }
   }
 
   if (rating) {
-    match.authorAvgRating = { $gte: parseInt(rating) }
+    match['$expr'] = {
+      if: { $eq: ['$authorRole', 'student'] },
+      then: { $gte: ['$author.averageRating.student', parseInt(rating)] },
+      else: { $gte: ['$author.averageRating.tutor', parseInt(rating)] }
+    }
   }
 
   if (language) {
@@ -86,12 +90,84 @@ const offerAggregateOptions = (query, params) => {
       sortOption['price'] = 1
     } else if (sort === 'priceDesc') {
       sortOption['price'] = -1
+    } else if (sort === 'authorAvgRating') {
+      const field = {
+        $cond: {
+          if: { $eq: ['$authorRole', 'student'] },
+          then: '$author.averageRating.student',
+          else: '$author.averageRating.tutor'
+        }
+      }
+      sortOption[field] = 1
     } else {
       sortOption[sort] = -1
     }
   }
 
-  return { match, sort: sortOption, skip, limit }
+  return [
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'author',
+        foreignField: '_id',
+        pipeline: [
+          {
+            $project: {
+              firstName: 1,
+              lastName: 1,
+              averageRating: 1,
+              totalReviews: 1,
+              photo: 1,
+              professionalSummary: 1,
+              FAQ: 1
+            }
+          }
+        ],
+        as: 'author'
+      }
+    },
+    {
+      $lookup: {
+        from: 'subjects',
+        localField: 'subject',
+        foreignField: '_id',
+        pipeline: [
+          {
+            $project: {
+              name: 1
+            }
+          }
+        ],
+        as: 'subject'
+      }
+    },
+    {
+      $unwind: '$author'
+    },
+    {
+      $unwind: '$subject'
+    },
+    {
+      $match: match
+    },
+    {
+      $sort: sortOption
+    },
+    {
+      $group: {
+        _id: null,
+        offers: { $push: '$$ROOT' },
+        count: { $sum: 1 }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        offers: { $slice: ['$offers', parseInt(skip), parseInt(limit)] },
+        count: 1
+      }
+    }
+  ]
 }
 
 module.exports = offerAggregateOptions

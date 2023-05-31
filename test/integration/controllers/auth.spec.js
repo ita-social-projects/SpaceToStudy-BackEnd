@@ -139,9 +139,7 @@ describe('Auth controller', () => {
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      Token.findOne = jest
-        .fn()
-        .mockResolvedValue({ ...{ confirmToken }, save: jest.fn().mockResolvedValue(confirmToken) })
+      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(confirmToken) })
     })
     afterEach(() => jest.resetAllMocks())
 
@@ -186,9 +184,7 @@ describe('Auth controller', () => {
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      Token.findOne = jest
-        .fn()
-        .mockResolvedValue({ ...{ confirmToken }, save: jest.fn().mockResolvedValue(confirmToken) })
+      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(confirmToken) })
     })
     afterEach(() => jest.resetAllMocks())
 
@@ -213,9 +209,7 @@ describe('Auth controller', () => {
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
 
-      Token.findOne = jest
-        .fn()
-        .mockResolvedValue({ ...{ confirmToken }, save: jest.fn().mockResolvedValue(confirmToken) })
+      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(confirmToken) })
     })
     afterEach(() => jest.resetAllMocks())
 
@@ -261,7 +255,7 @@ describe('Auth controller', () => {
       const { firstName, email, role } = user
       resetToken = tokenService.generateResetToken({ id: signupResponse.body.userId, firstName, email, role })
 
-      Token.findOne = jest.fn().mockResolvedValue({ ...{ resetToken }, save: jest.fn().mockResolvedValue(resetToken) })
+      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(resetToken) })
     })
     afterEach(() => jest.resetAllMocks())
 

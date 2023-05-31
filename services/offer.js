@@ -5,7 +5,8 @@ const { allowedOfferFieldsForUpdate } = require('~/validation/services/offer')
 
 const offerService = {
   getOffers: async (pipeline) => {
-    return await Offer.aggregate(pipeline).exec()
+    const response = await Offer.aggregate(pipeline).exec()
+    return response[0]
   },
 
   getOfferById: async (id) => {

@@ -1,4 +1,6 @@
 const User = require('~/models/user')
+const uploadService = require('~/services/upload')
+const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
@@ -85,6 +87,13 @@ const userService = {
     if (!user) {
       throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
+
+    if (user.photo) {
+      await uploadService.deleteFile(user.photo, USER)
+    }
+
+    const photoUrl = await uploadService.uploadFile(updateData, USER)
+    filteredUpdateData.photo = photoUrl
 
     if (role !== 'student') {
       filteredUpdateData.mainSubjects = { student: updateData.mainSubjects, tutor: user.mainSubjects?.tutor }

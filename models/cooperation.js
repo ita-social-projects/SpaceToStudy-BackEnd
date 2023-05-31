@@ -5,13 +5,10 @@ const {
   FIELD_CANNOT_BE_LONGER,
   FIELD_CANNOT_BE_SHORTER
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION, SUBJECT } = require('~/consts/models')
+const { USER, OFFER, COOPERATION } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM }
 } = require('~/consts/validation')
-const User = require('./user')
-const Subject = require('./subject')
-const Offer = require('./offer')
 
 const cooperationSchema = new Schema(
   {
@@ -48,19 +45,6 @@ const cooperationSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],
       min: [1, 'Price must be positive number']
     },
-    subjectName: {
-      type: String,
-      ref: SUBJECT,
-      required: false
-    },
-    initiatorFullName: {
-      type: String,
-      required: false
-    },
-    receiverFullName: {
-      type: String,
-      required: false
-    },
     status: {
       type: String,
       enum: {
@@ -75,17 +59,5 @@ const cooperationSchema = new Schema(
     versionKey: false
   }
 )
-
-cooperationSchema.pre('save', async function (next) {
-  const offer = await Offer.findById(this.offer).exec()
-  const initiator = await User.findById(this.initiator).exec()
-  const receiver = await User.findById(this.receiver).exec()
-  const subject = await Subject.findById(offer.subject).exec()
-
-  this.initiatorFullName = `${initiator.firstName} ${initiator.lastName}`
-  this.receiverFullName = `${receiver.firstName} ${receiver.lastName}`
-  this.subjectName = subject.name
-  next()
-})
 
 module.exports = model(COOPERATION, cooperationSchema)

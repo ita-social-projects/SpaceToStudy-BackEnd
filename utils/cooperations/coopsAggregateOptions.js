@@ -8,8 +8,16 @@ const coopsAggregateOptions = (params = {}, query) => {
 
   if (status) match.status = getRegex(status)
   if (id) match.$or = [{ initiator: mongoose.Types.ObjectId(id) }, { receiver: mongoose.Types.ObjectId(id) }]
+  if (search) {
+    const nameArray = search.trim().split(' ')
+    const firstNameRegex = getRegex(nameArray[0])
+    const lastNameRegex = getRegex(nameArray[1])
 
-  if (search) match.fullName = getRegex(search)
+    match['$or'] = [
+      { 'user.firstName': firstNameRegex, 'user.lastName': lastNameRegex },
+      { 'user.firstName': lastNameRegex, 'user.lastName': firstNameRegex }
+    ]
+  }
 
   return { skip: Number(skip), limit: Number(limit), match, sort: JSON.parse(sort) }
 }

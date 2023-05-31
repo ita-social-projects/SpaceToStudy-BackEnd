@@ -3,7 +3,7 @@ const getRegex = require('../getRegex')
 
 const coopsAggregateOptions = (params = {}, query) => {
   const { id } = params
-  const { skip = 0, limit = 5, status = '', sort = '{ order: "updatedAt", orderBy: "asc" }', search } = query
+  const { skip = 0, limit = 5, status = '', sort = '{ order: "updatedAt", orderBy: 1 }', search } = query
   const match = {}
 
   if (status) match.status = getRegex(status)

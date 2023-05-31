@@ -1,60 +1,10 @@
 const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
-  getCooperations: async ({ skip = 0, limit = 5, match, sort, currentUser }) => {
-    const lookupLocalField = match.$or[0].initiator === currentUser ? 'initiator' : 'receiver'
+  getCooperations: async (pipeline) => {
+    const [result] = await Cooperation.aggregate(pipeline).exec()
 
-    const result = await Cooperation.aggregate([
-      {
-        $lookup: {
-          from: 'users',
-          localField: lookupLocalField,
-          foreignField: '_id',
-          pipeline: [{ $project: { firstName: 1, lastName: 1, photo: 1 } }],
-          as: 'user'
-        }
-      },
-      {
-        $lookup: {
-          from: 'offers',
-          localField: 'offer',
-          foreignField: '_id',
-          pipeline: [
-            { $project: { title: 1, subject: 1 } },
-            {
-              $lookup: {
-                from: 'subjects',
-                localField: 'subject',
-                foreignField: '_id',
-                as: 'subject'
-              }
-            },
-            { $project: { title: 1, subject: { $arrayElemAt: ['$subject', 0] } } }
-          ],
-          as: 'offer'
-        }
-      },
-      {
-        $addFields: {
-          user: { $arrayElemAt: ['$user', 0] },
-          offer: { $arrayElemAt: ['$offer', 0] }
-        }
-      },
-      {
-        $match: match
-      },
-      {
-        $facet: {
-          items: [{ $sort: sort }, { $skip: skip }, { $limit: limit }],
-          count: [{ $count: 'count' }]
-        }
-      }
-    ]).exec()
-
-    return {
-      items: result[0].items ?? [],
-      count: result[0].count[0]?.count ?? 0
-    }
+    return result
   },
 
   getCooperationById: async (id) => {

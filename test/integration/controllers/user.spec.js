@@ -26,13 +26,15 @@ let testUser = {
 }
 
 let adminUser = {
-  role: 'admin',
+  role: ['admin'],
   firstName: 'TestAdmin',
   lastName: 'AdminTest',
   email: 'testadmin@gmail.com',
   password: 'supersecretpass123',
   appLanguage: 'en',
-  isEmailConfirmed: true
+  isEmailConfirmed: true,
+  isFirstLogin: false,
+  lastLoginAs: 'admin'
 }
 
 const updateUserData = {
@@ -69,14 +71,12 @@ describe('User controller', () => {
     })
 
     describe(`GET ${endpointUrl}`, () => {
-      let user
-
       beforeEach(async () => {
-        user = await User.create(testUser)
+        await User.create(testUser)
       })
 
       it('should throw UNAUTHORIZED', async () => {
-        const response = await app.get(endpointUrl + user._id)
+        const response = await app.get(endpointUrl)
 
         expectError(401, UNAUTHORIZED, response)
       })
@@ -105,7 +105,10 @@ describe('User controller', () => {
           firstName: testUser.firstName,
           lastName: testUser.lastName,
           email: testUser.email,
-          mainSubjects: expect.any(Array),
+          mainSubjects: expect.objectContaining({
+            tutor: expect.any(Array),
+            student: expect.any(Array)
+          }),
           lastLogin: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
@@ -141,7 +144,10 @@ describe('User controller', () => {
           firstName: testUser.firstName,
           lastName: testUser.lastName,
           email: testUser.email,
-          mainSubjects: expect.any(Array),
+          mainSubjects: expect.objectContaining({
+            student: expect.any(Array),
+            tutor: expect.any(Array)
+          }),
           lastLogin: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
@@ -186,7 +192,10 @@ describe('User controller', () => {
           firstName: testUser.firstName,
           lastName: testUser.lastName,
           email: testUser.email,
-          mainSubjects: expect.any(Array),
+          mainSubjects: expect.objectContaining({
+            student: expect.any(Array),
+            tutor: expect.any(Array)
+          }),
           lastLogin: expect.any(String),
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
@@ -218,7 +227,7 @@ describe('User controller', () => {
       })
 
       it('should throw FORBIDDEN', async () => {
-        const user = (await User.find())[0]
+        const user = await User.create(testUser)
 
         const response = await app
           .patch(endpointUrl + user._id)

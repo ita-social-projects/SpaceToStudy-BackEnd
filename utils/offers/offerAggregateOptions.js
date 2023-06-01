@@ -154,17 +154,21 @@ const offerAggregateOptions = (query, params) => {
       $sort: sortOption
     },
     {
-      $group: {
-        _id: null,
-        offers: { $push: '$$ROOT' },
-        count: { $sum: 1 }
+      $facet: {
+        count: [{ $count: 'count' }],
+        offers: [{ $skip: Number(skip) }, { $limit: Number(limit) }]
       }
     },
     {
       $project: {
-        _id: 0,
-        offers: { $slice: ['$offers', parseInt(skip), parseInt(limit)] },
-        count: 1
+        count: {
+          $cond: {
+            if: { $eq: ['$count', []] },
+            then: 0,
+            else: { $arrayElemAt: ['$count.count', 0] }
+          }
+        },
+        offers: 1
       }
     }
   ]

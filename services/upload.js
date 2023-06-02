@@ -6,7 +6,7 @@ const {
 let blobService
 
 const uploadService = {
-  uploadFile: async (file, containerName) => {
+  uploadFile: (file, containerName) => {
     blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
 
     const mainData = file.photo.src.split(',')[1]
@@ -31,7 +31,7 @@ const uploadService = {
     })
   },
 
-  deleteFile: async (fileName, containerName) => {
+  deleteFile: (fileName, containerName) => {
     blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
 
     return new Promise((resolve, reject) =>

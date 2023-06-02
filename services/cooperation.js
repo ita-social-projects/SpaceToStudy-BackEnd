@@ -1,24 +1,10 @@
 const Cooperation = require('~/models/cooperation')
 
 const cooperationService = {
-  getCooperations: async ({ skip = 0, limit = 5, match, sort, currentUser }) => {
-    return await Cooperation.aggregate()
-      .addFields({
-        fullName: {
-          $cond: [
-            {
-              $eq: ['$initiator', currentUser]
-            },
-            '$initiatorFullName',
-            '$receiverFullName'
-          ]
-        }
-      })
-      .match(match)
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .exec()
+  getCooperations: async (pipeline) => {
+    const [result] = await Cooperation.aggregate(pipeline).exec()
+
+    return result
   },
 
   getCooperationById: async (id) => {
@@ -26,14 +12,14 @@ const cooperationService = {
   },
 
   createCooperation: async (initiator, data) => {
-    const { offer, requiredProficiencyLevel, additionalInfo, receiver, price } = data
+    const { offer, proficiencyLevel, additionalInfo, receiver, price } = data
 
     return await Cooperation.create({
       initiator,
       receiver,
       offer,
       price,
-      requiredProficiencyLevel,
+      proficiencyLevel,
       additionalInfo
     })
   },

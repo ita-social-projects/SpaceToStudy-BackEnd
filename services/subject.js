@@ -11,6 +11,10 @@ const subjectService = {
       .exec()
   },
 
+  getSubjectsCount: async (searchFilter) => {
+    return await Subject.countDocuments(searchFilter).lean().exec()
+  },
+
   getSubjectById: async (id) => {
     return await Subject.findById(id).lean().exec()
   },

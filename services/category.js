@@ -13,6 +13,10 @@ const categoryService = {
       .exec()
   },
 
+  getCategoriesCount: async (searchFilter) => {
+    return await Category.countDocuments(searchFilter).lean().exec()
+  },
+
   getCategoriesNames: async () => {
     return await Category.find().select('name').lean().exec()
   },

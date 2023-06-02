@@ -1,29 +1,12 @@
 const Offer = require('~/models/offer')
-const userService = require('~/services/user')
-const subjectService = require('~/services/subject')
 
-const {
-  roles: { STUDENT }
-} = require('~/consts/auth')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedOfferFieldsForUpdate } = require('~/validation/services/offer')
 
 const offerService = {
-  getOffers: async (match, sort, skip, limit) => {
-    const count = await Offer.countDocuments(match)
-
-    const offers = await Offer.find(match)
-      .populate([
-        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary', 'FAQ'] },
-        { path: 'subject', select: 'name' }
-      ])
-      .sort(sort)
-      .skip(skip)
-      .limit(limit)
-      .lean()
-      .exec()
-
-    return { count, offers }
+  getOffers: async (pipeline) => {
+    const [response] = await Offer.aggregate(pipeline).exec()
+    return response
   },
 
   getOfferById: async (id) => {
@@ -41,29 +24,17 @@ const offerService = {
   },
 
   createOffer: async (author, authorRole, data) => {
-    const { price, proficiencyLevel, title, description, languages, subject: subjectId, category, FAQ } = data
-
-    const user = await userService.getUserById(author)
-    const subject = await subjectService.getSubjectById(subjectId)
-
-    const authorAvgRating = authorRole === STUDENT ? user.averageRating.student : user.averageRating.tutor
-    const authorFirstName = user.firstName
-    const authorLastName = user.lastName
-    const subjectName = subject.name
+    const { price, proficiencyLevel, title, description, languages, subject, category, FAQ } = data
 
     return await Offer.create({
       author,
       authorRole,
-      authorAvgRating,
-      authorFirstName,
-      authorLastName,
       price,
       proficiencyLevel,
       title,
       description,
       languages,
-      subjectName,
-      subject: subjectId,
+      subject,
       category,
       FAQ
     })

@@ -29,4 +29,10 @@ const superAdmin = {
   password: process.env.MAIL_PASS
 }
 
-module.exports = { config, gmailCredentials, superAdmin }
+const azureAccess = {
+  STORAGE_ACCOUNT: process.env.STORAGE_ACCOUNT,
+  ACCESS_KEY: process.env.ACCESS_KEY,
+  AZURE_HOST: process.env.AZURE_HOST
+}
+
+module.exports = { config, gmailCredentials, superAdmin, azureAccess }

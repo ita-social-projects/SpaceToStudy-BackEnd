@@ -10,9 +10,7 @@ const getSubjects = async (req, res) => {
 
   const subjects = await subjectService.getSubjects({ skip: parseInt(skip), limit: parseInt(limit), searchFilter })
 
-  const count = await subjectService.getSubjectsCount(searchFilter)
-
-  res.status(200).json({ subjects, count })
+  res.status(200).json(subjects)
 }
 
 const getSubjectById = async (req, res) => {

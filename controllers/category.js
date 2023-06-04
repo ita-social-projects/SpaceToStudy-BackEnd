@@ -8,9 +8,7 @@ const getCategories = async (req, res) => {
 
   const categories = await categoryService.getCategories(searchFilter, parseInt(skip), parseInt(limit))
 
-  const count = await categoryService.getCategoriesCount(searchFilter)
-
-  res.status(200).json({ categories, count })
+  res.status(200).json(categories)
 }
 
 const getCategoriesNames = async (_req, res) => {

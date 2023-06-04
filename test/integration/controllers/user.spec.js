@@ -216,7 +216,6 @@ describe('User controller', () => {
           .patch(endpointUrl + currentUserId)
           .send(updateUserData)
           .set('Authorization', `Bearer ${accessToken}`)
-
         expect(response.statusCode).toBe(204)
       })
 

@@ -12,7 +12,10 @@ const offerService = {
   getOfferById: async (id) => {
     const offer = await Offer.findById(id)
       .populate([
-        { path: 'author', select: ['totalReviews', 'photo', 'professionalSummary', 'FAQ'] },
+        {
+          path: 'author',
+          select: ['firstName', 'lastName', 'totalReviews', 'averageRating', 'photo', 'professionalSummary', 'FAQ']
+        },
         { path: 'subject', select: 'name' }
       ])
       .lean()

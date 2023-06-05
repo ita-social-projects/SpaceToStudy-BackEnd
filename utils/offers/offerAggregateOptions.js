@@ -10,6 +10,7 @@ const offerAggregateOptions = (query, params) => {
     language,
     search,
     languages,
+    nativeLanguage,
     excludedOfferId,
     sort = { createdAt: 1 },
     status,
@@ -72,6 +73,10 @@ const offerAggregateOptions = (query, params) => {
     match.status = status
   }
 
+  if (nativeLanguage) {
+    match['author.nativeLanguage'] = getRegex(nativeLanguage)
+  }
+
   if (categoryId) {
     match['category._id'] = mongoose.Types.ObjectId(categoryId)
   }
@@ -118,6 +123,7 @@ const offerAggregateOptions = (query, params) => {
               lastName: 1,
               averageRating: 1,
               totalReviews: 1,
+              nativeLanguage: 1,
               photo: 1,
               professionalSummary: 1,
               FAQ: 1

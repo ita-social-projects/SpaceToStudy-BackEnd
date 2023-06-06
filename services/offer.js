@@ -18,7 +18,11 @@ const offerService = {
       .lean()
       .exec()
 
-    offer.author.FAQ = offer.author.FAQ[offer.authorRole]
+    if (offer.author.FAQ && offer.authorRole in offer.author.FAQ) {
+      offer.author.FAQ = offer.author.FAQ[offer.authorRole]
+    } else {
+      delete offer.author.FAQ
+    }
 
     return offer
   },

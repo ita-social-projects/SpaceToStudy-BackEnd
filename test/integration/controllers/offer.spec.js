@@ -104,8 +104,14 @@ describe('Offer controller', () => {
           ...testOffer,
           author: {
             _id: expect.any(String),
+            firstName: 'Tart',
+            lastName: 'Drilling',
             FAQ: [{ _id: expect.any(String), answer: 'answer1', question: 'question1' }],
             totalReviews: {
+              student: 0,
+              tutor: 0
+            },
+            averageRating: {
               student: 0,
               tutor: 0
             }

@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
 
 const offerAggregateOptions = (query, params) => {
@@ -9,6 +10,7 @@ const offerAggregateOptions = (query, params) => {
     language,
     search,
     languages,
+    nativeLanguage,
     excludedOfferId,
     sort = { createdAt: 1 },
     status,
@@ -35,7 +37,7 @@ const offerAggregateOptions = (query, params) => {
   }
 
   if (authorId) {
-    match.author = authorId
+    match['author._id'] = mongoose.Types.ObjectId(authorId)
   }
 
   if (authorRole) {
@@ -71,16 +73,20 @@ const offerAggregateOptions = (query, params) => {
     match.status = status
   }
 
+  if (nativeLanguage) {
+    match['author.nativeLanguage'] = getRegex(nativeLanguage)
+  }
+
   if (categoryId) {
-    match.category = categoryId
+    match['category._id'] = mongoose.Types.ObjectId(categoryId)
   }
 
   if (subjectId) {
-    match.subject = subjectId
+    match['subject._id'] = mongoose.Types.ObjectId(subjectId)
   }
 
   if (excludedOfferId) {
-    match._id = { $ne: excludedOfferId }
+    match._id = { $ne: mongoose.Types.ObjectId(excludedOfferId) }
   }
 
   const sortOption = {}
@@ -117,6 +123,7 @@ const offerAggregateOptions = (query, params) => {
               lastName: 1,
               averageRating: 1,
               totalReviews: 1,
+              nativeLanguage: 1,
               photo: 1,
               professionalSummary: 1,
               FAQ: 1

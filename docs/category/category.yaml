@@ -35,18 +35,18 @@ paths:
               example:
                 - _id: 64045f98b131dd04d7896af6
                   name: languages
-                  categoryIcon: 
+                  categoryIcon:
                     path: categories-icons/link-to-icon.png
-                    color: "#66c42c"
-                  totalOffers: 9
+                    color: '#66c42c'
+                  totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
                 - _id: 640461e3cfdda3f3d16dcac5
                   name: music
-                  categoryIcon: 
+                  categoryIcon:
                     path: categories-icons/link-to-icon.png
-                    color: "#66c42c"
-                  totalOffers: 1
+                    color: '#66c42c'
+                  totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -61,7 +61,7 @@ paths:
                 message: The requested URL requires user authorization.
     post:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Category
       summary: Create new category.
@@ -79,7 +79,7 @@ paths:
               name: Languages
               categoryIcon:
                 path: categories-icons/link-to-icon.png
-                color: "#66C42C"
+                color: '#66C42C'
       responses:
         201:
           description: Created
@@ -92,8 +92,8 @@ paths:
                 name: Languages
                 categoryIcon:
                   path: categories-icons/link-to-icon.png
-                  color: "#66C42C"
-                totalOffers: 0
+                  color: '#66C42C'
+                totalOffers: { student: 10, tutor: 8 }
                 createdAt: 2023-20-01T13:25:36.292Z
                 updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -129,7 +129,7 @@ paths:
   /categories/{id}/subjects/names:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Categories
       summary: Find subjects' names for category
@@ -200,10 +200,10 @@ paths:
               example:
                 _id: 64045f98b131dd04d7896af6
                 name: Languages
-                categoryIcon: 
-                    path: categories-icons/link-to-icon.png
-                    color: "#66c42c"
-                totalOffers: 9
+                categoryIcon:
+                  path: categories-icons/link-to-icon.png
+                  color: '#66c42c'
+                totalOffers: { student: 10, tutor: 8 }
                 createdAt: 2023-20-01T13:25:36.292Z
                 updatedAt: 2023-20-01T13:25:36.292Z
         400:
@@ -239,7 +239,7 @@ paths:
   /categories/{categoryId}/subject/{subjectId}/price-range:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Offers
       summary: Find and return min and max price.
@@ -253,8 +253,8 @@ paths:
           description: The query with the role "?authorRole=tutor" or "?authorRole=student"
           type: string
           enum:
-           - student
-           - tutor
+            - student
+            - tutor
       responses:
         200:
           description: OK
@@ -274,7 +274,7 @@ paths:
               example:
                 status: 401
                 code: UNAUTHORIZED
-                message: The requested URL requires user authorization.       
+                message: The requested URL requires user authorization.
         404:
           description: Not Found
           content:
@@ -288,7 +288,7 @@ paths:
   /categories/{id}/subjects:
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Categories
       summary: Find subjects by category
@@ -317,13 +317,13 @@ paths:
                 - _id: 6422dbb9823be47b41eeb8d6
                   name: bass
                   category: 6421ed8ed991d46a84721dfa
-                  totalOffers: 7
+                  totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
                 - _id: 6422d995d898aa732d038e8f
                   name: guitar
                   category: 6421ed8ed991d46a84721dfa
-                  totalOffers: 3
+                  totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         400:

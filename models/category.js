@@ -22,9 +22,16 @@ const categorySchema = new Schema(
       }
     },
     totalOffers: {
-      type: Number,
-      ref: OFFER,
-      default: 0
+      student: {
+        type: Number,
+        ref: OFFER,
+        default: 0
+      },
+      tutor: {
+        type: Number,
+        ref: OFFER,
+        default: 0
+      }
     }
   },
   {

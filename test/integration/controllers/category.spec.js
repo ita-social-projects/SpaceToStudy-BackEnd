@@ -19,7 +19,10 @@ const categoryData = {
   _id: expect.any(String),
   categoryIcon: categoryBody.categoryIcon,
   name: expect.any(String),
-  totalOffers: expect.any(Number),
+  totalOffers: {
+    student: 0,
+    tutor: 0
+  },
   updatedAt: expect.any(String),
   createdAt: expect.any(String)
 }

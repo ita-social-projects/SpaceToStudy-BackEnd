@@ -23,11 +23,9 @@ definitions:
             student:
               type: number
               default: 0
-              $ref: '#/definitions/offer'
             tutor:
               type: number
               default: 0
-              $ref: '#/definitions/offer'
         createdAt:
           type: string
           format: date-time
@@ -70,11 +68,9 @@ definitions:
           student:
             type: number
             default: 0
-            $ref: '#/definitions/offer'
           tutor:
             type: number
             default: 0
-            $ref: '#/definitions/offer'
       createdAt:
         type: string
         format: date-time

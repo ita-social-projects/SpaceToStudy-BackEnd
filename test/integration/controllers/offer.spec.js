@@ -37,7 +37,8 @@ describe('Offer controller', () => {
     accessToken = await testUserAuthentication(app)
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
-    const category = categoryResponse.body[0]._id
+
+    const category = categoryResponse.body.categories[0]._id
 
     const subjectResponse = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send({
       name: 'testSubject',

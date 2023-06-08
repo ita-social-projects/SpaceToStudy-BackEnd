@@ -64,6 +64,11 @@ describe('Category controller', () => {
     })
 
     it('should create a new category', async () => {
+      testCategory = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(categoryBody)
+
+      subjectBody.category = testCategory.body._id
+      categoryBody._id = testCategory.body._id
+
       expect(testCategory.statusCode).toBe(201)
       expect(testCategory.body).toEqual(expect.objectContaining(categoryData))
     })
@@ -80,8 +85,7 @@ describe('Category controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(categoryData)
+      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 16 }))
     })
 
     it('should get all categories that contain "lan" in their name', async () => {
@@ -92,8 +96,7 @@ describe('Category controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body[0]).toEqual(categoryData)
+      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 2 }))
     })
 
     it('should get 5 categories', async () => {
@@ -105,23 +108,21 @@ describe('Category controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body.length).toBe(5)
+      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 16 }))
+      expect(response.body.categories.length).toBe(5)
     })
 
     it('should skip 8 categories and return the rest', async () => {
       const params = new URLSearchParams()
       params.set('skip', '8')
 
-      const count = await Category.countDocuments()
-
       const response = await app
         .get(endpointUrl + '?' + params.toString())
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body)).toBeTruthy()
-      expect(response.body.length).toBe(count - 8)
+      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 16 }))
+      expect(response.body.categories.length).toBe(8)
     })
   })
 
@@ -139,7 +140,10 @@ describe('Category controller', () => {
     })
 
     it('should get a category by id', async () => {
-      const response = await app.get(endpointUrl + categoryBody._id).set('Authorization', `Bearer ${accessToken}`)
+      const categoryResponse = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const categoryId = categoryResponse.body.categories[0]._id
+
+      const response = await app.get(endpointUrl + categoryId).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining(categoryData))

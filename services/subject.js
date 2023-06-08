@@ -3,12 +3,15 @@ const capitalizeFirstLetter = require('~/utils/capitalizeFirstLetter')
 
 const subjectService = {
   getSubjects: async ({ skip, limit, searchFilter }) => {
-    return await Subject.find(searchFilter)
+    const subjects = await Subject.find(searchFilter)
       .skip(skip)
       .limit(limit)
       .sort({ totalOffers: -1, updatedAt: -1 })
       .lean()
       .exec()
+
+    const count = await Subject.countDocuments(searchFilter)
+    return { count, subjects }
   },
 
   getSubjectById: async (id) => {

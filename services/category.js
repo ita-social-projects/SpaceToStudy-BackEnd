@@ -5,12 +5,15 @@ const capitalizeFirstLetter = require('~/utils/capitalizeFirstLetter')
 
 const categoryService = {
   getCategories: async (searchFilter, skip, limit) => {
-    return await Category.find(searchFilter)
+    const categories = await Category.find(searchFilter)
       .skip(skip)
       .limit(limit)
       .sort({ totalOffers: -1, updatedAt: -1 })
       .lean()
       .exec()
+
+    const count = await Category.countDocuments(searchFilter)
+    return { count, categories }
   },
 
   getCategoriesNames: async () => {

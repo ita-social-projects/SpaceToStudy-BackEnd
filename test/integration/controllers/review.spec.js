@@ -53,7 +53,7 @@ describe('Review controller', () => {
     reviewBody.targetUserId = userId
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
-    const category = categoryResponse.body[0]._id
+    const category = categoryResponse.body.categories[0]._id
     subjectBody.category = category
 
     testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)

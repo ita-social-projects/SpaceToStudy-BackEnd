@@ -209,16 +209,16 @@ describe('User controller', () => {
     })
 
     describe(`UPDATE ${endpointUrl}:id`, () => {
-      // it('should UPDATE USER PROFILE by his ID', async () => {
-      //   const { id: currentUserId } = TokenService.validateAccessToken(accessToken)
-      //
-      //   const response = await app
-      //     .patch(endpointUrl + currentUserId)
-      //     .send(updateUserData)
-      //     .set('Authorization', `Bearer ${accessToken}`)
-      //
-      //   expect(response.statusCode).toBe(204)
-      // })
+      it('should UPDATE USER PROFILE by his ID', async () => {
+        const { id: currentUserId } = TokenService.validateAccessToken(accessToken)
+
+        const response = await app
+          .patch(endpointUrl + currentUserId)
+          .send(updateUserData)
+          .set('Authorization', `Bearer ${accessToken}`)
+
+        expect(response.statusCode).toBe(204)
+      })
 
       it('should throw UNAUTHORIZED', async () => {
         const response = await app.patch(endpointUrl + nonExistingUserId).send(updateUserData)
@@ -254,14 +254,14 @@ describe('User controller', () => {
       const changeStatusPath = '/change-status'
       const mockedStatus = { tutor: STATUS_ENUM[0] }
 
-      // it('should UPDATE user by ID', async () => {
-      //   const response = await app
-      //     .patch(endpointUrl + currentUser.id + changeStatusPath)
-      //     .send(mockedStatus)
-      //     .set('Authorization', `Bearer ${accessToken}`)
-      //
-      //   expect(response.statusCode).toBe(204)
-      // })
+      it('should UPDATE user by ID', async () => {
+        const response = await app
+          .patch(endpointUrl + currentUser.id + changeStatusPath)
+          .send(mockedStatus)
+          .set('Authorization', `Bearer ${accessToken}`)
+
+        expect(response.statusCode).toBe(204)
+      })
 
       it('should throw DOCUMENT_NOT_FOUND', async () => {
         const response = await app

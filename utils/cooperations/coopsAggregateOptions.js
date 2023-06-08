@@ -3,31 +3,47 @@ const getRegex = require('../getRegex')
 
 const coopsAggregateOptions = (params = {}, query) => {
   const { id } = params
-  const { skip = 0, limit = 5, status = '', sort = '{ order: "updatedAt", orderBy: 1 }', search } = query
+  const { skip = 0, limit = 5, status = '', sort = '{ order: "asc", orderBy:"updatedAt"}', search } = query
   const match = {}
+  const sortOption = {}
+  const parsedSort = JSON.parse(sort)
+  const sortOrder = parsedSort.order === 'asc' ? 1 : -1
+
+  if (parsedSort.orderBy === 'name') {
+    sortOption['user.firstName'] = sortOrder
+    sortOption['user.lastName'] = sortOrder
+  } else {
+    sortOption[parsedSort.orderBy] = sortOrder
+  }
 
   if (status) match.status = getRegex(status)
-  if (id) match.$or = [{ initiator: mongoose.Types.ObjectId(id) }, { receiver: mongoose.Types.ObjectId(id) }]
+  if (id)
+    match.$and = [{ $or: [{ initiator: mongoose.Types.ObjectId(id) }, { receiver: mongoose.Types.ObjectId(id) }] }]
   if (search) {
     const nameArray = search.trim().split(' ')
     const firstNameRegex = getRegex(nameArray[0])
     const lastNameRegex = getRegex(nameArray[1])
 
-    match['$or'] = [
-      { 'user.firstName': firstNameRegex, 'user.lastName': lastNameRegex },
-      { 'user.firstName': lastNameRegex, 'user.lastName': firstNameRegex }
-    ]
+    match.$and[1] = {
+      $or: [
+        { 'user.firstName': firstNameRegex, 'user.lastName': lastNameRegex },
+        { 'user.firstName': lastNameRegex, 'user.lastName': firstNameRegex },
+        { 'offer.title': getRegex(search) }
+      ]
+    }
   }
-
-  const lookupLocalField = match.$or[0].initiator === id ? 'initiator' : 'receiver'
 
   return [
     {
       $lookup: {
         from: 'users',
-        localField: lookupLocalField,
-        foreignField: '_id',
-        pipeline: [{ $project: { firstName: 1, lastName: 1, photo: 1 } }],
+        let: {
+          lookUpField: { $cond: [{ $eq: ['$initiator', mongoose.Types.ObjectId(id)] }, '$receiver', '$initiator'] }
+        },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$_id', '$$lookUpField'] } } },
+          { $project: { firstName: 1, lastName: 1, photo: 1 } }
+        ],
         as: 'user'
       }
     },
@@ -37,16 +53,26 @@ const coopsAggregateOptions = (params = {}, query) => {
         localField: 'offer',
         foreignField: '_id',
         pipeline: [
-          { $project: { title: 1, subject: 1 } },
+          { $project: { title: 1, subject: 1, category: 1 } },
           {
             $lookup: {
               from: 'subjects',
-              localField: 'subject',
-              foreignField: '_id',
+              let: { subjectId: '$subject' },
+              pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$subjectId'] } } }, { $project: { name: 1 } }],
               as: 'subject'
             }
           },
-          { $project: { title: 1, subject: { $arrayElemAt: ['$subject', 0] } } }
+          {
+            $lookup: {
+              from: 'categories',
+              let: { categoryId: '$category' },
+              pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$categoryId'] } } }, { $project: { appearance: 1 } }],
+              as: 'category'
+            }
+          },
+          { $unwind: '$subject' },
+          { $unwind: '$category' },
+          { $project: { title: 1, subject: 1, category: 1 } }
         ],
         as: 'offer'
       }
@@ -66,7 +92,7 @@ const coopsAggregateOptions = (params = {}, query) => {
     },
     {
       $facet: {
-        items: [{ $sort: JSON.parse(sort) }, { $skip: Number(skip) }, { $limit: Number(limit) }],
+        items: [{ $sort: sortOption }, { $skip: Number(skip) }, { $limit: Number(limit) }],
         count: [{ $count: 'count' }]
       }
     },

@@ -149,7 +149,25 @@ const offerAggregateOptions = (query, params) => {
       }
     },
     {
+      $lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: '_id',
+        pipeline: [
+          {
+            $project: {
+              appearance: 1
+            }
+          }
+        ],
+        as: 'category'
+      }
+    },
+    {
       $unwind: '$author'
+    },
+    {
+      $unwind: '$category'
     },
     {
       $unwind: '$subject'

@@ -9,8 +9,8 @@ const categorySchema = new Schema(
       unique: true,
       required: [true, FIELD_CANNOT_BE_EMPTY('name')]
     },
-    categoryIcon: {
-      path: {
+    appearance: {
+      icon: {
         type: String,
         required: [true, FIELD_CANNOT_BE_EMPTY('category icon')],
         default: 'mocked-path-to-icon'

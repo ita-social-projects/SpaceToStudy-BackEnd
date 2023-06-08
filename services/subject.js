@@ -9,6 +9,7 @@ const subjectService = {
       .sort({ totalOffers: -1, updatedAt: -1 })
       .lean()
       .exec()
+
     const count = await Subject.countDocuments(searchFilter)
     return { count, subjects }
   },

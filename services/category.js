@@ -11,6 +11,7 @@ const categoryService = {
       .sort({ totalOffers: -1, updatedAt: -1 })
       .lean()
       .exec()
+
     const count = await Category.countDocuments(searchFilter)
     return { count, categories }
   },

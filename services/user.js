@@ -95,11 +95,7 @@ const userService = {
     const photoUrl = await uploadService.uploadFile(updateData, USER)
     filteredUpdateData.photo = photoUrl
 
-    if (role !== 'student') {
-      filteredUpdateData.mainSubjects = { student: updateData.mainSubjects, tutor: user.mainSubjects?.tutor }
-    } else if (role !== 'tutor') {
-      filteredUpdateData.mainSubjects = { student: user.mainSubjects?.student, tutor: updateData.mainSubjects }
-    }
+    filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },

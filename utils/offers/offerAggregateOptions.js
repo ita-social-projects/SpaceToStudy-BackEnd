@@ -12,7 +12,7 @@ const offerAggregateOptions = (query, params) => {
     languages,
     nativeLanguage,
     excludedOfferId,
-    sort = { createdAt: 1 },
+    sort = 'createdAt',
     status,
     skip = 0,
     limit = 5
@@ -89,24 +89,33 @@ const offerAggregateOptions = (query, params) => {
     match._id = { $ne: mongoose.Types.ObjectId(excludedOfferId) }
   }
 
-  const sortOption = {}
+  let sortOption = {}
 
   if (sort) {
-    if (sort === 'priceAsc') {
-      sortOption['price'] = 1
-    } else if (sort === 'priceDesc') {
-      sortOption['price'] = -1
-    } else if (sort === 'authorAvgRating') {
-      const field = {
-        $cond: {
-          if: { $eq: ['$authorRole', 'student'] },
-          then: '$author.averageRating.student',
-          else: '$author.averageRating.tutor'
+    try {
+      const parsedSort = JSON.parse(sort)
+      const { order, orderBy } = parsedSort
+      const sortOrder = order === 'asc' ? 1 : -1
+      sortOption = { [orderBy]: sortOrder }
+    } catch {
+      if (typeof sort === 'string') {
+        if (sort === 'priceAsc') {
+          sortOption['price'] = 1
+        } else if (sort === 'priceDesc') {
+          sortOption['price'] = -1
+        } else if (sort === 'authorAvgRating') {
+          const field = {
+            $cond: {
+              if: { $eq: ['$authorRole', 'student'] },
+              then: '$author.averageRating.student',
+              else: '$author.averageRating.tutor'
+            }
+          }
+          sortOption[field] = 1
+        } else {
+          sortOption[sort] = -1
         }
       }
-      sortOption[field] = 1
-    } else {
-      sortOption[sort] = -1
     }
   }
 

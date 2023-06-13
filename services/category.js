@@ -13,7 +13,7 @@ const categoryService = {
       .exec()
 
     const count = await Category.countDocuments(searchFilter)
-    return { count, categories }
+    return { count, items: categories }
   },
 
   getCategoriesNames: async () => {

@@ -26,7 +26,10 @@ let offerBody = {
   proficiencyLevel: ['Beginner'],
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
-  category: '63525e23bf163f5ea609ff27'
+  category: {
+    _id: '63525e23bf163f5ea609ff27',
+    appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+  }
 }
 let subjectBody = {
   name: 'English',
@@ -53,8 +56,10 @@ describe('Review controller', () => {
     reviewBody.targetUserId = userId
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
-    const category = categoryResponse.body.categories[0]._id
-    subjectBody.category = category
+    const { _id, appearance } = categoryResponse.body.items[0]
+    const category = { _id, appearance }
+
+    subjectBody.category = _id
 
     testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
     subjectBody = testSubject.body
@@ -65,6 +70,7 @@ describe('Review controller', () => {
       .send({ ...offerBody, subject: subjectBody._id })
 
     offerBody = testOffer.body
+    offerBody.category = category
 
     testReview = await app
       .post(endpointUrl)

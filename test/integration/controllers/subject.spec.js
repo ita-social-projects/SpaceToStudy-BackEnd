@@ -23,7 +23,7 @@ describe('Subject controller', () => {
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
 
-    const category = categoryResponse.body.categories[0]._id
+    const category = categoryResponse.body.items[0]._id
     subjectBody.category = category
 
     testSubject = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
@@ -67,8 +67,8 @@ describe('Subject controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body.subjects)).toBeTruthy()
-      expect(response.body.subjects[0]).toEqual(
+      expect(Array.isArray(response.body.items)).toBeTruthy()
+      expect(response.body.items[0]).toEqual(
         expect.objectContaining({
           _id: expect.any(String),
           name: subjectBody.name,

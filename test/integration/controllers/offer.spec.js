@@ -17,7 +17,10 @@ let testOffer = {
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
   subject: '',
-  category: ''
+  category: {
+    _id: '',
+    appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+  }
 }
 
 const updateData = {
@@ -38,7 +41,8 @@ describe('Offer controller', () => {
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
 
-    const category = categoryResponse.body.categories[0]._id
+    const { _id, appearance } = categoryResponse.body.items[0]
+    const category = { _id, appearance }
 
     const subjectResponse = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send({
       name: 'testSubject',
@@ -52,6 +56,7 @@ describe('Offer controller', () => {
     testOfferResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer)
 
     testOffer = testOfferResponse.body
+    testOffer.category = category
   })
 
   afterEach(async () => {

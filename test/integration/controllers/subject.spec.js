@@ -51,7 +51,10 @@ describe('Subject controller', () => {
           _id: expect.any(String),
           name: subjectBody.name,
           category: subjectBody.category,
-          totalOffers: 0,
+          totalOffers: {
+            student: 0,
+            tutor: 0
+          },
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
         })
@@ -70,7 +73,10 @@ describe('Subject controller', () => {
           _id: expect.any(String),
           name: subjectBody.name,
           category: subjectBody.category,
-          totalOffers: 0,
+          totalOffers: {
+            student: 0,
+            tutor: 0
+          },
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
         })
@@ -88,7 +94,10 @@ describe('Subject controller', () => {
           _id: expect.any(String),
           name: subjectBody.name,
           category: subjectBody.category,
-          totalOffers: 0,
+          totalOffers: {
+            student: 0,
+            tutor: 0
+          },
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
         })

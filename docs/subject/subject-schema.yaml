@@ -12,7 +12,14 @@ definitions:
           type: string
           $ref: '#/components/category'
         totalOffers:
-          type: Number
+          type: object
+          properties:
+            student:
+              type: number
+              default: 0
+            tutor:
+              type: number
+              default: 0
         createdAt:
           type: string
           format: date-time
@@ -38,7 +45,14 @@ definitions:
         type: string
         $ref: '#/components/category'
       totalOffers:
-        type: Number
+        type: object
+        properties:
+          student:
+            type: number
+            default: 0
+          tutor:
+            type: number
+            default: 0
       createdAt:
         type: string
         format: date-time

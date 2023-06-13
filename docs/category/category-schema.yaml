@@ -18,9 +18,14 @@ definitions:
         subjectsIcon:
           type: string
         totalOffers:
-          type: number
-          default: 0
-          $ref: '#/definitions/offer'
+          type: object
+          properties:
+            student:
+              type: number
+              default: 0
+            tutor:
+              type: number
+              default: 0
         createdAt:
           type: string
           format: date-time
@@ -58,9 +63,14 @@ definitions:
       subjectsIcon:
         type: string
       totalOffers:
-        type: number
-        default: 0
-        $ref: '#/definitions/offer'
+        type: object
+        properties:
+          student:
+            type: number
+            default: 0
+          tutor:
+            type: number
+            default: 0
       createdAt:
         type: string
         format: date-time

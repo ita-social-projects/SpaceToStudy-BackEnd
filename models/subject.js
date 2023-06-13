@@ -15,8 +15,14 @@ const subjectSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('category')]
     },
     totalOffers: {
-      type: Number,
-      default: 0
+      student: {
+        type: Number,
+        default: 0
+      },
+      tutor: {
+        type: Number,
+        default: 0
+      }
     }
   },
   { timestamps: true, versionKey: false }

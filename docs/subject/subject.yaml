@@ -20,13 +20,13 @@ paths:
                 - _id: 6255bc080a71adf9223df134
                   name: English
                   category: 63525e23bf163f5ea609ff27
-                  totalOffers: 2167
+                  totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
                 - _id: 6255bc080a71adf9223df135
                   name: Algebra
                   category: 63525e23bf163f5ea609ff29
-                  totalOffers: 913
+                  totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -69,7 +69,7 @@ paths:
                 _id: 6255bc080a71adf9223df136
                 name: Ukrainian
                 category: 63525e23bf163f5ea609ff27
-                totalOffers: 0
+                totalOffers: { student: 10, tutor: 8 }
                 createdAt: 2023-20-01T13:25:36.292Z
                 updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -129,7 +129,7 @@ paths:
                 _id: 6255bc080a71adf9223df134
                 name: English
                 category: 63525e23bf163f5ea609ff27
-                totalOffers: 1647
+                totalOffers: { student: 10, tutor: 8 }
                 createdAt: 2023-20-01T13:25:36.292Z
                 updatedAt: 2023-20-01T13:25:36.292Z
         400:
@@ -187,7 +187,7 @@ paths:
             example:
               name: Ukrainian
               category: 63525e23bf163f5ea609ff27
-              totalOffers: 25
+              totalOffers: { student: 10, tutor: 8 }
       responses:
         204:
           description: No Content

@@ -16,7 +16,8 @@ const offerService = {
           path: 'author',
           select: ['firstName', 'lastName', 'totalReviews', 'averageRating', 'photo', 'professionalSummary', 'FAQ']
         },
-        { path: 'subject', select: 'name' }
+        { path: 'subject', select: 'name' },
+        { path: 'category', select: 'appearance' }
       ])
       .lean()
       .exec()

@@ -4,20 +4,14 @@ const conditionCreator = require('~/utils/categories/conditionCreator')
 const capitalizeFirstLetter = require('~/utils/capitalizeFirstLetter')
 
 const categoryService = {
-  getCategories: async (searchFilter, skip, limit) => {
-    const categories = await Category.find(searchFilter)
-      .skip(skip)
-      .limit(limit)
-      .sort({ totalOffers: -1, updatedAt: -1 })
-      .lean()
-      .exec()
+  getCategories: async (pipeline) => {
+    const result = await Category.aggregate(pipeline).exec()
 
-    const count = await Category.countDocuments(searchFilter)
-    return { count, items: categories }
+    return result[0]
   },
 
-  getCategoriesNames: async () => {
-    return await Category.find().select('name').lean().exec()
+  getCategoriesNames: async (pipeline) => {
+    return await Category.aggregate(pipeline).exec()
   },
 
   getCategoryById: async (id) => {

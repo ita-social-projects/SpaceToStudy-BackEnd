@@ -1,18 +1,19 @@
 const categoryService = require('~/services/category')
-const getRegex = require('~/utils/getRegex')
+const categoriesAggregateOptions = require('~/utils/categories/categoriesAggregateOptions copy')
+const categoryNamesAggregateOptions = require('~/utils/categories/categoryNamesAggregateOptions')
 
 const getCategories = async (req, res) => {
-  const { name, skip, limit } = req.query
+  const pipeline = categoriesAggregateOptions(req.query)
 
-  const searchFilter = { name: getRegex(name) }
-
-  const categories = await categoryService.getCategories(searchFilter, parseInt(skip), parseInt(limit))
+  const categories = await categoryService.getCategories(pipeline)
 
   res.status(200).json(categories)
 }
 
 const getCategoriesNames = async (_req, res) => {
-  const categoriesNames = await categoryService.getCategoriesNames()
+  const pipeline = categoryNamesAggregateOptions()
+
+  const categoriesNames = await categoryService.getCategoriesNames(pipeline)
 
   res.status(200).json(categoriesNames)
 }

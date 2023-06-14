@@ -1,5 +1,5 @@
 const categoryService = require('~/services/category')
-const categoriesAggregateOptions = require('~/utils/categories/categoriesAggregateOptions copy')
+const categoriesAggregateOptions = require('~/utils/categories/categoriesAggregateOptions')
 const categoryNamesAggregateOptions = require('~/utils/categories/categoryNamesAggregateOptions')
 
 const getCategories = async (req, res) => {

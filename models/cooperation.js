@@ -7,7 +7,7 @@ const {
 } = require('~/consts/errors')
 const { USER, OFFER, COOPERATION } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM }
+  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, AUTHOR_ROLE_ENUM }
 } = require('~/consts/validation')
 
 const cooperationSchema = new Schema(
@@ -22,10 +22,26 @@ const cooperationSchema = new Schema(
       ref: USER,
       required: [true, FIELD_CANNOT_BE_EMPTY('initiator id')]
     },
+    initiatorRole: {
+      type: String,
+      enum: {
+        values: AUTHOR_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('initiator role', AUTHOR_ROLE_ENUM),
+        required: [true, 'Initiator role must be selected.']
+      }
+    },
     receiver: {
       type: Schema.Types.ObjectId,
       ref: USER,
       required: [true, FIELD_CANNOT_BE_EMPTY('recipient id')]
+    },
+    receiverRole: {
+      type: String,
+      enum: {
+        values: AUTHOR_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('receiver role', AUTHOR_ROLE_ENUM),
+        required: [true, 'Receiver role must be selected.']
+      }
     },
     additionalInfo: {
       type: String,

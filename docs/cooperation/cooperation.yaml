@@ -18,17 +18,21 @@ paths:
                 $ref: '#/definitions/cooperations'
               example:
                 - _id: 63ebc6fbd2f34037d0aba314
-                  offerId: 63ebc6fbd2f34037d0aba791
-                  initiatorUserId: 6255bc080a75adf9223df212
-                  recipientUserId: 6255bc080a75adf9223df100
+                  offer: 63ebc6fbd2f34037d0aba791
+                  initiator: 6255bc080a75adf9223df212
+                  initiatorRole: tutor
+                  receiver: 6255bc080a75adf9223df100
+                  receiverRole: student
                   price: 200
                   status: active
                   createdAt: 2021-05-09T11:34:53.243+00:00
                   updatedAt: 2022-07-02T11:59:53.243+00:00
                 - _id: 63ebc6fbd2f34037d0aba314
-                  offerId: 64ebc6fbd2f34037d0aba781
-                  initiatorUserId: 6755bc080a75adf9223df217
-                  recipientUserId: 6655bc080a75adf9223df108
+                  offer: 63ebc6fbd2f34037d0aba791
+                  initiator: 6255bc080a75adf9223df212
+                  initiatorRole: tutor
+                  receiver: 6255bc080a75adf9223df100
+                  receiverRole: student
                   price: 300
                   status: closed
                   createdAt: 2021-04-09T11:34:53.243+00:00
@@ -60,9 +64,11 @@ paths:
             schema:
               $ref: '#/definitions/cooperation'
             example:
-              offerId: 64ebc6fbd2f34037d0aba781
-              initiatorUserId: 6755bc080a75adf9223df217
-              recipientUserId: 6655bc080a75adf9223df108
+              offer: 63ebc6fbd2f34037d0aba791
+              initiator: 6255bc080a75adf9223df212
+              initiatorRole: tutor
+              receiver: 6255bc080a75adf9223df100
+              receiverRole: student
               price: 300
       responses:
         201:
@@ -73,9 +79,11 @@ paths:
                 $ref: '#/definitions/cooperation'
               example:
                 _id: 8755bc080a00adr9243df104
-                offerId: 64ebc6fbd2f34037d0aba781
-                initiatorUserId: 6755bc080a75adf9223df217
-                recipientUserId: 6655bc080a75adf9223df108
+                offer: 63ebc6fbd2f34037d0aba791
+                initiator: 6255bc080a75adf9223df212
+                initiatorRole: tutor
+                receiver: 6255bc080a75adf9223df100
+                receiverRole: studentF
                 price: 300
                 status: pending
                 createdAt: 2021-04-09T11:34:53.243+00:00
@@ -125,9 +133,11 @@ paths:
                 $ref: '#/definitions/cooperationResponse'
               example:
                 _id: 8755bc080a00adr9243df106
-                offerId: 64ebc6fbd2f34037d0aba782
-                initiatorUserId: 6755bc080a75adf9223df210
-                recipientUserId: 6655bc080a75adf9223df108
+                offer: 63ebc6fbd2f34037d0aba791
+                initiator: 6255bc080a75adf9223df212
+                initiatorRole: tutor
+                receiver: 6255bc080a75adf9223df100
+                receiverRole: student
                 price: 150
                 status: pending
                 createdAt: 2022-10-18T13:25:36.292+00:00

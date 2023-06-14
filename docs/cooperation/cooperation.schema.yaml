@@ -6,15 +6,19 @@ definitions:
       properties:
         _id:
           type: string
-        offerId:
+        offer:
           type: string
           ref: '#components/offer'
-        initiatorUserId:
+        initiator:
           type: string
           ref: '#/components/user'
-        recipientUserId:
+        initiatorRole:
+          type: string
+        receiver:
           type: string
           ref: '#components/user'
+        receiverRole:
+          type: string
         price:
           type: number
         status:
@@ -33,15 +37,19 @@ definitions:
   cooperationBody:
     type: object
     properties:
-      offerId:
+      offer:
         type: string
         ref: '#components/offer'
-      initiatorUserId:
+      initiator:
         type: string
         ref: '#/components/user'
-      recipientUserId:
+      initiatorRole:
+        type: string
+      receiver:
         type: string
         ref: '#components/user'
+      receiverRole:
+        type: string
       price:
         type: number
       status:
@@ -56,15 +64,19 @@ definitions:
     properties:
       _id:
         type: string
-      offerId:
+      offer:
         type: string
         ref: '#components/offer'
-      initiatorUserId:
+      initiator:
         type: string
         ref: '#/components/user'
-      recipientUserId:
+      initiatorRole:
+        type: string
+      receiver:
         type: string
         ref: '#components/user'
+      receiverRole:
+        type: string
       price:
         type: number
       status:

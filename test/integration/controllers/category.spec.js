@@ -12,12 +12,12 @@ let accessToken
 
 let categoryBody = {
   name: 'Languages',
-  categoryIcon: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+  appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
 }
 
 const categoryData = {
   _id: expect.any(String),
-  appearance: categoryBody.categoryIcon,
+  appearance: categoryBody.appearance,
   name: expect.any(String),
   totalOffers: {
     student: 0,

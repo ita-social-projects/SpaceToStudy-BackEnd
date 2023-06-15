@@ -12,7 +12,7 @@ const Cooperation = require('~/models/cooperation')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
-const nonExistingOfferId = '6487b9adf05b60536374c152'
+const nonExistingOfferId = '648ae644aa322613ba08e69e'
 
 let tutorUserData = {
   role: ['tutor'],

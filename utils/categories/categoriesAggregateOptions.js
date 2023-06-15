@@ -1,4 +1,3 @@
-const Subject = require('~/models/subject')
 const getRegex = require('~/utils/getRegex')
 
 const categoriesAggregateOptions = (query) => {
@@ -7,7 +6,7 @@ const categoriesAggregateOptions = (query) => {
   return [
     {
       $lookup: {
-        from: Subject.collection.name,
+        from: 'subjects',
         localField: '_id',
         foreignField: 'category',
         as: 'subjects'

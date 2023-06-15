@@ -1,10 +1,8 @@
-const Subject = require('~/models/subject')
-
 const categoryNamesAggregateOptions = () => {
   return [
     {
       $lookup: {
-        from: Subject.collection.name,
+        from: 'subjects',
         localField: '_id',
         foreignField: 'category',
         as: 'subjects'

@@ -74,8 +74,8 @@ describe('Cooperation controller', () => {
 
     const category = await Category.create({
       name: 'Dark Magic',
-      categoryIcon: {
-        path: 'path-to-icon',
+      appearance: {
+        icon: 'path-to-icon',
         color: '#66C42C'
       }
     })
@@ -116,7 +116,7 @@ describe('Cooperation controller', () => {
       const query = {
         skip: 0,
         limit: 5,
-        sort: JSON.stringify({ order: 'updatedAt', orderBy: 1 })
+        sort: JSON.stringify({ order: 'asc', orderBy: 'updatedAt' })
       }
 
       const response = await app.get(endpointUrl).query(query).set('Authorization', `Bearer ${accessToken}`)

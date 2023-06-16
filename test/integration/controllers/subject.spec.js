@@ -8,6 +8,7 @@ const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const endpointUrl = '/subjects/'
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
 
+const categoryBody = { name: 'testCategory' }
 const subjectBody = { name: 'English' }
 
 describe('Subject controller', () => {
@@ -21,9 +22,11 @@ describe('Subject controller', () => {
     await checkCategoryExistence()
     accessToken = await testUserAuthentication(app)
 
-    const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
-
-    const category = categoryResponse.body.items[0]._id
+    const categoryResponse = await app
+      .post('/categories/')
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send(categoryBody)
+    const category = categoryResponse.body._id
     subjectBody.category = category
 
     testSubject = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)

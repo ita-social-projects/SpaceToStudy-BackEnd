@@ -3,6 +3,7 @@ const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Review = require('~/models/review')
+const Category = require('~/models/category')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const jwt = require('jsonwebtoken')
 const {
@@ -55,12 +56,14 @@ describe('Review controller', () => {
     userId = decoded.id
     reviewBody.targetUserId = userId
 
-    const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
-    const { _id, name } = categoryResponse.body.items[0]
-    const category = { _id, name }
+    const categoryResponse = await Category.find()
+
+    const { _id, name } = categoryResponse[0]
+    const category = { _id: _id.toString(), name }
 
     subjectBody.category = _id
     offerBody.category = category
+    subjectBody.category = category
 
     testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
     subjectBody = testSubject.body

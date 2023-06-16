@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
 
 const coopsAggregateOptions = (params = {}, query) => {
-  const { id } = params
+  const { id, role } = params
   const { skip = 0, limit = 5, status = '', sort = '{ order: "asc", orderBy:"updatedAt"}', search } = query
   const match = {}
   const sortOption = {}
@@ -18,7 +18,14 @@ const coopsAggregateOptions = (params = {}, query) => {
 
   if (status) match.status = getRegex(status)
   if (id)
-    match.$and = [{ $or: [{ initiator: mongoose.Types.ObjectId(id) }, { receiver: mongoose.Types.ObjectId(id) }] }]
+    match.$and = [
+      {
+        $or: [
+          { initiator: mongoose.Types.ObjectId(id), initiatorRole: role },
+          { receiver: mongoose.Types.ObjectId(id), receiverRole: role }
+        ]
+      }
+    ]
   if (search) {
     const nameArray = search.trim().split(' ')
     const firstNameRegex = getRegex(nameArray[0])
@@ -38,11 +45,21 @@ const coopsAggregateOptions = (params = {}, query) => {
       $lookup: {
         from: 'users',
         let: {
-          lookUpField: { $cond: [{ $eq: ['$initiator', mongoose.Types.ObjectId(id)] }, '$receiver', '$initiator'] }
+          lookUpField: { $cond: [{ $eq: ['$initiator', mongoose.Types.ObjectId(id)] }, '$receiver', '$initiator'] },
+          role: {
+            $cond: [{ $eq: ['$initiatorRole', role] }, '$receiverRole', '$initiatorRole']
+          }
         },
         pipeline: [
           { $match: { $expr: { $eq: ['$_id', '$$lookUpField'] } } },
-          { $project: { firstName: 1, lastName: 1, photo: 1 } }
+          {
+            $project: {
+              firstName: 1,
+              lastName: 1,
+              photo: 1,
+              role: '$$role'
+            }
+          }
         ],
         as: 'user'
       }

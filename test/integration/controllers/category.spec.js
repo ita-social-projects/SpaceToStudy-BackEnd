@@ -12,12 +12,12 @@ let accessToken
 
 let categoryBody = {
   name: 'Languages',
-  categoryIcon: { path: 'mocked-path-to-icon', color: '#66C42C' }
+  appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
 }
 
 const categoryData = {
   _id: expect.any(String),
-  categoryIcon: categoryBody.categoryIcon,
+  appearance: categoryBody.appearance,
   name: expect.any(String),
   totalOffers: {
     student: 0,
@@ -88,7 +88,7 @@ describe('Category controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 16 }))
+      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 16 }))
     })
 
     it('should get all categories that contain "lan" in their name', async () => {
@@ -99,7 +99,7 @@ describe('Category controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 2 }))
+      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 2 }))
     })
 
     it('should get 5 categories', async () => {
@@ -111,8 +111,8 @@ describe('Category controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 16 }))
-      expect(response.body.categories.length).toBe(5)
+      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 16 }))
+      expect(response.body.items.length).toBe(5)
     })
 
     it('should skip 8 categories and return the rest', async () => {
@@ -124,8 +124,8 @@ describe('Category controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ categories: expect.any(Array), count: 16 }))
-      expect(response.body.categories.length).toBe(8)
+      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 16 }))
+      expect(response.body.items.length).toBe(8)
     })
   })
 
@@ -144,7 +144,7 @@ describe('Category controller', () => {
 
     it('should get a category by id', async () => {
       const categoryResponse = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
-      const categoryId = categoryResponse.body.categories[0]._id
+      const categoryId = categoryResponse.body.items[0]._id
 
       const response = await app.get(endpointUrl + categoryId).set('Authorization', `Bearer ${accessToken}`)
 

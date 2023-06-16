@@ -26,11 +26,14 @@ let offerBody = {
   proficiencyLevel: ['Beginner'],
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
-  category: '63525e23bf163f5ea609ff27'
+  category: {
+    _id: '',
+    appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+  }
 }
 let subjectBody = {
   name: 'English',
-  category: '63525e23bf163f5ea609ff27'
+  category: ''
 }
 const updateData = {
   comment: 'waste of money',
@@ -53,8 +56,11 @@ describe('Review controller', () => {
     reviewBody.targetUserId = userId
 
     const categoryResponse = await app.get('/categories/').set('Authorization', `Bearer ${accessToken}`)
-    const category = categoryResponse.body.categories[0]._id
-    subjectBody.category = category
+    const { _id, name } = categoryResponse.body.items[0]
+    const category = { _id, name }
+
+    subjectBody.category = _id
+    offerBody.category = category
 
     testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
     subjectBody = testSubject.body
@@ -65,6 +71,7 @@ describe('Review controller', () => {
       .send({ ...offerBody, subject: subjectBody._id })
 
     offerBody = testOffer.body
+    offerBody.category = category
 
     testReview = await app
       .post(endpointUrl)
@@ -138,7 +145,7 @@ describe('Review controller', () => {
             targetUserRole: 'student',
             offer: {
               _id,
-              category: null,
+              category: offerBody.category,
               proficiencyLevel: ['Beginner'],
               subject: {
                 _id: subject,
@@ -180,7 +187,7 @@ describe('Review controller', () => {
         targetUserRole: 'student',
         offer: {
           _id,
-          category: null,
+          category: offerBody.category,
           proficiencyLevel: ['Beginner'],
           subject: {
             _id: subject,

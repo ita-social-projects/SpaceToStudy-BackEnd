@@ -11,7 +11,7 @@ const subjectService = {
       .exec()
 
     const count = await Subject.countDocuments(searchFilter)
-    return { count, subjects }
+    return { count, items: subjects }
   },
 
   getSubjectById: async (id) => {

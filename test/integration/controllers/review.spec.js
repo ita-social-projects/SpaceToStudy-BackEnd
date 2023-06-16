@@ -58,7 +58,11 @@ describe('Review controller', () => {
 
     const categoryResponse = await Category.find()
 
-    const category = categoryResponse[0]._id
+    const { _id, name } = categoryResponse[0]
+    const category = { _id: _id.toString(), name }
+
+    subjectBody.category = _id
+    offerBody.category = category
     subjectBody.category = category
 
     testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)

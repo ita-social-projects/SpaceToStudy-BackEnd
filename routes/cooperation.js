@@ -9,7 +9,7 @@ const cooperationController = require('~/controllers/cooperation')
 const Offer = require('~/models/offer')
 const Cooperation = require('~/models/cooperation')
 
-const body = [{ model: Offer, idName: 'offerId' }]
+const body = [{ model: Offer, idName: 'offer' }]
 const param = [{ model: Cooperation, idName: 'id' }]
 
 router.use(authMiddleware)

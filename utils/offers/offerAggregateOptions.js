@@ -190,7 +190,7 @@ const offerAggregateOptions = (query, params) => {
     {
       $facet: {
         count: [{ $count: 'count' }],
-        offers: [{ $skip: Number(skip) }, { $limit: Number(limit) }]
+        items: [{ $skip: Number(skip) }, { $limit: Number(limit) }]
       }
     },
     {
@@ -202,7 +202,7 @@ const offerAggregateOptions = (query, params) => {
             else: { $arrayElemAt: ['$count.count', 0] }
           }
         },
-        offers: 1
+        items: 1
       }
     }
   ]

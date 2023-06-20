@@ -3,16 +3,17 @@ const getRegex = require('../getRegex')
 
 const coopsAggregateOptions = (params = {}, query) => {
   const { id, role } = params
-  const { skip = 0, limit = 5, status = '', sort = { order: 'asc', orderBy: 'updatedAt' }, search } = query
+  const { skip = 0, limit = 5, status = '', sort = '{ "order": "asc", "orderBy":"updatedAt"}', search } = query
   const match = {}
   const sortOption = {}
-  const sortOrder = sort.order === 'asc' ? 1 : -1
+  const parsedSort = JSON.parse(sort)
+  const sortOrder = parsedSort.order === 'asc' ? 1 : -1
 
-  if (sort.orderBy === 'name') {
+  if (parsedSort.orderBy === 'name') {
     sortOption['user.firstName'] = sortOrder
     sortOption['user.lastName'] = sortOrder
   } else {
-    sortOption[sort.orderBy] = sortOrder
+    sortOption[parsedSort.orderBy] = sortOrder
   }
 
   if (status) match.status = getRegex(status)
@@ -87,8 +88,7 @@ const coopsAggregateOptions = (params = {}, query) => {
             }
           },
           { $unwind: '$subject' },
-          { $unwind: '$category' },
-          { $project: { title: 1, subject: 1, category: 1, price: 1 } }
+          { $unwind: '$category' }
         ],
         as: 'offer'
       }

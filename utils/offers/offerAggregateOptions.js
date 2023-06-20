@@ -103,15 +103,8 @@ const offerAggregateOptions = (query, params) => {
           sortOption['price'] = 1
         } else if (sort === 'priceDesc') {
           sortOption['price'] = -1
-        } else if (sort === 'authorAvgRating') {
-          const field = {
-            $cond: {
-              if: { $eq: ['$authorRole', 'student'] },
-              then: '$author.averageRating.student',
-              else: '$author.averageRating.tutor'
-            }
-          }
-          sortOption[field] = 1
+        } else if (sort === 'rating') {
+          sortOption[`author.averageRating.${authorRole}`] = -1
         } else {
           sortOption[sort] = -1
         }

@@ -73,7 +73,7 @@ const cooperationSchema = new Schema(
       type: String,
       enum: {
         values: NEED_ACTION,
-        message: `Need action value can be either of these: ${NEED_ACTION.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('need action', NEED_ACTION)
       },
       required: true
     }

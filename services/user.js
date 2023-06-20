@@ -90,6 +90,8 @@ const userService = {
 
     if (user.photo) {
       await uploadService.deleteFile(user.photo, USER)
+      const photoUrl = await uploadService.uploadFile(updateData, USER)
+      filteredUpdateData.photo = photoUrl
     }
 
     if(updateData.photo) {

@@ -18,10 +18,10 @@ const getCooperationById = async (req, res) => {
 }
 
 const createCooperation = async (req, res) => {
-  const { id: initiatorId, role: initiatorRole } = req.user
+  const { id: initiator, role: initiatorRole } = req.user
   const data = req.body
 
-  const newCooperation = await cooperationService.createCooperation(initiatorId, initiatorRole, data)
+  const newCooperation = await cooperationService.createCooperation(initiator, initiatorRole, data)
 
   res.status(201).json(newCooperation)
 }
@@ -29,8 +29,9 @@ const createCooperation = async (req, res) => {
 const updateCooperation = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
+  const { role: currentUserRole } = req.user
 
-  await cooperationService.updateCooperation(id, updateData)
+  await cooperationService.updateCooperation(id, currentUserRole, updateData)
 
   res.status(204).end()
 }

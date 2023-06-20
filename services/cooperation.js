@@ -1,4 +1,6 @@
 const Cooperation = require('~/models/cooperation')
+const { createError } = require('~/utils/errorsHelper')
+const { FORBIDDEN, VALIDATION_ERROR } = require('~/consts/errors')
 
 const cooperationService = {
   getCooperations: async (pipeline) => {
@@ -22,18 +24,33 @@ const cooperationService = {
       offer,
       price,
       proficiencyLevel,
-      additionalInfo
+      additionalInfo,
+      needAction: receiverRole
     })
   },
 
-  updateCooperation: async (id, updateData) => {
+  updateCooperation: async (id, currentUserRole, updateData) => {
     const { price, status } = updateData
-    const filteredData = {
-      ...(price && { price }),
-      ...(status && { status })
+
+    if (price && status) {
+      throw createError(409, VALIDATION_ERROR('You can change only either the status or the price in one operation'))
     }
 
-    await Cooperation.findByIdAndUpdate(id, filteredData, { new: true }).lean().exec()
+    const cooperation = await Cooperation.findById(id)
+
+    if (price) {
+      if (currentUserRole !== cooperation.needAction) {
+        throw createError(403, FORBIDDEN)
+      }
+      cooperation.price = price
+      cooperation.needAction = cooperation.needAction === 'student' ? 'tutor' : 'student'
+
+      await cooperation.save()
+    }
+    if (status) {
+      cooperation.status = status
+      await cooperation.save()
+    }
   }
 }
 

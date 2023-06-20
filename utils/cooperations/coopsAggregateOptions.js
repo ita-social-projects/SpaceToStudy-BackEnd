@@ -3,17 +3,16 @@ const getRegex = require('../getRegex')
 
 const coopsAggregateOptions = (params = {}, query) => {
   const { id, role } = params
-  const { skip = 0, limit = 5, status = '', sort = '{ order: "asc", orderBy:"updatedAt"}', search } = query
+  const { skip = 0, limit = 5, status = '', sort = { order: 'asc', orderBy: 'updatedAt' }, search } = query
   const match = {}
   const sortOption = {}
-  const parsedSort = JSON.parse(sort)
-  const sortOrder = parsedSort.order === 'asc' ? 1 : -1
+  const sortOrder = sort.order === 'asc' ? 1 : -1
 
-  if (parsedSort.orderBy === 'name') {
+  if (sort.orderBy === 'name') {
     sortOption['user.firstName'] = sortOrder
     sortOption['user.lastName'] = sortOrder
   } else {
-    sortOption[parsedSort.orderBy] = sortOrder
+    sortOption[sort.orderBy] = sortOrder
   }
 
   if (status) match.status = getRegex(status)
@@ -70,7 +69,7 @@ const coopsAggregateOptions = (params = {}, query) => {
         localField: 'offer',
         foreignField: '_id',
         pipeline: [
-          { $project: { title: 1, subject: 1, category: 1 } },
+          { $project: { title: 1, subject: 1, category: 1, price: 1 } },
           {
             $lookup: {
               from: 'subjects',
@@ -89,7 +88,7 @@ const coopsAggregateOptions = (params = {}, query) => {
           },
           { $unwind: '$subject' },
           { $unwind: '$category' },
-          { $project: { title: 1, subject: 1, category: 1 } }
+          { $project: { title: 1, subject: 1, category: 1, price: 1 } }
         ],
         as: 'offer'
       }

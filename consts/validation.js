@@ -21,7 +21,8 @@ const enums = {
   STATUS_ENUM: ['active', 'blocked'],
   COOPERATION_STATUS: ['pending', 'active', 'declined', 'closed'],
   PARAMS: ['id', 'categoryId', 'subjectId'],
-  OFFER_STATUS: ['pending', 'active', 'closed']
+  OFFER_STATUS: ['pending', 'active', 'closed'],
+  NEED_ACTION: ['tutor', 'student']
 }
 
 module.exports = {

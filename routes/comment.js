@@ -8,8 +8,8 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const Cooperation = require('~/models/cooperation')
 const User = require('~/models/user')
 
-const body = [{model:Cooperation, idName: 'cooperation'}, { model:User, idName: 'author'}]
-const params = [{ model:Cooperation, idName: 'id'}]
+const body = [{ model: User, idName: 'author' }]
+const params = [{ model: Cooperation, idName: 'id' }]
 
 router.use(authMiddleware)
 

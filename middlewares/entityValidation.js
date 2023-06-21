@@ -7,7 +7,7 @@ const isEntityValid = (entities) => {
 
     let id = null
 
-    if (entities.params && entities.params.length > 0) {
+    if (entities.params?.length) {
       for (const { model, idName } of entities.params) {
         id = req.params[idName]
 
@@ -21,7 +21,7 @@ const isEntityValid = (entities) => {
       }
     }
 
-    if (entities.body && entities.body.length > 0) {
+    if (entities.body?.length) {
       for (const { model, idName } of entities.body) {
         id = req.body[idName]
 
@@ -35,7 +35,7 @@ const isEntityValid = (entities) => {
       }
     }
 
-    if (models.length > 0) {
+    if (models.length) {
       next(createError(404, DOCUMENT_NOT_FOUND(models)))
     }
 

@@ -19,10 +19,19 @@ const commentService = {
     return await Comment.create({ author, cooperation:cooperationId, text})
   },
 
-  getAll: async (cooperation) => {
-    return await Comment.find({ _id:cooperation }).populate({
+  getAll: async (cooperationId, userId) => {
+    const cooperation = await Cooperation.findOne({ 
+      $and:[
+        { _id:cooperationId}, 
+        { $or:[{ receiver:userId}, { initiator: userId}] }
+      ]
+    }).exec()
+  
+    if(!cooperation) throw createForbiddenError()
+
+    return await Comment.find({ _id:cooperationId }).populate({
       path:'author', 
-      select: ['firstName', 'lastName', 'post']
+      select: ['firstName', 'lastName', 'photo']
     }).exec()
   }
 }

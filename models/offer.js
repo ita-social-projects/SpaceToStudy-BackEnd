@@ -81,7 +81,7 @@ const offerSchema = new Schema(
         values: OFFER_STATUS,
         message: ENUM_CAN_BE_ONE_OF('offer status', OFFER_STATUS)
       },
-      default: 'pending'
+      default: 'active'
     },
     FAQ: {
       type: [

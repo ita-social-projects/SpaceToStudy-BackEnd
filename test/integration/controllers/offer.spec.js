@@ -86,7 +86,7 @@ describe('Offer controller', () => {
           author,
           subject,
           category,
-          status: 'pending',
+          status: 'active',
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
         })
@@ -99,7 +99,7 @@ describe('Offer controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ count: 1, offers: [expect.any(Object)] }))
+      expect(response.body).toEqual(expect.objectContaining({ count: 1, items: [expect.any(Object)] }))
     })
   })
 

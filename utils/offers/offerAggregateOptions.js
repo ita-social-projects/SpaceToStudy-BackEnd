@@ -103,15 +103,8 @@ const offerAggregateOptions = (query, params) => {
           sortOption['price'] = 1
         } else if (sort === 'priceDesc') {
           sortOption['price'] = -1
-        } else if (sort === 'authorAvgRating') {
-          const field = {
-            $cond: {
-              if: { $eq: ['$authorRole', 'student'] },
-              then: '$author.averageRating.student',
-              else: '$author.averageRating.tutor'
-            }
-          }
-          sortOption[field] = 1
+        } else if (sort === 'rating') {
+          sortOption[`author.averageRating.${authorRole}`] = -1
         } else {
           sortOption[sort] = -1
         }
@@ -190,7 +183,7 @@ const offerAggregateOptions = (query, params) => {
     {
       $facet: {
         count: [{ $count: 'count' }],
-        offers: [{ $skip: Number(skip) }, { $limit: Number(limit) }]
+        items: [{ $skip: Number(skip) }, { $limit: Number(limit) }]
       }
     },
     {
@@ -202,7 +195,7 @@ const offerAggregateOptions = (query, params) => {
             else: { $arrayElemAt: ['$count.count', 0] }
           }
         },
-        offers: 1
+        items: 1
       }
     }
   ]

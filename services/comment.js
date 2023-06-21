@@ -20,8 +20,6 @@ const commentService = {
       $and: [{ _id: cooperationId }, { $or: [{ receiver: userId }, { initiator: userId }] }]
     }).exec()
 
-    console.log(cooperation, cooperationId, userId)
-
     if (!cooperation) throw createForbiddenError()
 
     return await Comment.find({ cooperation: cooperationId })

@@ -15,9 +15,7 @@ const isEntityValid = (entities) => {
 
         const document = await model.findById(id)
 
-        if (!document) {
-          if (!models.includes(model.modelName)) models.push(model.modelName)
-        }
+        if (!document && !models.includes(model.modelName)) models.push(model.modelName)
       }
     }
 
@@ -29,9 +27,7 @@ const isEntityValid = (entities) => {
 
         const document = await model.findById(id)
 
-        if (!document) {
-          if (!models.includes(model.modelName)) models.push(model.modelName)
-        }
+        if (!document && !models.includes(model.modelName)) models.push(model.modelName)
       }
     }
 

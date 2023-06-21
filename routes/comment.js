@@ -6,7 +6,6 @@ const { authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
 
 const Cooperation = require('~/models/cooperation')
-const User = require('~/models/user')
 
 const params = [{ model: Cooperation, idName: 'id' }]
 

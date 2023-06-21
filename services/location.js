@@ -1,4 +1,4 @@
-const { request } = require('gaxios')
+const { request } = require('axios')
 
 const API_URL = 'https://countriesnow.space/api/v0.1'
 

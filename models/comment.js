@@ -2,8 +2,9 @@ const { Schema, model } = require('mongoose')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
 const { COOPERATION, COMMENT, USER } = require('~/consts/models')
 const {
-  enums: { AUTHOR_ROLE_ENUM }
+  enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
+
 
 const commentSchema = new Schema(
   {
@@ -20,8 +21,8 @@ const commentSchema = new Schema(
     authorRole: {
       type: String,
       enum: {
-        values: AUTHOR_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('author role', AUTHOR_ROLE_ENUM)
+        values: MAIN_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('author role', MAIN_ROLE_ENUM)
       },
       required: [true, 'Author role must be selected.']
     },
@@ -29,7 +30,7 @@ const commentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: COOPERATION,
       required: [true, FIELD_CANNOT_BE_EMPTY('cooperation')]
-    }
+    },
   },
   {
     timestamps: true,

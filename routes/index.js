@@ -10,7 +10,6 @@ const adminInvitation = require('~/routes/adminInvitation')
 const offer = require('~/routes/offer')
 const category = require('~/routes/category')
 const cooperation = require('~/routes/cooperation')
-const comment = require('~/routes/comment')
 
 router.use('/auth', auth)
 router.use('/users', user)

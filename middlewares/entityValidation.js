@@ -7,30 +7,30 @@ const isEntityValid = (entities) => {
 
     let id = null
 
-    if (entities.params) {
-      for ( const { model, idName } of entities.params) {
-        id = req.body[idName]
-          
+    if (entities.params && entities.params.length > 0) {
+      for (const { model, idName } of entities.params) {
+        id = req.params[idName]
+
         if (!id) continue
 
         const document = await model.findById(id)
 
         if (!document) {
-          models.push(model.modelName)
+          if (!models.includes(model.modelName)) models.push(model.modelName)
         }
       }
     }
 
-    if (entities.body) {
-      for ( const { model, idName } of entities.params) {
+    if (entities.body && entities.body.length > 0) {
+      for (const { model, idName } of entities.body) {
         id = req.body[idName]
-          
+
         if (!id) continue
 
         const document = await model.findById(id)
 
         if (!document) {
-          models.push(model.modelName)
+          if (!models.includes(model.modelName)) models.push(model.modelName)
         }
       }
     }

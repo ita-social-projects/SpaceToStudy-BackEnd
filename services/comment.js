@@ -3,7 +3,7 @@ const Cooperation = require('~/models/cooperation')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const commentService = {
-  create: async (body) => {
+  createComment: async (body) => {
     const { text, author, cooperationId } = body
 
     const cooperation = await Cooperation.findOne({
@@ -15,7 +15,7 @@ const commentService = {
     return await Comment.create({ author, cooperation: cooperationId, text })
   },
 
-  getAll: async (cooperationId, userId) => {
+  getComments: async (cooperationId, userId) => {
     const cooperation = await Cooperation.findOne({
       $and: [{ _id: cooperationId }, { $or: [{ receiver: userId }, { initiator: userId }] }]
     }).exec()

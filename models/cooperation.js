@@ -17,12 +17,12 @@ const cooperationSchema = new Schema(
     offer: {
       type: Schema.Types.ObjectId,
       ref: OFFER,
-      required: [true, FIELD_CANNOT_BE_EMPTY('offer id')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('offer')]
     },
     initiator: {
       type: Schema.Types.ObjectId,
       ref: USER,
-      required: [true, FIELD_CANNOT_BE_EMPTY('initiator id')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('initiator')]
     },
     initiatorRole: {
       type: String,
@@ -35,7 +35,7 @@ const cooperationSchema = new Schema(
     receiver: {
       type: Schema.Types.ObjectId,
       ref: USER,
-      required: [true, FIELD_CANNOT_BE_EMPTY('recipient id')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('receiver')]
     },
     receiverRole: {
       type: String,

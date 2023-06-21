@@ -14,22 +14,22 @@ const {
   roles: { ADMIN }
 } = require('~/consts/auth')
 
-const param = [{ model: User, idName: 'id' }]
+const params = [{ model: User, idName: 'id' }]
 
 router.use(authMiddleware)
 
 router.param('id', idValidation)
 
-router.use('/:id/reviews', isEntityValid(param), reviewRouter)
-router.use('/:id/cooperations', isEntityValid(param), cooperationRouter)
-router.use('/:id/offers', isEntityValid(param), offerRouter)
+router.use('/:id/reviews', isEntityValid({ params }), reviewRouter)
+router.use('/:id/cooperations', isEntityValid({ params }), cooperationRouter)
+router.use('/:id/offers', isEntityValid({ params }), offerRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
-router.get('/:id', isEntityValid(param), asyncWrapper(userController.getUserById))
-router.patch('/:id', isEntityValid(param), asyncWrapper(userController.updateUser))
+router.get('/:id', isEntityValid({ params }), asyncWrapper(userController.getUserById))
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
 
 router.use(restrictTo(ADMIN))
-router.patch('/:id/change-status', isEntityValid(param), asyncWrapper(userController.updateStatus))
-router.delete('/:id', isEntityValid(param), asyncWrapper(userController.deleteUser))
+router.patch('/:id/change-status', isEntityValid({ params }), asyncWrapper(userController.updateStatus))
+router.delete('/:id', isEntityValid({ params }), asyncWrapper(userController.deleteUser))
 
 module.exports = router

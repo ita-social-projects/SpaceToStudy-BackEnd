@@ -7,7 +7,7 @@ const commentSchema = new Schema(
     text: {
       type:String,
       required:[true, FIELD_CANNOT_BE_EMPTY('text')],
-      minLength: [4, FIELD_CANNOT_BE_SHORTER('text', 5)],
+      minLength: [4, FIELD_CANNOT_BE_SHORTER('text', 4)],
     },
     author: {
       type:Schema.Types.ObjectId,

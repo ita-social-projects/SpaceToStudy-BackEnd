@@ -54,11 +54,7 @@ const offerAggregateOptions = (query, params) => {
   }
 
   if (rating) {
-    match['$expr'] = {
-      if: { $eq: ['$authorRole', 'student'] },
-      then: { $gte: ['$author.averageRating.student', parseInt(rating)] },
-      else: { $gte: ['$author.averageRating.tutor', parseInt(rating)] }
-    }
+    match[`author.averageRating.${authorRole}`] = { $gte: parseInt(rating) }
   }
 
   if (language) {

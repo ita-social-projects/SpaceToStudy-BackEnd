@@ -1,11 +1,11 @@
 const commentService = require('~/services/comment')
 
 const createComment = async (req, res) => {
-  const { id: author } = req.user
+  const { id: author, role: authorRole } = req.user
   const data = req.body
   const { id: cooperationId } = req.params
 
-  const comment = await commentService.createComment({ text: data.text, author, cooperationId })
+  const comment = await commentService.createComment({ text: data.text, author, authorRole, cooperationId })
 
   res.status(201).json(comment)
 }

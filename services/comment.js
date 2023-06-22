@@ -4,7 +4,7 @@ const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const commentService = {
   createComment: async (body) => {
-    const { text, author, cooperationId } = body
+    const { text, author, authorRole, cooperationId } = body
 
     const cooperation = await Cooperation.findOne({
       $and: [{ _id: cooperationId }, { $or: [{ receiver: author }, { initiator: author }] }]
@@ -12,7 +12,7 @@ const commentService = {
 
     if (!cooperation) throw createForbiddenError()
 
-    return await Comment.create({ author, cooperation: cooperationId, text })
+    return await Comment.create({ author, cooperation: cooperationId, text, authorRole })
   },
 
   getComments: async (cooperationId, userId) => {

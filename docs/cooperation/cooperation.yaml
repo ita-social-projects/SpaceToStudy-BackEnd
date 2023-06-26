@@ -25,6 +25,7 @@ paths:
                   receiverRole: student
                   price: 200
                   status: active
+                  needAction: student
                   createdAt: 2021-05-09T11:34:53.243+00:00
                   updatedAt: 2022-07-02T11:59:53.243+00:00
                 - _id: 63ebc6fbd2f34037d0aba314
@@ -35,6 +36,7 @@ paths:
                   receiverRole: student
                   price: 300
                   status: closed
+                  needAction: tutor
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
         401:
@@ -65,8 +67,6 @@ paths:
               $ref: '#/definitions/cooperation'
             example:
               offer: 63ebc6fbd2f34037d0aba791
-              initiator: 6255bc080a75adf9223df212
-              initiatorRole: tutor
               receiver: 6255bc080a75adf9223df100
               receiverRole: student
               price: 300
@@ -83,9 +83,10 @@ paths:
                 initiator: 6255bc080a75adf9223df212
                 initiatorRole: tutor
                 receiver: 6255bc080a75adf9223df100
-                receiverRole: studentF
+                receiverRole: student
                 price: 300
                 status: pending
+                needAction: student
                 createdAt: 2021-04-09T11:34:53.243+00:00
                 updatedAt: 2022-09-02T11:59:53.243+00:00
         400:
@@ -140,6 +141,7 @@ paths:
                 receiverRole: student
                 price: 150
                 status: pending
+                needAction: student
                 createdAt: 2022-10-18T13:25:36.292+00:00
                 updatedAt: 2022-10-18T13:25:36.292+00:00
         400:
@@ -195,7 +197,6 @@ paths:
             schema:
               $ref: '#/definitions/cooperation'
             example:
-              price: 150
               status: closed
       responses:
         204:

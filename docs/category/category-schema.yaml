@@ -8,15 +8,13 @@ definitions:
           type: string
         name:
           type: string
-        categoryIcon:
+        appearance:
           type: object
           properties:
-            path:
+            icon:
               type: string
             color:
               type: string
-        subjectsIcon:
-          type: string
         totalOffers:
           type: object
           properties:
@@ -37,15 +35,13 @@ definitions:
     properties:
       name:
         type: string
-      categoryIcon:
+      appearance:
         type: object
         properties:
-          path:
+          icon:
             type: string
           color:
             type: string
-      subjectsIcon:
-        type: string
   category:
     type: object
     properties:
@@ -53,15 +49,13 @@ definitions:
         type: string
       name:
         type: string
-      categoryIcon:
+      appearance:
         type: object
         properties:
-          path:
+          icon:
             type: string
           color:
             type: string
-      subjectsIcon:
-        type: string
       totalOffers:
         type: object
         properties:

@@ -104,12 +104,18 @@ const errors = {
     message: `${document} with the specified ${document.length > 1 ? 'IDs were' : 'ID was'} not found.`
   }),
   FIELD_CANNOT_BE_EMPTY: (field) => `The ${field} field cannot be empty.`,
+  FIELD_MUST_BE_SELECTED: (field) => `${field[0].toUpperCase() + field.slice(1)} must be selected.`,
   ENUM_CAN_BE_ONE_OF: (field, enums) =>
     `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}`,
   FIELD_CANNOT_BE_LONGER: (field, quantity) =>
     `${field[0].toUpperCase() + field.slice(1)} cannot be longer than ${quantity} symbol.`,
   FIELD_CANNOT_BE_SHORTER: (field, quantity) =>
     `${field[0].toUpperCase() + field.slice(1)} cannot be shorter than ${quantity} symbol.`,
+  VALUE_MUST_BE_ABOVE: (field, val) =>
+    val === 1
+      ? `${field[0].toUpperCase() + field.slice(1)} must be a positive number.`
+      : `${field[0].toUpperCase() + field.slice(1)} must be above ${val}.`,
+  VALUE_MUST_BE_BELOW: (field, val) => `${field[0].toUpperCase() + field.slice(1)} must be below ${val}.`,
   DOCUMENT_ALREADY_EXISTS: (uniqueFields) => ({
     code: 'DOCUMENT_ALREADY_EXISTS',
     message: `'${uniqueFields}' field(s) must be unique.`

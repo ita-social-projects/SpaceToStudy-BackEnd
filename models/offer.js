@@ -2,14 +2,16 @@ const { Schema, model } = require('mongoose')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const {
-  enums: { AUTHOR_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS }
+  enums: { MAIN_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 const {
   FIELD_CANNOT_BE_EMPTY,
   ENUM_CAN_BE_ONE_OF,
   FIELD_CANNOT_BE_LONGER,
-  FIELD_CANNOT_BE_SHORTER
+  FIELD_CANNOT_BE_SHORTER,
+  FIELD_MUST_BE_SELECTED,
+  VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
 
 const offerSchema = new Schema(
@@ -17,7 +19,7 @@ const offerSchema = new Schema(
     price: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],
-      min: [1, 'Price must be a positive number']
+      min: [1, VALUE_MUST_BE_ABOVE('price', 1)]
     },
     proficiencyLevel: {
       type: [String],
@@ -45,25 +47,20 @@ const offerSchema = new Schema(
         values: SPOKEN_LANG_ENUM,
         message: ENUM_CAN_BE_ONE_OF('language', SPOKEN_LANG_ENUM)
       },
-      required: [true, 'Please select a language(s) that will be used in teaching.']
+      required: [true, FIELD_MUST_BE_SELECTED('language(s)')]
     },
     authorRole: {
       type: String,
       enum: {
-        values: AUTHOR_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('author role', AUTHOR_ROLE_ENUM),
-        required: [true, 'Author role must be selected.']
+        values: MAIN_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('author role', MAIN_ROLE_ENUM),
+        required: [true, FIELD_MUST_BE_SELECTED('author role')]
       }
     },
     author: {
       type: Schema.Types.ObjectId,
       ref: USER,
       required: true
-    },
-    subjectName: {
-      type: String,
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('subject name', 1)],
-      maxlength: [30, FIELD_CANNOT_BE_LONGER('subject name', 30)]
     },
     subject: {
       type: Schema.Types.ObjectId,
@@ -81,14 +78,14 @@ const offerSchema = new Schema(
         values: OFFER_STATUS,
         message: ENUM_CAN_BE_ONE_OF('offer status', OFFER_STATUS)
       },
-      default: 'active'
+      default: OFFER_STATUS[0]
     },
     FAQ: {
       type: [
         {
           question: {
             type: String,
-            required: [true, 'You must specify the question'],
+            required: [true, FIELD_CANNOT_BE_EMPTY('question')],
             validate: {
               validator: (question) => {
                 return question.trim().length > 0
@@ -98,7 +95,7 @@ const offerSchema = new Schema(
           },
           answer: {
             type: String,
-            required: [true, 'You must specify the answer'],
+            required: [true, FIELD_CANNOT_BE_EMPTY('answer')],
             validate: {
               validator: (answer) => {
                 return answer.trim().length > 0

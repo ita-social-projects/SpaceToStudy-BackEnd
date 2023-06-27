@@ -17,12 +17,11 @@ const enums = {
   PROFICIENCY_LEVEL_ENUM: ['Beginner', 'Intermediate', 'Advanced', 'Test Preparation', 'Professional', 'Specialized'],
   ROLE_ENUM: ['student', 'tutor', 'admin', 'superadmin'],
   LOGIN_ROLE_ENUM: ['student', 'tutor', 'admin'],
-  AUTHOR_ROLE_ENUM: ['student', 'tutor'],
+  MAIN_ROLE_ENUM: ['student', 'tutor'],
   STATUS_ENUM: ['active', 'blocked'],
   COOPERATION_STATUS: ['pending', 'active', 'declined', 'closed'],
   PARAMS: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS: ['active', 'draft', 'closed'],
-  NEED_ACTION: ['tutor', 'student'],
   NOTIFICATION_TYPE: ['review', 'comment']
 }
 

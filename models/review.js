@@ -1,11 +1,20 @@
 const { Schema, model } = require('mongoose')
 const userSchema = require('~/models/user')
 const offerSchema = require('~/models/offer')
+const { USER, OFFER } = require('~/consts/models')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
-const { USER, OFFER } = require('~/consts/models')
-const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
+const {
+  enums: { MAIN_ROLE_ENUM }
+} = require('~/consts/validation')
+const {
+  ENUM_CAN_BE_ONE_OF,
+  FIELD_CANNOT_BE_EMPTY,
+  FIELD_MUST_BE_SELECTED,
+  VALUE_MUST_BE_ABOVE,
+  VALUE_MUST_BE_BELOW
+} = require('~/consts/errors')
 
 const reviewSchema = new Schema(
   {
@@ -17,8 +26,8 @@ const reviewSchema = new Schema(
     rating: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('rating')],
-      min: [1, 'Rating must be above 1'],
-      max: [5, 'Rating must be below 5']
+      min: [1, VALUE_MUST_BE_ABOVE('rating', 1)],
+      max: [5, VALUE_MUST_BE_BELOW('rating', 5)]
     },
     author: {
       type: Schema.Types.ObjectId,
@@ -32,7 +41,11 @@ const reviewSchema = new Schema(
     },
     targetUserRole: {
       type: String,
-      required: true
+      enum: {
+        values: MAIN_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('target user role', MAIN_ROLE_ENUM)
+      },
+      required: [true, FIELD_MUST_BE_SELECTED('user role')]
     },
     offer: {
       type: Schema.Types.ObjectId,

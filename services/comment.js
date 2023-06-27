@@ -3,8 +3,8 @@ const Cooperation = require('~/models/cooperation')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const commentService = {
-  createComment: async (body) => {
-    const { text, author, authorRole, cooperationId } = body
+  createComment: async (data) => {
+    const { text, author, authorRole, cooperationId } = data
 
     const cooperation = await Cooperation.findOne({
       $and: [{ _id: cooperationId }, { $or: [{ receiver: author }, { initiator: author }] }]

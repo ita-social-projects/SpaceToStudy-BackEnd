@@ -22,7 +22,8 @@ const enums = {
   COOPERATION_STATUS: ['pending', 'active', 'declined', 'closed'],
   PARAMS: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS: ['active', 'draft', 'closed'],
-  NEED_ACTION: ['tutor', 'student']
+  NEED_ACTION: ['tutor', 'student'],
+  TYPE_NOTIFICATIONS_ENUM: ['chat', 'reviews', 'comments']
 }
 
 module.exports = {

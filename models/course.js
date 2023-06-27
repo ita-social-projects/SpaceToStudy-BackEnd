@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
 const { COURSE, USER, LESSON } = require('~/consts/models')
 

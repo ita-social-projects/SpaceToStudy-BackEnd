@@ -73,14 +73,14 @@ const userSchema = new Schema(
       student: {
         type: Number,
         default: 0,
-        min: [1, VALUE_MUST_BE_ABOVE('rating', 1)],
+        min: [0, VALUE_MUST_BE_ABOVE('rating', 0)],
         max: [5, VALUE_MUST_BE_BELOW('rating', 5)],
         set: (val) => Math.round(val * 10) / 10
       },
       tutor: {
         type: Number,
         default: 0,
-        min: [1, VALUE_MUST_BE_ABOVE('rating', 1)],
+        min: [0, VALUE_MUST_BE_ABOVE('rating', 0)],
         max: [5, VALUE_MUST_BE_BELOW('rating', 5)],
         set: (val) => Math.round(val * 10) / 10
       }

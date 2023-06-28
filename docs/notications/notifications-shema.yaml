@@ -1,0 +1,57 @@
+definitions:
+  notifications:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        user:
+          type: string
+          $ref: '#/components/user'
+        userRole:
+          type: string
+        type:
+          type: string
+          enum:
+            - Chat
+            - Review
+            - Comment
+        reference:
+          type: string
+          $refPath: '#/components/referenceModel'
+        referenceModel:
+          type:string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  notification:
+    type: object
+    properties:
+      _id:
+        type: string
+      user:
+        type: string
+        $ref: '#/components/user'
+      userRole:
+        type: string
+      type:
+        type: string
+        enum:
+          - Chat
+          - Review
+          - Comment
+      reference:
+        type: string
+        $refPath: '#/components/{referenceModel}'
+      referenceModel:
+        type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

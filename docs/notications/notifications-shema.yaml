@@ -14,7 +14,6 @@ definitions:
         type:
           type: string
           enum:
-            - Chat
             - Review
             - Comment
         reference:
@@ -41,7 +40,6 @@ definitions:
       type:
         type: string
         enum:
-          - Chat
           - Review
           - Comment
       reference:

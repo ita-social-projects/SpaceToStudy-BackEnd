@@ -1,10 +1,10 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { ROLE_ENUM, TYPE_NOTIFICATIONS_ENUM }
+  enums: { ROLE_ENUM, NOTIFICATION_TYPE }
 } = require('~/consts/validation')
 const { ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
 
-const { USER, NOTIFICATIONS, REVIEW, COMMENT, CHAT } = require('~/consts/models')
+const { USER, NOTIFICATIONS, REVIEW, COMMENT } = require('~/consts/models')
 
 const notificationsSchema = new Schema(
   {
@@ -17,15 +17,15 @@ const notificationsSchema = new Schema(
       type: String,
       enum: {
         values: ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('user role', ROLE_ENUM),
-        required: [true, 'User role must be selected.']
-      }
+        message: ENUM_CAN_BE_ONE_OF('user role', ROLE_ENUM)
+      },
+      required: [true, 'User role must be selected.']
     },
     type: {
       type: String,
       enum: {
-        values: TYPE_NOTIFICATIONS_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('notification type', TYPE_NOTIFICATIONS_ENUM)
+        values: NOTIFICATION_TYPE,
+        message: ENUM_CAN_BE_ONE_OF('notification type', NOTIFICATION_TYPE)
       },
       select: false
     },
@@ -37,7 +37,7 @@ const notificationsSchema = new Schema(
     referenceModel: {
       type: String,
       required: true,
-      enum: [CHAT, REVIEW, COMMENT]
+      enum: [REVIEW, COMMENT]
     }
   },
   { timestamps: true, versionKey: false }

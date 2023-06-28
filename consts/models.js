@@ -6,7 +6,10 @@ const refs = {
   TOKEN: 'Token',
   REVIEW: 'Review',
   ADMIN_INVITATION: 'AdminInvitation',
-  COOPERATION: 'Cooperation'
+  COOPERATION: 'Cooperation',
+  MESSAGE: 'Message',
+  COURSE: 'Course',
+  LESSON: 'Lesson'
 }
 
 module.exports = refs

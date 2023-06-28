@@ -1,8 +1,13 @@
 const { Schema, model } = require('mongoose')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
-const { LESSON } = require('~/consts/models')
+const { USER, LESSON } = require('~/consts/models')
 const lessonSchema = new Schema(
   {
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: USER,
+      required: true
+    },
     title: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('title')],

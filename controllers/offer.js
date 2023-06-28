@@ -29,8 +29,9 @@ const createOffer = async (req, res) => {
 const updateOffer = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
+  const { id: currentUserId } = req.user
 
-  await offerService.updateOffer(id, updateData)
+  await offerService.updateOffer(id, currentUserId, updateData)
 
   res.status(204).end()
 }

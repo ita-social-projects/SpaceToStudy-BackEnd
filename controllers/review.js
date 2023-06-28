@@ -41,8 +41,9 @@ const addReview = async (req, res) => {
 const updateReview = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
+  const { id: currentUserId } = req.user
 
-  await reviewService.updateReview(id, updateData)
+  await reviewService.updateReview(id, currentUserId, updateData)
 
   res.status(204).end()
 }

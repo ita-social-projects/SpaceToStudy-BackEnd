@@ -29,9 +29,9 @@ const createCooperation = async (req, res) => {
 const updateCooperation = async (req, res) => {
   const { id } = req.params
   const updateData = req.body
-  const { role: currentUserRole } = req.user
+  const currentUser = req.user
 
-  await cooperationService.updateCooperation(id, currentUserRole, updateData)
+  await cooperationService.updateCooperation(id, currentUser, updateData)
 
   res.status(204).end()
 }

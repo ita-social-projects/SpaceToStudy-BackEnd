@@ -15,7 +15,7 @@ const courseSchema = new Schema(
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('description')],
       minLength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
-      maxLength: [1000, FIELD_CANNOT_BE_LONGER('description', 100)]
+      maxLength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)]
     },
     author: {
       type: Schema.Types.ObjectId,

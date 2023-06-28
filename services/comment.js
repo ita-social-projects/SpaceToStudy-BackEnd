@@ -22,7 +22,7 @@ const commentService = {
 
     if (!cooperation) throw createForbiddenError()
 
-    return await Comment.find({ cooperation: cooperationId })
+    return await Comment.find({ cooperation: cooperationId, author:userId })
       .populate({
         path: 'author',
         select: ['firstName', 'lastName', 'photo']

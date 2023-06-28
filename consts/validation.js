@@ -23,7 +23,7 @@ const enums = {
   PARAMS: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS: ['active', 'draft', 'closed'],
   NEED_ACTION: ['tutor', 'student'],
-  TYPE_NOTIFICATIONS_ENUM: ['chat', 'reviews', 'comments']
+  TYPE_NOTIFICATIONS_ENUM: ['chat', 'review', 'comment']
 }
 
 module.exports = {

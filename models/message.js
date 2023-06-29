@@ -29,6 +29,7 @@ const messageSchema = new Schema(
 
     messageText: {
       type: String,
+      required: [true, FIELD_CANNOT_BE_EMPTY('message text')],
       minLength: [1, FIELD_CANNOT_BE_SHORTER('additional info', 1)],
       maxLength: [1000, FIELD_CANNOT_BE_LONGER('additional info', 1000)]
     },

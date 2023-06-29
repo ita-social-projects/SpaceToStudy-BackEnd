@@ -22,6 +22,12 @@ definitions:
           type: array
           items:
             type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
   course:
     type: object
     properties:
@@ -43,6 +49,12 @@ definitions:
         type: array
         items:
           type: string
+      createdAt:
+          type: string
+          format: date-time
+      updatedAt:
+          type: string
+          format: date-time
   courseBody:
     type: object
     properties:

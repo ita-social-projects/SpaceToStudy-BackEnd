@@ -20,6 +20,17 @@ definitions:
         updatedAt:
           type: string
           format: date-time
+  chatBody:
+    type: object
+    properties:
+      members:
+        type: object
+        properties:
+          user:
+            type: string
+            ref: '#/components/user'
+          role:
+            type: string
   chat:
     type: object
     properties:

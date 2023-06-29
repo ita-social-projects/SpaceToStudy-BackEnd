@@ -1,6 +1,6 @@
 const commentService = require('~/services/comment')
 
-const createComment = async (req, res) => {
+const addComment = async (req, res) => {
   const { id: author, role: authorRole } = req.user
   const data = req.body
   const { id: cooperationId } = req.params

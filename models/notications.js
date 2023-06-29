@@ -25,7 +25,7 @@ const notificationsSchema = new Schema(
       type: String,
       enum: {
         values: NOTIFICATION_TYPE,
-        message: ENUM_CAN_BE_ONE_OF('notification type', NOTIFICATION_TYPE)
+        message: ENUM_CAN_BE_ONE_OF('type', NOTIFICATION_TYPE)
       },
       select: false
     },

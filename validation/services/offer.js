@@ -5,6 +5,7 @@ const allowedOfferFieldsForUpdate = {
   languages: true,
   subject: true,
   category: true,
+  status: true,
   FAQ: true
 }
 

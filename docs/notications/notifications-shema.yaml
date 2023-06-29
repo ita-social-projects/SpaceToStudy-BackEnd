@@ -23,9 +23,12 @@ definitions:
             - Comment
         reference:
           type: string
-          $refPath: '#/components/referenceModel'
+          $refPath: '#/components/{referenceModel}'
         referenceModel:
-          type:string
+          type: string
+          enum:
+            - Review
+            - Comment
         createdAt:
           type: string
           format: date-time
@@ -57,6 +60,9 @@ definitions:
         $refPath: '#/components/{referenceModel}'
       referenceModel:
         type: string
+        enum:
+          - Review
+          - Comment
       createdAt:
         type: string
         format: date-time

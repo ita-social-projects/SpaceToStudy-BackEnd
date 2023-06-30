@@ -3,11 +3,12 @@ const {
   FIELD_CANNOT_BE_EMPTY,
   ENUM_CAN_BE_ONE_OF,
   FIELD_CANNOT_BE_LONGER,
-  FIELD_CANNOT_BE_SHORTER
+  FIELD_CANNOT_BE_SHORTER,
+  FIELD_MUST_BE_SELECTED
 } = require('~/consts/errors')
 const { USER, MESSAGE, CHAT } = require('~/consts/models')
 const {
-  enums: { AUTHOR_ROLE_ENUM }
+  enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
 
 const messageSchema = new Schema(
@@ -20,16 +21,16 @@ const messageSchema = new Schema(
     authorRole: {
       type: String,
       enum: {
-        values: AUTHOR_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('author role', AUTHOR_ROLE_ENUM),
-        required: [true, 'Author role must be selected.']
+        values: MAIN_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('author role', MAIN_ROLE_ENUM),
+        required: [true, FIELD_MUST_BE_SELECTED('author role')]
       }
     },
     text: {
       type: String,
-      required: [true, FIELD_CANNOT_BE_EMPTY('message text')],
-      minLength: [1, FIELD_CANNOT_BE_SHORTER('message text', 1)],
-      maxLength: [1000, FIELD_CANNOT_BE_LONGER('message text', 1000)]
+      required: [true, FIELD_CANNOT_BE_EMPTY('text')],
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('text', 1)],
+      maxLength: [1000, FIELD_CANNOT_BE_LONGER('text', 1000)]
     },
     isRead: {
       type: Boolean,

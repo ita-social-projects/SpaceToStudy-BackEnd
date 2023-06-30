@@ -26,7 +26,7 @@ const testCooperationData = {
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   additionalInfo:
-    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student",
+    'I don\'t like both Dark Arts and Voldemort that\'s why i want to learn your subject and became your student',
   receiver: '649c147ac75d3e44440e3a12',
   offer: '649c148cc75d3e44440e3a13',
   initiatorRole: 'student',

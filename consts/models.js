@@ -8,10 +8,9 @@ const refs = {
   ADMIN_INVITATION: 'AdminInvitation',
   COOPERATION: 'Cooperation',
   MESSAGE: 'Message',
-  CHAT: 'Chat'
+  CHAT: 'Chat',
   NOTIFICATIONS: 'Notifications',
   COMMENT: 'Comment'
-
 }
 
 module.exports = refs

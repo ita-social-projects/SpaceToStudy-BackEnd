@@ -1,70 +1,49 @@
 definitions:
-  categories:
+  chats:
     type: array
     items:
       type: object
       properties:
         _id:
           type: string
-        name:
-          type: string
-        appearance:
+        members:
           type: object
           properties:
-            icon:
+            user:
               type: string
-            color:
+              $ref: '#/components/user'
+            role:
               type: string
-        totalOffers:
-          type: object
-          properties:
-            student:
-              type: number
-              default: 0
-            tutor:
-              type: number
-              default: 0
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-  categoryBody:
+  chatBody:
     type: object
     properties:
-      name:
-        type: string
-      appearance:
+      members:
         type: object
         properties:
-          icon:
+          user:
             type: string
-          color:
+            ref: '#/components/user'
+          role:
             type: string
-  category:
+  chat:
     type: object
     properties:
       _id:
         type: string
-      name:
-        type: string
-      appearance:
+      members:
         type: object
         properties:
-          icon:
+          user:
             type: string
-          color:
+            ref: '#/components/user'
+          role:
             type: string
-      totalOffers:
-        type: object
-        properties:
-          student:
-            type: number
-            default: 0
-          tutor:
-            type: number
-            default: 0
       createdAt:
         type: string
         format: date-time

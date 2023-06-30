@@ -3,11 +3,13 @@ const {
   FIELD_CANNOT_BE_EMPTY,
   ENUM_CAN_BE_ONE_OF,
   FIELD_CANNOT_BE_LONGER,
-  FIELD_CANNOT_BE_SHORTER
+  FIELD_CANNOT_BE_SHORTER,
+  FIELD_MUST_BE_SELECTED,
+  VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
 const { USER, OFFER, COOPERATION } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, AUTHOR_ROLE_ENUM, NEED_ACTION }
+  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
 
 const cooperationSchema = new Schema(
@@ -25,9 +27,9 @@ const cooperationSchema = new Schema(
     initiatorRole: {
       type: String,
       enum: {
-        values: AUTHOR_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('initiator role', AUTHOR_ROLE_ENUM),
-        required: [true, 'Initiator role must be selected.']
+        values: MAIN_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('initiator role', MAIN_ROLE_ENUM),
+        required: [true, FIELD_MUST_BE_SELECTED('initiator role')]
       }
     },
     receiver: {
@@ -38,9 +40,9 @@ const cooperationSchema = new Schema(
     receiverRole: {
       type: String,
       enum: {
-        values: AUTHOR_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('receiver role', AUTHOR_ROLE_ENUM),
-        required: [true, 'Receiver role must be selected.']
+        values: MAIN_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('receiver role', MAIN_ROLE_ENUM),
+        required: [true, FIELD_MUST_BE_SELECTED('receiver role')]
       }
     },
     additionalInfo: {
@@ -59,21 +61,21 @@ const cooperationSchema = new Schema(
     price: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('price')],
-      min: [1, 'Price must be positive number']
+      min: [1, VALUE_MUST_BE_ABOVE('price', 1)]
     },
     status: {
       type: String,
       enum: {
         values: COOPERATION_STATUS,
-        message: `Cooperation status can be either of these: ${COOPERATION_STATUS.toString()}`
+        message: ENUM_CAN_BE_ONE_OF('cooperation status', COOPERATION_STATUS)
       },
       default: COOPERATION_STATUS[0]
     },
     needAction: {
       type: String,
       enum: {
-        values: NEED_ACTION,
-        message: ENUM_CAN_BE_ONE_OF('need action', NEED_ACTION)
+        values: MAIN_ROLE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('need action', MAIN_ROLE_ENUM)
       },
       required: true
     }

@@ -37,23 +37,20 @@ definitions:
               - Arabic
         authorRole:
           type: string
-        authorFirstName:
-          type: string
-        authorLastName:
-          type: string
-        authorAvgRating:
-          type: integer
         author:
-          type: object
+          type: string
+          ref: '#components/user'
         subject:
-          type: object
+          type: string
+          ref: '#components/subject'
         category:
           type: string
+          ref: '#components/category'
         status:
           type: string
           enum:
-            - pending
             - active
+            - draft
             - closed
         FAQ:
           type: array
@@ -106,13 +103,15 @@ definitions:
         type: string
       subject:
         type: string
+        ref: '#components/subject'
       category:
         type: string
+        ref: '#components/category'
       status:
         type: string
         enum:
-          - pending
           - active
+          - draft
           - closed
       FAQ:
         type: array
@@ -159,23 +158,20 @@ definitions:
             - Arabic
       authorRole:
         type: string
-      authorFirstName:
-        type: string
-      authorLastName:
-        type: string
-      authorAvgRating:
-        type: integer
       author:
         type: string
+        ref: '#components/user'
       subject:
         type: string
+        ref: '#components/subject'
       category:
         type: string
+        ref: '#components/category'
       status:
         type: string
         enum:
-          - pending
           - active
+          - draft
           - closed
       FAQ:
         type: array

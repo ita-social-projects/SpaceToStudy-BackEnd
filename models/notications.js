@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 const {
   enums: { ROLE_ENUM, NOTIFICATION_TYPE }
 } = require('~/consts/validation')
-const { ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+const { ENUM_CAN_BE_ONE_OF, FIELD_MUST_BE_SELECTED } = require('~/consts/errors')
 
 const { USER, NOTIFICATIONS, REVIEW, COMMENT } = require('~/consts/models')
 
@@ -19,7 +19,7 @@ const notificationsSchema = new Schema(
         values: ROLE_ENUM,
         message: ENUM_CAN_BE_ONE_OF('user role', ROLE_ENUM)
       },
-      required: [true, 'User role must be selected.']
+      required: [true, FIELD_MUST_BE_SELECTED('user role')]
     },
     type: {
       type: String,

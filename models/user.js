@@ -7,7 +7,10 @@ const {
   FIELD_CANNOT_BE_EMPTY,
   ENUM_CAN_BE_ONE_OF,
   FIELD_CANNOT_BE_SHORTER,
-  FIELD_CANNOT_BE_LONGER
+  FIELD_CANNOT_BE_LONGER,
+  FIELD_MUST_BE_SELECTED,
+  VALUE_MUST_BE_ABOVE,
+  VALUE_MUST_BE_BELOW
 } = require('~/consts/errors')
 
 const offerSchema = require('~/models/offer')
@@ -20,7 +23,7 @@ const userSchema = new Schema(
         values: ROLE_ENUM,
         message: ENUM_CAN_BE_ONE_OF('user role', ROLE_ENUM)
       },
-      required: [true, 'User role must be selected.']
+      required: [true, FIELD_MUST_BE_SELECTED('user role')]
     },
     firstName: {
       type: String,
@@ -70,15 +73,15 @@ const userSchema = new Schema(
       student: {
         type: Number,
         default: 0,
-        min: [0, 'Rating must be above 0'],
-        max: [5, 'Rating must be below 5'],
+        min: [0, VALUE_MUST_BE_ABOVE('rating', 0)],
+        max: [5, VALUE_MUST_BE_BELOW('rating', 5)],
         set: (val) => Math.round(val * 10) / 10
       },
       tutor: {
         type: Number,
         default: 0,
-        min: [0, 'Rating must be above 0'],
-        max: [5, 'Rating must be below 5'],
+        min: [0, VALUE_MUST_BE_ABOVE('rating', 0)],
+        max: [5, VALUE_MUST_BE_BELOW('rating', 5)],
         set: (val) => Math.round(val * 10) / 10
       }
     },
@@ -157,7 +160,7 @@ const userSchema = new Schema(
           {
             question: {
               type: String,
-              required: [true, 'You must specify the question'],
+              required: [true, FIELD_CANNOT_BE_EMPTY('question')],
               validate: {
                 validator: (question) => {
                   return question.trim().length > 0
@@ -167,7 +170,7 @@ const userSchema = new Schema(
             },
             answer: {
               type: String,
-              required: [true, 'You must specify the answer'],
+              required: [true, FIELD_CANNOT_BE_EMPTY('answer')],
               validate: {
                 validator: (answer) => {
                   return answer.trim().length > 0
@@ -181,7 +184,7 @@ const userSchema = new Schema(
           {
             question: {
               type: String,
-              required: [true, 'You must specify the question'],
+              required: [true, FIELD_CANNOT_BE_EMPTY('question')],
               validate: {
                 validator: (question) => {
                   return question.trim().length > 0
@@ -191,7 +194,7 @@ const userSchema = new Schema(
             },
             answer: {
               type: String,
-              required: [true, 'You must specify the answer'],
+              required: [true, FIELD_CANNOT_BE_EMPTY('answer')],
               validate: {
                 validator: (answer) => {
                   return answer.trim().length > 0

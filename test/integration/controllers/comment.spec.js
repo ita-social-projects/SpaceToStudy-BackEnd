@@ -1,31 +1,15 @@
-const Category = require('~/models/category')
-const Cooperation = require('~/models/cooperation')
-const Offer = require('~/models/offer')
-const Subject = require('~/models/subject')
-const User = require('~/models/user')
-const TokenService = require('~/services/token')
-const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
+const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
+const { expectError } = require('~/test/helpers')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
+const TokenService = require('~/services/token')
 
-const endpointUrl = (id = ':id') => `cooperations/${id}/comments`
+const Cooperation = require('~/models/cooperation')
 
+const endpointUrl = (id = ':id') => `/cooperations/${id}/comments`
 
-let testCommentData = {
-  text:'my comment'
-}
+const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 
-let tutorUserData = {
-  role: ['tutor'],
-  firstName: 'albus',
-  lastName: 'dumbledore',
-  email: 'lovemagic@gmail.com',
-  password: 'supermagicpass123',
-  appLanguage: 'en',
-  isEmailConfirmed: true,
-  lastLogin: new Date().toJSON()
-}
-
-  
 let studentUserData = {
   role: ['student'],
   firstName: 'harry',
@@ -36,26 +20,25 @@ let studentUserData = {
   isEmailConfirmed: true,
   lastLogin: new Date().toJSON()
 }
-  
-const testOfferData = {
-  authorRole: 'tutor',
-  price: 99,
-  proficiencyLevel: 'Beginner',
-  title: 'First-class teacher. Director of the Hogwarts school of magic',
-  description: 'I will teach you how to protect yourself and your family from dark arts',
-  languages: 'English',
-  FAQ: [{ question: 'Do you enjoy being a director of the Hogwarts?', answer: 'Actually yes, i really like it.' }]
-}
 
 const testCooperationData = {
   price: 99,
+  receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   additionalInfo:
-        'I don\'t like both Dark Arts and Voldemort that\'s why i want to learn your subject and became your student'
+    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student",
+  receiver: '649c147ac75d3e44440e3a12',
+  offer: '649c148cc75d3e44440e3a13',
+  initiatorRole: 'student',
+  needAction: 'tutor'
+}
+
+let testCommentData = {
+  text: 'my comment'
 }
 
 describe('Comment controller', () => {
-  let app, server, accessToken, testCooperation, testStudentUser, testTutorUser, testOffer, testComment
+  let app, server, accessToken, testUser, testCooperation, testComment
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -64,41 +47,12 @@ describe('Comment controller', () => {
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, studentUserData)
 
-    testStudentUser = TokenService.validateAccessToken(accessToken)
-
-    testTutorUser = await User.create(tutorUserData)
-
-    const category = await Category.create({
-      name: 'Dark Magic',
-      appearance: {
-        icon: 'path-to-icon',
-        color: '#66C42C'
-      }
-    })
-
-    const subject = await Subject.create({
-      name: 'Defense Against the Dark Arts',
-      category: category._id
-    })
-
-    testOffer = await Offer.create({
-      author: testTutorUser._id,
-      subject: subject._id,
-      category: category._id,
-      ...testOfferData
-    })
+    testUser = TokenService.validateAccessToken(accessToken)
 
     testCooperation = await Cooperation.create({
-      initiator: testStudentUser._id,
-      receiver: testTutorUser._id,
-      offer: testOffer._id,
-      initiatorRole:testStudentUser.role,
-      receiverRole:testTutorUser.role,
-      needAction: testTutorUser.role,
+      initiator: testUser.id,
       ...testCooperationData
     })
-
-    console.log(testCooperation)
 
     testComment = await app
       .post(endpointUrl(testCooperation._id))
@@ -115,17 +69,88 @@ describe('Comment controller', () => {
   })
 
   describe(`GET ${endpointUrl()}`, () => {
-    it('should get all comments', async () => {
+    it('get all comments', async () => {
       const response = await app.get(endpointUrl(testCooperation._id)).set('Authorization', `Bearer ${accessToken}`)
 
-      expect(true).toBe(true)
-      expect(response.statusCode).toBe(200)
+      expect(response.status).toBe(200)
+      expect(response.body.length).toBe(1)
+      expect(Array.isArray(response.body)).toBe(true)
+      expect(response.body[0]).toMatchObject({
+        _id: testComment._body._id,
+        text: expect.any(String),
+        author: {
+          _id: testUser.id,
+          firstName: expect.any(String),
+          lastName: expect.any(String)
+        },
+        cooperation: testCooperation._id,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String)
+      })
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const cooperation = await Cooperation.create({
+        ...testCooperationData,
+        initiator: '649c1fc9c75d3e44440e3a15'
+      })
+
+      const response = await app.post(endpointUrl(cooperation._id)).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND for cooperation', async () => {
+      const response = await app
+        .post(endpointUrl(nonExistingCooperationId))
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl(testCooperation._id))
+
+      expectError(401, UNAUTHORIZED, response)
     })
   })
 
   describe(`POST ${endpointUrl()}`, () => {
-    it('should create a comment', async () => {
+    it('should create new comment', () => {
       expect(testComment.statusCode).toBe(201)
+      expect(testComment._body).toMatchObject({
+        _id: testComment._body._id,
+        text: expect.any(String),
+        author: testUser.id,
+        cooperation: testCooperation._id,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String)
+      })
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const cooperation = await Cooperation.create({
+        ...testCooperationData,
+        initiator: '649c1fc9c75d3e44440e3a15'
+      })
+
+      const response = await app.post(endpointUrl(cooperation._id)).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND for cooperation', async () => {
+      const response = await app
+        .post(endpointUrl(nonExistingCooperationId))
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.post(endpointUrl(testCooperation._id))
+
+      expectError(401, UNAUTHORIZED, response)
     })
   })
 })

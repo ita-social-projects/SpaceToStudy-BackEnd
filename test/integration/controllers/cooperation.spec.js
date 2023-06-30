@@ -38,9 +38,10 @@ let studentUserData = {
 
 const testCooperationData = {
   price: 99,
+  receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   additionalInfo:
-    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student"
+    'I don\'t like both Dark Arts and Voldemort that\'s why i want to learn your subject and became your student'
 }
 
 const testOfferData = {
@@ -54,7 +55,8 @@ const testOfferData = {
 }
 
 const updateData = {
-  status: 'active'
+  status: 'active',
+  price: 100
 }
 
 describe('Cooperation controller', () => {
@@ -235,6 +237,8 @@ describe('Cooperation controller', () => {
         .patch(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updateData)
+
+      console.log(updateResponse)
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)

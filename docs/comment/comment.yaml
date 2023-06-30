@@ -1,0 +1,129 @@
+paths:
+  /cooperations/{id}/comments:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comments
+      summary: Find your comments of cooperation
+      description: Finds and returns an array with a list of all your own comment related to specific cooperation.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation that needs to be fetched comments from
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/comments'
+              example:
+                - _id: 63ebc6fbd2f34037d0aba791
+                  author:
+                    _id: 64ebc6fbd2f34037d0aba294
+                    firstName: Harry
+                    lastName: Potter
+                  text: my comment
+                  cooperation: 63ebc6fbd2f34037d0aba699
+                  createdAt: 2023-02-14T23:44:21.334Z
+                  updatedAt: 2023-02-14T23:44:21.334Z
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found Cooperation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Cooperation with the specified id was not found.
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Comments
+      summary: Create new comment.
+      description: Creates and saves a new comment for specific cooperation.
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        description: Create new comment.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/commentBody'
+            example:
+              text: my comment
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/comment'
+              example:
+                _id: 63ebc6fbd2f34037d0aba791
+                author:
+                  _id: 64ebc6fbd2f34037d0aba294
+                  firstName: Harry
+                  lastName: Potter
+                text: my comment
+                cooperation: 63ebc6fbd2f34037d0aba699
+                createdAt: 2023-02-14T23:44:21.334Z
+                updatedAt: 2023-02-14T23:44:21.334Z
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found Cooperation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Cooperation with the specified id was not found.

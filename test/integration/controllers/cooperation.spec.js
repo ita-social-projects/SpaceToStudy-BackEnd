@@ -40,7 +40,7 @@ const testCooperationData = {
   price: 99,
   proficiencyLevel: 'Beginner',
   additionalInfo:
-    'I don\'t like both Dark Arts and Voldemort that\'s why i want to learn your subject and became your student'
+    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student"
 }
 
 const testOfferData = {
@@ -54,7 +54,6 @@ const testOfferData = {
 }
 
 const updateData = {
-  price: 100,
   status: 'active'
 }
 
@@ -96,8 +95,8 @@ describe('Cooperation controller', () => {
       .post(endpointUrl)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        initiator: testStudentUser.id,
         receiver: testTutorUser._id,
+        receiverRole: tutorUserData.role[0],
         offer: testOffer._id,
         ...testCooperationData
       })
@@ -135,6 +134,7 @@ describe('Cooperation controller', () => {
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         status: 'pending',
+        needAction: tutorUserData.role[0],
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -163,10 +163,12 @@ describe('Cooperation controller', () => {
         },
         initiator: testStudentUser.id,
         receiver: testTutorUser._id,
+        receiverRole: tutorUserData.role[0],
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         status: 'pending',
+        needAction: tutorUserData.role[0],
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -195,10 +197,12 @@ describe('Cooperation controller', () => {
         offer: testOffer._id,
         initiator: testStudentUser.id,
         receiver: testTutorUser._id,
+        receiverRole: tutorUserData.role[0],
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         status: 'pending',
+        needAction: tutorUserData.role[0],
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -237,7 +241,6 @@ describe('Cooperation controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       expect(updateResponse.status).toBe(204)
-      expect(response.body.price).toBe(updateData.price)
       expect(response.body.status).toBe(updateData.status)
     })
 

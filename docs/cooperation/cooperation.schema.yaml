@@ -28,6 +28,11 @@ definitions:
             - active
             - declined
             - closed
+        needAction:
+          type: string
+          enum:
+            - student
+            - tutor
         createdAt:
           type: string
           format: date-time
@@ -40,11 +45,6 @@ definitions:
       offer:
         type: string
         ref: '#components/offer'
-      initiator:
-        type: string
-        ref: '#/components/user'
-      initiatorRole:
-        type: string
       receiver:
         type: string
         ref: '#components/user'
@@ -86,6 +86,11 @@ definitions:
           - active
           - declined
           - closed
+      needAction:
+        type: string
+        enum:
+          - student
+          - tutor
       createdAt:
         type: string
         format: date-time

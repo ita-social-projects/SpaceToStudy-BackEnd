@@ -3,7 +3,7 @@ const Cooperation = require('~/models/cooperation')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const commentService = {
-  createComment: async (data) => {
+  addComment: async (data) => {
     const { text, author, authorRole, cooperationId } = data
 
     const cooperation = await Cooperation.findOne({

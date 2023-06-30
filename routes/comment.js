@@ -14,6 +14,6 @@ const params = [{ model: Cooperation, idName: 'id' }]
 router.use(authMiddleware)
 
 router.get('/', isEntityValid({ params }), asyncWrapper(commentController.getComments))
-router.post('/', isEntityValid({ body, params }), asyncWrapper(commentController.createComment))
+router.post('/', isEntityValid({ body, params }), asyncWrapper(commentController.addComment))
 
 module.exports = router

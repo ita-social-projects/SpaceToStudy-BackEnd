@@ -5,7 +5,7 @@ const addComment = async (req, res) => {
   const data = req.body
   const { id: cooperationId } = req.params
 
-  const comment = await commentService.createComment({ text: data.text, author, authorRole, cooperationId })
+  const comment = await commentService.addComment({ text: data.text, author, authorRole, cooperationId })
 
   res.status(201).json(comment)
 }

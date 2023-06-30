@@ -10,6 +10,8 @@ const endpointUrl = (id = ':id') => `/cooperations/${id}/comments`
 
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 
+const mockedInitiatorId = '649c1fc9c75d3e44440e3a15'
+
 let studentUserData = {
   role: ['student'],
   firstName: 'harry',
@@ -92,7 +94,7 @@ describe('Comment controller', () => {
     it('should throw FORBIDDEN', async () => {
       const cooperation = await Cooperation.create({
         ...testCooperationData,
-        initiator: '649c1fc9c75d3e44440e3a15'
+        initiator: mockedInitiatorId
       })
 
       const response = await app.post(endpointUrl(cooperation._id)).set('Authorization', `Bearer ${accessToken}`)
@@ -131,7 +133,7 @@ describe('Comment controller', () => {
     it('should throw FORBIDDEN', async () => {
       const cooperation = await Cooperation.create({
         ...testCooperationData,
-        initiator: '649c1fc9c75d3e44440e3a15'
+        initiator: mockedInitiatorId
       })
 
       const response = await app.post(endpointUrl(cooperation._id)).set('Authorization', `Bearer ${accessToken}`)

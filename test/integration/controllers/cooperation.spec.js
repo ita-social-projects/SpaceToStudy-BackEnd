@@ -41,7 +41,7 @@ const testCooperationData = {
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   additionalInfo:
-    'I don\'t like both Dark Arts and Voldemort that\'s why i want to learn your subject and became your student'
+    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student"
 }
 
 const testOfferData = {
@@ -55,7 +55,6 @@ const testOfferData = {
 }
 
 const updateData = {
-  price: 100,
   status: 'active'
 }
 

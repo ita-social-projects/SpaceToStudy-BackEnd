@@ -21,9 +21,9 @@ const commentSchema = new Schema(
       type: String,
       enum: {
         values: AUTHOR_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('author role', AUTHOR_ROLE_ENUM),
-        required: [true, 'Author role must be selected.']
-      }
+        message: ENUM_CAN_BE_ONE_OF('author role', AUTHOR_ROLE_ENUM)
+      },
+      required: [true, 'Author role must be selected.']
     },
     cooperation: {
       type: Schema.Types.ObjectId,

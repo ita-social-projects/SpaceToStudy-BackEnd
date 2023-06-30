@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const {
-  enums: { MAIN_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS }
+  enums: { MAIN_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS_ENUM }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
 const {
@@ -75,10 +75,10 @@ const offerSchema = new Schema(
     status: {
       type: String,
       enum: {
-        values: OFFER_STATUS,
-        message: ENUM_CAN_BE_ONE_OF('offer status', OFFER_STATUS)
+        values: OFFER_STATUS_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('offer status', OFFER_STATUS_ENUM)
       },
-      default: OFFER_STATUS[0]
+      default: OFFER_STATUS_ENUM[0]
     },
     FAQ: {
       type: [

@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { ROLE_ENUM, NOTIFICATION_TYPE }
+  enums: { ROLE_ENUM, NOTIFICATION_TYPE_ENUM }
 } = require('~/consts/validation')
 const { ENUM_CAN_BE_ONE_OF, FIELD_MUST_BE_SELECTED } = require('~/consts/errors')
 
@@ -24,8 +24,8 @@ const notificationsSchema = new Schema(
     type: {
       type: String,
       enum: {
-        values: NOTIFICATION_TYPE,
-        message: ENUM_CAN_BE_ONE_OF('type', NOTIFICATION_TYPE)
+        values: NOTIFICATION_TYPE_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('type', NOTIFICATION_TYPE_ENUM)
       },
       select: false
     },

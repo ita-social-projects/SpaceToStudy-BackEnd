@@ -9,6 +9,9 @@ const refs = {
   COOPERATION: 'Cooperation',
   MESSAGE: 'Message',
   CHAT: 'Chat'
+  NOTIFICATIONS: 'Notifications',
+  COMMENT: 'Comment'
+
 }
 
 module.exports = refs

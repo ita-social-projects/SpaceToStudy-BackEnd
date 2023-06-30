@@ -14,7 +14,7 @@ definitions:
           enum:
               - student
               - tutor
-        messageText:
+        text:
           type: string
         isRead:
           type: boolean
@@ -35,7 +35,7 @@ definitions:
       author:
         type: string
         ref: '#/components/user'      
-      messageText:
+      text:
         type: string     
       chat:
         type: string
@@ -53,7 +53,7 @@ definitions:
           enum:
               - student
               - tutor
-       messageText:
+       text:
           type: string        
        isRead:
           type: boolean

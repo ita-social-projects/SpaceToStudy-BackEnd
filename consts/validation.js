@@ -19,10 +19,10 @@ const enums = {
   LOGIN_ROLE_ENUM: ['student', 'tutor', 'admin'],
   MAIN_ROLE_ENUM: ['student', 'tutor'],
   STATUS_ENUM: ['active', 'blocked'],
-  COOPERATION_STATUS: ['pending', 'active', 'declined', 'closed'],
-  PARAMS: ['id', 'categoryId', 'subjectId'],
-  OFFER_STATUS: ['active', 'draft', 'closed'],
-  NOTIFICATION_TYPE: ['review', 'comment']
+  COOPERATION_STATUS_ENUM: ['pending', 'active', 'declined', 'closed'],
+  PARAMS_ENUM: ['id', 'categoryId', 'subjectId'],
+  OFFER_STATUS_ENUM: ['active', 'draft', 'closed'],
+  NOTIFICATION_TYPE_ENUM: ['review', 'comment']
 }
 
 module.exports = {

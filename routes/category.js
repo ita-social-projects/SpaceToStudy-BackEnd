@@ -11,7 +11,7 @@ const offerRouter = require('~/routes/offer')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const {
-  enums: { PARAMS }
+  enums: { PARAMS_ENUM }
 } = require('~/consts/validation')
 
 const nestedParam = [
@@ -22,7 +22,7 @@ const param = [{ model: Category, idName: 'id' }]
 
 router.use(authMiddleware)
 
-PARAMS.forEach((param) => {
+PARAMS_ENUM.forEach((param) => {
   router.param(param, idValidation)
 })
 

@@ -10,7 +10,8 @@ const refs = {
   MESSAGE: 'Message',
   CHAT: 'Chat',
   NOTIFICATIONS: 'Notifications',
-  COMMENT: 'Comment'
+  COMMENT: 'Comment',
+  LESSON: 'Lesson'
 }
 
 module.exports = refs

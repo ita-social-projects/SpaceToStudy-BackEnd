@@ -9,7 +9,7 @@ const {
 } = require('~/consts/errors')
 const { USER, OFFER, COOPERATION } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
+  enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
 
 const cooperationSchema = new Schema(
@@ -66,10 +66,10 @@ const cooperationSchema = new Schema(
     status: {
       type: String,
       enum: {
-        values: COOPERATION_STATUS,
-        message: ENUM_CAN_BE_ONE_OF('cooperation status', COOPERATION_STATUS)
+        values: COOPERATION_STATUS_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('cooperation status', COOPERATION_STATUS_ENUM)
       },
-      default: COOPERATION_STATUS[0]
+      default: COOPERATION_STATUS_ENUM[0]
     },
     needAction: {
       type: String,

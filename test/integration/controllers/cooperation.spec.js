@@ -237,9 +237,7 @@ describe('Cooperation controller', () => {
         .patch(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updateData)
-
-      console.log(updateResponse)
-
+      
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)

@@ -220,7 +220,7 @@ describe('Cooperation controller', () => {
           offer: nonExistingOfferId,
           ...testCooperationData
         })
-
+    
       expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
 
@@ -237,7 +237,7 @@ describe('Cooperation controller', () => {
         .patch(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)
         .send(updateData)
-      
+
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)

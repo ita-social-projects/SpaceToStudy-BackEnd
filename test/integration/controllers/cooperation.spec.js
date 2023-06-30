@@ -55,8 +55,8 @@ const testOfferData = {
 }
 
 const updateData = {
-  status: 'active',
-  price: 100
+  price: 100,
+  status: 'active'
 }
 
 describe('Cooperation controller', () => {
@@ -220,7 +220,7 @@ describe('Cooperation controller', () => {
           offer: nonExistingOfferId,
           ...testCooperationData
         })
-    
+
       expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
 

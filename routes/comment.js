@@ -8,12 +8,11 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const Cooperation = require('~/models/cooperation')
 const User = require('~/models/user')
 
-const body = [{ model: User, idName: 'author' }]
 const params = [{ model: Cooperation, idName: 'id' }]
 
 router.use(authMiddleware)
 
 router.get('/', isEntityValid({ params }), asyncWrapper(commentController.getComments))
-router.post('/', isEntityValid({ body, params }), asyncWrapper(commentController.addComment))
+router.post('/', isEntityValid({ params }), asyncWrapper(commentController.addComment))
 
 module.exports = router

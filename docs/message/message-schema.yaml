@@ -34,18 +34,9 @@ definitions:
     properties:
       author:
         type: string
-        ref: '#/components/user'
-      authorRole:
-        type: string
-        enum:
-            - student
-            - tutor
+        ref: '#/components/user'      
       messageText:
         type: string     
-      isRead:
-        type: boolean
-      isNotified:
-        type: boolean
       chat:
         type: string
         ref: '#/components/chat'

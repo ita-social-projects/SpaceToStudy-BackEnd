@@ -20,6 +20,6 @@ const getComments = async (req, res) => {
 }
 
 module.exports = {
-  createComment,
+  addComment,
   getComments
 }

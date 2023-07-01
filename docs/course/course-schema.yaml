@@ -77,8 +77,4 @@ definitions:
     required:
       - title
       - description
-<<<<<<< HEAD
       - author
-=======
-      - author
->>>>>>> 6cda051 (added course schema for swagger docs)

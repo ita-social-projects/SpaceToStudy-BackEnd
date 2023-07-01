@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, ENUM_CAN_BE_ONE_OF, FIELD_MUST_BE_SELECTED } = require('~/consts/errors')
 const { COOPERATION, COMMENT, USER } = require('~/consts/models')
 const {
   enums: { MAIN_ROLE_ENUM }

@@ -1,0 +1,33 @@
+definitions:
+  comments:
+    type: array
+    items:
+      type: object
+      properties:
+        _id: 
+          type: string
+        author:
+          type: object
+          properties:
+            _id:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+        text:
+          type: string
+        cooperation:
+          type: string
+          ref: '#components/cooperation'
+        createdAt: 
+          type: string
+        updatedAt:
+          type: string
+  commentBody:
+    type: object
+    properties:
+      text:
+        type: string
+    required:
+      - text

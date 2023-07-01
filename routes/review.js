@@ -14,7 +14,7 @@ const body = [
   { model: User, idName: 'targetUserId' },
   { model: Offer, idName: 'offer' }
 ]
-const param = [{ model: Review, idName: 'id' }]
+const params = [{ model: Review, idName: 'id' }]
 
 router.use(authMiddleware)
 
@@ -23,9 +23,9 @@ router.param('id', idValidation)
 router.get('/stats', asyncWrapper(reviewController.getReviewStatsByUserId))
 
 router.get('/', asyncWrapper(reviewController.getReviews))
-router.post('/', isEntityValid(body, 'body'), asyncWrapper(reviewController.addReview))
-router.get('/:id', isEntityValid(param), asyncWrapper(reviewController.getReviewById))
-router.patch('/:id', isEntityValid(param), asyncWrapper(reviewController.updateReview))
-router.delete('/:id', isEntityValid(param), asyncWrapper(reviewController.deleteReview))
+router.post('/', isEntityValid({ body }), asyncWrapper(reviewController.addReview))
+router.get('/:id', isEntityValid({ params }), asyncWrapper(reviewController.getReviewById))
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(reviewController.updateReview))
+router.delete('/:id', isEntityValid({ params }), asyncWrapper(reviewController.deleteReview))
 
 module.exports = router

@@ -14,11 +14,11 @@ const {
   enums: { PARAMS_ENUM }
 } = require('~/consts/validation')
 
-const nestedParam = [
+const nestedParams = [
   { model: Category, idName: 'categoryId' },
   { model: Subject, idName: 'subjectId' }
 ]
-const param = [{ model: Category, idName: 'id' }]
+const params = [{ model: Category, idName: 'id' }]
 
 router.use(authMiddleware)
 
@@ -28,14 +28,14 @@ PARAMS_ENUM.forEach((param) => {
 
 router.get(
   '/:categoryId?/subjects/:subjectId?/price-range',
-  isEntityValid(nestedParam),
+  isEntityValid({ params:nestedParams}),
   asyncWrapper(categoryController.priceMinMax)
 )
-router.use('/:categoryId?/subjects/:subjectId?/offers', isEntityValid(nestedParam), offerRouter)
-router.use('/:id?/subjects', isEntityValid(param), subjectRouter)
+router.use('/:categoryId?/subjects/:subjectId?/offers', isEntityValid({ params:nestedParams }), offerRouter)
+router.use('/:id?/subjects', isEntityValid({ params }), subjectRouter)
 router.get('/', asyncWrapper(categoryController.getCategories))
 router.post('/', asyncWrapper(categoryController.addCategory))
 router.get('/names', asyncWrapper(categoryController.getCategoriesNames))
-router.get('/:id', isEntityValid(param), asyncWrapper(categoryController.getCategoryById))
+router.get('/:id', isEntityValid({ params }), asyncWrapper(categoryController.getCategoryById))
 
 module.exports = router

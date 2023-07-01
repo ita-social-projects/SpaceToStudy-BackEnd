@@ -14,16 +14,16 @@ const body = [
   { model: Category, idName: 'categoryId' },
   { model: Subject, idName: 'subjectId' }
 ]
-const param = [{ model: Offer, idName: 'id' }]
+const params = [{ model: Offer, idName: 'id' }]
 
 router.use(authMiddleware)
 
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(offerController.getOffers))
-router.post('/', isEntityValid(body, 'body'), asyncWrapper(offerController.createOffer))
-router.get('/:id', isEntityValid(param), asyncWrapper(offerController.getOfferById))
-router.patch('/:id', isEntityValid(param), asyncWrapper(offerController.updateOffer))
-router.delete('/:id', isEntityValid(param), asyncWrapper(offerController.deleteOffer))
+router.post('/', isEntityValid({ body }), asyncWrapper(offerController.createOffer))
+router.get('/:id', isEntityValid({ params }), asyncWrapper(offerController.getOfferById))
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(offerController.updateOffer))
+router.delete('/:id', isEntityValid({ params }), asyncWrapper(offerController.deleteOffer))
 
 module.exports = router

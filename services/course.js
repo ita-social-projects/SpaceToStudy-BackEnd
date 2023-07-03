@@ -8,6 +8,27 @@ const { createError } = require('~/utils/errorsHelper')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const courseService = {
+  createCourse: async (author, data) => {
+    const { title, description, lessons, attachments } = data
+    let attachmentUrls
+
+    if (attachments) {
+      attachmentUrls = await Promise.all(
+        attachments.map(async (file) => {
+          return await uploadService.uploadFile(file, ATTACHMENT)
+        })
+      )
+    }
+
+    return await Course.create({
+      title,
+      description,
+      author,
+      lessons,
+      attachments: attachmentUrls
+    })
+  },
+
   updateCourse: async (userId, data) => {
     const { id, title, description, attachments, rewriteAttachments = false } = data
 

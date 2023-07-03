@@ -77,4 +77,3 @@ definitions:
     required:
       - title
       - description
-      - author

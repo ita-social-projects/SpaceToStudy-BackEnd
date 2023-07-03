@@ -21,13 +21,25 @@ const isEntityValid = (entities) => {
 
     if (entities.body?.length) {
       for (const { model, idName } of entities.body) {
-        id = req.body[idName]
+        if (Array.isArray(req.body[idName])) {
+          await Promise.all(
+            req.body[idName].map(async (id) => {
+              const document = await model.findById(id)
 
-        if (!id) continue
+              if (!document && !models.includes(model.modelName)) {
+                models.push(model.modelName)
+              }
+            })
+          )
+        } else {
+          id = req.body[idName]
 
-        const document = await model.findById(id)
+          if (!id) continue
 
-        if (!document && !models.includes(model.modelName)) models.push(model.modelName)
+          const document = await model.findById(id)
+
+          if (!document && !models.includes(model.modelName)) models.push(model.modelName)
+        }
       }
     }
 

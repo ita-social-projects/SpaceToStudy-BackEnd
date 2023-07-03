@@ -9,10 +9,10 @@ const uploadService = {
   uploadFile: (file, containerName) => {
     blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
 
-    const mainData = file.photo.src.split(',')[1]
+    const mainData = file.src.split(',')[1]
 
     const buffer = Buffer.from(mainData, 'base64')
-    const blobName = `${Date.now()}-${file.photo.name}`
+    const blobName = `${Date.now()}-${file.name}`
 
     return new Promise((resolve, reject) => {
       const stream = blobService.createWriteStreamToBlockBlob(containerName, blobName, (error) => {

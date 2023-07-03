@@ -1,12 +1,12 @@
 const lessonService = require('~/services/lesson')
 
 const createLesson = async (req, res) => {
+  const currentUser = req.user
   const data = req.body
-  console.log(data)
 
-  const newLesson = lessonService.createLesson(data)
+  const newLesson = await lessonService.createLesson(currentUser, data)
 
-  res.status(201).send(newLesson)
+  res.status(201).json(newLesson)
 }
 
 module.exports = {

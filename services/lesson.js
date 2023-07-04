@@ -10,8 +10,7 @@ const lessonService = {
 
     const fileUrls = await Promise.all(
       attachments.map(async (file) => {
-        const fileUrl = await uploadService.uploadFile(file, LESSON)
-        return fileUrl
+        return await uploadService.uploadFile(file, LESSON)
       })
     )
 

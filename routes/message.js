@@ -11,6 +11,6 @@ const body = [{ model: Message, idName: 'message' }]
 
 router.use(authMiddleware)
 
-router.post('/', isEntityValid({ body }), asyncWrapper(messageController.createMessage))
+router.post('/', isEntityValid({ body }), asyncWrapper(messageController.sendMessage))
 
 module.exports = router

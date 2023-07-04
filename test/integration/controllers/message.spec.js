@@ -4,14 +4,11 @@ const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED } = require('~/consts/errors')
 
 const endpointUrl = '/messages/'
-// const nonExistingCategoryId = '63bed9ef260f18d04ab15da2'
 
 let accessToken
 let messageData
 
 let messageBody = {
-  author: '6421d9833cdf38b706756dff',
-  authorRole: 'tutor',
   text: 'SOme amount of text',
   isRead: false,
   isNotified: false,
@@ -51,8 +48,6 @@ describe('Message controller', () => {
 
       messageData = {
         _id: expect.any(String),
-        author: expect.any(String),
-        authorRole: 'tutor',
         text: 'SOme amount of text',
         isRead: false,
         isNotified: false,

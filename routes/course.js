@@ -1,6 +1,5 @@
 const router = require('express').Router()
 
-const { roles: { TUTOR} } = require('~/consts/auth')
 const courseController = require('~/controllers/course')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { authMiddleware, restrictTo } = require('~/middlewares/auth')
@@ -8,6 +7,9 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const idValidation = require('~/middlewares/idValidation')
 const Course = require('~/models/course')
 const Lesson = require('~/models/lesson')
+const {
+  roles: { TUTOR }
+} = require('~/consts/auth')
 
 const body = [{ model: Lesson, idName: 'lessons' }]
 const params = [{ model: Course, idName: 'id' }]

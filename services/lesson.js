@@ -1,17 +1,12 @@
 const Lesson = require('~/models/lesson')
 const uploadService = require('~/services/upload')
-const { createForbiddenError } = require('~/utils/errorsHelper')
 const { LESSON } = require('~/consts/upload')
 
 const lessonService = {
   createLesson: async (currentUser, data) => {
     let { title, description, attachments } = data
 
-    const { id: author, role } = currentUser
-
-    if (role !== 'tutor') {
-      throw createForbiddenError()
-    }
+    const { id: author } = currentUser
 
     const fileUrls = await Promise.all(
       attachments.map(async (file) => {

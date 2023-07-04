@@ -1,18 +1,19 @@
 const User = require('~/models/user')
 const { hashPassword } = require('~/utils/passwordHelper')
 
-const testUserAuthentication = async (app, testUser = {}) => {
+const testUserAuthentication = async (app, userData = {}) => {
   const qtyOfMandatorySignupFields = 5
-  if (Object.keys(testUser).length < qtyOfMandatorySignupFields) {
+  let testUser
+  if (Object.keys(userData).length < qtyOfMandatorySignupFields) {
     testUser = {
-      role: 'student',
+      role: userData.role ? userData.role : 'student',
       firstName: 'Tart',
       lastName: 'Drilling',
       email: 'tartdrilling@gmail.com',
       password: 'Qwerty123@',
       FAQ: { student: [{ question: 'question1', answer: 'answer1' }] },
       isEmailConfirmed: true,
-      lastLoginAs: 'student'
+      lastLoginAs: userData.role ? userData.role : 'student'
     }
   }
 

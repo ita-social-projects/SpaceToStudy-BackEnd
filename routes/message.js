@@ -5,9 +5,9 @@ const { authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
 
 const messageController = require('~/controllers/message')
-const Message = require('~/models/message')
+const Chat = require('~/models/chat')
 
-const body = [{ model: Message, idName: 'message' }]
+const body = [{ model: Chat, idName: 'chat' }]
 
 router.use(authMiddleware)
 

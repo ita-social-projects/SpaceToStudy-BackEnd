@@ -21,7 +21,8 @@ const chatSchema = new Schema(
             message: ENUM_CAN_BE_ONE_OF('user role', MAIN_ROLE_ENUM)
           },
           required: [true, FIELD_MUST_BE_SELECTED('user role')]
-        }
+        },
+        _id: false
       }
     ]
   },

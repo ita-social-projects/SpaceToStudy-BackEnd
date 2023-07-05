@@ -30,7 +30,7 @@ const courseService = {
       )
         
       if(rewriteAttachments) course.attachments = urls
-      else course.attachments.concat(urls)
+      else course.attachments = course.attachments.concat(urls)
     }
     
     const updateData = { title, description }

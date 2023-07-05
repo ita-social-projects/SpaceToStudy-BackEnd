@@ -18,7 +18,7 @@ const courseService = {
 
     const courseAuthor = course.author.toString()
 
-    if(userId !== courseAuthor) {
+    if (userId !== courseAuthor) {
       createForbiddenError()
     }
 

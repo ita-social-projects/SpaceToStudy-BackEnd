@@ -11,6 +11,14 @@ const chatService = {
         { user: member, role: memberRole }
       ]
     })
+  },
+  getChats: async (currentUser) => {
+    const { id: user, role: userRole } = currentUser
+
+    return await Chat.find({
+      'members.user': user,
+      'members.role': userRole
+    })
   }
 }
 

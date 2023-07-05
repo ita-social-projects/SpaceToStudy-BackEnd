@@ -16,5 +16,6 @@ router.use(authMiddleware)
 router.use('/:id/messages', messageRouter)
 
 router.post('/', isEntityValid({ body }), asyncWrapper(chatController.createChat))
+router.get('/', asyncWrapper(chatController.getChats))
 
 module.exports = router

@@ -1,10 +1,10 @@
 const chatService = require('~/services/chat')
 
 const createChat = async (req, res) => {
-  const { id: author, role: authorRole } = req.user
-  const { chatMember, chatMemberRole } = req.body
+  const currentUser = req.user
+  const data = req.body
 
-  const chat = await chatService.createChat({ author, authorRole, chatMember, chatMemberRole })
+  const chat = await chatService.createChat(currentUser, data)
 
   res.status(201).json(chat)
 }

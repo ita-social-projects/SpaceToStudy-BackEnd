@@ -1,8 +1,9 @@
 const Chat = require('~/models/chat')
 
 const chatService = {
-  createChat: async (data) => {
-    const { author, authorRole, chatMember, chatMemberRole } = data
+  createChat: async (currentUser, data) => {
+    const { id: author, role: authorRole } = currentUser
+    const { chatMember, chatMemberRole } = data
 
     return await Chat.create({
       members: [

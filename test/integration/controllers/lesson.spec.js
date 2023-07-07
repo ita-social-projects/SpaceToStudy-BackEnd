@@ -81,6 +81,21 @@ describe('Lesson controller', () => {
     })
   })
 
+  describe(`GET ${endpointUrl}`, () => {
+    it('get all lessons', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual(expect.objectContaining({ count: 1, items: [expect.any(Object)] }))
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
   describe(`DELETE ${endpointUrl}:id`, () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app

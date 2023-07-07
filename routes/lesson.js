@@ -15,6 +15,7 @@ const params = [{ model: Lesson, idName: 'id' }]
 router.use(authMiddleware)
 
 router.use(restrictTo(TUTOR))
+router.get('/', asyncWrapper(lessonController.getLessons))
 router.post('/', asyncWrapper(lessonController.createLesson))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(lessonController.deleteLesson))
 

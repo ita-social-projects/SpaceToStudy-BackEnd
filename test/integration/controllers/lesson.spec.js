@@ -2,6 +2,7 @@ const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
+const uploadService = require('~/services/upload')
 
 const endpointUrl = '/lessons'
 
@@ -32,7 +33,6 @@ describe('Lesson controller', () => {
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, { role: 'tutor' })
 
-    const uploadService = require('~/services/upload')
     uploadService.uploadFile = mockUploadFile
 
     testLessonResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testLesson)

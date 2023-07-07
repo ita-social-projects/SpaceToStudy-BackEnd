@@ -4,7 +4,7 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Messages
+        - Chats
       summary: Create a new chat.
       description: Create and save a new chat to database.
       produces:

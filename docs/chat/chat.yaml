@@ -9,6 +9,15 @@ paths:
       description: Create and save a new chat to database.
       produces:
         - application/json
+      requestBody:
+        required: true
+        description: Create new chat.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/chatBody'
+            chatMember: 6421d9833cdf38b706756dff 
+            chatMemberRole: student
       responses:
         201:
           description: OK

@@ -7,7 +7,7 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const chatController = require('~/controllers/chat')
 const User = require('~/models/user')
 
-const body = [{ model: User, idName: 'targetUserId' }]
+const body = [{ model: User, idName: 'user' }]
 
 router.use(authMiddleware)
 

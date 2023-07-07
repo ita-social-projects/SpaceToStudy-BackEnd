@@ -8,6 +8,16 @@ const getNotifications = async (req, res) => {
   res.status(200).json(notifications)
 }
 
+const createNotification = async (req, res) => {
+  const { id: user, role: userRole } = req.user
+  const data = req.body
+
+  const newNotification = await notificationService.createNotification(user, userRole, data)
+
+  res.status(201).json(newNotification)
+}
+
 module.exports = {
-  getNotifications
+  getNotifications,
+  createNotification
 }

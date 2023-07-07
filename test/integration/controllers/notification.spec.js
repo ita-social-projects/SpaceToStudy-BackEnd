@@ -12,6 +12,25 @@ const testNotificationData = {
   referenceModel: 'Review'
 }
 
+const notificationBody = {
+  user: '64a7ad5099abcc063d675b69',
+  userRole: 'student',
+  type: 'review',
+  reference: '64a7a87aa763d20640038a13',
+  referenceModel: 'Review'
+}
+
+const notificationData = {
+  _id: expect.any(String),
+  user: '64a7ad5099abcc063d675b69',
+  userRole: 'student',
+  type: 'review',
+  reference: '64a7a87aa763d20640038a13',
+  referenceModel: 'Review',
+  createdAt: expect.any(String),
+  updatedAt: expect.any(String)
+}
+
 describe('Notification controller', () => {
   let app, server, accessToken, currentUser, testNotification
 
@@ -19,7 +38,7 @@ describe('Notification controller', () => {
     ;({ app, server } = await serverInit())
   })
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
 
     currentUser = TokenService.validateAccessToken(accessToken)
@@ -27,7 +46,7 @@ describe('Notification controller', () => {
     testNotification = await Notification.create({
       user: currentUser.id,
       userRole: currentUser.role,
-      type:'review',
+      type: 'review',
       ...testNotificationData
     })
   })
@@ -41,24 +60,38 @@ describe('Notification controller', () => {
   })
 
   describe(`GET ${endpointUrl}`, () => {
-    it('should get user\'s notifications and count them', async () => {
+    it("should get user's notifications and count them", async () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
-
-      console.log(response.body)
 
       expect(response.statusCode).toBe(200)
       expect(response.body.count).toBe(1)
       expect(response.body.items[0]).toMatchObject({
-        _id:testNotification._id,
-        createdAt:expect.any(String),
-        updatedAt:expect.any(String),
+        _id: testNotification._id,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
         ...testNotificationData
       })
     })
 
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl)
-  
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`POST ${endpointUrl}`, () => {
+    it('should create notification', async () => {
+      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(notificationBody)
+
+      expect(response.statusCode).toBe(201)
+
+      expect(response.body).toEqual(expect.objectContaining(notificationData))
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.post(endpointUrl).send(notificationBody)
+
       expectError(401, UNAUTHORIZED, response)
     })
   })

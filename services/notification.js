@@ -9,6 +9,17 @@ const notificationService = {
       items,
       count
     }
+  },
+  createNotification: async (user, userRole, data) => {
+    const { type, reference, referenceModel } = data
+
+    return await Notification.create({
+      user,
+      userRole,
+      type,
+      reference,
+      referenceModel
+    })
   }
 }
 

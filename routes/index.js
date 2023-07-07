@@ -14,6 +14,7 @@ const comment = require('~/routes/comment')
 const lesson = require('~/routes/lesson')
 const chat = require('~/routes/chat')
 const message = require('~/routes/message')
+const notification = require('~/routes/notification')
 
 router.use('/auth', auth)
 router.use('/users', user)
@@ -29,5 +30,6 @@ router.use('/comments', comment)
 router.use('/lessons', lesson)
 router.use('/chats', chat)
 router.use('/messages', message)
+router.use('/notifications', notification)
 
 module.exports = router

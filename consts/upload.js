@@ -1,5 +1,6 @@
 const containers = {
-  USER: 'user'
+  USER: 'user',
+  ATTACHMENT: 'attachment'
 }
 
 module.exports = containers

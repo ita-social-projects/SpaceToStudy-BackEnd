@@ -6,12 +6,10 @@ jest.mock('azure-storage')
 describe('uploadService', () => {
   it('Should upload a file to Azure Blob Storage', async () => {
     const file = {
-      photo: {
-        src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-        name: 'example.jpg'
-      }
+      src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
+      name: 'example.jpg'
     }
-    const blobName = `${file.photo.name}`
+    const blobName = `${file.name}`
 
     const fn = (containerName, blobName, cb) => {
       cb(null, blobName)
@@ -28,10 +26,8 @@ describe('uploadService', () => {
   }),
     it('Should show an error during the upload', async () => {
       const file = {
-        photo: {
-          src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-          name: 'example.jpg'
-        }
+        src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
+        name: 'example.jpg'
       }
 
       const fn = (containerName, blobName, cb) => {

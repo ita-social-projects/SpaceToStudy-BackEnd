@@ -5,7 +5,7 @@ const getNotifications = async (req, res) => {
 
   const notifications = await notificationService.getNotifications({ user, userRole })
 
-  res.status(200).send(notifications)
+  res.status(200).json(notifications)
 }
 
 module.exports = {

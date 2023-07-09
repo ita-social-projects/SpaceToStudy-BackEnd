@@ -11,6 +11,10 @@ const lessonService = {
     )
 
     return await Lesson.create({ author, title, description, attachments: fileUrls })
+  },
+
+  deleteLesson: async (id) => {
+    await Lesson.findByIdAndRemove(id).exec()
   }
 }
 

@@ -165,7 +165,6 @@ describe('Lesson controller', () => {
 
   describe(`PATCH ${endpointUrl}`, () => {
     it('should update a lesson', async () => {
-      console.log(testLessonId)
       const response = await app
         .patch(endpointUrl + testLessonId)
         .set('Authorization', `Bearer ${accessToken}`)

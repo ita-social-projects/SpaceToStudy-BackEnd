@@ -1,5 +1,22 @@
 const courseService = require('~/services/course')
 
+const getCourses = async (req, res) => {
+  const { id: author } = req.user
+  const { skip, limit } = req.query
+
+  const course = await courseService.getCourses({ skip: parseInt(skip), limit: parseInt(limit), author })
+
+  res.status(200).json(course)
+}
+
+const getCourseById = async (req, res) => {
+  const { id } = req.params
+
+  const course = await courseService.getCourseById(id)
+
+  res.status(200).json(course)
+}
+
 const createCourse = async (req, res) => {
   const { id: author } = req.user
   const data = req.body
@@ -20,6 +37,8 @@ const updateCourse = async (req, res) => {
 }
 
 module.exports = {
+  getCourses,
+  getCourseById,
   createCourse,
   updateCourse
 }

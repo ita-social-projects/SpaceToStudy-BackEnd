@@ -7,5 +7,6 @@ const { authMiddleware } = require('~/middlewares/auth')
 router.use(authMiddleware)
 
 router.get('/', asyncWrapper(notificationController.getNotifications))
+router.delete('/', asyncWrapper(notificationController.clearNotifications))
 
 module.exports = router

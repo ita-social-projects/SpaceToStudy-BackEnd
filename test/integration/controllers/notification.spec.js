@@ -44,8 +44,6 @@ describe('Notification controller', () => {
     it('should get user\'s notifications and count them', async () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
-      console.log(response.body)
-
       expect(response.statusCode).toBe(200)
       expect(response.body.count).toBe(1)
       expect(response.body.items[0]).toMatchObject({
@@ -58,6 +56,23 @@ describe('Notification controller', () => {
 
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl)
+  
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`DELETE ${endpointUrl}`, () => {
+    it('should clear all user\'s notifications', async () => {
+      const response = await app.delete(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      
+      const notifications = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(204)
+      expect(notifications.body.count).toBe(0)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.delete(endpointUrl)
   
       expectError(401, UNAUTHORIZED, response)
     })

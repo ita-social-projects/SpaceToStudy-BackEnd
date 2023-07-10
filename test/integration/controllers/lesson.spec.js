@@ -1,12 +1,16 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED } = require('~/consts/errors')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const uploadService = require('~/services/upload')
 
-const endpointUrl = '/lessons'
+const Lesson = require('~/models/lesson')
+
+const endpointUrl = '/lessons/'
 
 let mockUploadFile = jest.fn().mockResolvedValue('mocked-file-url')
+
+const nonExistingID = '64a33e71eea95284f397a6e4'
 
 const testLesson = {
   title: 'title',
@@ -60,6 +64,28 @@ describe('Lesson controller', () => {
       const response = await app.post(endpointUrl)
 
       expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`DELETE ${endpointUrl}:id`, () => {
+    it('should delete subject by ID', async () => {
+      const response = await app
+        .delete(endpointUrl + testLessonResponse.body._id)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.delete(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw NOT_FOUND', async () => {
+      const response = await app.delete(endpointUrl + nonExistingID).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
     })
   })
 })

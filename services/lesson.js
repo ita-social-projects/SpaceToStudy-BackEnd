@@ -14,12 +14,12 @@ const lessonService = {
     return await Lesson.create({ author, title, description, attachments: fileUrls })
   },
   getLessons: async (match, sort, skip, limit) => {
-    const items = Lesson.find(match).sort(sort).skip(skip).limit(limit).exec()
-    const count = Lesson.countDocuments(match)
+    const items = await Lesson.find(match).sort(sort).skip(skip).limit(limit).exec()
+    const count = await Lesson.countDocuments(match)
 
     return {
-      items,
-      count
+      count,
+      items
     }
   },
   deleteLesson: async (id, currentUser) => {

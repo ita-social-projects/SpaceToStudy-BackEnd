@@ -1,8 +1,8 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
-const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const uploadService = require('~/services/upload')
+const { expectError } = require('~/test/helpers')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 
 const Lesson = require('~/models/lesson')
 

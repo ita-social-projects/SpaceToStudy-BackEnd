@@ -16,9 +16,9 @@ const getLessons = async (req, res) => {
 
   const match = getMatchOptions({ author, title })
 
-  const result = await lessonService.getLessons(match, sort, parseInt(skip), parseInt(limit))
+  const lessons = await lessonService.getLessons(match, sort, parseInt(skip), parseInt(limit))
 
-  res.status(200).json(result)
+  res.status(200).json(lessons)
 }
 
 const deleteLesson = async (req, res) => {

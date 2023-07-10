@@ -65,7 +65,7 @@ paths:
       tags:
         - Lessons
       summary: Delete lesson by ID
-      description: Finds and deletes a subject with the specified ID.
+      description: Finds and deletes a lesson with the specified ID.
       produces:
         - application/json
       parameters:
@@ -116,4 +116,4 @@ paths:
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
-                message: Subject with the specified id was not found.
+                message: Lesson with the specified id was not found.

@@ -3,8 +3,8 @@ const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
-const TokenService = require('~/services/token')
 const uploadService = require('~/services/upload')
+const Course = require('~/models/course')
 
 const endpointUrl = '/courses/'
 
@@ -43,7 +43,7 @@ const updateData = {
 }
 
 describe('Course controller', () => {
-  let app, server, accessToken, currentUser, studentAccessToken, testCourseResponse, testCourse
+  let app, server, accessToken, studentAccessToken, testCourseResponse, testCourse
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -54,8 +54,6 @@ describe('Course controller', () => {
 
     accessToken = await testUserAuthentication(app, tutorUser)
     studentAccessToken = await testUserAuthentication(app)
-    
-    currentUser = TokenService.validateAccessToken(accessToken)
 
     uploadService.uploadFile = mockUploadFile
 
@@ -75,8 +73,8 @@ describe('Course controller', () => {
     it('should create a course', async () => {
       expect(testCourseResponse.statusCode).toBe(201)
       expect(testCourseResponse.body).toMatchObject({
-        title: 'test title',
-        description: 'test description',
+        title: testCourseData.title,
+        description: testCourseData.description,
         attachments: ['mocked-file-url']
       })
     })

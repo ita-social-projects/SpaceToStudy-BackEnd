@@ -41,7 +41,7 @@ let tutorUser = {
 }
 
 describe('Lesson controller', () => {
-  let app, server, accessToken, testLessonResponse, studentAccessToken
+  let app, server, accessToken, studentAccessToken, testLessonResponse
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -79,6 +79,14 @@ describe('Lesson controller', () => {
 
       expectError(401, UNAUTHORIZED, response)
     })
+
+    it('should throw FORBIDDEN', async () => {
+      accessToken = await testUserAuthentication(app)
+
+      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`).send(testLesson)
+
+      expectError(403, FORBIDDEN, response)
+    })
   })
 
   describe(`GET ${endpointUrl}`, () => {
@@ -93,6 +101,14 @@ describe('Lesson controller', () => {
       const response = await app.get(endpointUrl)
 
       expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      accessToken = await testUserAuthentication(app)
+
+      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`).send(testLesson)
+
+      expectError(403, FORBIDDEN, response)
     })
   })
 

@@ -6,10 +6,11 @@ const { ATTACHMENT } = require('~/consts/upload')
 const lessonService = {
   createLesson: async (author, data) => {
     let { title, description, attachments } = data
+    let fileUrls
 
-    const fileUrls = await Promise.all(
-      attachments.map(async (file) => await uploadService.uploadFile(file, ATTACHMENT))
-    )
+    if (attachments) {
+      fileUrls = await Promise.all(attachments.map(async (file) => await uploadService.uploadFile(file, ATTACHMENT)))
+    }
 
     return await Lesson.create({ author, title, description, attachments: fileUrls })
   },

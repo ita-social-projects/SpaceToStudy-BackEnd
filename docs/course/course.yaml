@@ -150,7 +150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/subject'
+                $ref: '#/definitions/course'
               example:
                 title: Advanced English
                 description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
@@ -191,7 +191,7 @@ paths:
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
-                message: Subject with the specified id was not found.
+                message: Course with the specified id was not found.
     patch:
       security:
         - bearerAuth: []

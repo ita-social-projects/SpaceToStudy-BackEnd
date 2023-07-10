@@ -71,7 +71,14 @@ const courseService = {
 
     await course.validate()
     await course.save()
+  },
+
+  getOneCourse: async (match) => {
+    const item = Course.find(match)
+
+    return item
   }
+
 }
 
 module.exports = courseService

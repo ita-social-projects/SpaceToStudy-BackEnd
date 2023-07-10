@@ -1,4 +1,5 @@
 const courseService = require('~/services/course')
+const getMatchOptions = require('~/utils/getMatchOptions')
 
 const getCourses = async (req, res) => {
   const { id: author } = req.user
@@ -28,8 +29,20 @@ const updateCourse = async (req, res) => {
   res.status(204).end()
 }
 
+const getOneCourse = async (req, res) => {
+  const { id: author } = req.user
+  const { title } = req.query
+
+  const match = getMatchOptions({ author, title })
+
+  const course = courseService.getOneCourse(match);
+
+  res.status(200).json(course)
+}
+
 module.exports = {
   getCourses,
   createCourse,
-  updateCourse
+  updateCourse,
+  getOneCourse
 }

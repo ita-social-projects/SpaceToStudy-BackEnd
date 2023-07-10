@@ -156,4 +156,25 @@ describe('Course controller', () => {
       expectError(403, FORBIDDEN, response)
     })
   })
+
+  describe(`GET ${endpointUrl}`, () => {
+    it('should get one course', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(expect.objectContaining(expect.any(Object)))
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
 })

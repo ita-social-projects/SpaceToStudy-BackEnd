@@ -12,13 +12,15 @@ const lessonSchema = new Schema(
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('title')],
       minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
-      maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
+      maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)],
+      trim: true
     },
     description: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('description')],
       minlength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
-      maxlength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)]
+      maxlength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
+      trim: true
     },
     attachments: {
       type: [String]

@@ -4,9 +4,14 @@ const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const messageService = {
   sendMessage: async (author, authorRole, data) => {
-    const { text, isRead, isNotified, chat } = data
+    const { text, chat } = data
 
-    return await Message.create({ author, authorRole, text, isRead, isNotified, chat })
+    return await Message.create({
+      author,
+      authorRole,
+      text,
+      chat
+    })
   },
 
   getMessages: async (match, skip, limit) => {
@@ -23,3 +28,4 @@ const messageService = {
 }
 
 module.exports = messageService
+

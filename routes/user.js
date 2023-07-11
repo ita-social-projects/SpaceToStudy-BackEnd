@@ -9,7 +9,6 @@ const userController = require('~/controllers/user')
 const reviewRouter = require('~/routes/review')
 const cooperationRouter = require('~/routes/cooperation')
 const offerRouter = require('~/routes/offer')
-const chatRouter = require('~/routes/chat')
 const User = require('~/models/user')
 const {
   roles: { ADMIN }
@@ -24,7 +23,6 @@ router.param('id', idValidation)
 router.use('/:id/reviews', isEntityValid({ params }), reviewRouter)
 router.use('/:id/cooperations', isEntityValid({ params }), cooperationRouter)
 router.use('/:id/offers', isEntityValid({ params }), offerRouter)
-router.use('/:id/chats', isEntityValid({ params }), chatRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(userController.getUserById))

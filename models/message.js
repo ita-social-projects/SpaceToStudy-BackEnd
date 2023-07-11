@@ -10,6 +10,7 @@ const { USER, MESSAGE, CHAT } = require('~/consts/models')
 const {
   enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
+const Chat = require('~/models/chat')
 
 const messageSchema = new Schema(
   {
@@ -53,5 +54,11 @@ const messageSchema = new Schema(
     versionKey: false
   }
 )
+
+messageSchema.post('save', async function (doc) {
+  const { _id, chat } = doc
+
+  await Chat.updateOne({ _id: chat }, { latestMessage: _id })
+})
 
 module.exports = model(MESSAGE, messageSchema)

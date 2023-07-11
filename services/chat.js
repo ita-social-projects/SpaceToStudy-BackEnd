@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 const Chat = require('~/models/chat')
 
 const chatService = {
@@ -16,7 +18,7 @@ const chatService = {
     const { id: user, role: userRole } = currentUser
 
     return await Chat.find({
-      'members.user': user,
+      'members.user': mongoose.Types.ObjectId(user),
       'members.role': userRole
     })
   }

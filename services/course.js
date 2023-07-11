@@ -73,12 +73,9 @@ const courseService = {
     await course.save()
   },
 
-  getOneCourse: async (match) => {
-    const item = Course.find(match)
-
-    return item
+  getOneCourse: async (id) => {
+    return await Course.findById(id).lean().exec()
   }
-
 }
 
 module.exports = courseService

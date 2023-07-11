@@ -30,12 +30,9 @@ const updateCourse = async (req, res) => {
 }
 
 const getOneCourse = async (req, res) => {
-  const { id: author } = req.user
-  const { title } = req.query
+  const { id } = req.params
 
-  const match = getMatchOptions({ author, title })
-
-  const course = courseService.getOneCourse(match);
+  const course = await courseService.getOneCourse(id)
 
   res.status(200).json(course)
 }

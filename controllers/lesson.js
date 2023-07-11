@@ -11,8 +11,9 @@ const createLesson = async (req, res) => {
 
 const deleteLesson = async (req, res) => {
   const { id } = req.params
+  const currentUser = req.user
 
-  await lessonService.deleteLesson(id)
+  await lessonService.deleteLesson(id, currentUser)
 
   res.status(204).end()
 }

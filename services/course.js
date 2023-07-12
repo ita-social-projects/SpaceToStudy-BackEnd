@@ -73,7 +73,7 @@ const courseService = {
     await course.save()
   },
 
-  getOneCourse: async (id) => {
+  getCourseById: async (id) => {
     return await Course.findById(id).lean().exec()
   }
 }

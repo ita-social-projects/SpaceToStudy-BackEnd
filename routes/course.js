@@ -21,7 +21,7 @@ router.param('id', idValidation)
 router.use(restrictTo(TUTOR))
 router.get('/', asyncWrapper(courseController.getCourses))
 router.post('/', isEntityValid({ body }), asyncWrapper(courseController.createCourse))
-router.patch('/:id', isEntityValid({ params }), asyncWrapper(courseController.updateCourse))
-router.get('/:id', isEntityValid({ params }), asyncWrapper(courseController.getOneCourse))
+router.patch('/:id', isEntityValid({ params }),asyncWrapper(courseController.updateCourse))
+router.get('/:id', isEntityValid({ params }), asyncWrapper(courseController.getCourseById))
 
 module.exports = router

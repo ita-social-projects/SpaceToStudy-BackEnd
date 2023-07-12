@@ -194,32 +194,17 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Course
+        - Courses
       summary: Find one course.
       description: Finds and returns one course.
       produces:
         - application/json
       parameters:
-        - in: query
-          name: title
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: sort
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          required: false
-        - in: query
-          name: skip
-          schema:
-            type: integer
-          required: false
+        - name: id
+          in: path
+          required: true
+          description: ID of the course that needs to be fetched
+          type: string
       responses:
         200:
           description: OK
@@ -258,3 +243,13 @@ paths:
                 status: 403
                 code: FORBIDDEN
                 message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Course with the specified id was not found.

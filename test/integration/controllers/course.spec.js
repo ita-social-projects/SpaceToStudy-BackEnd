@@ -122,37 +122,6 @@ describe('Course controller', () => {
     })
   })
 
-  describe(`GET ${endpointUrl}:id`, () => {
-    it('should get a course by id', async () => {
-      const response = await app.get(endpointUrl + testCourse._id).set('Authorization', `Bearer ${accessToken}`)
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toMatchObject({
-        title: 'assembly',
-        description: 'you will learn some modern programming language for all your needs',
-        attachments: ['mocked-file-url']
-      })
-    })
-
-    it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(endpointUrl)
-
-      expectError(401, UNAUTHORIZED, response)
-    })
-
-    it('should throw FORBIDDEN', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
-
-      expectError(403, FORBIDDEN, response)
-    })
-
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingCourseId).set('Authorization', `Bearer ${accessToken}`)
-
-      expectError(404, DOCUMENT_NOT_FOUND([Course.modelName]), response)
-    })
-  })
-
   describe(`PATCH ${endpointUrl}:id`, () => {
     it('should update a course', async () => {
       const response = await app

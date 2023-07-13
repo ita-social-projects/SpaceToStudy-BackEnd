@@ -21,7 +21,7 @@ describe('Notification controller', () => {
     ;({ app, server } = await serverInit())
   })
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
 
     currentUser = TokenService.validateAccessToken(accessToken)
@@ -29,7 +29,7 @@ describe('Notification controller', () => {
     testNotification = await Notification.create({
       user: currentUser.id,
       userRole: currentUser.role,
-      type:'review',
+      type: 'review',
       ...testNotificationData
     })
   })
@@ -49,16 +49,16 @@ describe('Notification controller', () => {
       expect(response.statusCode).toBe(200)
       expect(response.body.count).toBe(1)
       expect(response.body.items[0]).toMatchObject({
-        _id:testNotification._id,
-        createdAt:expect.any(String),
-        updatedAt:expect.any(String),
+        _id: testNotification._id,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
         ...testNotificationData
       })
     })
 
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl)
-  
+
       expectError(401, UNAUTHORIZED, response)
     })
   })
@@ -66,7 +66,7 @@ describe('Notification controller', () => {
   describe(`DELETE ${endpointUrl}`, () => {
     it('should clear all user\'s notifications', async () => {
       const response = await app.delete(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
-      
+
       const notifications = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(204)
@@ -75,30 +75,34 @@ describe('Notification controller', () => {
 
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.delete(endpointUrl)
-  
+
       expectError(401, UNAUTHORIZED, response)
     })
   })
 
   describe(`DELETE ${endpointUrl}:id`, () => {
     it('should delete notification by id', async () => {
-      const response = await app.delete(endpointUrl + testNotification._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app
+        .delete(endpointUrl + testNotification._id)
+        .set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(204)
 
       const deletedNotification = await Notification.findById(testNotification._id)
-      
+
       expect(deletedNotification).toBe(null)
     })
 
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.delete(endpointUrl + testNotification._id)
-  
+
       expectError(401, UNAUTHORIZED, response)
     })
-    
+
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.delete(endpointUrl + nonExistingNotificationId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app
+        .delete(endpointUrl + nonExistingNotificationId)
+        .set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, DOCUMENT_NOT_FOUND([Notification.modelName]), response)
     })

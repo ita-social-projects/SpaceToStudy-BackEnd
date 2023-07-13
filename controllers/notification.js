@@ -8,7 +8,7 @@ const getNotifications = async (req, res) => {
   res.status(200).json(notifications)
 }
 
-const clearNotifications = async (req,res) => {
+const clearNotifications = async (req, res) => {
   const { id } = req.user
 
   await notificationService.clearNotifications(id)
@@ -16,7 +16,7 @@ const clearNotifications = async (req,res) => {
   res.status(204).end()
 }
 
-const deleteNotification = async (req,res) => {
+const deleteNotification = async (req, res) => {
   const { id } = req.params
 
   await notificationService.deleteNotification(id)

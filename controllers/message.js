@@ -2,10 +2,8 @@ const messageService = require('~/services/message')
 
 const sendMessage = async (req, res) => {
   const { id: author, role: authorRole } = req.user
-  const { id: chatId } = req.params
-  const data = req.body
-
-  data.chat = chatId
+  const { id: chat } = req.params
+  const data = { ...req.body, chat }
 
   const newMessage = await messageService.sendMessage(author, authorRole, data)
 

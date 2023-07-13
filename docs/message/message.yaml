@@ -62,6 +62,16 @@ paths:
           required: true
           description: ID of the chat that needs to be fetched messages from
           type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
       responses:
         200:
           description: OK

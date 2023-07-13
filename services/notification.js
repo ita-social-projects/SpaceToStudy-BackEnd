@@ -13,6 +13,18 @@ const notificationService = {
 
   clearNotifications: async (user) => {
     await Notification.deleteMany({ user }).exec()
+  },
+
+  createNotification: async (data) => {
+    const { user, userRole, type, reference, referenceModel } = data
+
+    return await Notification.create({
+      user,
+      userRole,
+      type,
+      reference,
+      referenceModel
+    })
   }
 }
 

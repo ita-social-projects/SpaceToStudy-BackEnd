@@ -1,10 +1,10 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const testUserAuthentication = require('~/utils/testUserAuth')
+const Course = require('~/models/course')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 const uploadService = require('~/services/upload')
-const Course = require('~/models/course')
 
 const endpointUrl = '/courses/'
 
@@ -67,6 +67,33 @@ describe('Course controller', () => {
 
   afterAll(async () => {
     await stopServer(server)
+  })
+
+  describe(`GET ${endpointUrl}`, () => {
+    it('should get all courses', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+      const { title, description, attachments } = await Course.findById(testCourse._id)
+
+      expect(response.statusCode).toBe(200)
+      expect({ title, description, attachments }).toMatchObject({
+        title: 'assembly',
+        description: 'you will learn some modern programming language for all your needs',
+        attachments: ['mocked-file-url']
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
   })
 
   describe(`POST ${endpointUrl}`, () => {

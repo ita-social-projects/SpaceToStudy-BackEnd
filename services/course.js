@@ -8,6 +8,13 @@ const { createError } = require('~/utils/errorsHelper')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const courseService = {
+  getCourses: async ({ author, skip, limit }) => {
+    const items = await Course.find({ author }).skip(skip).limit(limit).sort({ updatedAt: -1 }).lean().exec()
+    const count = await Course.countDocuments({ author })
+
+    return { items, count }
+  },
+
   createCourse: async (author, data) => {
     const { title, description, lessons, attachments } = data
     let attachmentUrls
@@ -34,10 +41,10 @@ const courseService = {
 
     const course = await Course.findById(id).exec()
 
-    if(!course) {
+    if (!course) {
       throw createError(DOCUMENT_NOT_FOUND(Course.modelName))
     }
-    
+
     const courseAuthor = course.author.toString()
 
     if (userId !== courseAuthor) {

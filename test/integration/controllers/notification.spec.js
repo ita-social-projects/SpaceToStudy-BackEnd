@@ -1,11 +1,13 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED } = require('~/consts/errors')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Notification = require('~/models/notification')
 const TokenService = require('~/services/token')
 
 const endpointUrl = '/notifications/'
+
+const nonExistingNotificationId = '64afccc190854916620410f0'
 
 const testNotificationData = {
   reference: '64a7a87aa763d20640038a13',
@@ -75,6 +77,30 @@ describe('Notification controller', () => {
       const response = await app.delete(endpointUrl)
   
       expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`DELETE ${endpointUrl}:id`, () => {
+    it('should delete notification by id', async () => {
+      const response = await app.delete(endpointUrl + testNotification._id).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(204)
+
+      const deletedNotification = await Notification.findById(testNotification._id)
+      
+      expect(deletedNotification).toBe(null)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.delete(endpointUrl + testNotification._id)
+  
+      expectError(401, UNAUTHORIZED, response)
+    })
+    
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
+      const response = await app.delete(endpointUrl + nonExistingNotificationId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Notification.modelName]), response)
     })
   })
 })

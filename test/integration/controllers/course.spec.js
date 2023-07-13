@@ -5,7 +5,6 @@ const Course = require('~/models/course')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 const uploadService = require('~/services/upload')
-const Course = require('~/models/course')
 
 const endpointUrl = '/courses/'
 

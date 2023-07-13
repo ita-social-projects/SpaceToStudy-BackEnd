@@ -9,6 +9,16 @@ const createLesson = async (req, res) => {
   res.status(201).json(newLesson)
 }
 
+const deleteLesson = async (req, res) => {
+  const { id } = req.params
+  const currentUser = req.user
+
+  await lessonService.deleteLesson(id, currentUser)
+
+  res.status(204).end()
+}
+
 module.exports = {
-  createLesson
+  createLesson,
+  deleteLesson
 }

@@ -12,17 +12,6 @@ const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 
 const mockedInitiatorId = '649c1fc9c75d3e44440e3a15'
 
-let studentUserData = {
-  role: ['student'],
-  firstName: 'harry',
-  lastName: 'potter',
-  email: 'potter@gmail.com',
-  password: 'supermagicpass123',
-  appLanguage: 'en',
-  isEmailConfirmed: true,
-  lastLogin: new Date().toJSON()
-}
-
 const testCooperationData = {
   price: 99,
   receiverRole: 'tutor',
@@ -47,7 +36,7 @@ describe('Comment controller', () => {
   })
 
   beforeEach(async () => {
-    accessToken = await testUserAuthentication(app, studentUserData)
+    accessToken = await testUserAuthentication(app)
 
     testUser = TokenService.validateAccessToken(accessToken)
 

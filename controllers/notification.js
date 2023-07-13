@@ -8,6 +8,15 @@ const getNotifications = async (req, res) => {
   res.status(200).json(notifications)
 }
 
+const clearNotifications = async (req,res) => {
+  const { id } = req.user
+
+  await notificationService.clearNotifications(id)
+
+  res.status(204).end()
+}
+
 module.exports = {
-  getNotifications
+  getNotifications,
+  clearNotifications
 }

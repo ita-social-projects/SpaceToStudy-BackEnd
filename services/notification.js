@@ -9,6 +9,10 @@ const notificationService = {
       items,
       count
     }
+  },
+
+  clearNotifications: async (user) => {
+    await Notification.deleteMany({ user }).exec()
   }
 }
 

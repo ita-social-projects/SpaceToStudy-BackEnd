@@ -1,8 +1,8 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
-const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const uploadService = require('~/services/upload')
+const { expectError } = require('~/test/helpers')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 
 const Lesson = require('~/models/lesson')
 
@@ -41,7 +41,7 @@ let tutorUser = {
 }
 
 describe('Lesson controller', () => {
-  let app, server, accessToken, testLessonResponse, studentAccessToken
+  let app, server, accessToken, studentAccessToken, testLessonResponse
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -78,6 +78,37 @@ describe('Lesson controller', () => {
       const response = await app.post(endpointUrl)
 
       expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      accessToken = await testUserAuthentication(app)
+
+      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`).send(testLesson)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}`, () => {
+    it('get all lessons', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.status).toBe(200)
+      expect(response.body).toEqual(expect.objectContaining({ count: 1, items: [expect.any(Object)] }))
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      accessToken = await testUserAuthentication(app)
+
+      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`).send(testLesson)
+
+      expectError(403, FORBIDDEN, response)
     })
   })
 

@@ -1,12 +1,13 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
+const Lesson = require('~/models/lesson')
 const uploadService = require('~/services/upload')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 
-const Lesson = require('~/models/lesson')
 
 const endpointUrl = '/lessons/'
+const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
 
 let mockUploadFile = jest.fn().mockResolvedValue('mocked-file-url')
 
@@ -27,6 +28,7 @@ const testLesson = {
   ]
 }
 
+
 let tutorUser = {
   role: 'tutor',
   firstName: 'albus',
@@ -40,8 +42,25 @@ let tutorUser = {
   lastLoginAs: 'tutor'
 }
 
+const updateData = {
+  title: 'updated title',
+  description: 'new cool description'
+}
+
+const studentUserData = {
+  role: 'student',
+  firstName: 'Yamada',
+  lastName: 'Kizen',
+  email: 'yamakai@gmail.com',
+  password: 'ninpopass',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: 'student'
+}
+
 describe('Lesson controller', () => {
-  let app, server, accessToken, studentAccessToken, testLessonResponse
+  let app, server, accessToken, studentAccessToken, testLessonResponse, testLessonId
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -54,6 +73,9 @@ describe('Lesson controller', () => {
     uploadService.uploadFile = mockUploadFile
 
     testLessonResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testLesson)
+    testLessonId = testLessonResponse.body._id
+
+    studentAccessToken = await testUserAuthentication(app, studentUserData)
   })
 
   afterEach(async () => {
@@ -120,7 +142,7 @@ describe('Lesson controller', () => {
 
       expectError(403, FORBIDDEN, response)
     })
-    it('should delete subject by ID', async () => {
+    it('should delete lesson by ID', async () => {
       const response = await app
         .delete(endpointUrl + testLessonResponse.body._id)
         .set('Authorization', `Bearer ${accessToken}`)
@@ -138,6 +160,44 @@ describe('Lesson controller', () => {
       const response = await app.delete(endpointUrl + nonExistingID).set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}`, () => {
+    it('should update a lesson', async () => {
+      const response = await app
+        .patch(endpointUrl + testLessonId)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(updateData)
+      expect(response.statusCode).toBe(204)
+
+      const updatedLesson = await Lesson.findById(testLessonId)
+      expect(updatedLesson).toMatchObject({
+        title: 'updated title',
+        description: 'new cool description',
+        attachments: ['mocked-file-url', 'mocked-file-url']
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.patch(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
+      const response = await app.patch(endpointUrl + nonExistingLessonId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .patch(endpointUrl)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .send(updateData)
+
+      expectError(403, FORBIDDEN, response)
     })
   })
 })

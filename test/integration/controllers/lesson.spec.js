@@ -227,5 +227,12 @@ describe('Lesson controller', () => {
 
       expectError(401, UNAUTHORIZED, response)
     })
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .get(endpointUrl + testLessonResponse.body._id)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
   })
 })

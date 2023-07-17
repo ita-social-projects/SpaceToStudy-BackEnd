@@ -3,6 +3,7 @@ const getMatchOptions = require('~/utils/getMatchOptions')
 
 const createLesson = async (req, res) => {
   const { id: author } = req.user
+
   const data = req.body
 
   const newLesson = await lessonService.createLesson(author, data)
@@ -11,6 +12,7 @@ const createLesson = async (req, res) => {
 }
 const getLessonById = async (req, res) => {
   const { id } = req.params
+
   const lesson = await lessonService.getLessonById(id)
 
   res.status(200).json(lesson)

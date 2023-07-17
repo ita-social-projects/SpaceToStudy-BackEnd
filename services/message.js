@@ -10,15 +10,15 @@ const messageService = {
   },
 
   getMessages: async (match, skip, limit) => {
-    const { userId, chatId } = match
+    const { user, chat } = match
 
-    const chat = await Chat.findOne({
-      $and: [{ _id: chatId }, { 'members.user': userId }]
+    const existingChat = await Chat.findOne({
+      $and: [{ _id: chat }, { 'members.user': user }]
     }).exec()
 
-    if (!chat) throw createForbiddenError()
+    if (!existingChat) throw createForbiddenError()
 
-    return await Message.find({ chat: chatId }).select('+isRead').sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
+    return await Message.find({ chat }).select('+isRead').sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
   }
 }
 

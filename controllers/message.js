@@ -11,11 +11,11 @@ const sendMessage = async (req, res) => {
 }
 
 const getMessages = async (req, res) => {
-  const { id: userId } = req.user
-  const { id: chatId } = req.params
+  const { id: user } = req.user
+  const { id: chat } = req.params
   const { skip, limit } = req.query
 
-  const messages = await messageService.getMessages({ userId, chatId }, parseInt(skip), parseInt(limit))
+  const messages = await messageService.getMessages({ user, chat }, parseInt(skip), parseInt(limit))
 
   res.status(200).json(messages)
 }

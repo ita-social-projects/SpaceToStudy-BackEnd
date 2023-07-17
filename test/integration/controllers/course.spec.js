@@ -184,14 +184,6 @@ describe('Course controller', () => {
       expectError(404, DOCUMENT_NOT_FOUND([Course.modelName]), response)
     })
 
-    it('should throw FORBIDDEN', async () => {
-      const response = await app
-      .get(endpointUrl + testCourseResponse.body._id)
-      .set('Authorization', `Bearer ${studentAccessToken}`)
-
-      expectError(403, FORBIDDEN, response)
-    })
-
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl)
 

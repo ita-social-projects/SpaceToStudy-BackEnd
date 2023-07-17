@@ -72,6 +72,10 @@ const lessonService = {
     }
 
     await Lesson.findByIdAndRemove(id).exec()
+  },
+
+  getLessonById: async (id) => {
+    return await Lesson.findById(id).lean().exec()
   }
 }
 

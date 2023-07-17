@@ -9,6 +9,12 @@ const createLesson = async (req, res) => {
 
   res.status(201).json(newLesson)
 }
+const getLessonById = async (req, res) => {
+  const { id } = req.params
+  const lesson = await lessonService.getLessonById(id)
+
+  res.status(200).json(lesson)
+}
 
 const getLessons = async (req, res) => {
   const { id: author } = req.user
@@ -44,5 +50,6 @@ module.exports = {
   createLesson,
   getLessons,
   updateLesson,
-  deleteLesson
+  deleteLesson,
+  getLessonById
 }

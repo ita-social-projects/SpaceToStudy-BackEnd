@@ -15,6 +15,10 @@ const courseService = {
     return { items, count }
   },
 
+  getCourseById: async (id) => {
+    return await Course.findById(id).lean().exec()
+  },
+
   createCourse: async (author, data) => {
     const { title, description, lessons, attachments } = data
     let attachmentUrls
@@ -71,10 +75,6 @@ const courseService = {
 
     await course.validate()
     await course.save()
-  },
-
-  getCourseById: async (id) => {
-    return await Course.findById(id).lean().exec()
   }
 }
 

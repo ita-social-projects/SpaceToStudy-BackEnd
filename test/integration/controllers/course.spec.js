@@ -160,7 +160,7 @@ describe('Course controller', () => {
   })
 
   describe(`GET ${endpointUrl}:id`, () => {
-    it('should get one course', async () => {
+    it('should get course by id', async () => {
       const response = await app
         .get(endpointUrl + testCourseResponse.body._id)
         .set('Authorization', `Bearer ${accessToken}`)

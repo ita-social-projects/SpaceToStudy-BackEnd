@@ -195,8 +195,8 @@ paths:
         - bearerAuth: []
       tags:
         - Courses
-      summary: Find one course.
-      description: Finds and returns one course.
+      summary: Find course by id.
+      description: Finds and returns course by id.
       produces:
         - application/json
       parameters:

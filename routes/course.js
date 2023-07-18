@@ -19,7 +19,8 @@ router.use(authMiddleware)
 router.param('id', idValidation)
 
 router.use(restrictTo(TUTOR))
+router.get('/', asyncWrapper(courseController.getCourses))
 router.post('/', isEntityValid({ body }), asyncWrapper(courseController.createCourse))
-router.patch('/:id', isEntityValid({ params }),asyncWrapper(courseController.updateCourse))
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(courseController.updateCourse))
 
 module.exports = router

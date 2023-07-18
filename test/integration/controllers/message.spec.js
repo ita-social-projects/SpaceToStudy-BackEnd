@@ -1,23 +1,14 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
-const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED } = require('~/consts/errors')
 const Chat = require('~/models/chat')
+const { expectError } = require('~/test/helpers')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
-async function chatData() {
-  const data = await Chat.create({
-    members: [
-      { user: '6491d003a634c3c427b69daa', role: 'tutor' },
-      { user: '6491d003a634c3c427b69da5', role: 'student' }
-    ]
-  })
-  const chat = data.toJSON()
-  return chat
-}
+const endpointUrl = (id) => `/chats/${id}/messages/`
 
-const endpointUrl = '/messages/'
+const chatEndpointUrl = '/chats'
 
-let accessToken
+const nonExistingChatId = '64a54c0db1948d5b9d29314a'
 
 let messageBody = {
   text: 'SOme amount of text',
@@ -27,16 +18,31 @@ let messageBody = {
 
 let messageData = {
   _id: expect.any(String),
-  text: 'SOme amount of text',
+  text: messageBody.text,
   isRead: false,
-  isNotified: false,
   chat: expect.any(String),
   updatedAt: expect.any(String),
   createdAt: expect.any(String)
 }
 
+let chatBody = {
+  chatMember: '6421d9833cdf38b706756dff',
+  chatMemberRole: 'student'
+}
+
+let userData = {
+  role: ['tutor'],
+  firstName: 'test',
+  lastName: 'user',
+  email: 'user@gmail.com',
+  password: 'super@123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON()
+}
+
 describe('Message controller', () => {
-  let app, server
+  let app, server, messageResponse, chatResponse, accessToken
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -44,6 +50,14 @@ describe('Message controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
+
+    chatResponse = await app.post(chatEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+    messageBody.chat = chatResponse.body._id
+
+    messageResponse = await app
+      .post(endpointUrl(messageBody.chat))
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send(messageBody)
   })
 
   afterEach(async () => {
@@ -54,22 +68,47 @@ describe('Message controller', () => {
     await stopServer(server)
   })
 
-  describe(`POST ${endpointUrl}`, () => {
+  describe(`POST ${endpointUrl(messageBody.chat)}`, () => {
+    it('should create a new message', async () => {
+      expect(messageResponse.statusCode).toBe(201)
+      expect(messageResponse.body).toEqual(expect.objectContaining(messageData))
+    })
+
     it('should throw UNAUTHORIZED', async () => {
-      const response = await app.post(endpointUrl).send(messageBody)
+      const response = await app.post(endpointUrl(messageBody.chat)).send(messageBody)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}`, () => {
+    it('should get all messages related to a chat', async () => {
+      const response = await app.get(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body[0]).toEqual(expect.objectContaining(messageData))
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl(messageBody.chat))
 
       expectError(401, UNAUTHORIZED, response)
     })
 
-    it('should create a new message', async () => {
-      const chatMock = await chatData()
-      messageBody.chat = await chatMock._id
+    it('should throw FORBIDDEN', async () => {
+      const accessTokenForbidden = await testUserAuthentication(app, userData)
 
-      const testMessage = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(messageBody)
+      const response = await app
+        .get(endpointUrl(messageBody.chat))
+        .set('Authorization', `Bearer ${accessTokenForbidden}`)
 
-      expect(testMessage.statusCode).toBe(201)
+      expectError(403, FORBIDDEN, response)
+    })
 
-      expect(testMessage._body).toEqual(expect.objectContaining(messageData))
+    it('should throw DOCUMENT_NOT_FOUND for chat', async () => {
+      const response = await app.get(endpointUrl(nonExistingChatId)).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })
   })
 })

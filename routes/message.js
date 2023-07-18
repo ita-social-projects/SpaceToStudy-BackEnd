@@ -1,4 +1,4 @@
-const router = require('express').Router()
+const router = require('express').Router({ mergeParams: true })
 
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { authMiddleware } = require('~/middlewares/auth')
@@ -7,10 +7,11 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const messageController = require('~/controllers/message')
 const Chat = require('~/models/chat')
 
-const body = [{ model: Chat, idName: 'chat' }]
+const params = [{ model: Chat, idName: 'id' }]
 
 router.use(authMiddleware)
 
-router.post('/', isEntityValid({ body }), asyncWrapper(messageController.sendMessage))
+router.get('/', isEntityValid({ params }), asyncWrapper(messageController.getMessages))
+router.post('/', isEntityValid({ params }), asyncWrapper(messageController.sendMessage))
 
 module.exports = router

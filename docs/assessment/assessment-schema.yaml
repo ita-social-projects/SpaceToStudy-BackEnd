@@ -1,0 +1,69 @@
+definitions:
+  assessments:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+        questions:
+          type: object
+          properties:
+            text:
+              type: string
+            answers:
+              type: array
+              items:
+                type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  assessmentBody:
+    type: object
+    properties:
+        _id:
+          type: string
+        name:
+          type: string
+        questions:
+          type: object
+          properties:
+            text:
+              type: string
+            answers:
+              type: array
+              items:
+                type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  assessment:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+      questions:
+          type: object
+          properties:
+            text:
+              type: string
+            answers:
+              type: array
+              items:
+                type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

@@ -8,8 +8,8 @@ const endpointUrl = '/chats/'
 let accessToken
 
 let chatBody = {
-  chatMember: '6421d9833cdf38b706756dff',
-  chatMemberRole: 'student'
+  member: '6421d9833cdf38b706756dff',
+  memberRole: 'student'
 }
 
 let chatData = {

@@ -59,6 +59,69 @@ paths:
                 status: 403
                 code: FORBIDDEN
                 message: You do not have permission to perform this action.
+  /lessons/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lessons
+      summary: Find and return lesson by ID
+      description: Finds and returns a lesson with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the lesson that needs to be fetched
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#definitions/lessonBody'
+              example:
+                title: Title of the lesson
+                description: Some information about this lesson
+                author: 64a33e71eea95284f397a6ee
+                attachments:
+                  - link-to-1st-file
+                  - link-to-2nd-file
+                _id: 93ec1cd51e9d781cdb6f5b56
+                createdAt: 2023-02-14T23:44:21.334Z
+                updatedAt: 2023-02-14T23:44:21.334Z
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Lesson with the specified id was not found.
     get:
       security:
         - bearerAuth: []

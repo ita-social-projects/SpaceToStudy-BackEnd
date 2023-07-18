@@ -5,7 +5,6 @@ const uploadService = require('~/services/upload')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 
-
 const endpointUrl = '/lessons/'
 const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
 
@@ -27,7 +26,6 @@ const testLesson = {
     }
   ]
 }
-
 
 let tutorUser = {
   role: 'tutor',
@@ -196,6 +194,43 @@ describe('Lesson controller', () => {
         .patch(endpointUrl)
         .set('Authorization', `Bearer ${studentAccessToken}`)
         .send(updateData)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}:id`, () => {
+    it('Should get lesson by ID', async () => {
+      const response = await app
+        .get(endpointUrl + testLessonResponse.body._id)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+
+      expect(response.body).toMatchObject({
+        _id: expect.any(String),
+        author: expect.any(String),
+        title: 'title',
+        description: 'description',
+        attachments: ['mocked-file-url', 'mocked-file-url'],
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String)
+      })
+    })
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
+      const response = await app.get(endpointUrl + nonExistingLessonId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
+    })
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .get(endpointUrl + testLessonResponse.body._id)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
 
       expectError(403, FORBIDDEN, response)
     })

@@ -26,8 +26,8 @@ let messageData = {
 }
 
 let chatBody = {
-  chatMember: '6421d9833cdf38b706756dff',
-  chatMemberRole: 'student'
+  member: '6421d9833cdf38b706756dff',
+  memberRole: 'student'
 }
 
 let userData = {
@@ -42,7 +42,7 @@ let userData = {
 }
 
 describe('Message controller', () => {
-  let app, server, messageResponse, chatResponse, accessToken
+  let app, server, chatResponse, accessToken
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -54,10 +54,7 @@ describe('Message controller', () => {
     chatResponse = await app.post(chatEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
     messageBody.chat = chatResponse.body._id
 
-    messageResponse = await app
-      .post(endpointUrl(messageBody.chat))
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send(messageBody)
+    await app.post(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`).send(messageBody)
   })
 
   afterEach(async () => {
@@ -70,8 +67,13 @@ describe('Message controller', () => {
 
   describe(`POST ${endpointUrl(messageBody.chat)}`, () => {
     it('should create a new message', async () => {
-      expect(messageResponse.statusCode).toBe(201)
-      expect(messageResponse.body).toEqual(expect.objectContaining(messageData))
+      const response = await app
+        .post(endpointUrl(messageBody.chat))
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(messageBody)
+
+      expect(response.statusCode).toBe(201)
+      expect(response.body).toEqual(expect.objectContaining(messageData))
     })
 
     it('should throw UNAUTHORIZED', async () => {

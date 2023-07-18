@@ -25,6 +25,10 @@ const notificationService = {
       reference,
       referenceModel
     })
+  },
+  
+  deleteNotification: async (id) => {
+    await Notification.findByIdAndDelete(id).exec()
   }
 }
 

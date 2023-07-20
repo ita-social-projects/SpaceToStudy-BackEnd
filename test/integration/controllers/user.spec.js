@@ -263,15 +263,6 @@ describe('User controller', () => {
         expect(response.statusCode).toBe(204)
       })
 
-      it('should throw DOCUMENT_NOT_FOUND', async () => {
-        const response = await app
-          .patch(endpointUrl + nonExistingUserId + changeStatusPath)
-          .send(mockedStatus)
-          .set('Authorization', `Bearer ${accessToken}`)
-
-        expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
-      })
-
       it('should throw FORBIDDEN', async () => {
         await app.post(logoutEndpoint)
 

@@ -147,15 +147,6 @@ describe('Offer controller', () => {
 
       expect(response.statusCode).toBe(204)
     })
-
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app
-        .patch(endpointUrl + nonExistingOfferId)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send(updateData)
-
-      expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
-    })
   })
 
   describe(`test DELETE ${endpointUrl}:id`, () => {

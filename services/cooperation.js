@@ -1,6 +1,6 @@
 const Cooperation = require('~/models/cooperation')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
-const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { VALIDATION_ERROR } = require('~/consts/errors')
 
 const cooperationService = {
   getCooperations: async (pipeline) => {
@@ -30,7 +30,7 @@ const cooperationService = {
   },
 
   updateCooperation: async (id, currentUser, updateData) => {
-    const { id: currentUserId, role: currentUserRole } = currentUser
+    const { role: currentUserRole } = currentUser
     const { price, status } = updateData
 
     if (price && status) {
@@ -38,16 +38,6 @@ const cooperationService = {
     }
 
     const cooperation = await Cooperation.findById(id)
-    if (!cooperation) {
-      throw createError(DOCUMENT_NOT_FOUND(Cooperation.modelName))
-    }
-
-    const initiator = cooperation.initiator.toString()
-    const receiver = cooperation.receiver.toString()
-
-    if (initiator !== currentUserId && receiver !== currentUserId) {
-      throw createForbiddenError()
-    }
 
     if (price) {
       if (currentUserRole !== cooperation.needAction) {

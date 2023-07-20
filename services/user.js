@@ -84,10 +84,6 @@ const userService = {
 
     const user = await User.findById(id).lean().exec()
 
-    if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
-    }
-
     if (user.photo) {
       await uploadService.deleteFile(user.photo, USER)
     }

@@ -1,23 +1,19 @@
 const { Schema, model } = require('mongoose')
-const { FIELD_CANNOT_BE_EMPTY } = require('~/consts/errors')
 const { OFFER, CATEGORY } = require('~/consts/models')
 
 const categorySchema = new Schema(
   {
     name: {
       type: String,
-      unique: true,
-      required: [true, FIELD_CANNOT_BE_EMPTY('name')]
+      unique: true
     },
     appearance: {
       icon: {
         type: String,
-        required: [true, FIELD_CANNOT_BE_EMPTY('category icon')],
         default: 'mocked-path-to-icon'
       },
       color: {
         type: String,
-        required: [true, FIELD_CANNOT_BE_EMPTY('icon color')],
         default: '#66C42C'
       }
     },

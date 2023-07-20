@@ -8,49 +8,34 @@ const {
 const {
   enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
-const {
-  ENUM_CAN_BE_ONE_OF,
-  FIELD_CANNOT_BE_EMPTY,
-  FIELD_MUST_BE_SELECTED,
-  VALUE_MUST_BE_ABOVE,
-  VALUE_MUST_BE_BELOW
-} = require('~/consts/errors')
+const { ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
 
 const reviewSchema = new Schema(
   {
     comment: {
-      type: String,
-      required: false,
-      default: null
+      type: String
     },
     rating: {
-      type: Number,
-      required: [true, FIELD_CANNOT_BE_EMPTY('rating')],
-      min: [1, VALUE_MUST_BE_ABOVE('rating', 1)],
-      max: [5, VALUE_MUST_BE_BELOW('rating', 5)]
+      type: Number
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: USER,
-      required: true
+      ref: USER
     },
     targetUserId: {
       type: Schema.Types.ObjectId,
-      ref: USER,
-      required: true
+      ref: USER
     },
     targetUserRole: {
       type: String,
       enum: {
         values: MAIN_ROLE_ENUM,
         message: ENUM_CAN_BE_ONE_OF('target user role', MAIN_ROLE_ENUM)
-      },
-      required: [true, FIELD_MUST_BE_SELECTED('user role')]
+      }
     },
     offer: {
       type: Schema.Types.ObjectId,
-      ref: OFFER,
-      required: true
+      ref: OFFER
     }
   },
   {

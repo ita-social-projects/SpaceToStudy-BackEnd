@@ -5,72 +5,51 @@ const {
   enums: { MAIN_ROLE_ENUM, SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, OFFER_STATUS_ENUM }
 } = require('~/consts/validation')
 const { USER, SUBJECT, CATEGORY, OFFER } = require('~/consts/models')
-const {
-  FIELD_CANNOT_BE_EMPTY,
-  ENUM_CAN_BE_ONE_OF,
-  FIELD_CANNOT_BE_LONGER,
-  FIELD_CANNOT_BE_SHORTER,
-  FIELD_MUST_BE_SELECTED,
-  VALUE_MUST_BE_ABOVE
-} = require('~/consts/errors')
+const { ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
 
 const offerSchema = new Schema(
   {
     price: {
-      type: Number,
-      required: [true, FIELD_CANNOT_BE_EMPTY('price')],
-      min: [1, VALUE_MUST_BE_ABOVE('price', 1)]
+      type: Number
     },
     proficiencyLevel: {
       type: [String],
       enum: {
         values: PROFICIENCY_LEVEL_ENUM,
         message: ENUM_CAN_BE_ONE_OF('proficiency level', PROFICIENCY_LEVEL_ENUM)
-      },
-      required: [true, FIELD_CANNOT_BE_EMPTY('proficiency level')]
+      }
     },
     title: {
-      type: String,
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
-      maxlength: [100, FIELD_CANNOT_BE_LONGER('title', 100)],
-      required: [true, FIELD_CANNOT_BE_EMPTY('title')]
+      type: String
     },
     description: {
-      type: String,
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
-      maxlength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
-      required: [true, FIELD_CANNOT_BE_EMPTY('description')]
+      type: String
     },
     languages: {
       type: [String],
       enum: {
         values: SPOKEN_LANG_ENUM,
         message: ENUM_CAN_BE_ONE_OF('language', SPOKEN_LANG_ENUM)
-      },
-      required: [true, FIELD_MUST_BE_SELECTED('language(s)')]
+      }
     },
     authorRole: {
       type: String,
       enum: {
         values: MAIN_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('author role', MAIN_ROLE_ENUM),
-        required: [true, FIELD_MUST_BE_SELECTED('author role')]
+        message: ENUM_CAN_BE_ONE_OF('author role', MAIN_ROLE_ENUM)
       }
     },
     author: {
       type: Schema.Types.ObjectId,
-      ref: USER,
-      required: true
+      ref: USER
     },
     subject: {
       type: Schema.Types.ObjectId,
-      ref: SUBJECT,
-      required: true
+      ref: SUBJECT
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: CATEGORY,
-      required: true
+      ref: CATEGORY
     },
     status: {
       type: String,
@@ -84,24 +63,10 @@ const offerSchema = new Schema(
       type: [
         {
           question: {
-            type: String,
-            required: [true, FIELD_CANNOT_BE_EMPTY('question')],
-            validate: {
-              validator: (question) => {
-                return question.trim().length > 0
-              },
-              message: 'Question cannot contain only whitespace'
-            }
+            type: String
           },
           answer: {
-            type: String,
-            required: [true, FIELD_CANNOT_BE_EMPTY('answer')],
-            validate: {
-              validator: (answer) => {
-                return answer.trim().length > 0
-              },
-              message: 'Answer cannot contain only whitespace'
-            }
+            type: String
           }
         }
       ]

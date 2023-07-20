@@ -8,10 +8,8 @@ const Offer = require('~/models/offer')
 const User = require('~/models/user')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
-const Cooperation = require('~/models/cooperation')
 
 const endpointUrl = '/cooperations/'
-const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 const nonExistingOfferId = '648ae644aa322613ba08e69e'
 
 let tutorUserData = {
@@ -175,14 +173,6 @@ describe('Cooperation controller', () => {
       })
     })
 
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app
-        .get(endpointUrl + nonExistingCooperationId)
-        .set('Authorization', `Bearer ${accessToken}`)
-
-      expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
-    })
-
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl + testCooperation.body._id)
 
@@ -243,15 +233,6 @@ describe('Cooperation controller', () => {
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(updateData.status)
-    })
-
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = (testCooperation = await app
-        .patch(endpointUrl + nonExistingCooperationId)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send(updateData))
-
-      expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
     })
 
     it('should throw UNAUTHORIZED', async () => {

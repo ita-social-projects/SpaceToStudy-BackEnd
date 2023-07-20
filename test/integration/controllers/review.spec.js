@@ -224,15 +224,6 @@ describe('Review controller', () => {
 
       expect(response.statusCode).toBe(204)
     })
-
-    it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app
-        .patch(endpointUrl + nonExistingReviewId)
-        .set('Authorization', `Bearer ${accessToken}`)
-        .send(updateData)
-
-      expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
-    })
   })
 
   describe(`DELETE ${endpointUrl}:id`, () => {

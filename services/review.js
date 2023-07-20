@@ -1,7 +1,5 @@
 const Review = require('~/models/review')
 const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
-const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedReviewFieldsForUpdate } = require('~/validation/services/review')
 
@@ -66,15 +64,6 @@ const reviewService = {
     const filteredUpdateData = filterAllowedFields(updateData, allowedReviewFieldsForUpdate)
 
     const review = await Review.findById(id).exec()
-    if (!review) {
-      throw createError(DOCUMENT_NOT_FOUND(Review.modelName))
-    }
-
-    const author = review.author.toString()
-
-    if (author !== currentUserId) {
-      throw createForbiddenError()
-    }
 
     for (const field in filteredUpdateData) {
       review[field] = filteredUpdateData[field]

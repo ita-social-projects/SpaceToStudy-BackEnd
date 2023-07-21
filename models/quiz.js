@@ -6,9 +6,9 @@ const quizSchema = new Schema(
   {
     title: {
       type: String,
-      required: [true, FIELD_CANNOT_BE_EMPTY('quiz title')],
-      minLength: [1, FIELD_CANNOT_BE_SHORTER('quiz title', 1)],
-      maxLength: [100, FIELD_CANNOT_BE_LONGER('quiz title', 100)]
+      required: [true, FIELD_CANNOT_BE_EMPTY('title')],
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
+      maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
     },
     questions: [
       {

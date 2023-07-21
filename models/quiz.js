@@ -10,10 +10,10 @@ const quizSchema = new Schema(
       minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
       maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
     },
-    questions: [
+    items: [
       {
         _id: false,
-        text: {
+        question: {
           type: String,
           required: [true, FIELD_CANNOT_BE_EMPTY('question')],
           minLength: [1, FIELD_CANNOT_BE_SHORTER('question', 1)],

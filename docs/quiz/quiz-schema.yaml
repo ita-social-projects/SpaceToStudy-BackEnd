@@ -8,12 +8,12 @@ definitions:
           type: string
         title:
           type: string
-        questions:
+        items:
             type: array
             items:
               type: object
               properties:
-                text:
+                question:
                   type: string
                 answers:
                   type: array
@@ -32,12 +32,12 @@ definitions:
     properties:
       title:
         type: string
-      questions:
+      items:
           type: array
           items:
             type: object
             properties:
-              text:
+              question:
                 type: string
               answers:
                 type: array
@@ -52,12 +52,12 @@ definitions:
         type: string
       title:
         type: string
-      questions:
+      items:
           type: array
           items:
             type: object
             properties:
-              text:
+              question:
                 type: string
               answers:
                 type: array

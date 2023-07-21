@@ -55,6 +55,8 @@ describe('Course controller', () => {
     accessToken = await testUserAuthentication(app, tutorUser)
     studentAccessToken = await testUserAuthentication(app)
 
+    currentUser = TokenService.validateAccessToken(accessToken)
+
     uploadService.uploadFile = mockUploadFile
 
     testCourseResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testCourseData)
@@ -154,6 +156,38 @@ describe('Course controller', () => {
         .send(updateData)
 
       expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}:id`, () => {
+    it('should get course by id', async () => {
+      const response = await app
+        .get(endpointUrl + testCourseResponse.body._id)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toMatchObject({
+        _id: expect.any(String),
+        author: expect.any(String),
+        title: 'assembly',
+        description: 'you will learn some modern programming language for all your needs',
+        attachments: ['mocked-file-url'],
+        lessons: expect.any(Array),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String)
+      })
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND', async () => {
+      const response = await app.get(endpointUrl + nonExistingCourseId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Course.modelName]), response)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
     })
   })
 })

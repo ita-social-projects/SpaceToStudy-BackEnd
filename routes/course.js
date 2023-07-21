@@ -18,6 +18,7 @@ router.use(authMiddleware)
 
 router.param('id', idValidation)
 
+router.get('/:id', isEntityValid({ params }), asyncWrapper(courseController.getCourseById))
 router.use(restrictTo(TUTOR))
 router.get('/', asyncWrapper(courseController.getCourses))
 router.post('/', isEntityValid({ body }), asyncWrapper(courseController.createCourse))

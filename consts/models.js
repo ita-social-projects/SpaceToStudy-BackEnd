@@ -13,7 +13,7 @@ const refs = {
   COMMENT: 'Comment',
   LESSON: 'Lesson',
   COURSE: 'Course',
-  ASSESSMENT: 'Assessment'
+  QUIZ: 'QUIZ'
 }
 
 module.exports = refs

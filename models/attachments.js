@@ -13,8 +13,7 @@ const attachmentSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('link')]
     },
     description: {
-      type: String,
-      required: false
+      type: String
     },
     contentType: {
       type: String,

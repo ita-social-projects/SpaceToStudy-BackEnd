@@ -24,7 +24,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/chats'
+                $ref: '#/definitions/chat'
               example:
                   _id: 64a54c6c7bca605aaf2da66c
                   members: [
@@ -49,6 +49,49 @@ paths:
                 status: 401
                 code: 'UNAUTHORIZED'
                 message: 'The requested URL requires user authorization.'
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Chats
+      summary: Find all chats for current user.
+      description: Finds and returns all chats for current user by their token.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/chats'
+              example:
+                  - _id: 64a54c6c7bca605aaf2da66c
+                    members: [
+                      {
+                        user: 6491d003a634c3c427b69daa,
+                        role: tutor
+                      },
+                      {
+                        user: 6421d9833cdf38b706756dff,
+                        role: student
+                      }
+                    ]
+                    createdAt: 2023-20-01T13:25:36.292Z
+                    updatedAt: 2023-20-01T13:25:36.292Z
+                  - _id: 64a54c6c7bca605aaf2da6df
+                    members: [
+                      {
+                        user: 6491d003a634c3c427b69dda,
+                        role: student
+                      },
+                      {
+                        user: 6421d9833cdf38b706756d22,
+                        role: tutor
+                      }
+                    ]
+                    createdAt: 2023-20-01T13:25:36.292Z
+                    updatedAt: 2023-20-01T13:25:36.292Z
   /chats/{id}/messages:
     get:
       security:

@@ -9,6 +9,13 @@ const createChat = async (req, res) => {
   res.status(201).json(chat)
 }
 
+const getChats = async (req, res) => {
+  const chats = await chatService.getChats(req.user)
+
+  res.status(200).json(chats)
+}
+
 module.exports = {
-  createChat
+  createChat,
+  getChats
 }

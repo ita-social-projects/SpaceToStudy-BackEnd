@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 const Chat = require('~/models/chat')
 
 const chatService = {
@@ -11,6 +13,28 @@ const chatService = {
         { user: member, role: memberRole }
       ]
     })
+  },
+  getChats: async (currentUser) => {
+    const { id: user, role: userRole } = currentUser
+
+    return await Chat
+      .find({
+        'members.user': mongoose.Types.ObjectId(user),
+        'members.role': userRole
+      })
+      .populate([
+        {
+          path: 'latestMessage',
+          populate: {
+            path: 'author',
+            select: '_id firstName lastName'
+          },
+        },
+        {
+          path: 'members.user',
+          select: '_id firstName lastName photo'
+        }
+      ])
   }
 }
 

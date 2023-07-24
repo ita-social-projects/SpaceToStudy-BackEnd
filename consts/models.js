@@ -12,7 +12,8 @@ const refs = {
   NOTIFICATIONS: 'Notifications',
   COMMENT: 'Comment',
   LESSON: 'Lesson',
-  COURSE:'Course'
+  COURSE: 'Course',
+  QUIZ: 'Quiz'
 }
 
 module.exports = refs

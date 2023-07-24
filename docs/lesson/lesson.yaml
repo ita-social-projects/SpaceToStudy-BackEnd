@@ -1,5 +1,72 @@
 paths:
   /lessons:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Lessons
+      summary: Find all lessons.
+      description: Finds and returns an array with a list of all lessons.
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#definitions/lessons'
+              example:
+                title: Colors in English
+                description: With this lesson you will learn all about colors in English.
+                author: 63da8767c9ad4c9a0b0eacd3
+                attachments:
+                  - link-to-1st-file
+                  - link-to-2nd-file
+                _id: 63ec1cd51e9d781cdb6f4b14
+                createdAt: 2023-02-14T23:44:21.334Z
+                updatedAt: 2023-02-14T23:44:21.334Z
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
     post:
       security:
         - bearerAuth: []
@@ -122,63 +189,6 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Lesson with the specified id was not found.
-    get:
-      security:
-        - bearerAuth: []
-      tags:
-        - Lessons
-      summary: Find all lessons.
-      description: Finds and returns an array with a list of all lessons.
-      produces:
-        - application/json
-      parameters:
-        - in: query
-          name: title
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: sort
-          schema:
-            type: string
-          required: false
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          required: false
-        - in: query
-          name: skip
-          schema:
-            type: integer
-          required: false
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#definitions/lessons'
-              example:
-                title: Colors in English
-                description: With this lesson you will learn all about colors in English.
-                author: 63da8767c9ad4c9a0b0eacd3
-                attachments:
-                  - link-to-1st-file
-                  - link-to-2nd-file
-                _id: 63ec1cd51e9d781cdb6f4b14
-                createdAt: 2023-02-14T23:44:21.334Z
-                updatedAt: 2023-02-14T23:44:21.334Z
-        401:
-          description: Unauthorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 401
-                code: UNAUTHORIZED
-                message: The requested URL requires user authorization.
         403:
           description: Forbidden
           content:
@@ -189,7 +199,6 @@ paths:
                 status: 403
                 code: FORBIDDEN
                 message: You do not have permission to perform this action.
-  lessons/{id]:
     patch:
       security:
         - bearerAuth: []

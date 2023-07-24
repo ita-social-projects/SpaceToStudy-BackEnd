@@ -1,0 +1,73 @@
+definitions:
+  quizzes:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        items:
+            type: array
+            items:
+              type: object
+              properties:
+                question:
+                  type: string
+                answers:
+                  type: array
+                  items:
+                    type: object
+                    text: string
+                    correct: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  quizBody:
+    type: object
+    properties:
+      title:
+        type: string
+      items:
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: object
+                  text: string
+                  correct: boolean
+  quiz:
+    type: object
+    properties:
+      _id:
+        type: string
+      title:
+        type: string
+      items:
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: object
+                  text: string
+                  correct: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

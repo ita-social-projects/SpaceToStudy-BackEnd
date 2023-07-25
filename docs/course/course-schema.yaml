@@ -17,11 +17,12 @@ definitions:
           type: array
           items:
             type: string
-            ref: '#components/lesson'
+            ref: '#/components/lesson'
         attachments:
           type: array
           items:
             type: string
+            ref: '#/components/attachments'
         createdAt:
           type: string
           format: date-time
@@ -44,11 +45,12 @@ definitions:
         type: array
         items:
           type: string
-          ref: '#components/lesson'
+          ref: '#/components/lesson'
       attachments:
         type: array
         items:
           type: string
+          ref: '#/components/attachments'
       createdAt:
           type: string
           format: date-time
@@ -69,11 +71,12 @@ definitions:
         type: array
         items:
           type: string
-          ref: '#components/lesson'
+          ref: '#/components/lesson'
       attachments:
         type: array
         items:
           type: string
+          ref: '#/components/attachments'
     required:
       - title
       - description

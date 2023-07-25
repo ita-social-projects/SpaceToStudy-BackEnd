@@ -1,19 +1,13 @@
 const Lesson = require('~/models/lesson')
-const uploadService = require('~/services/upload')
-const { ATTACHMENT } = require('~/consts/upload')
+
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const lessonService = {
   createLesson: async (author, data) => {
-    let { title, description, attachments } = data
-    let fileUrls
+    const { title, description, attachments } = data
 
-    if (attachments) {
-      fileUrls = await Promise.all(attachments.map(async (file) => await uploadService.uploadFile(file, ATTACHMENT)))
-    }
-
-    return await Lesson.create({ author, title, description, attachments: fileUrls })
+    return await Lesson.create({ author, title, description, attachments })
   },
 
   getLessons: async (match, sort, skip, limit) => {
@@ -42,14 +36,7 @@ const lessonService = {
     }
 
     if (attachments) {
-      const urls = await Promise.all(
-        attachments.map(async (file) => {
-          return await uploadService.uploadFile(file, ATTACHMENT)
-        })
-      )
-
-      if (rewriteAttachments) lesson.attachments = urls
-      else lesson.attachments = lesson.attachments.concat(urls)
+      lesson.attachments = rewriteAttachments ? attachments : lesson.attachments.concat(attachments)
     }
 
     for (const [key, value] of Object.entries({ title, description })) {

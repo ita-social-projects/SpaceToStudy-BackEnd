@@ -1,11 +1,7 @@
 const Course = require('~/models/course')
-const uploadService = require('~/services/upload')
 
-const { ATTACHMENT } = require('~/consts/upload')
 const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
-
-const { createError } = require('~/utils/errorsHelper')
-const { createForbiddenError } = require('~/utils/errorsHelper')
+const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 
 const courseService = {
   getCourses: async ({ author, skip, limit }) => {
@@ -21,22 +17,13 @@ const courseService = {
 
   createCourse: async (author, data) => {
     const { title, description, lessons, attachments } = data
-    let attachmentUrls
-
-    if (attachments) {
-      attachmentUrls = await Promise.all(
-        attachments.map(async (file) => {
-          return await uploadService.uploadFile(file, ATTACHMENT)
-        })
-      )
-    }
 
     return await Course.create({
       title,
       description,
       author,
       lessons,
-      attachments: attachmentUrls
+      attachments
     })
   },
 
@@ -55,15 +42,8 @@ const courseService = {
       throw createForbiddenError()
     }
 
-    if (attachments?.length) {
-      const urls = await Promise.all(
-        attachments.map(async (file) => {
-          return await uploadService.uploadFile(file, ATTACHMENT)
-        })
-      )
-
-      if (rewriteAttachments) course.attachments = urls
-      else course.attachments = course.attachments.concat(urls)
+    if (attachments) {
+      course.attachments = rewriteAttachments ? attachments : course.attachments.concat(attachments)
     }
 
     const updateData = { title, description }

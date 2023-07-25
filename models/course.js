@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose')
 
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
-const { COURSE, USER, LESSON } = require('~/consts/models')
+const { COURSE, USER, LESSON, ATTACHMENT } = require('~/consts/models')
 
 const courseSchema = new Schema(
   {
@@ -27,7 +27,8 @@ const courseSchema = new Schema(
       ref: LESSON
     },
     attachments: {
-      type: [String]
+      type: [Schema.Types.ObjectId],
+      ref: ATTACHMENT
     }
   },
   {

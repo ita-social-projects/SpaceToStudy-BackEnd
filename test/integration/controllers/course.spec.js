@@ -79,7 +79,8 @@ describe('Course controller', () => {
       expect({ title, description, attachments }).toMatchObject({
         title: 'assembly',
         description: 'you will learn some modern programming language for all your needs',
-        attachments: ['mocked-file-url']
+        attachments: ['mocked-file-url'],
+        lessons: expect.any(Array)
       })
     })
 
@@ -102,7 +103,8 @@ describe('Course controller', () => {
       expect(testCourseResponse.body).toMatchObject({
         title: testCourseData.title,
         description: testCourseData.description,
-        attachments: ['mocked-file-url']
+        attachments: ['mocked-file-url'],
+        lessons: expect.any(Array)
       })
     })
 

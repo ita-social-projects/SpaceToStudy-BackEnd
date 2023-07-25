@@ -32,19 +32,15 @@ paths:
                   title: Advanced English
                   description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
-                  attachments:
-                    - link-to-1st-file
-                    - link-to-2nd-file
-                  lessons: []
+                  attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+                  lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
                   createdAt: 2023-02-14T23:44:21.334Z
                   updatedAt: 2023-02-14T23:44:21.334Z
                 - _id: 640461e3cfdda3f3d16dcac5
                   title: Advanced Ukrainian
                   description: Advanced Ukrainian course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
-                  attachments:
-                    - link-to-1st-file
-                    - link-to-2nd-file
+                  attachments: []
                   lessons: []
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
@@ -87,9 +83,8 @@ paths:
               title: Advanced English
               description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
               author: 63da8767c9ad4c9a0b0eacd3
-              attachments:
-                - link-to-1st-file
-                - link-to-2nd-file
+              attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+              lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
       responses:
         201:
           description: Created
@@ -101,10 +96,8 @@ paths:
                 title: Advanced English
                 description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                 author: 63da8767c9ad4c9a0b0eacd3
-                attachments:
-                  - link-to-1st-file
-                  - link-to-2nd-file
-                lessons: []
+                attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+                lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -216,10 +209,8 @@ paths:
                 title: Advanced English
                 description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                 author: 63da8767c9ad4c9a0b0eacd3
-                attachments:
-                  - link-to-1st-file
-                  - link-to-2nd-file
-                lessons: []
+                attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+                lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

@@ -1,30 +1,16 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Lesson = require('~/models/lesson')
-const uploadService = require('~/services/upload')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 
 const endpointUrl = '/lessons/'
 const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
 
-let mockUploadFile = jest.fn().mockResolvedValue('mocked-file-url')
-
-const nonExistingID = '64a33e71eea95284f397a6e4'
-
 const testLesson = {
   title: 'title',
   description: 'description',
-  attachments: [
-    {
-      src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-      name: 'example1.jpg'
-    },
-    {
-      src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-      name: 'example2.jpg'
-    }
-  ]
+  attachments: ['65bed8ef260f18d04ab22da3', '65bed9ef260f19d05ab25bc6']
 }
 
 let tutorUser = {
@@ -68,8 +54,6 @@ describe('Lesson controller', () => {
     accessToken = await testUserAuthentication(app, tutorUser)
     studentAccessToken = await testUserAuthentication(app)
 
-    uploadService.uploadFile = mockUploadFile
-
     testLessonResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testLesson)
     testLessonId = testLessonResponse.body._id
 
@@ -90,7 +74,7 @@ describe('Lesson controller', () => {
       expect(testLessonResponse.body).toMatchObject({
         title: 'title',
         description: 'description',
-        attachments: ['mocked-file-url', 'mocked-file-url']
+        attachments: expect.any(Array)
       })
     })
 
@@ -155,7 +139,7 @@ describe('Lesson controller', () => {
     })
 
     it('should throw NOT_FOUND', async () => {
-      const response = await app.delete(endpointUrl + nonExistingID).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + nonExistingLessonId).set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
     })
@@ -173,7 +157,7 @@ describe('Lesson controller', () => {
       expect(updatedLesson).toMatchObject({
         title: 'updated title',
         description: 'new cool description',
-        attachments: ['mocked-file-url', 'mocked-file-url']
+        attachments: expect.any(Array)
       })
     })
 
@@ -212,7 +196,7 @@ describe('Lesson controller', () => {
         author: expect.any(String),
         title: 'title',
         description: 'description',
-        attachments: ['mocked-file-url', 'mocked-file-url'],
+        attachments: expect.any(Array),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })

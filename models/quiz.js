@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { QUIZ } = require('~/consts/models')
+const { QUIZ, USER, COURSE } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER } = require('~/consts/errors')
 
 const quizSchema = new Schema(
@@ -35,7 +35,12 @@ const quizSchema = new Schema(
           }
         ]
       }
-    ]
+    ],
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: USER,
+      required: [true, FIELD_CANNOT_BE_EMPTY('author')]
+    }
   },
   { timestamps: true, versionKey: false }
 )

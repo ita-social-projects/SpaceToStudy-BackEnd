@@ -24,6 +24,18 @@ const messageService = {
     if (!existingChat) throw createForbiddenError()
 
     return await Message.find({ chat }).select('+isRead').sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
+  },
+
+  deleteMessages: async (match) => {
+    const { user, chat } = match
+
+    const existingChat = await Chat.findOne({
+      $and: [{ _id: chat }, { 'members.user': user }]
+    }).exec()
+
+    if (!existingChat) throw createForbiddenError()
+
+    await Message.remove({ chat })
   }
 }
 

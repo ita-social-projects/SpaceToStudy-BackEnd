@@ -20,7 +20,17 @@ const getMessages = async (req, res) => {
   res.status(200).json(messages)
 }
 
+const deleteMessages = async (req, res) => {
+  const { id: user } = req.user
+  const { id: chat } = req.params
+
+  await messageService.deleteMessages({ user, chat })
+
+  res.status(204).end()
+}
+
 module.exports = {
   sendMessage,
-  getMessages
+  getMessages,
+  deleteMessages
 }

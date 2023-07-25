@@ -61,4 +61,10 @@ messageSchema.post('save', async function (doc) {
   await Chat.updateOne({ _id: chat }, { latestMessage: _id })
 })
 
+messageSchema.post('remove', async function (doc) {
+  const { chat } = doc
+
+  await Chat.updateOne({ _id: chat }, { latestMessage: null })
+})
+
 module.exports = model(MESSAGE, messageSchema)

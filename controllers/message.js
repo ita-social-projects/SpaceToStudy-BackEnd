@@ -1,4 +1,5 @@
 const messageService = require('~/services/message')
+const getRegex = require('~/utils/getRegex')
 
 const sendMessage = async (req, res) => {
   const { id: author, role: authorRole } = req.user
@@ -13,9 +14,14 @@ const sendMessage = async (req, res) => {
 const getMessages = async (req, res) => {
   const { id: user } = req.user
   const { id: chat } = req.params
-  const { skip, limit } = req.query
+  const { skip, limit, message } = req.query
+  const searchCondition = { chat }
 
-  const messages = await messageService.getMessages({ user, chat }, parseInt(skip), parseInt(limit))
+  if (message) {
+    searchCondition.text = getRegex(message)
+  }
+
+  const messages = await messageService.getMessages({ user, chat }, parseInt(skip), parseInt(limit), searchCondition)
 
   res.status(200).json(messages)
 }

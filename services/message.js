@@ -14,7 +14,7 @@ const messageService = {
     })
   },
 
-  getMessages: async (match, skip, limit) => {
+  getMessages: async (match, skip, limit, searchCondition) => {
     const { user, chat } = match
 
     const existingChat = await Chat.findOne({
@@ -23,7 +23,7 @@ const messageService = {
 
     if (!existingChat) throw createForbiddenError()
 
-    return await Message.find({ chat }).select('+isRead').sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
+    return await Message.find(searchCondition).select('+isRead').sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
   },
 
   deleteMessages: async (match) => {
@@ -40,4 +40,3 @@ const messageService = {
 }
 
 module.exports = messageService
-

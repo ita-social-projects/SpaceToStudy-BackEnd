@@ -7,7 +7,7 @@ const quizService = {
     return await Quiz.create({
       title,
       author,
-      items,
+      items
     })
   }
 }

@@ -48,9 +48,7 @@ describe('Quiz controller', () => {
   })
 
   beforeEach(async () => {
-    accessToken = await testUserAuthentication(app, 
-      { role: TUTOR }
-    )
+    accessToken = await testUserAuthentication(app, { role: TUTOR })
 
     studentAccessToken = await testUserAuthentication(app, studentUserData)
 
@@ -86,7 +84,6 @@ describe('Quiz controller', () => {
     })
 
     it('should throw FORBIDDEN', async () => {
-
       const response = await app
         .post(endpointUrl)
         .send(testQuizData)

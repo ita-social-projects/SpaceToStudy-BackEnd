@@ -41,6 +41,8 @@ let userData = {
   lastLogin: new Date().toJSON()
 }
 
+const searchText = 'SOme amount of text'
+
 describe('Message controller', () => {
   let app, server, chatResponse, accessToken
 
@@ -86,6 +88,16 @@ describe('Message controller', () => {
   describe(`GET ${endpointUrl}`, () => {
     it('should get all messages related to a chat', async () => {
       const response = await app.get(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body[0]).toEqual(expect.objectContaining(messageData))
+    })
+
+    it('should get messages matching the text query', async () => {
+      const response = await app
+        .get(endpointUrl(messageBody.chat))
+        .set('Authorization', `Bearer ${accessToken}`)
+        .query({ message: searchText })
 
       expect(response.statusCode).toBe(200)
       expect(response.body[0]).toEqual(expect.objectContaining(messageData))

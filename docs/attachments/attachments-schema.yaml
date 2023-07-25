@@ -1,0 +1,52 @@
+definitions:
+  attachments:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        fileName:
+          type: string
+        link:
+          type: string
+        description:
+          type: string
+        size:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  attachmentBody:
+    type: object
+    properties:
+      fileName:
+        type: string
+      link:
+        type: string
+      description:
+        type: string
+      size:
+        type: number
+  attachment:
+    type: object
+    properties:
+      _id:
+        type: string
+      fileName:
+        type: string
+      link:
+        type: string
+      description:
+        type: string
+      size:
+        type: number
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

@@ -68,6 +68,7 @@ paths:
                 status: 403
                 code: FORBIDDEN
                 message: You do not have permission to perform this action.
+  /attachments/{id}:
     delete:
       security:
         - bearerAuth: []

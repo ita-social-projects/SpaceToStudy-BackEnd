@@ -9,8 +9,8 @@ const attachmentService = {
     return { count, items }
   },
 
-  deleteAttachment: async (attachment, currentUser) => {
-    const item = await Attachment.findById(attachment)
+  deleteAttachment: async (id, currentUser) => {
+    const item = await Attachment.findById(id).exec()
 
     const attachmentAuthor = item.author.toString()
 
@@ -18,7 +18,7 @@ const attachmentService = {
       throw createForbiddenError()
     }
 
-    await Attachment.findByIdAndRemove(attachment).exec()
+    await Attachment.findByIdAndRemove(id).exec()
   }
 }
 

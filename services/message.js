@@ -35,7 +35,7 @@ const messageService = {
 
     if (!existingChat) throw createForbiddenError()
 
-    await Message.remove({ chat })
+    await Message.deleteMany({ chat })
   }
 }
 

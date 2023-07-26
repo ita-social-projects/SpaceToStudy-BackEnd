@@ -113,4 +113,34 @@ describe('Message controller', () => {
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })
   })
+
+  describe(`DELETE ${endpointUrl}`, () => {
+    it('should delete all messages related to a chat', async () => {
+      const response = await app.delete(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.delete(endpointUrl(messageBody.chat))
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const accessTokenForbidden = await testUserAuthentication(app, userData)
+
+      const response = await app
+        .delete(endpointUrl(messageBody.chat))
+        .set('Authorization', `Bearer ${accessTokenForbidden}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND for chat', async () => {
+      const response = await app.delete(endpointUrl(nonExistingChatId)).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
+    })
+  })
 })

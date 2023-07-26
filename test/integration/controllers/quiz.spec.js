@@ -17,11 +17,11 @@ const testQuizData = {
       answers: [
         {
           text: 'Yes',
-          correct: true
+          isCorrect: true
         },
         {
           text: 'Yes, of course',
-          correct: false
+          isCorrect: false
         }
       ]
     }
@@ -41,7 +41,7 @@ const studentUserData = {
 }
 
 describe('Quiz controller', () => {
-  let app, server, accessToken, currentUser, studentAccessToken
+  let app, server, accessToken, currentUser, studentAccessToken, testQuiz
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -49,10 +49,11 @@ describe('Quiz controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, { role: TUTOR })
-
     studentAccessToken = await testUserAuthentication(app, studentUserData)
-
+    
     currentUser = TokenService.validateAccessToken(accessToken)
+
+    testQuiz = await app.post(endpointUrl).send(testQuizData).set('Authorization', `Bearer ${accessToken}`)
   })
 
   afterEach(async () => {
@@ -65,10 +66,9 @@ describe('Quiz controller', () => {
 
   describe(`POST ${endpointUrl}`, () => {
     it('should create a new quiz', async () => {
-      const response = await app.post(endpointUrl).send(testQuizData).set('Authorization', `Bearer ${accessToken}`)
 
-      expect(response.statusCode).toBe(201)
-      expect(response._body).toMatchObject({
+      expect(testQuiz.statusCode).toBe(201)
+      expect(testQuiz._body).toMatchObject({
         _id: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),

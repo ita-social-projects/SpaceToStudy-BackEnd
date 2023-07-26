@@ -28,8 +28,9 @@ const quizSchema = new Schema(
               minLength: [1, FIELD_CANNOT_BE_SHORTER('answer', 1)],
               maxLength: [150, FIELD_CANNOT_BE_LONGER('answer', 150)]
             },
-            correct: {
+            isCorrect: {
               type: Boolean,
+              default: false,
               required: true
             }
           }

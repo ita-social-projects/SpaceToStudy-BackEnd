@@ -6,7 +6,7 @@ paths:
       tags:
         - Quizzes
       summary: Creates a new quiz.
-      description: Creates a new quiz with and saves it to the database.
+      description: Creates a new quiz and saves it to the database.
       produces:
         - application/json
       requestBody:
@@ -14,32 +14,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/quizBody'
+              $ref: '#/definitions/quizBody'
             example:
               title: Assembly
               items: 
                 - question: Is it the best programming language?
                   answers: 
                     - text: Yes,
-                      correct: false
+                      isCorrect: false
                     - text: Yes, of course,
-                      correct: true
+                      isCorrect: true
       responses:
         201:
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#definitions/lessons'
+                $ref: '#/definitions/lessons'
               example:
                 title: Assembly
                 items: 
                 - question: Is it the best programming language?
                   answers: 
                     - text: Yes,
-                      correct: false
+                      isCorrect: false
                     - text: Yes, of course,
-                      correct: true
+                      isCorrect: true
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

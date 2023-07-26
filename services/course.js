@@ -75,6 +75,22 @@ const courseService = {
 
     await course.validate()
     await course.save()
+  },
+
+  deleteCourse: async (id, currentUser) => {
+    const course = await Course.findById(id).exec()
+
+    if (!course) {
+      throw createError(DOCUMENT_NOT_FOUND(Course.modelName))
+    }
+
+    const author = course.author.toString()
+
+    if (author !== currentUser) {
+      throw createForbiddenError()
+    }
+
+    await Course.findByIdAndRemove(id).exec()
   }
 }
 

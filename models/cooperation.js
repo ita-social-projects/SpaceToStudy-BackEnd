@@ -7,7 +7,7 @@ const {
   FIELD_MUST_BE_SELECTED,
   VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION } = require('~/consts/models')
+const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
@@ -78,6 +78,14 @@ const cooperationSchema = new Schema(
         message: ENUM_CAN_BE_ONE_OF('need action', MAIN_ROLE_ENUM)
       },
       required: true
+    },
+    availableQuizzes: {
+      type: [Schema.Types.ObjectId],
+      ref: QUIZ
+    },
+    finishedQuizzes: {
+      type: [Schema.Types.ObjectId],
+      ref: FINISHED_QUIZ
     }
   },
   {

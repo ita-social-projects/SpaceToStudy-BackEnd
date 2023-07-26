@@ -9,6 +9,8 @@ const User = require('~/models/user')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const Cooperation = require('~/models/cooperation')
+const Quiz = require('~/models/quiz')
+const FinishedQuiz = require('~/models/finishedQuiz')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
@@ -54,12 +56,46 @@ const testOfferData = {
   FAQ: [{ question: 'Do you enjoy being a director of the Hogwarts?', answer: 'Actually yes, i really like it.' }]
 }
 
+const testActiveQuizData = {
+  title: 'My test quiz',
+  items: [
+    {
+      question: 'What is your name?',
+      answers: [
+        { text: '2', correct: true },
+        { text: 'No', correct: false }
+      ]
+    }
+  ]
+}
+
+const testFinishedQuizData = {
+  grade: 1,
+  results: [
+    {
+      question: 'What is your name?',
+      answers: [
+        { text: '2', isCorrect: true, isChosen: false },
+        { text: 'No', isCorrect: false, isChosen: true }
+      ]
+    }
+  ]
+}
+
 const updateData = {
   status: 'active'
 }
 
 describe('Cooperation controller', () => {
-  let app, server, accessToken, testOffer, testCooperation, testStudentUser, testTutorUser
+  let app,
+    server,
+    accessToken,
+    testOffer,
+    testCooperation,
+    testStudentUser,
+    testTutorUser,
+    testActiveQuiz,
+    testFinishedQuiz
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -92,6 +128,16 @@ describe('Cooperation controller', () => {
       ...testOfferData
     })
 
+    testActiveQuiz = await Quiz.create({
+      ...testActiveQuizData
+      // author: testTutorUser._id,
+    })
+
+    testFinishedQuiz = await FinishedQuiz.create({
+      ...testFinishedQuizData,
+      quiz: testActiveQuiz._id
+    })
+
     testCooperation = await app
       .post(endpointUrl)
       .set('Authorization', `Bearer ${accessToken}`)
@@ -99,6 +145,8 @@ describe('Cooperation controller', () => {
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
         offer: testOffer._id,
+        availableQuizzes: [testActiveQuiz._id],
+        finishedQuizzes: [testFinishedQuiz._id],
         ...testCooperationData
       })
   })
@@ -121,6 +169,8 @@ describe('Cooperation controller', () => {
 
       const response = await app.get(endpointUrl).query(query).set('Authorization', `Bearer ${accessToken}`)
 
+      // console.log(testCooperation._body)
+
       expect(response.status).toBe(200)
       expect(response.body.count).toBe(1)
       expect(Array.isArray(response.body.items)).toBe(true)
@@ -136,6 +186,8 @@ describe('Cooperation controller', () => {
         price: testCooperationData.price,
         status: 'pending',
         needAction: tutorUserData.role[0],
+        availableQuizzes: testCooperation._body.availableQuizzes,
+        finishedQuizzes: testCooperation._body.finishedQuizzes,
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })

@@ -14,7 +14,16 @@ const cooperationService = {
   },
 
   createCooperation: async (initiator, initiatorRole, data) => {
-    const { offer, proficiencyLevel, additionalInfo, receiver, receiverRole, price } = data
+    const {
+      offer,
+      proficiencyLevel,
+      additionalInfo,
+      receiver,
+      receiverRole,
+      price,
+      availableQuizzes,
+      finishedQuizzes
+    } = data
 
     return await Cooperation.create({
       initiator,
@@ -25,7 +34,9 @@ const cooperationService = {
       price,
       proficiencyLevel,
       additionalInfo,
-      needAction: receiverRole
+      needAction: receiverRole,
+      availableQuizzes,
+      finishedQuizzes
     })
   },
 

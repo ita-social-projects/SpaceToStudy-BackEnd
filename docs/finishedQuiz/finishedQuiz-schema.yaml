@@ -1,0 +1,85 @@
+definitions:
+  finishedQuizzes:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        quiz:
+          type: string
+          ref: '#components/quiz'
+        grade:
+          type: number
+        results:
+            type: array
+            items:
+              type: object
+              properties:
+                question:
+                  type: string
+                answers:
+                  type: array
+                  items:
+                    type: object
+                    text: string
+                    isCorrect: boolean
+                    isChosen: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  finishedQuizBody:
+    type: object
+    properties:
+      quiz:
+        type: string
+        ref: '#components/quiz'
+      grade:
+        type: number
+      results:
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: object
+                  text: string
+                  isCorrect: boolean
+                  isChosen: boolean
+  finishedQuiz:
+    type: object
+    properties:
+      _id:
+        type: string
+      quiz:
+        type: string
+        ref: '#components/quiz'
+      grade:
+        type: number
+      results:
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: object
+                  text: string
+                  isCorrect: boolean
+                  isChosen: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

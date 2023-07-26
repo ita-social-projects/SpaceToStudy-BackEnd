@@ -15,13 +15,13 @@ const getMessages = async (req, res) => {
   const { id: user } = req.user
   const { id: chat } = req.params
   const { skip, limit, message } = req.query
-  const searchCondition = { chat }
+  const match = { chat, user }
 
   if (message) {
-    searchCondition.text = getRegex(message)
+    match.text = getRegex(message)
   }
 
-  const messages = await messageService.getMessages({ user, chat }, parseInt(skip), parseInt(limit), searchCondition)
+  const messages = await messageService.getMessages(match, parseInt(skip), parseInt(limit))
 
   res.status(200).json(messages)
 }

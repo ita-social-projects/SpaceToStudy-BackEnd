@@ -41,7 +41,7 @@ let userData = {
   lastLogin: new Date().toJSON()
 }
 
-const searchText = 'SOme amount of text'
+const searchText = 'Some amount of text'
 
 describe('Message controller', () => {
   let app, server, chatResponse, accessToken

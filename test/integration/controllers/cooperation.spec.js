@@ -130,7 +130,6 @@ describe('Cooperation controller', () => {
 
     testActiveQuiz = await Quiz.create({
       ...testActiveQuizData
-      // author: testTutorUser._id,
     })
 
     testFinishedQuiz = await FinishedQuiz.create({
@@ -168,8 +167,6 @@ describe('Cooperation controller', () => {
       }
 
       const response = await app.get(endpointUrl).query(query).set('Authorization', `Bearer ${accessToken}`)
-
-      // console.log(testCooperation._body)
 
       expect(response.status).toBe(200)
       expect(response.body.count).toBe(1)

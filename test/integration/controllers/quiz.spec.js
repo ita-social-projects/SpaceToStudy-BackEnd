@@ -66,7 +66,6 @@ describe('Quiz controller', () => {
 
   describe(`POST ${endpointUrl}`, () => {
     it('should create a new quiz', async () => {
-
       expect(testQuiz.statusCode).toBe(201)
       expect(testQuiz._body).toMatchObject({
         _id: expect.any(String),

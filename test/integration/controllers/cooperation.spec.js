@@ -10,7 +10,6 @@ const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const Cooperation = require('~/models/cooperation')
 const Quiz = require('~/models/quiz')
-const FinishedQuiz = require('~/models/finishedQuiz')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
@@ -69,33 +68,12 @@ const testActiveQuizData = {
   ]
 }
 
-const testFinishedQuizData = {
-  grade: 1,
-  results: [
-    {
-      question: 'What is your name?',
-      answers: [
-        { text: '2', isCorrect: true, isChosen: false },
-        { text: 'No', isCorrect: false, isChosen: true }
-      ]
-    }
-  ]
-}
-
 const updateData = {
   status: 'active'
 }
 
 describe('Cooperation controller', () => {
-  let app,
-    server,
-    accessToken,
-    testOffer,
-    testCooperation,
-    testStudentUser,
-    testTutorUser,
-    testActiveQuiz,
-    testFinishedQuiz
+  let app, server, accessToken, testOffer, testCooperation, testStudentUser, testTutorUser, testActiveQuiz
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -132,11 +110,6 @@ describe('Cooperation controller', () => {
       ...testActiveQuizData
     })
 
-    testFinishedQuiz = await FinishedQuiz.create({
-      ...testFinishedQuizData,
-      quiz: testActiveQuiz._id
-    })
-
     testCooperation = await app
       .post(endpointUrl)
       .set('Authorization', `Bearer ${accessToken}`)
@@ -144,8 +117,6 @@ describe('Cooperation controller', () => {
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
         offer: testOffer._id,
-        availableQuizzes: [testActiveQuiz._id],
-        finishedQuizzes: [testFinishedQuiz._id],
         ...testCooperationData
       })
   })
@@ -183,8 +154,6 @@ describe('Cooperation controller', () => {
         price: testCooperationData.price,
         status: 'pending',
         needAction: tutorUserData.role[0],
-        availableQuizzes: testCooperation._body.availableQuizzes,
-        finishedQuizzes: testCooperation._body.finishedQuizzes,
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -284,7 +253,7 @@ describe('Cooperation controller', () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)
-        .send(updateData)
+        .send({ ...updateData, availableQuiz: testActiveQuiz._id })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)

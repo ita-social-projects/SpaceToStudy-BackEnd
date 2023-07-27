@@ -21,6 +21,9 @@ definitions:
                     type: object
                     text: string
                     isCorrect: boolean
+        author:
+          type: string
+          ref: '#/components/user'
         createdAt:
           type: string
           format: date-time
@@ -65,6 +68,9 @@ definitions:
                   type: object
                   text: string
                   isCorrect: boolean
+      author:
+          type: string
+          ref: '#/components/user'
       createdAt:
         type: string
         format: date-time

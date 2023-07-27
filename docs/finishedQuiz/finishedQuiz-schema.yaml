@@ -8,7 +8,7 @@ definitions:
           type: string
         quiz:
           type: string
-          ref: '#components/quiz'
+          ref: '#/definitions/quiz'
         grade:
           type: number
         results:
@@ -36,7 +36,7 @@ definitions:
     properties:
       quiz:
         type: string
-        ref: '#components/quiz'
+        ref: '#/definitions/quiz'
       grade:
         type: number
       results:
@@ -60,7 +60,7 @@ definitions:
         type: string
       quiz:
         type: string
-        ref: '#components/quiz'
+        ref: '#/definitions/quiz'
       grade:
         type: number
       results:

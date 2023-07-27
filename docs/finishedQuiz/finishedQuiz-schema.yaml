@@ -22,9 +22,13 @@ definitions:
                   type: array
                   items:
                     type: object
-                    text: string
-                    isCorrect: boolean
-                    isChosen: boolean
+                    properties:
+                      text:
+                        type: string
+                      isCorrect:
+                        type: boolean
+                      isChosen:
+                        type: boolean
         createdAt:
           type: string
           format: date-time
@@ -50,9 +54,13 @@ definitions:
                 type: array
                 items:
                   type: object
-                  text: string
-                  isCorrect: boolean
-                  isChosen: boolean
+                    properties:
+                      text:
+                        type: string
+                      isCorrect:
+                        type: boolean
+                      isChosen:
+                        type: boolean
   finishedQuiz:
     type: object
     properties:
@@ -74,9 +82,13 @@ definitions:
                 type: array
                 items:
                   type: object
-                  text: string
-                  isCorrect: boolean
-                  isChosen: boolean
+                    properties:
+                      text:
+                        type: string
+                      isCorrect:
+                        type: boolean
+                      isChosen:
+                        type: boolean
       createdAt:
         type: string
         format: date-time

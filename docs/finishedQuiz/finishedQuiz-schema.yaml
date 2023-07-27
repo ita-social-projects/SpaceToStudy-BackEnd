@@ -12,23 +12,23 @@ definitions:
         grade:
           type: number
         results:
-            type: array
-            items:
-              type: object
-              properties:
-                question:
-                  type: string
-                answers:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      text:
-                        type: string
-                      isCorrect:
-                        type: boolean
-                      isChosen:
-                        type: boolean
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    isCorrect:
+                      type: boolean
+                    isChosen:
+                      type: boolean
         createdAt:
           type: string
           format: date-time
@@ -44,23 +44,23 @@ definitions:
       grade:
         type: number
       results:
-          type: array
-          items:
-            type: object
-            properties:
-              question:
-                type: string
-              answers:
-                type: array
-                items:
-                  type: object
-                    properties:
-                      text:
-                        type: string
-                      isCorrect:
-                        type: boolean
-                      isChosen:
-                        type: boolean
+        type: array
+        items:
+          type: object
+          properties:
+            question:
+              type: string
+            answers:
+              type: array
+              items:
+                type: object
+                properties:
+                  text:
+                    type: string
+                  isCorrect:
+                    type: boolean
+                  isChosen:
+                    type: boolean
   finishedQuiz:
     type: object
     properties:
@@ -72,23 +72,23 @@ definitions:
       grade:
         type: number
       results:
-          type: array
-          items:
-            type: object
-            properties:
-              question:
-                type: string
-              answers:
-                type: array
-                items:
-                  type: object
-                    properties:
-                      text:
-                        type: string
-                      isCorrect:
-                        type: boolean
-                      isChosen:
-                        type: boolean
+        type: array
+        items:
+          type: object
+          properties:
+            question:
+              type: string
+            answers:
+              type: array
+              items:
+                type: object
+                properties:
+                  text:
+                    type: string
+                  isCorrect:
+                    type: boolean
+                  isChosen:
+                    type: boolean
       createdAt:
         type: string
         format: date-time

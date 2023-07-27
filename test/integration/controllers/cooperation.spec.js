@@ -253,7 +253,7 @@ describe('Cooperation controller', () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)
-        .send({ ...updateData, availableQuiz: testActiveQuiz._id })
+        .send({ ...updateData, availableQuizzes: [testActiveQuiz._id] })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
@@ -261,6 +261,7 @@ describe('Cooperation controller', () => {
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(updateData.status)
+      expect(response.body.availableQuizzes).toEqual([testActiveQuiz._id.toString()])
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {

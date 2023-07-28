@@ -1,9 +1,7 @@
 const mergeArraysUniqueValues = (firstArray, secondArray) => {
   const uniqueValuesArray = secondArray.filter((item) => !firstArray.includes(item))
 
-  const mergedArray = firstArray.concat(uniqueValuesArray)
-
-  return mergedArray
+  return firstArray.concat(uniqueValuesArray)
 }
 
 module.exports = mergeArraysUniqueValues

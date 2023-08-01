@@ -9,6 +9,7 @@ const User = require('~/models/user')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const Cooperation = require('~/models/cooperation')
+const Quiz = require('~/models/quiz')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
@@ -54,12 +55,25 @@ const testOfferData = {
   FAQ: [{ question: 'Do you enjoy being a director of the Hogwarts?', answer: 'Actually yes, i really like it.' }]
 }
 
+const testActiveQuizData = {
+  title: 'My test quiz',
+  items: [
+    {
+      question: 'What is your name?',
+      answers: [
+        { text: '2', correct: true },
+        { text: 'No', correct: false }
+      ]
+    }
+  ]
+}
+
 const updateData = {
   status: 'active'
 }
 
 describe('Cooperation controller', () => {
-  let app, server, accessToken, testOffer, testCooperation, testStudentUser, testTutorUser
+  let app, server, accessToken, testOffer, testCooperation, testStudentUser, testTutorUser, testActiveQuiz
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -90,6 +104,10 @@ describe('Cooperation controller', () => {
       subject: subject._id,
       category: category._id,
       ...testOfferData
+    })
+
+    testActiveQuiz = await Quiz.create({
+      ...testActiveQuizData
     })
 
     testCooperation = await app
@@ -235,7 +253,7 @@ describe('Cooperation controller', () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
         .set('Authorization', `Bearer ${accessToken}`)
-        .send(updateData)
+        .send({ ...updateData, availableQuizzes: [testActiveQuiz._id] })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
@@ -243,6 +261,7 @@ describe('Cooperation controller', () => {
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(updateData.status)
+      expect(response.body.availableQuizzes).toEqual([testActiveQuiz._id.toString()])
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {

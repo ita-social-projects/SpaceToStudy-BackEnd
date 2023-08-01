@@ -14,6 +14,7 @@ const refs = {
   LESSON: 'Lesson',
   COURSE: 'Course',
   QUIZ: 'Quiz',
+  FINISHED_QUIZ: 'FinishedQuiz',
   ATTACHMENT: 'Attachment'
 }
 

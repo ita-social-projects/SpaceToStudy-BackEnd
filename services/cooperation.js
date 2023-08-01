@@ -1,4 +1,6 @@
 const Cooperation = require('~/models/cooperation')
+const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
+const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
@@ -31,7 +33,7 @@ const cooperationService = {
 
   updateCooperation: async (id, currentUser, updateData) => {
     const { id: currentUserId, role: currentUserRole } = currentUser
-    const { price, status } = updateData
+    const { price, status, availableQuizzes, finishedQuizzes } = updateData
 
     if (price && status) {
       throw createError(409, VALIDATION_ERROR('You can change only either the status or the price in one operation'))
@@ -60,6 +62,15 @@ const cooperationService = {
     }
     if (status) {
       cooperation.status = status
+      await cooperation.save()
+    }
+    if (availableQuizzes) {
+      cooperation.availableQuizzes = mergeArraysUniqueValues(cooperation.availableQuizzes, availableQuizzes)
+      await cooperation.save()
+    }
+    if (finishedQuizzes) {
+      cooperation.finishedQuizzes = mergeArraysUniqueValues(cooperation.finishedQuizzes, finishedQuizzes)
+      cooperation.availableQuizzes = removeArraysUniqueValues(cooperation.availableQuizzes, cooperation.finishedQuizzes)
       await cooperation.save()
     }
   }

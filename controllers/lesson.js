@@ -1,5 +1,7 @@
 const lessonService = require('~/services/lesson')
 const getMatchOptions = require('~/utils/getMatchOptions')
+const getRegex = require('~/utils/getRegex')
+const getSortOptions = require('~/utils/getSortOptions')
 
 const createLesson = async (req, res) => {
   const { id: author } = req.user
@@ -22,9 +24,10 @@ const getLessons = async (req, res) => {
   const { id: author } = req.user
   const { title, sort, skip, limit } = req.query
 
-  const match = getMatchOptions({ author, title })
+  const match = getMatchOptions({ author, title: getRegex(title) })
+  const sortOptions = getSortOptions(sort)
 
-  const lessons = await lessonService.getLessons(match, sort, parseInt(skip), parseInt(limit))
+  const lessons = await lessonService.getLessons(match, sortOptions, parseInt(skip), parseInt(limit))
 
   res.status(200).json(lessons)
 }

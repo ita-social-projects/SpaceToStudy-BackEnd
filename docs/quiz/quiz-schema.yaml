@@ -20,7 +20,10 @@ definitions:
                   items:
                     type: object
                     text: string
-                    correct: boolean
+                    isCorrect: boolean
+        author:
+          type: string
+          ref: '#/components/user'
         createdAt:
           type: string
           format: date-time
@@ -44,7 +47,7 @@ definitions:
                 items:
                   type: object
                   text: string
-                  correct: boolean
+                  isCorrect: boolean
   quiz:
     type: object
     properties:
@@ -64,7 +67,10 @@ definitions:
                 items:
                   type: object
                   text: string
-                  correct: boolean
+                  isCorrect: boolean
+      author:
+          type: string
+          ref: '#/components/user'
       createdAt:
         type: string
         format: date-time

@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { QUIZ } = require('~/consts/models')
+const { QUIZ, USER, COURSE } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER } = require('~/consts/errors')
 
 const quizSchema = new Schema(
@@ -28,14 +28,20 @@ const quizSchema = new Schema(
               minLength: [1, FIELD_CANNOT_BE_SHORTER('answer', 1)],
               maxLength: [150, FIELD_CANNOT_BE_LONGER('answer', 150)]
             },
-            correct: {
+            isCorrect: {
               type: Boolean,
+              default: false,
               required: true
             }
           }
         ]
       }
-    ]
+    ],
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: USER,
+      required: [true, FIELD_CANNOT_BE_EMPTY('author')]
+    }
   },
   { timestamps: true, versionKey: false }
 )

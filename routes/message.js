@@ -13,5 +13,6 @@ router.use(authMiddleware)
 
 router.get('/', isEntityValid({ params }), asyncWrapper(messageController.getMessages))
 router.post('/', isEntityValid({ params }), asyncWrapper(messageController.sendMessage))
+router.delete('/', isEntityValid({ params }), asyncWrapper(messageController.deleteMessages))
 
 module.exports = router

@@ -23,5 +23,6 @@ router.use(restrictTo(TUTOR))
 router.get('/', asyncWrapper(courseController.getCourses))
 router.post('/', isEntityValid({ body }), asyncWrapper(courseController.createCourse))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(courseController.updateCourse))
+router.delete('/:id', isEntityValid({ params }), asyncWrapper(courseController.deleteCourse))
 
 module.exports = router

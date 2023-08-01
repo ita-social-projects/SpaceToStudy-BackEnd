@@ -36,9 +36,19 @@ const updateCourse = async (req, res) => {
   res.status(204).end()
 }
 
+const deleteCourse = async (req, res) => {
+  const { id: currentUser } = req.user
+  const { id } = req.params
+
+  await courseService.deleteCourse(id, currentUser)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getCourses,
   createCourse,
   updateCourse,
-  getCourseById
+  getCourseById,
+  deleteCourse
 }

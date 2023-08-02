@@ -1,4 +1,16 @@
 const quizService = require('~/services/quiz')
+const getRegex = require('~/utils/getRegex')
+
+const getQuiz = async (req, res) => {
+  const { id: author } = req.user
+  const { title, sort, skip, limit } = req.query
+
+  const match = { author, title: getRegex(title) }
+
+  const reviews = await quizService.getQuiz(match, sort, parseInt(skip), parseInt(limit))
+
+  res.status(200).json(reviews)
+}
 
 const createQuiz = async (req, res) => {
   const { id: author } = req.user
@@ -10,5 +22,6 @@ const createQuiz = async (req, res) => {
 }
 
 module.exports = {
+  getQuiz,
   createQuiz
 }

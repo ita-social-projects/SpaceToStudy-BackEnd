@@ -1,8 +1,8 @@
 const Quiz = require('~/models/quiz')
 
 const quizService = {
-  getQuiz: async (match, skip, limit) => {
-    const items = await Quiz.find(match).skip(skip).limit(limit).sort({ updatedAt: -1 }).lean().exec()
+  getQuiz: async (match, sort, skip, limit) => {
+    const items = await Quiz.find(match).skip(skip).limit(limit).sort(sort).lean().exec()
     const count = await Quiz.countDocuments(match)
 
     return { items, count }

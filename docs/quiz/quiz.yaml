@@ -48,6 +48,7 @@ paths:
                             isCorrect: false
                           - text: Yes, of course,
                             isCorrect: true
+                    author: '6477007a6fa4d05e1a800ce5'
                   - _id: 64ca5932b57f2442403394a9
                     title: Chemistry
                     items:
@@ -59,6 +60,7 @@ paths:
                             isCorrect: true
                           - text: H2O2
                             isCorrect: true
+                    author: '6477007a6fa4d05e1a800ce5'
                 count: 2
         401:
           description: Unauthorized

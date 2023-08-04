@@ -10,7 +10,7 @@ const { authMiddleware, restrictTo } = require('~/middlewares/auth')
 router.use(authMiddleware)
 
 router.use(restrictTo(TUTOR))
-router.get('/', asyncWrapper(quizController.getQuiz))
+router.get('/', asyncWrapper(quizController.getQuizzes))
 router.post('/', asyncWrapper(quizController.createQuiz))
 
 module.exports = router

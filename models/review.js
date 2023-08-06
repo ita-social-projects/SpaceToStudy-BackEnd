@@ -174,4 +174,4 @@ reviewSchema.post(/^findOneAnd/, async function () {
   await this.review.constructor.calcAverageRatings(this.review.targetUserId, this.review.targetUserRole)
 })
 
-module.exports = model('Review', reviewSchema)
+module.exports = model(REVIEW, reviewSchema)

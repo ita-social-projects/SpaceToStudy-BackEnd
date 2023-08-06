@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose')
 const userSchema = require('~/models/user')
 const offerSchema = require('~/models/offer')
-const { USER, OFFER } = require('~/consts/models')
+const { USER, OFFER, REVIEW } = require('~/consts/models')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
@@ -15,6 +15,7 @@ const {
   VALUE_MUST_BE_ABOVE,
   VALUE_MUST_BE_BELOW
 } = require('~/consts/errors')
+const notificationService = require('~/services/notification')
 
 const reviewSchema = new Schema(
   {
@@ -150,8 +151,17 @@ reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUs
   }
 }
 
-reviewSchema.post('save', function () {
+reviewSchema.post('save', async function () {
   this.constructor.calcAverageRatings(this.targetUserId, this.targetUserRole)
+
+  const notificationData = {
+    user: this.targetUserId,
+    userRole: this.targetUserRole,
+    type: 'new',
+    reference: this._id,
+    referenceModel: REVIEW
+  }
+  await notificationService.createNotification(notificationData)
 })
 
 reviewSchema.pre(/^findOneAnd/, async function (next) {

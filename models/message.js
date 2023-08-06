@@ -11,6 +11,7 @@ const {
   enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
 const Chat = require('~/models/chat')
+const notificationService = require('~/services/notification')
 
 const messageSchema = new Schema(
   {
@@ -56,9 +57,27 @@ const messageSchema = new Schema(
 )
 
 messageSchema.post('save', async function (doc) {
-  const { _id, chat } = doc
+  const { _id, chat: chatId } = doc
 
-  await Chat.updateOne({ _id: chat }, { latestMessage: _id })
+  const chat = await Chat.findById(chatId).exec()
+
+  chat.latestMessage = _id
+
+  chat.members.map(async (member) => {
+    if (doc.author.toString() !== member.user.toString()) {
+      const notificationData = {
+        user: member.user,
+        userRole: member.role,
+        type: 'new',
+        reference: _id,
+        referenceModel: MESSAGE
+      }
+
+      await notificationService.createNotification(notificationData)
+    }
+  })
+
+  await chat.save()
 })
 
 messageSchema.post('deleteMany', async function (doc) {

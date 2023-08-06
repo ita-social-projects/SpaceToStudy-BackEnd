@@ -39,7 +39,7 @@ const cooperationService = {
       throw createError(409, VALIDATION_ERROR('You can change only either the status or the price in one operation'))
     }
 
-    const cooperation = await Cooperation.findById(id)
+    const cooperation = await Cooperation.findById(id).exec()
     if (!cooperation) {
       throw createError(DOCUMENT_NOT_FOUND(Cooperation.modelName))
     }
@@ -52,17 +52,15 @@ const cooperationService = {
     }
 
     if (price) {
-      if (currentUserRole !== cooperation.needAction) {
+      if (currentUserRole !== cooperation.needAction.toString()) {
         throw createForbiddenError()
       }
-      cooperation.price = price
-      cooperation.needAction = cooperation.needAction === 'student' ? 'tutor' : 'student'
+      const updatedNeedAction = cooperation.needAction.toString() === 'student' ? 'tutor' : 'student'
 
-      await cooperation.save()
+      await Cooperation.findByIdAndUpdate(id, { price, needAction: updatedNeedAction }).exec()
     }
     if (status) {
-      cooperation.status = status
-      await cooperation.save()
+      await Cooperation.findByIdAndUpdate(id, { status }).exec()
     }
     if (availableQuizzes) {
       cooperation.availableQuizzes = mergeArraysUniqueValues(cooperation.availableQuizzes, availableQuizzes)

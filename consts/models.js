@@ -9,7 +9,7 @@ const refs = {
   COOPERATION: 'Cooperation',
   MESSAGE: 'Message',
   CHAT: 'Chat',
-  NOTIFICATIONS: 'Notifications',
+  NOTIFICATION: 'Notification',
   COMMENT: 'Comment',
   LESSON: 'Lesson',
   COURSE: 'Course',

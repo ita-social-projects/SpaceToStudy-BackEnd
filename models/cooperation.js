@@ -122,14 +122,13 @@ cooperationSchema.pre('findOneAndUpdate', function (next) {
 })
 
 cooperationSchema.post('findOneAndUpdate', async function (doc) {
-  const user =
-    this.type === 'updated'
-      ? doc.needAction === doc.initiatorRole
-        ? doc.receiver
-        : doc.initiator
-      : doc.needAction === doc.initiatorRole
-      ? doc.initiator
-      : doc.receiver
+  let user
+  if (this.type === 'updated') {
+    user = doc.needAction === doc.initiatorRole ? doc.receiver : doc.initiator
+  } else {
+    user = doc.needAction === doc.initiatorRole ? doc.initiator : doc.receiver
+  }
+
   const notificationData = {
     user,
     userRole: user === doc.initiator ? doc.initiatorRole : doc.receiverRole,

@@ -3,10 +3,9 @@ const {
   enums: { ROLE_ENUM, NOTIFICATION_TYPE_ENUM }
 } = require('~/consts/validation')
 const { ENUM_CAN_BE_ONE_OF, FIELD_MUST_BE_SELECTED } = require('~/consts/errors')
+const { USER, NOTIFICATION, COOPERATION, MESSAGE, REVIEW, COMMENT } = require('~/consts/models')
 
-const { USER, NOTIFICATIONS, REVIEW, COMMENT } = require('~/consts/models')
-
-const notificationsSchema = new Schema(
+const notificationSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -26,8 +25,7 @@ const notificationsSchema = new Schema(
       enum: {
         values: NOTIFICATION_TYPE_ENUM,
         message: ENUM_CAN_BE_ONE_OF('type', NOTIFICATION_TYPE_ENUM)
-      },
-      select: false
+      }
     },
     reference: {
       type: Schema.Types.ObjectId,
@@ -37,10 +35,10 @@ const notificationsSchema = new Schema(
     referenceModel: {
       type: String,
       required: true,
-      enum: [REVIEW, COMMENT]
+      enum: [REVIEW, COOPERATION, MESSAGE, COMMENT]
     }
   },
   { timestamps: true, versionKey: false }
 )
 
-module.exports = model(NOTIFICATIONS, notificationsSchema)
+module.exports = model(NOTIFICATION, notificationSchema)

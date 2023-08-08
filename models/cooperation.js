@@ -11,6 +11,8 @@ const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/mode
 const {
   enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
+const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
+const notificationService = require('~/services/notification')
 
 const cooperationSchema = new Schema(
   {
@@ -93,5 +95,50 @@ const cooperationSchema = new Schema(
     versionKey: false
   }
 )
+
+cooperationSchema.post('save', async function () {
+  const notificationData = {
+    user: this.receiver,
+    userRole: this.receiverRole,
+    type: REQUESTED,
+    reference: this._id,
+    referenceModel: COOPERATION
+  }
+
+  await notificationService.createNotification(notificationData)
+})
+
+cooperationSchema.pre('findOneAndUpdate', function (next) {
+  if (this._update.price) {
+    this.type = UPDATED
+
+    next()
+  }
+
+  if (this._update.status) {
+    this.type = this._update.status
+
+    next()
+  }
+})
+
+cooperationSchema.post('findOneAndUpdate', async function (doc) {
+  let user
+  if (this.type === UPDATED) {
+    user = doc.needAction === doc.initiatorRole ? doc.receiver : doc.initiator
+  } else {
+    user = doc.needAction === doc.initiatorRole ? doc.initiator : doc.receiver
+  }
+
+  const notificationData = {
+    user,
+    userRole: user === doc.initiator ? doc.initiatorRole : doc.receiverRole,
+    type: this.type,
+    reference: doc._id,
+    referenceModel: COOPERATION
+  }
+
+  await notificationService.createNotification(notificationData)
+})
 
 module.exports = model(COOPERATION, cooperationSchema)

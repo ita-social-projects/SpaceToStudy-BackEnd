@@ -15,6 +15,7 @@ const {
   VALUE_MUST_BE_ABOVE,
   VALUE_MUST_BE_BELOW
 } = require('~/consts/errors')
+const { NEW } = require('~/consts/notificationTypes')
 const notificationService = require('~/services/notification')
 
 const reviewSchema = new Schema(
@@ -157,7 +158,7 @@ reviewSchema.post('save', async function () {
   const notificationData = {
     user: this.targetUserId,
     userRole: this.targetUserRole,
-    type: 'new',
+    type: NEW,
     reference: this._id,
     referenceModel: REVIEW
   }

@@ -10,6 +10,7 @@ const { USER, MESSAGE, CHAT } = require('~/consts/models')
 const {
   enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
+const { NEW } = require('~/consts/notificationTypes')
 const Chat = require('~/models/chat')
 const notificationService = require('~/services/notification')
 
@@ -68,7 +69,7 @@ messageSchema.post('save', async function (doc) {
       const notificationData = {
         user: member.user,
         userRole: member.role,
-        type: 'new',
+        type: NEW,
         reference: _id,
         referenceModel: MESSAGE
       }

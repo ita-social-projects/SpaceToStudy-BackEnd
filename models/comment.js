@@ -4,6 +4,7 @@ const { COOPERATION, COMMENT, USER } = require('~/consts/models')
 const {
   enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
+const { NEW } = require('~/consts/notificationTypes')
 const cooperationService = require('~/services/cooperation')
 const notificationService = require('~/services/notification')
 
@@ -47,7 +48,7 @@ commentSchema.post('save', async function () {
   const notificationData = {
     user,
     userRole: user === cooperation.initiator ? cooperation.initiatorRole : cooperation.receiverRole,
-    type: 'new',
+    type: NEW,
     reference: this._id,
     referenceModel: COMMENT
   }

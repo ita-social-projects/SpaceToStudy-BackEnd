@@ -23,7 +23,13 @@ const messageService = {
 
     if (!existingChat) throw createForbiddenError()
 
-    return await Message.find(match).select('+isRead').sort({ createdAt: -1 }).skip(skip).limit(limit).exec()
+    return await Message.find(match)
+      .populate({ path: 'author', select: '_id photo' })
+      .select('+isRead')
+      .sort({ createdAt: 1 })
+      .skip(skip)
+      .limit(limit)
+      .exec()
   },
 
   deleteMessages: async (match) => {

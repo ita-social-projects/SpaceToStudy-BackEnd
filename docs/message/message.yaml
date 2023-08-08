@@ -17,7 +17,7 @@ paths:
             schema:
               $ref: '#/definitions/messageBody'
             example:
-              text: "Some text"
+              text: 'Some text'
               isRead: false
               isNotified: false
       responses:
@@ -29,9 +29,9 @@ paths:
                 $ref: '#/definitions/messages'
               example:
                 - _id: 64a28e8c5d56f749c7d915d0
-                  author: 6421d9833cdf38b706756dff
-                  authorRole: "student"
-                  text: "Some text"
+                  author: { _id: 6421d9833cdf38b706756dff, photo: 1687425744398-ITA wallpapers-19.png }
+                  authorRole: 'student'
+                  text: 'Some text'
                   isRead: false
                   isNotified: false
                   chat: 6421d9833cdf38b706756dfd
@@ -49,7 +49,7 @@ paths:
                 message: 'The requested URL requires user authorization.'
     get:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Messages
       summary: Find your messages in chat
@@ -86,9 +86,9 @@ paths:
                 $ref: '#/definitions/messages'
               example:
                 - _id: 64a28e8c5d56f749c7d915d0
-                  author: 6421d9833cdf38b706756dff
-                  authorRole: "student"
-                  text: "Some text"
+                  author: { _id: 6421d9833cdf38b706756dff, photo: 1687425744398-ITA wallpapers-19.png }
+                  authorRole: 'student'
+                  text: 'Some text'
                   isRead: false
                   isNotified: false
                   chat: 6421d9833cdf38b706756dfd

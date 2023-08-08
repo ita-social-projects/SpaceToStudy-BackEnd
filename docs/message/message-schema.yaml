@@ -7,8 +7,13 @@ definitions:
         _id:
           type: string
         author:
-          type: string
-          ref: '#/components/user'
+          type: object
+          properties:
+            _id:
+              type: string
+              ref: '#/components/user'
+            photo:
+              type: string
         authorRole:
           type: string
           enum:
@@ -46,8 +51,13 @@ definitions:
        _id:
           type: string
        author:
-          type: string
-          ref: '#/components/user'
+          type: object
+          properties:
+            _id:
+              type: string
+              ref: '#/components/user'
+            photo:
+              type: string
        authorRole:
           type: string
           enum:

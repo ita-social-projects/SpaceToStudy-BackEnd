@@ -7,11 +7,15 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const idValidation = require('~/middlewares/idValidation')
 const Course = require('~/models/course')
 const Lesson = require('~/models/lesson')
+const Attachment = require('~/models/attachment')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
 
-const body = [{ model: Lesson, idName: 'lessons' }]
+const body = [
+  { model: Lesson, idName: 'lessons' },
+  { model: Attachment, idName: 'attachment' }
+]
 const params = [{ model: Course, idName: 'id' }]
 
 router.use(authMiddleware)

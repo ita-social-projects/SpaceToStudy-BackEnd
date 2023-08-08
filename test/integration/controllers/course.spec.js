@@ -73,14 +73,8 @@ describe('Course controller', () => {
     it('should get all courses', async () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
-      const { title, description, attachments } = await Course.findById(testCourse._id)
-
       expect(response.statusCode).toBe(200)
-      expect({ title, description, attachments }).toMatchObject({
-        title: 'assembly',
-        description: 'you will learn some modern programming language for all your needs',
-        attachments: ['mocked-file-url']
-      })
+      expect(response.body).toEqual({ count: 1, items: [expect.objectContaining(testCourseData)] })
     })
 
     it('should throw UNAUTHORIZED', async () => {
@@ -102,7 +96,8 @@ describe('Course controller', () => {
       expect(testCourseResponse.body).toMatchObject({
         title: testCourseData.title,
         description: testCourseData.description,
-        attachments: ['mocked-file-url']
+        attachments: ['mocked-file-url'],
+        lessons: expect.any(Array)
       })
     })
 

@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb')
 const Offer = require('~/models/offer')
 
 const filterAllowedFields = require('~/utils/filterAllowedFields')
@@ -11,7 +12,7 @@ const offerService = {
     return response
   },
 
-  getOfferById: async (id) => {
+  getOfferById: async (id, userId) => {
     const offer = await Offer.findById(id)
       .populate([
         {
@@ -24,10 +25,48 @@ const offerService = {
       .lean()
       .exec()
 
+    const [chatLookup] = await Offer.aggregate([
+      {
+        $match: { _id: ObjectId(id) }
+      },
+      {
+        $lookup: {
+          from: 'chats',
+          let: { authorId: '$author', userId: ObjectId(userId) },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [{ $in: ['$$authorId', '$members.user'] }, { $in: ['$$userId', '$members.user'] }]
+                }
+              }
+            },
+            { $project: { _id: 1 } }
+          ],
+          as: 'chatId'
+        }
+      },
+      {
+        $addFields: {
+          chatId: {
+            $cond: {
+              if: { $gt: [{ $size: '$chatId' }, 0] },
+              then: { $arrayElemAt: ['$chatId._id', 0] },
+              else: null
+            }
+          }
+        }
+      }
+    ])
+
     if (offer.author.FAQ && offer.authorRole in offer.author.FAQ) {
       offer.author.FAQ = offer.author.FAQ[offer.authorRole]
     } else {
       delete offer.author.FAQ
+    }
+
+    if (chatLookup) {
+      offer.chatId = chatLookup.chatId
     }
 
     return offer

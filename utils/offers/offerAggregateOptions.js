@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
 
-const offerAggregateOptions = (query, params) => {
+const offerAggregateOptions = (query, params, user) => {
   const {
     authorRole,
     price,
@@ -18,6 +18,7 @@ const offerAggregateOptions = (query, params) => {
     limit = 5
   } = query
   const { categoryId, subjectId, id: authorId } = params
+  const { id: userId } = user
 
   const match = {}
 
@@ -159,6 +160,34 @@ const offerAggregateOptions = (query, params) => {
           }
         ],
         as: 'category'
+      }
+    },
+    {
+      $lookup: {
+        from: 'chats',
+        let: { authorId: { $arrayElemAt: ['$author._id', 0] }, userId: mongoose.Types.ObjectId(userId) },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [{ $in: ['$$authorId', '$members.user'] }, { $in: ['$$userId', '$members.user'] }]
+              }
+            }
+          },
+          { $project: { _id: 1 } }
+        ],
+        as: 'chatId'
+      }
+    },
+    {
+      $addFields: {
+        chatId: {
+          $cond: {
+            if: { $gt: [{ $size: '$chatId' }, 0] },
+            then: { $arrayElemAt: ['$chatId._id', 0] },
+            else: null
+          }
+        }
       }
     },
     {

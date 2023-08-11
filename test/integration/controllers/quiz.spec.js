@@ -41,7 +41,7 @@ const studentUserData = {
 }
 
 describe('Quiz controller', () => {
-  let app, server, accessToken, currentUser, studentAccessToken, testQuiz, testQuizBody
+  let app, server, accessToken, currentUser, studentAccessToken, testQuiz, testId
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -54,7 +54,7 @@ describe('Quiz controller', () => {
     currentUser = TokenService.validateAccessToken(accessToken)
 
     testQuiz = await app.post(endpointUrl).send(testQuizData).set('Authorization', `Bearer ${accessToken}`)
-    testQuizBody = testQuiz.body
+    testId = testQuiz.body._id
   })
 
   afterEach(async () => {
@@ -128,7 +128,7 @@ describe('Quiz controller', () => {
 
   describe(`GET ${endpointUrl}:id`, () => {
     it('should get quiz by id', async () => {
-      const response = await app.get(endpointUrl + testQuizBody._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + testId).set('Authorization', `Bearer ${accessToken}`)
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toMatchObject({

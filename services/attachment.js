@@ -1,5 +1,7 @@
 const Attachment = require('~/models/attachment')
 const { createForbiddenError } = require('~/utils/errorsHelper')
+const uploadService = require('./upload')
+const { ATTACHMENT } = require('~/consts/upload')
 
 const attachmentService = {
   getAttachments: async (match, sort, skip, limit) => {
@@ -7,6 +9,18 @@ const attachmentService = {
     const count = await Attachment.countDocuments(match)
 
     return { count, items }
+  },
+
+  createAttachments: async ({ author, files }) => {
+    return await Promise.all(
+      files.map(async (file) => {
+        const { originalname, buffer, size } = file
+
+        const link = await uploadService.uploadFile(originalname, buffer, ATTACHMENT)
+
+        return await Attachment.create({ author, fileName: originalname, link, size })
+      })
+    )
   },
 
   deleteAttachment: async (id, currentUser) => {

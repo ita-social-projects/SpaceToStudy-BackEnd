@@ -93,7 +93,10 @@ const userService = {
     }
 
     if (updateData.photo) {
-      const photoUrl = await uploadService.uploadFile(updateData.photo, USER)
+      const mainData = updateData.photo.src.split(',')[1]
+      const buffer = Buffer.from(mainData, 'base64')
+
+      const photoUrl = await uploadService.uploadFile(updateData.photo.name, buffer, USER)
       filteredUpdateData.photo = photoUrl
     }
 

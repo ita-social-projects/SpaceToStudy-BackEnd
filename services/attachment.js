@@ -11,14 +11,14 @@ const attachmentService = {
     return { count, items }
   },
 
-  createAttachments: async ({ author, files }) => {
+  createAttachments: async ({ author, files, description }) => {
     return await Promise.all(
       files.map(async (file) => {
         const { originalname, buffer, size } = file
 
         const link = await uploadService.uploadFile(originalname, buffer, ATTACHMENT)
 
-        return await Attachment.create({ author, fileName: originalname, link, size })
+        return await Attachment.create({ author, fileName: originalname, link, description, size })
       })
     )
   },

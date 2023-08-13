@@ -19,7 +19,7 @@ router.use(restrictTo(TUTOR))
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(attachmentController.getAttachments))
-router.post('/', upload.array('files'), asyncWrapper(attachmentController.createAttachment))
+router.post('/', upload.array('files'), asyncWrapper(attachmentController.createAttachments))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(attachmentController.deleteAttachment))
 
 module.exports = router

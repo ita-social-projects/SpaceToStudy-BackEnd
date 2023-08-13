@@ -18,11 +18,12 @@ const getAttachments = async (req, res) => {
 
 const createAttachments = async (req, res) => {
   const { id: author } = req.user
+  const { description } = req.body
   const files = req.files
 
-  const attachments = await attachmentService.createAttachments({ author, files })
+  const attachments = await attachmentService.createAttachments({ author, files, description })
 
-  res.status(200).json(attachments)
+  res.status(201).json(attachments)
 }
 
 const deleteAttachment = async (req, res) => {

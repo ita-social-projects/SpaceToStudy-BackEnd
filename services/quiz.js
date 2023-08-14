@@ -43,6 +43,19 @@ const quizService = {
     }
 
     await quiz.save()
+  },
+
+  deleteQuiz: async (id, currentUser) => {
+    const { id: currentUserId } = currentUser
+
+    const quiz = await Quiz.findById(id)
+    const quizAuthor = quiz.author.toString()
+
+    if (quizAuthor !== currentUserId) {
+      throw createForbiddenError()
+    }
+
+    await Quiz.findByIdAndRemove(id).exec()
   }
 }
 

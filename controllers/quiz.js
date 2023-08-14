@@ -41,9 +41,19 @@ const updateQuiz = async (req, res) => {
   res.status(204).end()
 }
 
+const deleteQuiz = async (req, res) => {
+  const { id } = req.params
+  const currentUser = req.user
+
+  await quizService.deleteQuiz(id, currentUser)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getQuizzes,
   getQuizById,
   createQuiz,
-  updateQuiz
+  updateQuiz,
+  deleteQuiz
 }

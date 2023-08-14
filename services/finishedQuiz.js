@@ -1,9 +1,15 @@
 const FinishedQuiz = require('~/models/finishedQuiz')
+const Quiz = require('~/models/quiz')
 
 const finishedQuizService = {
-  getFinishedQuizzes: async (skip = 0, limit = 10) => {
-    const items = await FinishedQuiz.find().skip(skip).limit(limit).sort({ createdAt: -1 }).lean().exec()
-    const count = await FinishedQuiz.countDocuments()
+  getFinishedQuizzes: async (author, skip = 0, limit = 10) => {
+    const authorQuizzes = await Quiz.distinct('_id', { author })
+
+    const match = { quiz: { $in: authorQuizzes } }
+
+    const items = await FinishedQuiz.find(match).skip(skip).limit(limit).sort({ createdAt: -1 }).lean().exec()
+
+    const count = await FinishedQuiz.countDocuments(match)
 
     return { items, count }
   }

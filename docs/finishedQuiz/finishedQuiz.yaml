@@ -6,7 +6,7 @@ paths:
       tags:
         - Finished quizzes
       summary: Find all finished quizzes.
-      description: Finds and returns an array with a list of all finishedQuizzes.
+      description: Finds and returns an array with a list of all user finishedQuizzes.
       produces:
         - application/json
       parameters:
@@ -26,7 +26,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/finishedQuizBody'
+                $ref: '#/definitions/finishedQuizzes'
               example:
                 items:
                   - _id: 64ca5914b57f2442403394a5

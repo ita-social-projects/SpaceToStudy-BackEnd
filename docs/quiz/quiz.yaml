@@ -150,13 +150,13 @@ paths:
       security:
         - bearerAuth: []
       tags:
-        - Quiz
+        - Quizzes
       summary: Find quiz by id.
       description: Finds and returns quiz by id.
       produces:
         - application/json
       parameters:
-        - in: query
+        - in: id
           name: id
           required: true
           description: ID of the quiz that needs to be fetched
@@ -169,16 +169,16 @@ paths:
               schema:
                 $ref: '#/definitions/quizBody'
               example:
-                - _id: 64ca5914b57f2442403394a5
-                  title: IT
-                  item:
-                    - question: Is it the best programming language?
-                      answers:
-                        - text: Yes,
-                          isCorrect: false
-                        - text: Yes, of course,
-                          isCorrect: true
-                  author: '6477007a6fa4d05e1a800ce5'
+                _id: 64ca5914b57f2442403394a5
+                title: IT
+                items:
+                  - question: Is it the best programming language?
+                    answers:
+                      - text: Yes,
+                        isCorrect: false
+                      - text: Yes, of course,
+                        isCorrect: true
+                author: '6477007a6fa4d05e1a800ce5'
         401:
           description: Unauthorized
           content:

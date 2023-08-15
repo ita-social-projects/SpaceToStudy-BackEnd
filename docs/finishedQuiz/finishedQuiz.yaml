@@ -1,0 +1,80 @@
+paths:
+  /finished-quizzes:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Finished quizzes
+      summary: Find all finished quizzes.
+      description: Finds and returns an array with a list of all user finishedQuizzes.
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: skip
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: string
+          required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/finishedQuizzes'
+              example:
+                items:
+                  - _id: 64ca5914b57f2442403394a5
+                    quiz: 64cf82cb290732a7973f1e09
+                    grade: 100
+                    results:
+                      - question: Is it the best programming language?
+                        answers:
+                          - text: Yes,
+                            isCorrect: false
+                            isChosen: true
+                          - text: Yes, of course,
+                            isCorrect: true
+                            isChosen: false
+                    createdAt: 2023-08-06T11:30:06.747Z
+                    updatedAt: 2023-08-06T11:30:06.747Z
+                  - _id: 64ca5932b57f2442403394a9
+                    quiz: 64cf82cb290732a7973f1e06
+                    grade: 100
+                    results:
+                      - question: How are you going?
+                        answers:
+                          - text: Fine,
+                            isCorrect: false
+                            isChosen: false
+                          - text: Bad,
+                            isCorrect: true
+                            isChosen: true
+                    createdAt: 2023-08-06T11:30:06.747Z
+                    updatedAt: 2023-08-06T11:30:06.747Z
+                count: 2
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.

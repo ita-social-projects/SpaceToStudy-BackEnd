@@ -16,7 +16,8 @@ router.use(authMiddleware)
 
 router.get('/:id', isEntityValid({ params }), asyncWrapper(quizController.getQuizById))
 router.use(restrictTo(TUTOR))
-
+router.get('/', asyncWrapper(quizController.getQuizzes))
+router.post('/', asyncWrapper(quizController.createQuiz))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(quizController.deleteQuiz))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(quizController.updateQuiz))
 

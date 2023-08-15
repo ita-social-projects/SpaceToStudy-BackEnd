@@ -46,6 +46,9 @@ definitions:
         category:
           type: string
           ref: '#components/category'
+        chatId:
+          type: string
+          ref: '#/components/chat'
         status:
           type: string
           enum:
@@ -167,6 +170,9 @@ definitions:
       category:
         type: string
         ref: '#components/category'
+      chatId:
+        type: string
+        ref: '#/components/chat'
       status:
         type: string
         enum:

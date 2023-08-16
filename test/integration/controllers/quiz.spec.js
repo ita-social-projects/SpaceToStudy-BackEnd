@@ -1,12 +1,14 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
+const Quiz = require('~/models/quiz')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
 
+const nonExistingQuizId = '64a33e71eea95284f397a6e4'
 const endpointUrl = '/quizzes/'
 
 const testQuizData = {
@@ -122,6 +124,33 @@ describe('Quiz controller', () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
 
       expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`DELETE ${endpointUrl}:id`, () => {
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .delete(endpointUrl + testQuiz.body._id)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+    it('should delete quiz by ID', async () => {
+      const response = await app.delete(endpointUrl + testQuiz.body._id).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.delete(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw NOT_FOUND', async () => {
+      const response = await app.delete(endpointUrl + nonExistingQuizId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Quiz.modelName]), response)
     })
   })
 })

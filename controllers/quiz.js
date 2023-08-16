@@ -23,7 +23,17 @@ const createQuiz = async (req, res) => {
   res.status(201).send(newQuiz)
 }
 
+const deleteQuiz = async (req, res) => {
+  const { id } = req.params
+  const { id: currentUserId } = req.user
+
+  await quizService.deleteQuiz(id, currentUserId)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getQuizzes,
-  createQuiz
+  createQuiz,
+  deleteQuiz
 }

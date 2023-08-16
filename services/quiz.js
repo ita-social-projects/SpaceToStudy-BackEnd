@@ -1,4 +1,5 @@
 const Quiz = require('~/models/quiz')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const quizService = {
   getQuiz: async (match, sort, skip = 0, limit = 10) => {
@@ -16,6 +17,17 @@ const quizService = {
       author,
       items
     })
+  },
+
+  deleteQuiz: async (id, currentUserId) => {
+    const quiz = await Quiz.findById(id)
+    const author = quiz.author.toString()
+
+    if (author !== currentUserId) {
+      throw createForbiddenError()
+    }
+
+    await Quiz.findByIdAndRemove(id).exec()
   }
 }
 

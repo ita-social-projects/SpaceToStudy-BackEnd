@@ -14,7 +14,7 @@ const createFinishedQuiz = async (req, res) => {
 
   const newFinishedQuiz = await finishedQuizService.createFinishedQuiz(data)
 
-  res.status(201).send(newFinishedQuiz)
+  res.status(201).json(newFinishedQuiz)
 }
 
 module.exports = {

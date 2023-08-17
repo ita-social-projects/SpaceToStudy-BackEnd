@@ -12,9 +12,9 @@ definitions:
         status:
           type: string
           enum:
-            - progress
-            - finished
-            - assigned
+            - inProgress
+            - onHold
+            - completed
         createdAt:
           type: string
           format: date-time
@@ -30,9 +30,9 @@ definitions:
       status:
         type: string
         enum:
-          - progress
-          - finished
-          - assigned
+          - inProgress
+          - onHold
+          - completed
   finishedLesson:
     type: object
     properties:
@@ -44,9 +44,9 @@ definitions:
       status:
         type: string
         enum:
-          - progress
-          - finished
-          - assigned
+          - inProgress
+          - onHold
+          - completed
       createdAt:
         type: string
         format: date-time

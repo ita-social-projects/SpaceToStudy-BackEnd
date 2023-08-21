@@ -8,6 +8,10 @@ const quizService = {
     return { items, count }
   },
 
+  getQuizById: async (id) => {
+    return await Quiz.findById(id).lean().exec()
+  },
+
   createQuiz: async (author, data) => {
     const { title, items } = data
 

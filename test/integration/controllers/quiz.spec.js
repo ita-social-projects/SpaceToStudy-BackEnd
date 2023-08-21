@@ -41,7 +41,7 @@ const studentUserData = {
 }
 
 describe('Quiz controller', () => {
-  let app, server, accessToken, currentUser, studentAccessToken, testQuiz
+  let app, server, accessToken, currentUser, studentAccessToken, testQuiz, testQuizId
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -54,6 +54,7 @@ describe('Quiz controller', () => {
     currentUser = TokenService.validateAccessToken(accessToken)
 
     testQuiz = await app.post(endpointUrl).send(testQuizData).set('Authorization', `Bearer ${accessToken}`)
+    testQuizId = testQuiz.body._id
   })
 
   afterEach(async () => {
@@ -109,6 +110,33 @@ describe('Quiz controller', () => {
           }
         ],
         count: 1
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}:id`, () => {
+    it('should get quiz by id', async () => {
+      const response = await app.get(endpointUrl + testQuizId).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toMatchObject({
+        _id: expect.any(String),
+        author: currentUser.id,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        ...testQuizData
       })
     })
 

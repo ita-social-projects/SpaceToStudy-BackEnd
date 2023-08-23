@@ -1,13 +1,17 @@
 const attachmentService = require('~/services/attachment')
+
 const getMatchOptions = require('~/utils/getMatchOptions')
+const getSortOptions = require('~/utils/getSortOptions')
+const getRegex = require('~/utils/getRegex')
 
 const getAttachments = async (req, res) => {
   const { id: author } = req.user
   const { fileName, sort, skip, limit } = req.query
 
-  const match = getMatchOptions({ author, fileName })
+  const match = getMatchOptions({ author, fileName: getRegex(fileName) })
+  const sortOptions = getSortOptions(sort)
 
-  const attachments = await attachmentService.getAttachments(match, sort, parseInt(skip), parseInt(limit))
+  const attachments = await attachmentService.getAttachments(match, sortOptions, parseInt(skip), parseInt(limit))
 
   res.status(200).json(attachments)
 }

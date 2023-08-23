@@ -13,8 +13,8 @@ definitions:
           type: string
           enum:
             - inProgress
-            - onHold
-            - completed
+            - assigned
+            - finished
         createdAt:
           type: string
           format: date-time
@@ -31,8 +31,8 @@ definitions:
         type: string
         enum:
           - inProgress
-          - onHold
-          - completed
+          - assigned
+          - finished
   finishedLesson:
     type: object
     properties:
@@ -45,8 +45,8 @@ definitions:
         type: string
         enum:
           - inProgress
-          - onHold
-          - completed
+          - assigned
+          - finished
       createdAt:
         type: string
         format: date-time

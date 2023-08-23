@@ -23,7 +23,7 @@ const enums = {
   PARAMS_ENUM: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS_ENUM: ['active', 'draft', 'closed'],
   NOTIFICATION_TYPE_ENUM: ['new', 'requested', 'active', 'declined', 'updated', 'closed', 'deleted'],
-  LESSON_STATUS_ENUM: ['inProgress', 'onHold', 'completed']
+  LESSON_STATUS_ENUM: ['inProgress', 'assigned', 'finished']
 }
 
 module.exports = {

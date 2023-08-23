@@ -12,6 +12,16 @@ const finishedQuizService = {
     const count = await FinishedQuiz.countDocuments(match)
 
     return { items, count }
+  },
+
+  createFinishedQuiz: async (data) => {
+    const { quiz, grade, results } = data
+
+    return await FinishedQuiz.create({
+      quiz,
+      grade,
+      results
+    })
   }
 }
 

@@ -4,7 +4,8 @@ const {
   FIELD_CANNOT_BE_EMPTY,
   FIELD_CANNOT_BE_SHORTER,
   FIELD_CANNOT_BE_LONGER,
-  VALUE_MUST_BE_ABOVE
+  VALUE_MUST_BE_ABOVE,
+  VALUE_MUST_BE_BELOW
 } = require('~/consts/errors')
 
 const finishedQuizSchema = new Schema(
@@ -17,7 +18,8 @@ const finishedQuizSchema = new Schema(
     grade: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('grade')],
-      min: [0, VALUE_MUST_BE_ABOVE('grade', 0)]
+      min: [0, VALUE_MUST_BE_ABOVE('grade', 0)],
+      max: [100, VALUE_MUST_BE_BELOW('grade', 100)]
     },
     results: [
       {

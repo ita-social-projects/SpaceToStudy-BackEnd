@@ -1,6 +1,9 @@
 const { Schema, model } = require('mongoose')
 const { LESSON, FINISHED_LESSON } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+const {
+  enums: { LESSON_STATUS_ENUM }
+} = require('~/consts/validation')
 
 const finishedLessonSchema = new Schema(
   {

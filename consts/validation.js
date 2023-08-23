@@ -22,7 +22,8 @@ const enums = {
   COOPERATION_STATUS_ENUM: ['pending', 'active', 'declined', 'closed'],
   PARAMS_ENUM: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS_ENUM: ['active', 'draft', 'closed'],
-  NOTIFICATION_TYPE_ENUM: ['new', 'requested', 'active', 'declined', 'updated', 'closed', 'deleted']
+  NOTIFICATION_TYPE_ENUM: ['new', 'requested', 'active', 'declined', 'updated', 'closed', 'deleted'],
+  LESSON_STATUS_ENUM: ['inProgress', 'onHold', 'completed']
 }
 
 module.exports = {

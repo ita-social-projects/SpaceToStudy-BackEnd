@@ -33,7 +33,7 @@ const cooperationService = {
 
   updateCooperation: async (id, currentUser, updateData) => {
     const { id: currentUserId, role: currentUserRole } = currentUser
-    const { price, status, availableQuizzes, finishedQuizzes } = updateData
+    const { price, status, availableQuizzes, finishedQuizzes, availableLessons, finishedLessons } = updateData
 
     if (price && status) {
       throw createError(409, VALIDATION_ERROR('You can change only either the status or the price in one operation'))
@@ -69,6 +69,15 @@ const cooperationService = {
     if (finishedQuizzes) {
       cooperation.finishedQuizzes = mergeArraysUniqueValues(cooperation.finishedQuizzes, finishedQuizzes)
       cooperation.availableQuizzes = removeArraysUniqueValues(cooperation.availableQuizzes, cooperation.finishedQuizzes)
+      await cooperation.save()
+    }
+    if (availableLessons) {
+      cooperation.availableLessons = mergeArraysUniqueValues(cooperation.availableLessons, availableLessons)
+      await cooperation.save()
+    }
+    if (finishedLessons) {
+      cooperation.finishedLessons = mergeArraysUniqueValues(cooperation.finishedLessons, finishedLessons)
+      cooperation.availableLessons = removeArraysUniqueValues(cooperation.availableLessons, cooperation.finishedLessons)
       await cooperation.save()
     }
   }

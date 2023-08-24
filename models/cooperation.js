@@ -7,7 +7,7 @@ const {
   FIELD_MUST_BE_SELECTED,
   VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/models')
+const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ, LESSON, FINISHED_LESSON } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
@@ -88,6 +88,14 @@ const cooperationSchema = new Schema(
     finishedQuizzes: {
       type: [Schema.Types.ObjectId],
       ref: FINISHED_QUIZ
+    },
+    availableLessons: {
+      type: [Schema.Types.ObjectId],
+      ref: LESSON
+    },
+    finishedLessons: {
+      type: [Schema.Types.ObjectId],
+      ref: FINISHED_LESSON
     }
   },
   {

@@ -13,18 +13,12 @@ const attachmentSchema = new Schema(
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('file name')],
       minLength: [5, FIELD_CANNOT_BE_SHORTER('file name', 5)],
-      maxLength: [100, FIELD_CANNOT_BE_LONGER('file name', 100)],
+      maxLength: [55, FIELD_CANNOT_BE_LONGER('file name', 55)],
       trim: true
     },
     link: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('link')],
-      trim: true
-    },
-    description: {
-      type: String,
-      minLength: [30, FIELD_CANNOT_BE_SHORTER('description', 30)],
-      maxLength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
       trim: true
     },
     size: {

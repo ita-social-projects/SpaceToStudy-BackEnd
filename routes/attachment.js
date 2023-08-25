@@ -18,6 +18,7 @@ router.param('id', idValidation)
 
 router.get('/', asyncWrapper(attachmentController.getAttachments))
 router.post('/', upload.array('files'), asyncWrapper(attachmentController.createAttachments))
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(attachmentController.updateAttachment))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(attachmentController.deleteAttachment))
 
 module.exports = router

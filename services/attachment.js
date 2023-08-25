@@ -1,6 +1,6 @@
 const Attachment = require('~/models/attachment')
 const { createForbiddenError } = require('~/utils/errorsHelper')
-const uploadService = require('./upload')
+const uploadService = require('~/services/upload')
 const { ATTACHMENT } = require('~/consts/upload')
 
 const attachmentService = {

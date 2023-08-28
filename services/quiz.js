@@ -1,4 +1,5 @@
 const Quiz = require('~/models/quiz')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const quizService = {
   getQuiz: async (match, sort, skip = 0, limit = 10) => {
@@ -20,6 +21,21 @@ const quizService = {
       author,
       items
     })
+  },
+
+  updateQuiz: async (id, currentUserId, updateData) => {
+    const quiz = await Quiz.findById(id).exec()
+
+    const author = quiz.author.toString()
+    if (currentUserId !== author) {
+      throw createForbiddenError()
+    }
+
+    for (let field in updateData) {
+      quiz[field] = updateData[field]
+    }
+
+    await quiz.save()
   }
 }
 

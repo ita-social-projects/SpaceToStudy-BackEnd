@@ -44,11 +44,9 @@ const quizService = {
 
     await quiz.save()
   },
-
-  deleteQuiz: async (id, currentUser) => {
-    const { id: currentUserId } = currentUser
-
+  deleteQuiz: async (id, currentUserId) => {
     const quiz = await Quiz.findById(id)
+
     const quizAuthor = quiz.author.toString()
 
     if (quizAuthor !== currentUserId) {

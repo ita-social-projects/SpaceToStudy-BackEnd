@@ -1,10 +1,34 @@
 const Message = require('~/models/message')
 const Chat = require('~/models/chat')
-const { createForbiddenError } = require('~/utils/errorsHelper')
+const { createForbiddenError, createBadRequestError, createNotFoundError, createError } = require('~/utils/errorsHelper')
+const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const messageService = {
   sendMessage: async (author, authorRole, data) => {
-    const { text, chat } = data
+    const { text, member, chat, memberRole } = data
+
+    if(!chat && (!member || !memberRole) ) throw createBadRequestError()
+
+    if (!chat) {
+      const newChat = await Chat.create({
+        latestMessage: text,
+        members: [
+          { user: author, role: authorRole },
+          { user: member, role: memberRole }
+        ]
+      })
+
+      return await Message.create({
+        author,
+        authorRole,
+        text,
+        chat: newChat._id
+      })
+    }
+
+    const existingChat = await Chat.findById(chat)
+
+    if(!existingChat) throw createError(404, DOCUMENT_NOT_FOUND(Chat.modelName))
 
     return await Message.create({
       author,

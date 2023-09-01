@@ -62,7 +62,7 @@ const lessonService = {
   },
 
   getLessonById: async (id) => {
-    return await Lesson.findById(id).lean().exec()
+    return await Lesson.findById(id).populate('attachments').lean().exec()
   }
 }
 

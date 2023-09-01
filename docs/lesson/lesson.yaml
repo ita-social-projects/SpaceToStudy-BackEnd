@@ -150,9 +150,8 @@ paths:
                 attachments:
                   - _id: 63ec1cd51e9d781cdb6f4b14
                     author: 648afee884936e09a37deaaa
-                    fileName: EnglishB2Level
-                    link: 'https://english-b2-test.com'
-                    description: This is basic B2 level English test.
+                    fileName: EnglishB2Level.pdf
+                    link: 3302931_EnglishB2Level.pdf
                     size: 230
                     createdAt: 2023-02-14T23:44:21.334Z
                     updatedAt: 2023-02-14T23:44:21.334Z

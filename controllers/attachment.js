@@ -16,6 +16,16 @@ const getAttachments = async (req, res) => {
   res.status(200).json(attachments)
 }
 
+const createAttachments = async (req, res) => {
+  const { id: author } = req.user
+  const { description } = req.body
+  const files = req.files
+
+  const attachments = await attachmentService.createAttachments({ author, files, description })
+
+  res.status(201).json(attachments)
+}
+
 const deleteAttachment = async (req, res) => {
   const { id } = req.params
   const { id: currentUser } = req.user
@@ -27,5 +37,6 @@ const deleteAttachment = async (req, res) => {
 
 module.exports = {
   getAttachments,
+  createAttachments,
   deleteAttachment
 }

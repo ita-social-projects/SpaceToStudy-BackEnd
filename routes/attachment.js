@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const Attachment = require('~/models/attachment')
+const upload = require('~/middlewares/multer')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const idValidation = require('~/middlewares/idValidation')
 const isEntityValid = require('~/middlewares/entityValidation')
@@ -16,6 +17,7 @@ router.use(restrictTo(TUTOR))
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(attachmentController.getAttachments))
+router.post('/', upload.array('files'), asyncWrapper(attachmentController.createAttachments))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(attachmentController.deleteAttachment))
 
 module.exports = router

@@ -1,0 +1,58 @@
+definitions:
+  questions:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        title:
+          type: string
+        answers:
+          type: array
+          items:
+            type: object
+            text: string
+            isCorrect: boolean
+        author:
+          type: string
+          ref: '#/components/user'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  questionsBody:
+    type: object
+    properties:
+      title:
+        type: string
+        answers:
+          type: array
+          items:
+            type: object
+            text: string
+            isCorrect: boolean
+  question:
+    type: object
+    properties:
+      _id:
+        type: string
+      title:
+        type: string
+      answers:
+        type: array
+        items:
+          type: object
+          text: string
+          isCorrect: boolean
+      author:
+        type: string
+        ref: '#/components/user'
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

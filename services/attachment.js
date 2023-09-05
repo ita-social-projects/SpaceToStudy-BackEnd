@@ -37,7 +37,12 @@ const attachmentService = {
 
     if (fileName) {
       const [fileExtension] = attachment.fileName.split('.').reverse()
-      attachment.fileName = fileName + `.${fileExtension}`
+      const newFileName = `${fileName}.${fileExtension}`
+
+      const newLink = await uploadService.updateFile(attachment.link, newFileName, ATTACHMENT)
+
+      attachment.fileName = newFileName
+      attachment.link = newLink
     }
 
     await attachment.validate()

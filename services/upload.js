@@ -28,6 +28,34 @@ const uploadService = {
     })
   },
 
+  updateFile: async (name, newName, containerName) => {
+    blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
+
+    const blobUrl = `${AZURE_HOST}/${containerName}/${name}`
+    const newBlobName = `${Date.now()}-${newName}`
+
+    return new Promise((resolve, reject) => {
+      blobService.startCopyBlob(blobUrl, containerName, newBlobName, (error) => {
+        if (error) {
+          reject(error)
+        }
+
+        blobService.getBlobProperties(containerName, newBlobName, (err, properties) => {
+          if (err) {
+            reject(err)
+          }
+
+          if (properties.copy.status !== 'success') {
+            reject(name)
+          }
+
+          uploadService.deleteFile(name, containerName)
+          resolve(newBlobName)
+        })
+      })
+    })
+  },
+
   deleteFile: (fileName, containerName) => {
     blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
 

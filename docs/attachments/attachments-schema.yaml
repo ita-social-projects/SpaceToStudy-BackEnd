@@ -10,8 +10,6 @@ definitions:
           type: string
         link:
           type: string
-        description:
-          type: string
         size:
           type: number
         createdAt:
@@ -25,12 +23,6 @@ definitions:
     properties:
       fileName:
         type: string
-      link:
-        type: string
-      description:
-        type: string
-      size:
-        type: number
   attachment:
     type: object
     properties:
@@ -39,8 +31,6 @@ definitions:
       fileName:
         type: string
       link:
-        type: string
-      description:
         type: string
       size:
         type: number

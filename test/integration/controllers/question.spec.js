@@ -1,6 +1,6 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED } = require('~/consts/errors')
+const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
 const {
@@ -24,9 +24,20 @@ const testQuestionData = {
   ]
 }
 
+const studentUserData = {
+  role: 'student',
+  firstName: 'Yamada',
+  lastName: 'Kizen',
+  email: 'yamakai@gmail.com',
+  password: 'ninpopass',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: 'student'
+}
 
 describe('Question controller', () => {
-  let app, server, accessToken, currentUser, testQuestion
+  let app, server, accessToken, currentUser, studentAccessToken, testQuestion
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -38,6 +49,10 @@ describe('Question controller', () => {
     currentUser = TokenService.validateAccessToken(accessToken)
 
     testQuestion = await Question.create({ author: currentUser.id, ...testQuestionData })
+
+    studentAccessToken = await testUserAuthentication(app, studentUserData)
+
+    testQuestion = await app.post(endpointUrl).send(testQuestionData).set('Authorization', `Bearer ${accessToken}`)
   })
 
   afterEach(async () => {
@@ -66,6 +81,34 @@ describe('Question controller', () => {
       const response = await app.get(endpointUrl)
 
       expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`POST ${endpointUrl}`, () => {
+    it('should create a new quiz', async () => {
+      expect(testQuestion.statusCode).toBe(201)
+      expect(testQuestion._body).toMatchObject({
+        _id: expect.any(String),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        author: currentUser.id,
+        ...testQuestionData
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.post(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .post(endpointUrl)
+        .send(testQuestionData)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
     })
   })
 })

@@ -28,6 +28,10 @@ const testQuizData = {
   ]
 }
 
+const updateData = {
+  title: 'WebAssembly'
+}
+
 const studentUserData = {
   role: 'student',
   firstName: 'Yamada',
@@ -148,6 +152,37 @@ describe('Quiz controller', () => {
 
     it('should throw FORBIDDEN', async () => {
       const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}:id`, () => {
+    it('should update a quiz', async () => {
+      await app
+        .patch(endpointUrl + testQuizId)
+        .send(updateData)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      const quizResponse = await app.get(endpointUrl + testQuizId).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(quizResponse.body).toMatchObject({
+        ...testQuizData,
+        ...updateData
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.patch(endpointUrl + testQuizId).send(updateData)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .patch(endpointUrl + testQuizId)
+        .send(updateData)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
 
       expectError(403, FORBIDDEN, response)
     })

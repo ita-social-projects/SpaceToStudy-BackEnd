@@ -31,8 +31,19 @@ const createQuiz = async (req, res) => {
   res.status(201).send(newQuiz)
 }
 
+const updateQuiz = async (req, res) => {
+  const { id } = req.params
+  const { id: currentUserId } = req.user
+  const updateData = req.body
+
+  await quizService.updateQuiz(id, currentUserId, updateData)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getQuizzes,
   getQuizById,
-  createQuiz
+  createQuiz,
+  updateQuiz
 }

@@ -85,7 +85,7 @@ describe('Question controller', () => {
   })
 
   describe(`POST ${endpointUrl}`, () => {
-    it('should create a new quiz', async () => {
+    it('should create a new question', async () => {
       expect(testQuestion.statusCode).toBe(201)
       expect(testQuestion._body).toMatchObject({
         _id: expect.any(String),

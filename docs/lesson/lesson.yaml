@@ -151,7 +151,14 @@ paths:
                 description: Some information about this lesson
                 content: <h1>Title</h1>
                 author: 64a33e71eea95284f397a6ee
-                attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+                attachments:
+                  - _id: 63ec1cd51e9d781cdb6f4b14
+                    author: 648afee884936e09a37deaaa
+                    fileName: EnglishB2Level.pdf
+                    link: 3302931_EnglishB2Level.pdf
+                    size: 230
+                    createdAt: 2023-02-14T23:44:21.334Z
+                    updatedAt: 2023-02-14T23:44:21.334Z
                 _id: 93ec1cd51e9d781cdb6f5b56
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

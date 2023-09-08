@@ -13,16 +13,16 @@ const getQuestions = async (req, res) => {
   res.status(200).json(questions)
 }
 
-const createCourse = async (req, res) => {
+const createQuestion = async (req, res) => {
   const { id: author } = req.user
   const data = req.body
 
-  const newCourse = await questionService.createQuestion(author, data)
+  const newQuestion = await questionService.createQuestion(author, data)
 
-  res.status(201).json(newCourse)
+  res.status(201).json(newQuestion)
 }
 
 module.exports = {
   getQuestions,
-  createCourse
+  createQuestion
 }

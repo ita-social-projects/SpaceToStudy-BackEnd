@@ -14,6 +14,6 @@ const body = [{ model: Question, idName: 'question' }]
 router.use(authMiddleware)
 
 router.use(restrictTo(TUTOR))
-router.post('/', isEntityValid({ body }), asyncWrapper(questionController.createCourse))
+router.post('/', isEntityValid({ body }), asyncWrapper(questionController.createQuestion))
 
 module.exports = router

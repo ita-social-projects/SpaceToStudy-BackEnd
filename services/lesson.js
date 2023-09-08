@@ -11,7 +11,12 @@ const lessonService = {
   },
 
   getLessons: async (match, sort, skip, limit) => {
-    const items = await Lesson.find(match).sort(sort).skip(skip).limit(limit).exec()
+    const items = await Lesson.find(match)
+      .collation({ locale: 'en', strength: 1 })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec()
     const count = await Lesson.countDocuments(match)
 
     return {

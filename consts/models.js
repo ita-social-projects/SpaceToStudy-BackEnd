@@ -15,7 +15,8 @@ const refs = {
   COURSE: 'Course',
   QUIZ: 'Quiz',
   FINISHED_QUIZ: 'FinishedQuiz',
-  ATTACHMENT: 'Attachment'
+  ATTACHMENT: 'Attachment',
+  QUESTION: 'Question'
 }
 
 module.exports = refs

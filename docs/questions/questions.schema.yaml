@@ -19,6 +19,9 @@ definitions:
                 type: string
               isCorrect:
                 type: boolean
+        category:
+          type: string
+          ref: '#/definitions/resourcesCategory'
         author:
           type: string
           ref: '#/components/user'
@@ -44,6 +47,9 @@ definitions:
               type: string
             isCorrect:
               type: boolean
+      category:
+        type: string
+        ref: '#/definitions/resourcesCategory'
   question:
     type: object
     properties:
@@ -62,6 +68,9 @@ definitions:
               type: string
             isCorrect:
               type: boolean
+      category:
+        type: string
+        ref: '#/definitions/resourcesCategory'
       author:
         type: string
         ref: '#/components/user'

@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const { QUESTION, USER } = require('~/consts/models')
+const { QUESTION, RESOURCES_CATEGORY, USER } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER } = require('~/consts/errors')
 
 const questionSchema = new Schema(
@@ -32,6 +32,11 @@ const questionSchema = new Schema(
         }
       }
     ],
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: RESOURCES_CATEGORY,
+      required: [true, FIELD_CANNOT_BE_EMPTY('category')]
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: USER,

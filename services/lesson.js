@@ -5,13 +5,18 @@ const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const lessonService = {
   createLesson: async (author, data) => {
-    const { title, description, attachments } = data
+    const { title, description, attachments, content } = data
 
-    return await Lesson.create({ author, title, description, attachments })
+    return await Lesson.create({ author, title, description, attachments, content })
   },
 
   getLessons: async (match, sort, skip, limit) => {
-    const items = await Lesson.find(match).sort(sort).skip(skip).limit(limit).exec()
+    const items = await Lesson.find(match)
+      .collation({ locale: 'en', strength: 1 })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec()
     const count = await Lesson.countDocuments(match)
 
     return {
@@ -62,7 +67,7 @@ const lessonService = {
   },
 
   getLessonById: async (id) => {
-    return await Lesson.findById(id).lean().exec()
+    return await Lesson.findById(id).populate('attachments').lean().exec()
   }
 }
 

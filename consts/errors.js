@@ -56,6 +56,10 @@ const errors = {
     code: 'FORBIDDEN',
     message: 'You do not have permission to perform this action.'
   },
+  BAD_REQUEST: {
+    code: 'BAD_REQUEST',
+    message: 'The request could not be processed due to invalid or missing parameters.'
+  },
   BAD_CONFIRM_TOKEN: {
     code: 'BAD_CONFIRM_TOKEN',
     message: 'The confirm token is either invalid or has expired.'

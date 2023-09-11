@@ -1,8 +1,15 @@
 const Quiz = require('~/models/quiz')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const quizService = {
   getQuiz: async (match, sort, skip = 0, limit = 10) => {
-    const items = await Quiz.find(match).skip(skip).limit(limit).sort(sort).lean().exec()
+    const items = await Quiz.find(match)
+      .collation({ locale: 'en', strength: 1 })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .lean()
+      .exec()
     const count = await Quiz.countDocuments(match)
 
     return { items, count }
@@ -20,6 +27,21 @@ const quizService = {
       author,
       items
     })
+  },
+
+  updateQuiz: async (id, currentUserId, updateData) => {
+    const quiz = await Quiz.findById(id).exec()
+
+    const author = quiz.author.toString()
+    if (currentUserId !== author) {
+      throw createForbiddenError()
+    }
+
+    for (let field in updateData) {
+      quiz[field] = updateData[field]
+    }
+
+    await quiz.save()
   }
 }
 

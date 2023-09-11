@@ -8,12 +8,17 @@ definitions:
           type: string
         title:
           type: string
+        text:
+          type: string
         answers:
           type: array
           items:
             type: object
-            text: string
-            isCorrect: boolean
+            properties:
+              text:
+                type: string
+              isCorrect:
+                type: boolean
         author:
           type: string
           ref: '#/components/user'
@@ -28,12 +33,17 @@ definitions:
     properties:
       title:
         type: string
-        answers:
-          type: array
-          items:
-            type: object
-            text: string
-            isCorrect: boolean
+      text:
+        type: string
+      answers:
+        type: array
+        items:
+          type: object
+          properties:
+            text:
+              type: string
+            isCorrect:
+              type: boolean
   question:
     type: object
     properties:
@@ -41,12 +51,17 @@ definitions:
         type: string
       title:
         type: string
+      text:
+        type: string
       answers:
         type: array
         items:
           type: object
-          text: string
-          isCorrect: boolean
+          properties:
+            text:
+              type: string
+            isCorrect:
+              type: boolean
       author:
         type: string
         ref: '#/components/user'

@@ -21,7 +21,8 @@ const testQuestionData = {
       text: 'Yes, of course',
       isCorrect: false
     }
-  ]
+  ],
+  type: 'multipleChoice'
 }
 
 const studentUserData = {

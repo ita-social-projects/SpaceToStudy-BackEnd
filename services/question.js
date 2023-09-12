@@ -16,11 +16,12 @@ const questionService = {
   },
 
   createQuestion: async (author, data) => {
-    const { title, answers } = data
+    const { title, answers, type } = data
 
     return await Question.create({
       title,
       answers,
+      type,
       author
     })
   }

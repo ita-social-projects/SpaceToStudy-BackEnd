@@ -22,6 +22,7 @@ paths:
                   isCorrect: true
                 - text: Second answer
                   isCorrect: false
+              type: multipleChoice
       responses:
         '201':
           description: Created
@@ -37,6 +38,7 @@ paths:
                     isCorrect: true
                   - text: Second answer
                     isCorrect: false
+                type: multipleChoice
                 author: 63da8767c9ad4c9a0b0eacd3
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

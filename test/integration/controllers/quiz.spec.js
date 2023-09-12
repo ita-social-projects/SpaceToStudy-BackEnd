@@ -11,6 +11,7 @@ const endpointUrl = '/quizzes/'
 
 const testQuizData = {
   title: 'Assembly',
+  category: ['63bed9ef260f18d04ab15da'],
   items: [
     {
       question: 'Is it the best programming language?',
@@ -73,6 +74,7 @@ describe('Quiz controller', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         author: currentUser.id,
+        category: testQuizData.category,
         ...testQuizData
       })
     })
@@ -106,6 +108,7 @@ describe('Quiz controller', () => {
             author: currentUser.id,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
+            category: testQuizData.category,
             ...testQuizData
           }
         ],
@@ -134,6 +137,7 @@ describe('Quiz controller', () => {
       expect(response.body).toMatchObject({
         _id: expect.any(String),
         author: currentUser.id,
+        category: testQuizData.category,
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         ...testQuizData

@@ -1,4 +1,4 @@
-const { ATTACHMENT, USER } = require('~/consts/models')
+const { ATTACHMENT, USER, CATEGORY } = require('~/consts/models')
 const { Schema, model } = require('mongoose')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
 
@@ -30,6 +30,10 @@ const attachmentSchema = new Schema(
     size: {
       type: Number,
       required: [true, FIELD_CANNOT_BE_EMPTY('size')]
+    },
+    category: {
+      type: [Schema.Types.ObjectId],
+      ref: CATEGORY
     }
   },
   {

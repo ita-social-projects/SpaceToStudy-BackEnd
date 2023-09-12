@@ -1,12 +1,60 @@
+const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const Attachment = require('~/models/attachment')
-const { createForbiddenError } = require('~/utils/errorsHelper')
+const { createForbiddenError, createError } = require('~/utils/errorsHelper')
+const uploadService = require('~/services/upload')
+const { ATTACHMENT } = require('~/consts/upload')
 
 const attachmentService = {
   getAttachments: async (match, sort, skip, limit) => {
-    const items = await Attachment.find(match).sort(sort).skip(skip).limit(limit).exec()
+    const items = await Attachment.find(match)
+      .collation({ locale: 'en', strength: 1 })
+      .sort(sort)
+      .skip(skip)
+      .limit(limit)
+      .exec()
     const count = await Attachment.countDocuments(match)
 
     return { count, items }
+  },
+
+  createAttachments: async ({ author, files, description }) => {
+    return await Promise.all(
+      files.map(async (file) => {
+        const { originalname, buffer, size } = file
+
+        const link = await uploadService.uploadFile(originalname, buffer, ATTACHMENT)
+
+        return await Attachment.create({ author, fileName: originalname, link, description, size })
+      })
+    )
+  },
+
+  updateAttachment: async (id, currentUser, fileName) => {
+    const attachment = await Attachment.findById(id).exec()
+
+    if (!attachment) {
+      throw createError(404, DOCUMENT_NOT_FOUND(attachment.modelName))
+    }
+
+    if (currentUser !== attachment.author.toString()) {
+      throw createForbiddenError()
+    }
+
+    if (fileName) {
+      const [fileExtension] = attachment.fileName.split('.').reverse()
+      const newFileName = `${fileName}.${fileExtension}`
+
+      attachment.fileName = newFileName
+
+      await attachment.validate()
+
+      const newLink = await uploadService.updateFile(attachment.link, newFileName, ATTACHMENT)
+
+      attachment.link = newLink
+    }
+
+    await attachment.validate()
+    await attachment.save()
   },
 
   deleteAttachment: async (id, currentUser) => {

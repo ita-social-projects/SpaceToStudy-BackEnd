@@ -1,6 +1,10 @@
 paths:
   /finished-quizzes:
     get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Finished quizzes
       summary: Find all finished quizzes.
       description: Finds and returns an array with a list of all user finishedQuizzes.
       produces:

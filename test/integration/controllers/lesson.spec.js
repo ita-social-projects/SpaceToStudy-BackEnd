@@ -10,8 +10,9 @@ const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
 const testLesson = {
   title: 'title',
   description: 'description',
-  attachments: ['65bed8ef260f18d04ab22da3', '65bed9ef260f19d05ab25bc6'],
   category: ['63bed9ef260f18d04ab15da']
+  content: '<h1>Title</h1>',
+  attachments: ['65bed8ef260f18d04ab22da3', '65bed9ef260f19d05ab25bc6']
 }
 
 let tutorUser = {
@@ -73,9 +74,10 @@ describe('Lesson controller', () => {
     it('should create a lesson', async () => {
       expect(testLessonResponse.statusCode).toBe(201)
       expect(testLessonResponse.body).toMatchObject({
-        title: 'title',
-        description: 'description',
         category: testLesson.category,
+        title: testLesson.title,
+        description: testLesson.description,
+        content: testLesson.content,
         attachments: expect.any(Array)
       })
     })
@@ -196,9 +198,10 @@ describe('Lesson controller', () => {
       expect(response.body).toMatchObject({
         _id: expect.any(String),
         author: expect.any(String),
-        title: 'title',
-        description: 'description',
         category: testLesson.category,
+        title: testLesson.title,
+        description: testLesson.description,
+        content: testLesson.content,
         attachments: expect.any(Array),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)

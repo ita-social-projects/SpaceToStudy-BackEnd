@@ -6,7 +6,7 @@ jest.mock('azure-storage')
 describe('uploadService', () => {
   it('Should upload a file to Azure Blob Storage', async () => {
     const file = {
-      src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
+      buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
       name: 'example.jpg'
     }
     const blobName = `${file.name}`
@@ -20,13 +20,13 @@ describe('uploadService', () => {
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
-    const result = await uploadService.uploadFile(file)
+    const result = await uploadService.uploadFile(file.name, file.buffer)
 
     expect(result).toContain(blobName)
   }),
     it('Should show an error during the upload', async () => {
       const file = {
-        src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
+        buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
         name: 'example.jpg'
       }
 
@@ -40,7 +40,7 @@ describe('uploadService', () => {
       azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
       try {
-        await uploadService.uploadFile(file)
+        await uploadService.uploadFile(file.name, file.buffer)
       } catch (err) {
         expect(err).toBe('error')
       }

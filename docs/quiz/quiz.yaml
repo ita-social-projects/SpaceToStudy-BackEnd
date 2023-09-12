@@ -202,3 +202,59 @@ paths:
                 status: 403
                 code: FORBIDDEN
                 message: You do not have permission to perform this action.
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Quizzes
+      summary: Update quiz by id.
+      description: Updates quiz by id.
+      produces:
+        - application/json
+      parameters:
+        - in: params
+          name: id
+          required: true
+          description: ID of the quiz that needs to be updated
+          type: string
+      requestBody:
+        description: Data to update a quiz
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/quizBody'
+            example:
+              title: WebAssembly
+      responses:
+        204:
+          description: No content
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: NOT_FOUND
+                message: Quiz with the specified id was not found.

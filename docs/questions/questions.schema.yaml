@@ -1,54 +1,55 @@
 definitions:
-  attachments:
+  questions:
     type: array
     items:
       type: object
       properties:
         _id:
           type: string
-        fileName:
+        title:
           type: string
-        link:
-          type: string
-        size:
-          type: number
-        category:
+        answers:
           type: array
-          ref: '#/components/category'
+          items:
+            type: object
+            text: string
+            isCorrect: boolean
+        author:
+          type: string
+          ref: '#/components/user'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-  attachmentBody:
+  questionsBody:
     type: object
     properties:
-      fileName:
+      title:
         type: string
-      link:
-        type: string
-      description:
-        type: string
-      size:
-        type: number
-      category:
-        type: array
-        ref: '#/components/category'
-  attachment:
+        answers:
+          type: array
+          items:
+            type: object
+            text: string
+            isCorrect: boolean
+  question:
     type: object
     properties:
       _id:
         type: string
-      fileName:
+      title:
         type: string
-      link:
-        type: string
-      size:
-        type: number
-      category:
+      answers:
         type: array
-        ref: '#/components/category'
+        items:
+          type: object
+          text: string
+          isCorrect: boolean
+      author:
+        type: string
+        ref: '#/components/user'
       createdAt:
         type: string
         format: date-time

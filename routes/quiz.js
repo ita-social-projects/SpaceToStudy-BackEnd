@@ -17,5 +17,6 @@ router.get('/:id', isEntityValid({ params }), asyncWrapper(quizController.getQui
 router.use(restrictTo(TUTOR))
 router.get('/', asyncWrapper(quizController.getQuizzes))
 router.post('/', asyncWrapper(quizController.createQuiz))
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(quizController.updateQuiz))
 
 module.exports = router

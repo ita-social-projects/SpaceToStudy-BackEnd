@@ -10,17 +10,7 @@ definitions:
           type: string
         items:
             type: array
-            items:
-              type: object
-              properties:
-                question:
-                  type: string
-                answers:
-                  type: array
-                  items:
-                    type: object
-                    text: string
-                    isCorrect: boolean
+            ref: '#/components/question'
         author:
           type: string
           ref: '#/components/user'
@@ -57,17 +47,7 @@ definitions:
         type: string
       items:
           type: array
-          items:
-            type: object
-            properties:
-              question:
-                type: string
-              answers:
-                type: array
-                items:
-                  type: object
-                  text: string
-                  isCorrect: boolean
+          ref: '#/components/question'
       author:
           type: string
           ref: '#/components/user'

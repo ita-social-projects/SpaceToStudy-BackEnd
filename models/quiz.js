@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 const { QUIZ, USER } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER } = require('~/consts/errors')
 
-const quizSchema = new Schema(
+let quizSchema = new Schema(
   {
     title: {
       type: String,

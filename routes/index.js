@@ -19,6 +19,7 @@ const course = require('~/routes/course')
 const quiz = require('~/routes/quiz')
 const attachment = require('~/routes/attachment')
 const finishedQuiz = require('~/routes/finishedQuiz')
+const question = require('~/routes/question')
 
 router.use('/auth', auth)
 router.use('/users', user)
@@ -39,5 +40,6 @@ router.use('/courses', course)
 router.use('/quizzes', quiz)
 router.use('/attachments', attachment)
 router.use('/finished-quizzes', finishedQuiz)
+router.use('/questions', question)
 
 module.exports = router

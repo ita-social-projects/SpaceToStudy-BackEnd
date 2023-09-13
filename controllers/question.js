@@ -22,7 +22,17 @@ const createQuestion = async (req, res) => {
   res.status(201).json(newQuestion)
 }
 
+const deleteQuestion = async (req, res) => {
+  const currentUser = req.user
+  const { id } = req.params
+
+  await offerService.deleteQuestion(id, currentUser)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getQuestions,
-  createQuestion
+  createQuestion,
+  deleteQuestion
 }

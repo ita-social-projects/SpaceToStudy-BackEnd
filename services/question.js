@@ -1,9 +1,8 @@
 const Question = require('~/models/question')
-
+const { createForbiddenError } = require('~/utils/errorsHelper')
 const questionService = {
   getQuestions: async (match, sort, skip = 0, limit = 10) => {
-    const items = await Question
-      .find(match)
+    const items = await Question.find(match)
       .collation({ locale: 'en', strength: 1 })
       .sort(sort)
       .skip(skip)
@@ -24,6 +23,22 @@ const questionService = {
       type,
       author
     })
+  },
+
+  deleteQuestion: async (id, currentUser) => {
+    const question = await Question.findById(id).exec()
+
+    if (!question) {
+      throw createError(DOCUMENT_NOT_FOUND(Question.modelName))
+    }
+
+    const author = question.author.toString()
+
+    if (author !== currentUser) {
+      throw createForbiddenError()
+    }
+
+    await Question.findByIdAndRemove(id).exec()
   }
 }
 module.exports = questionService

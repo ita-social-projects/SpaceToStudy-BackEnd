@@ -6,7 +6,6 @@ const TokenService = require('~/services/token')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
-const Question = require('~/models/question')
 
 const endpointUrl = '/questions/'
 
@@ -46,12 +45,9 @@ describe('Question controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, { role: TUTOR })
+    studentAccessToken = await testUserAuthentication(app, studentUserData)
 
     currentUser = TokenService.validateAccessToken(accessToken)
-
-    testQuestion = await Question.create({ author: currentUser.id, ...testQuestionData })
-
-    studentAccessToken = await testUserAuthentication(app, studentUserData)
 
     testQuestion = await app.post(endpointUrl).send(testQuestionData).set('Authorization', `Bearer ${accessToken}`)
   })
@@ -66,16 +62,18 @@ describe('Question controller', () => {
 
   describe(`GET ${endpointUrl}`, () => {
     it('should return list of questions', async () => {
-      const questions = await app.get(endpointUrl).set('Authorization', accessToken)
+      const questions = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
 
       expect(questions.statusCode).toBe(200)
-      expect(questions.count).toBe(1)
-      expect(questions.items).toContainObject({
-        _id: testQuestion._id,
-        createdAt: expect.any(String),
-        updatedAt: expect.any(String),
-        ...testQuestionData
-      })
+      expect(questions.body.count).toBe(1)
+      expect(questions.body.items).toMatchObject([
+        {
+          _id: testQuestion.body._id,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          ...testQuestionData
+        }
+      ])
     })
 
     it('should throw UNAUTHORIZED', async () => {

@@ -23,10 +23,10 @@ const createQuestion = async (req, res) => {
 }
 
 const deleteQuestion = async (req, res) => {
-  const currentUser = req.user
+  const userId = req.user.id
   const { id } = req.params
 
-  await offerService.deleteQuestion(id, currentUser)
+  await offerService.deleteQuestion(id, userId)
 
   res.status(204).end()
 }

@@ -28,10 +28,6 @@ const questionService = {
   deleteQuestion: async (id, currentUser) => {
     const question = await Question.findById(id).exec()
 
-    if (!question) {
-      throw createError(DOCUMENT_NOT_FOUND(Question.modelName))
-    }
-
     const author = question.author.toString()
 
     if (author !== currentUser) {

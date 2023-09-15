@@ -1,9 +1,9 @@
 const Question = require('~/models/question')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const questionService = {
   getQuestions: async (match, sort, skip = 0, limit = 10) => {
-    const items = await Question
-      .find(match)
+    const items = await Question.find(match)
       .collation({ locale: 'en', strength: 1 })
       .sort(sort)
       .skip(skip)
@@ -24,6 +24,20 @@ const questionService = {
       type,
       author
     })
+  },
+
+  updateQuestion: async (id, currentUserId, data) => {
+    const question = await Question.findById(id).exec()
+
+    const author = question.author.toString()
+
+    if (currentUserId !== author) {
+      throw createForbiddenError()
+    }
+    for (let field in data) {
+      question[field] = data[field]
+    }
+    await question.save()
   }
 }
 module.exports = questionService

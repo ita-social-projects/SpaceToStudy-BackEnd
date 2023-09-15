@@ -1,5 +1,6 @@
 const Question = require('~/models/question')
 const { createForbiddenError } = require('~/utils/errorsHelper')
+
 const questionService = {
   getQuestions: async (match, sort, skip = 0, limit = 10) => {
     const items = await Question.find(match)

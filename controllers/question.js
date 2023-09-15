@@ -26,7 +26,7 @@ const deleteQuestion = async (req, res) => {
   const userId = req.user.id
   const { id } = req.params
 
-  await offerService.deleteQuestion(id, userId)
+  await questionService.deleteQuestion(id, userId)
 
   res.status(204).end()
 }

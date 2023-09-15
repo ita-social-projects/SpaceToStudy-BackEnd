@@ -13,6 +13,16 @@ const getQuestions = async (req, res) => {
   res.status(200).json(questions)
 }
 
+const createQuestion = async (req, res) => {
+  const { id: author } = req.user
+  const data = req.body
+
+  const newQuestion = await questionService.createQuestion(author, data)
+
+  res.status(201).json(newQuestion)
+}
+
 module.exports = {
-  getQuestions
+  getQuestions,
+  createQuestion
 }

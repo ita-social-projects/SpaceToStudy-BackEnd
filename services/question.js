@@ -13,7 +13,17 @@ const questionService = {
     const count = await Question.countDocuments(match)
 
     return { items, count }
+  },
+
+  createQuestion: async (author, data) => {
+    const { title, answers, type } = data
+
+    return await Question.create({
+      title,
+      answers,
+      type,
+      author
+    })
   }
 }
-
 module.exports = questionService

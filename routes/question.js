@@ -3,7 +3,9 @@ const Question = require('~/models/question')
 
 const questionController = require('~/controllers/question')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
-const { authMiddleware, restrictTo, isEntityValid } = require('~/middlewares/auth')
+const isEntityValid = require('~/middlewares/entityValidation')
+const { authMiddleware, restrictTo } = require('~/middlewares/auth')
+
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')

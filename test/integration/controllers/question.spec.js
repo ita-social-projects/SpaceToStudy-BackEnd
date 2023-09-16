@@ -37,7 +37,8 @@ const studentUserData = {
 }
 
 const updateData = {
-  title: 'Here is updated one!'
+  title: 'Here is updated one!',
+  type: 'multipleChoice'
 }
 
 describe('Question controller', () => {
@@ -124,6 +125,8 @@ describe('Question controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       const questionResponse = await app.get(endpointUrl + testQuestionId).set('Authorization', `Bearer ${accessToken}`)
+      console.log(questionResponse)
+      console.log(testQuestionId)
 
       expect(questionResponse.body).toMatchObject({
         ...testQuestionData,

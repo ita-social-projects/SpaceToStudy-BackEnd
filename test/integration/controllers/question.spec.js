@@ -3,6 +3,7 @@ const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
+const Question = require('~/models/question')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
@@ -119,14 +120,15 @@ describe('Question controller', () => {
 
   describe(`PATCH ${endpointUrl}:id`, () => {
     it('should update a question', async () => {
-      await app
+      const response = await app
         .patch(endpointUrl + testQuestionId)
         .send(updateData)
         .set('Authorization', `Bearer ${accessToken}`)
+      expect(response.statusCode).toBe(204)
 
-      const questionResponse = await app.get(endpointUrl + testQuestionId).set('Authorization', `Bearer ${accessToken}`)
+      const updatedQuestion = await Question.findById(testQuestionId)
 
-      expect(questionResponse.body).toMatchObject({
+      expect(updatedQuestion).toMatchObject({
         ...testQuestionData,
         ...updateData
       })

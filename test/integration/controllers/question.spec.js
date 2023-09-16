@@ -125,8 +125,6 @@ describe('Question controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
 
       const questionResponse = await app.get(endpointUrl + testQuestionId).set('Authorization', `Bearer ${accessToken}`)
-      console.log(questionResponse)
-      console.log(testQuestionId)
 
       expect(questionResponse.body).toMatchObject({
         ...testQuestionData,

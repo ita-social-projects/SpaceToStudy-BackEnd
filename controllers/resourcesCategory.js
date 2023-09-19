@@ -10,7 +10,7 @@ const getResourcesCategories = async (req, res) => {
   const match = getMatchOptions({ author, name: getRegex(name) })
   const sortOptions = getSortOptions(sort)
 
-  const resourcesCategories = await resourcesCategoryService.getAttachments(
+  const resourcesCategories = await resourcesCategoryService.getResourcesCategories(
     match,
     sortOptions,
     parseInt(skip),

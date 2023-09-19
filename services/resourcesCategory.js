@@ -1,7 +1,7 @@
 const ResourcesCategory = require('~/models/resourcesCategory')
 
 const resourcesCategoryService = {
-  getAttachments: async (match, sort, skip, limit) => {
+  getResourcesCategories: async (match, sort, skip, limit) => {
     const items = await ResourcesCategory.find(match)
       .collation({ locale: 'en', strength: 1 })
       .sort(sort)

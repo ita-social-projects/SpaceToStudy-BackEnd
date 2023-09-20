@@ -16,6 +16,9 @@ definitions:
       attachments:
         type: array
         $ref: '#/components/attachments'
+      category:
+        type: string
+        ref: '#/components/category'
     required:
       - title
       - description

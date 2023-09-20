@@ -12,6 +12,9 @@ definitions:
           type: string
         size:
           type: number
+        category:
+          type: array
+          ref: '#/components/category'
         createdAt:
           type: string
           format: date-time
@@ -23,6 +26,15 @@ definitions:
     properties:
       fileName:
         type: string
+      link:
+        type: string
+      description:
+        type: string
+      size:
+        type: number
+      category:
+        type: array
+        ref: '#/components/category'
   attachment:
     type: object
     properties:
@@ -34,6 +46,9 @@ definitions:
         type: string
       size:
         type: number
+      category:
+        type: array
+        ref: '#/components/category'
       createdAt:
         type: string
         format: date-time

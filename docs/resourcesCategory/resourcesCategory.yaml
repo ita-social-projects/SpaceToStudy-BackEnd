@@ -107,7 +107,7 @@ paths:
         security:
           - bearerAuth: []
         tags:
-          - Quizzes
+          - Resource category
         summary: Creates a new resource category.
         description: Creates a new resource category and saves it to the database.
         produces:

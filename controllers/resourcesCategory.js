@@ -7,9 +7,9 @@ const createResourcesCategory = async (req, res) => {
   const { id: author } = req.user
   const data = req.body
 
-  const newQuiz = await resourcesCategoryService.createResourcesCategory(author, data)
+  const newResourcesCategory = await resourcesCategoryService.createResourcesCategory(author, data)
 
-  res.status(201).send(newQuiz)
+  res.status(201).send(newResourcesCategory)
 }
 
 const getResourcesCategories = async (req, res) => {

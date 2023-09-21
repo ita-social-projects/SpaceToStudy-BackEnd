@@ -2,7 +2,7 @@ const { Schema, model } = require('mongoose')
 const {
   enums: { QUESTION_TYPE_ENUM }
 } = require('~/consts/validation')
-const { QUESTION, USER } = require('~/consts/models')
+const { QUESTION, USER, RESOURCES_CATEGORY } = require('~/consts/models')
 const {
   FIELD_CANNOT_BE_EMPTY,
   FIELD_CANNOT_BE_LONGER,
@@ -41,6 +41,11 @@ const questionSchema = new Schema(
         message: ENUM_CAN_BE_ONE_OF('type', QUESTION_TYPE_ENUM)
       },
       required: true
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: RESOURCES_CATEGORY,
+      required: [true, FIELD_CANNOT_BE_EMPTY('category')]
     },
     author: {
       type: Schema.Types.ObjectId,

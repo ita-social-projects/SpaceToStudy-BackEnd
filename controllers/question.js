@@ -3,9 +3,10 @@ const getRegex = require('~/utils/getRegex')
 const getSortOptions = require('~/utils/getSortOptions')
 
 const getQuestions = async (req, res) => {
+  const { id: author } = req.user
   const { title, sort, skip, limit } = req.query
 
-  const match = { title: getRegex(title) }
+  const match = { author, title: getRegex(title) }
   const sortOptions = getSortOptions(sort)
 
   const questions = await questionService.getQuestions(match, sortOptions, parseInt(skip), parseInt(limit))

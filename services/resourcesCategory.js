@@ -11,6 +11,9 @@ const resourcesCategoryService = {
     const count = await ResourcesCategory.countDocuments(match)
 
     return { count, items }
+  },
+  getResourcesCategoriesNames: async (match) => {
+    return await ResourcesCategory.find(match).distinct('name').exec()
   }
 }
 

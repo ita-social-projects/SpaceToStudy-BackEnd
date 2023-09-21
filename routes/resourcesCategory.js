@@ -12,5 +12,6 @@ router.use(authMiddleware)
 router.use(restrictTo(TUTOR))
 
 router.get('/', asyncWrapper(resourcesCategoryController.getResourcesCategories))
+router.get('/names', asyncWrapper(resourcesCategoryController.getResourcesCategoriesNames))
 
 module.exports = router

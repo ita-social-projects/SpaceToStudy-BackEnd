@@ -10,8 +10,9 @@ const {
 
 router.use(authMiddleware)
 router.use(restrictTo(TUTOR))
-router.post('/', asyncWrapper(resourcesCategoryController.createResourcesCategory))
 router.get('/', asyncWrapper(resourcesCategoryController.getResourcesCategories))
 router.get('/names', asyncWrapper(resourcesCategoryController.getResourcesCategoriesNames))
+router.post('/', asyncWrapper(resourcesCategoryController.createResourcesCategory))
+router.patch('/:id', asyncWrapper(resourcesCategoryController.updateResourceCategory))
 
 module.exports = router

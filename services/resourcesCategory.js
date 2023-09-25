@@ -23,6 +23,21 @@ const resourcesCategoryService = {
   },
   getResourcesCategoriesNames: async (match) => {
     return await ResourcesCategory.find(match).distinct('name').exec()
+  },
+
+  updateResourceCategory: async (id, currentUserId, updateData) => {
+    const resourceCategory = await ResourcesCategory.findById(id).exec()
+
+    const author = resourceCategory.author.toString()
+    if (currentUserId !== author) {
+      throw createForbiddenError()
+    }
+
+    for (let field in updateData) {
+      resourceCategory[field] = updateData[field]
+    }
+
+    await resourceCategory.save()
   }
 }
 

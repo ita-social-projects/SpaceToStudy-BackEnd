@@ -1,4 +1,5 @@
 const router = require('express').Router()
+
 const Question = require('~/models/question')
 
 const questionController = require('~/controllers/question')
@@ -10,12 +11,15 @@ const {
   roles: { TUTOR }
 } = require('~/consts/auth')
 
+
 router.use(authMiddleware)
 const params = [{ model: Question, idName: 'id' }]
 
 router.get('/', asyncWrapper(questionController.getQuestions))
 router.use(restrictTo(TUTOR))
 router.post('/', asyncWrapper(questionController.createQuestion))
+router.delete('/:id', isEntityValid({ params }), asyncWrapper(questionController.deleteQuestion))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(questionController.updateQuestion))
+
 
 module.exports = router

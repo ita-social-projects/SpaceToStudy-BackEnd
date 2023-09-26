@@ -42,7 +42,8 @@ paths:
                 description: With this lesson you will learn all about colors in English.
                 content: <h1>Title</h1>
                 author: 63da8767c9ad4c9a0b0eacd3
-                attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+                attachments: [63ed1cd25e9d781cdb6a6b15]
+                category: [3da8767c9ad4c9a0b0eacd3]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -86,7 +87,8 @@ paths:
               description: With this lesson you will learn all about colors in English.
               content: <h1>Title</h1>
               author: 63da8767c9ad4c9a0b0eacd3
-              attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+              attachments: [63ed1cd25e9d781cdb6a6b15]
+              category: [3da8767c9ad4c9a0b0eacd3]
       responses:
         201:
           description: Created
@@ -99,7 +101,8 @@ paths:
                 description: With this lesson you will learn all about colors in English.
                 content: <h1>Title</h1>
                 author: 63da8767c9ad4c9a0b0eacd3
-                attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
+                attachments: [63ed1cd25e9d781cdb6a6b15]
+                category: [3da8767c9ad4c9a0b0eacd3]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -263,7 +266,7 @@ paths:
                 message: Lesson with the specified id was not found.
     delete:
       security:
-        - bearerAuth: [ ]
+        - bearerAuth: []
       tags:
         - Lessons
       summary: Delete lesson by ID

@@ -3,9 +3,10 @@ const getRegex = require('~/utils/getRegex')
 const getSortOptions = require('~/utils/getSortOptions')
 
 const getQuestions = async (req, res) => {
+  const { id: author } = req.user
   const { title, sort, skip, limit } = req.query
 
-  const match = { title: getRegex(title) }
+  const match = { author, title: getRegex(title) }
   const sortOptions = getSortOptions(sort)
 
   const questions = await questionService.getQuestions(match, sortOptions, parseInt(skip), parseInt(limit))
@@ -22,11 +23,21 @@ const createQuestion = async (req, res) => {
   res.status(201).json(newQuestion)
 }
 
+
 const deleteQuestion = async (req, res) => {
   const userId = req.user.id
   const { id } = req.params
 
   await questionService.deleteQuestion(id, userId)
+  
+  res.status(204).end()
+}
+
+const updateQuestion = async (req, res) => {
+  const { id } = req.params
+  const { id: currentUserId } = req.user
+  const data = req.body
+  await questionService.updateQuestion(id, currentUserId, data)
 
   res.status(204).end()
 }
@@ -34,5 +45,6 @@ const deleteQuestion = async (req, res) => {
 module.exports = {
   getQuestions,
   createQuestion,
-  deleteQuestion
+  deleteQuestionб
+  updateQuestion
 }

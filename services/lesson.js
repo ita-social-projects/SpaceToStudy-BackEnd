@@ -5,9 +5,9 @@ const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const lessonService = {
   createLesson: async (author, data) => {
-    const { title, description, attachments, content } = data
+    const { title, description, attachments, content, category  } = data
 
-    return await Lesson.create({ author, title, description, attachments, content })
+    return await Lesson.create({ author, title, description, attachments, content, category  })
   },
 
   getLessons: async (match, sort, skip, limit) => {

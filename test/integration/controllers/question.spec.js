@@ -3,6 +3,7 @@ const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
+const Question = require('~/models/question')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
@@ -36,8 +37,13 @@ const studentUserData = {
   lastLoginAs: 'student'
 }
 
+const updateData = {
+  title: 'Here is updated one!',
+  type: 'multipleChoice'
+}
+
 describe('Question controller', () => {
-  let app, server, accessToken, currentUser, studentAccessToken, testQuestion
+  let app, server, accessToken, currentUser, studentAccessToken, testQuestion, testQuestionId
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -50,6 +56,7 @@ describe('Question controller', () => {
     currentUser = TokenService.validateAccessToken(accessToken)
 
     testQuestion = await app.post(endpointUrl).send(testQuestionData).set('Authorization', `Bearer ${accessToken}`)
+    testQuestionId = testQuestion.body._id
   })
 
   afterEach(async () => {
@@ -105,6 +112,38 @@ describe('Question controller', () => {
       const response = await app
         .post(endpointUrl)
         .send(testQuestionData)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}:id`, () => {
+    it('should update a question', async () => {
+      const response = await app
+        .patch(endpointUrl + testQuestionId)
+        .send(updateData)
+        .set('Authorization', `Bearer ${accessToken}`)
+      expect(response.statusCode).toBe(204)
+
+      const updatedQuestion = await Question.findById(testQuestionId)
+
+      expect(updatedQuestion).toMatchObject({
+        ...testQuestionData,
+        ...updateData
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.patch(endpointUrl + testQuestionId).send(updateData)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .patch(endpointUrl + testQuestionId)
+        .send(updateData)
         .set('Authorization', `Bearer ${studentAccessToken}`)
 
       expectError(403, FORBIDDEN, response)

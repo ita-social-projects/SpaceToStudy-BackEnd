@@ -20,6 +20,17 @@ const getResourcesCategories = async (req, res) => {
   res.status(200).json(resourcesCategories)
 }
 
+const getResourcesCategoriesNames = async (req, res) => {
+  const { id: author } = req.user
+
+  const match = getMatchOptions({ author })
+
+  const resourcesCategoriesNames = await resourcesCategoryService.getResourcesCategoriesNames(match)
+
+  res.status(200).json(resourcesCategoriesNames)
+}
+
 module.exports = {
-  getResourcesCategories
+  getResourcesCategories,
+  getResourcesCategoriesNames
 }

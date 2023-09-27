@@ -57,15 +57,7 @@ const testOfferData = {
 
 const testActiveQuizData = {
   title: 'My test quiz',
-  items: [
-    {
-      question: 'What is your name?',
-      answers: [
-        { text: '2', correct: true },
-        { text: 'No', correct: false }
-      ]
-    }
-  ]
+  items: []
 }
 
 const updateData = {
@@ -107,6 +99,8 @@ describe('Cooperation controller', () => {
     })
 
     testActiveQuiz = await Quiz.create({
+      author: testTutorUser._id,
+      category: category._id,
       ...testActiveQuizData
     })
 

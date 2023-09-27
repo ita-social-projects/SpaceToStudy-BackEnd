@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
-const { USER, LESSON, ATTACHMENT } = require('~/consts/models')
+const { USER, LESSON, ATTACHMENT, CATEGORY } = require('~/consts/models')
 const lessonSchema = new Schema(
   {
     author: {
@@ -18,19 +18,23 @@ const lessonSchema = new Schema(
     description: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('description')],
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
-      maxlength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
+      maxLength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
       trim: true
     },
     content: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('content')],
-      minlength: [50, FIELD_CANNOT_BE_SHORTER('content', 50)],
+      minLength: [50, FIELD_CANNOT_BE_SHORTER('content', 50)],
       trim: true
     },
     attachments: {
       type: [Schema.Types.ObjectId],
       ref: ATTACHMENT
+    },
+    category: {
+      type: [Schema.Types.ObjectId],
+      ref: CATEGORY
     }
   },
   {

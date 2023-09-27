@@ -49,6 +49,7 @@ paths:
                           - text: Yes, of course,
                             isCorrect: true
                     author: '6477007a6fa4d05e1a800ce5'
+                    category: '63bed9ef260f18d04ab15da'
                   - _id: 64ca5932b57f2442403394a9
                     title: Chemistry
                     items:
@@ -61,6 +62,7 @@ paths:
                           - text: H2O2
                             isCorrect: true
                     author: '6477007a6fa4d05e1a800ce5'
+                    category: '63bed9ef260f18d04ab15da'
                 count: 2
         401:
           description: Unauthorized
@@ -169,16 +171,18 @@ paths:
               schema:
                 $ref: '#/definitions/quizBody'
               example:
-                _id: 64ca5914b57f2442403394a5
-                title: IT
                 items:
-                  - question: Is it the best programming language?
-                    answers:
-                      - text: Yes,
-                        isCorrect: false
-                      - text: Yes, of course,
-                        isCorrect: true
-                author: '6477007a6fa4d05e1a800ce5'
+                  - _id: 64ca5914b57f2442403394a5
+                    title: IT
+                    items:
+                      - question: Is it the best programming language?
+                        answers:
+                          - text: Yes,
+                            isCorrect: false
+                          - text: Yes, of course,
+                            isCorrect: true
+                    author: 6477007a6fa4d05e1a800ce5,
+                    category: 63bed9ef260f18d04ab15da
         401:
           description: Unauthorized
           content:

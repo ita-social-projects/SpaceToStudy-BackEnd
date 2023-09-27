@@ -28,14 +28,14 @@ const userSchema = new Schema(
     firstName: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('first name')],
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('first name', 1)],
-      maxlength: [30, FIELD_CANNOT_BE_LONGER('first name', 30)]
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('first name', 1)],
+      maxLength: [30, FIELD_CANNOT_BE_LONGER('first name', 30)]
     },
     lastName: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('last name')],
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('last name', 1)],
-      maxlength: [30, FIELD_CANNOT_BE_LONGER('last name', 30)]
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('last name', 1)],
+      maxLength: [30, FIELD_CANNOT_BE_LONGER('last name', 30)]
     },
     email: {
       type: String,
@@ -46,7 +46,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('password')],
-      minlength: [8, FIELD_CANNOT_BE_SHORTER('password', 8)],
+      minLength: [8, FIELD_CANNOT_BE_SHORTER('password', 8)],
       select: false
     },
     address: {

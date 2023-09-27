@@ -27,37 +27,32 @@ const questionService = {
     })
   },
 
-
   deleteQuestion: async (id, currentUser) => {
     const question = await Question.findById(id).exec()
-    
+
     const author = question.author.toString()
-    
+
     if (author !== currentUser) {
       throw createForbiddenError()
     }
-    
+
     await Question.findByIdAndRemove(id).exec()
-    
   },
 
   updateQuestion: async (id, currentUserId, data) => {
-
     const question = await Question.findById(id).exec()
 
     const author = question.author.toString()
 
-
-    if (author !== currentUser) {
+    if (author !== currentUserId) {
       throw createForbiddenError()
     }
 
-    
     for (let field in data) {
       question[field] = data[field]
     }
     await question.save()
   }
 }
-  
+
 module.exports = questionService

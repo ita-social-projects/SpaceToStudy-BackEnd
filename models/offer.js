@@ -31,14 +31,14 @@ const offerSchema = new Schema(
     },
     title: {
       type: String,
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
-      maxlength: [100, FIELD_CANNOT_BE_LONGER('title', 100)],
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
+      maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)],
       required: [true, FIELD_CANNOT_BE_EMPTY('title')]
     },
     description: {
       type: String,
-      minlength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
-      maxlength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
+      maxLength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
       required: [true, FIELD_CANNOT_BE_EMPTY('description')]
     },
     languages: {

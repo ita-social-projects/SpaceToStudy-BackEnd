@@ -10,7 +10,7 @@ const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
 const testLesson = {
   title: 'title',
   description: 'description',
-  category: ['63bed9ef260f18d04ab15da']
+  category: ['63bed9ef260f18d04ab15da'],
   content: '<h1>Title</h1>',
   attachments: ['65bed8ef260f18d04ab22da3', '65bed9ef260f19d05ab25bc6']
 }

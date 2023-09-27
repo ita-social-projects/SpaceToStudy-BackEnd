@@ -23,13 +23,12 @@ const createQuestion = async (req, res) => {
   res.status(201).json(newQuestion)
 }
 
-
 const deleteQuestion = async (req, res) => {
   const userId = req.user.id
   const { id } = req.params
 
   await questionService.deleteQuestion(id, userId)
-  
+
   res.status(204).end()
 }
 
@@ -45,6 +44,6 @@ const updateQuestion = async (req, res) => {
 module.exports = {
   getQuestions,
   createQuestion,
-  deleteQuestionб
+  deleteQuestion,
   updateQuestion
 }

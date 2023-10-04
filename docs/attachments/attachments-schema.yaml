@@ -15,8 +15,8 @@ definitions:
         size:
           type: number
         category:
-          type: array
-          ref: '#/components/category'
+          type: string
+          ref: '#/definitions/resourcesCategory'
         createdAt:
           type: string
           format: date-time
@@ -35,8 +35,8 @@ definitions:
       size:
         type: number
       category:
-        type: array
-        ref: '#/components/category'
+        type: string
+        ref: '#/definitions/resourcesCategory'
   attachment:
     type: object
     properties:
@@ -51,8 +51,8 @@ definitions:
       size:
         type: number
       category:
-        type: array
-        ref: '#/components/category'
+        type: string
+        ref: '#/definitions/resourcesCategory'
       createdAt:
         type: string
         format: date-time

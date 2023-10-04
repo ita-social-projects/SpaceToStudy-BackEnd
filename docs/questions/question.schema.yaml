@@ -17,6 +17,9 @@ definitions:
         author:
           type: string
           ref: '#/components/user'
+        category:
+          type: string
+          ref: '#/definitions/resourcesCategory'
         createdAt:
           type: string
           format: date-time
@@ -28,12 +31,15 @@ definitions:
     properties:
       title:
         type: string
-        answers:
-          type: array
-          items:
-            type: object
-            text: string
-            isCorrect: boolean
+      answers:
+        type: array
+        items:
+          type: object
+          text: string
+          isCorrect: boolean
+      category:
+          type: string
+          ref: '#/definitions/resourcesCategory'
   question:
     type: object
     properties:
@@ -50,6 +56,9 @@ definitions:
       author:
         type: string
         ref: '#/components/user'
+      category:
+        type: string
+        ref: '#/definitions/resourcesCategory'
       createdAt:
         type: string
         format: date-time

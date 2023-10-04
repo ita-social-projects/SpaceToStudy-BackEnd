@@ -21,8 +21,9 @@ const quizSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('author')]
     },
     category: {
-      type: [Schema.Types.ObjectId],
-      ref: CATEGORY
+      type: Schema.Types.ObjectId,
+      ref: CATEGORY,
+      default: null
     }
   },
   { timestamps: true, versionKey: false }

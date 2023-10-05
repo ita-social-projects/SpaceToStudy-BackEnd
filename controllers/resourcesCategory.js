@@ -39,8 +39,19 @@ const getResourcesCategoriesNames = async (req, res) => {
   res.status(200).json(resourcesCategoriesNames)
 }
 
+const updateResourceCategory = async (req, res) => {
+  const { id } = req.params
+  const { id: author } = req.user
+  const updateData = req.body
+
+  await resourcesCategoryService.updateResourceCategory(id, author, updateData)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getResourcesCategories,
   createResourcesCategory,
-  getResourcesCategoriesNames
+  getResourcesCategoriesNames,
+  updateResourceCategory
 }

@@ -1,4 +1,8 @@
 definitions:
+  resourceCategoryBody:
+    type: object
+    properties:
+      name: string
   resourcesCategory:
     type: object
     properties:

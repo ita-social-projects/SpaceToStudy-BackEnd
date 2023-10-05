@@ -25,6 +25,10 @@ const studentUserData = {
   lastLoginAs: 'student'
 }
 
+const updateResourceCategoryData = {
+  name: 'Computer Science'
+}
+
 describe('ResourceCategory controller', () => {
   let app, server, accessToken, currentUser, studentAccessToken, testResourceCategory
 
@@ -74,6 +78,32 @@ describe('ResourceCategory controller', () => {
       const response = await app
         .post(endpointUrl)
         .send(testResourceCategoryData)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}`, () => {
+    it('should update resource category', async () => {
+      const response = await app
+        .patch(endpointUrl)
+        .send(updateResourceCategoryData)
+        .set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.patch(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .patch(endpointUrl)
+        .send(updateResourceCategoryData)
         .set('Authorization', `Bearer ${studentAccessToken}`)
 
       expectError(403, FORBIDDEN, response)

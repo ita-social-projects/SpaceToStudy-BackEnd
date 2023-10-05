@@ -29,7 +29,6 @@ const getResourcesCategories = async (req, res) => {
   res.status(200).json(resourcesCategories)
 }
 
-<<<<<<< HEAD
 const getResourcesCategoriesNames = async (req, res) => {
   const { id: author } = req.user
 
@@ -38,7 +37,8 @@ const getResourcesCategoriesNames = async (req, res) => {
   const resourcesCategoriesNames = await resourcesCategoryService.getResourcesCategoriesNames(match)
 
   res.status(200).json(resourcesCategoriesNames)
-=======
+}
+
 const updateResourceCategory = async (req, res) => {
   const { id } = req.params
   const { id: author } = req.user
@@ -47,15 +47,11 @@ const updateResourceCategory = async (req, res) => {
   await resourcesCategoryService.updateResourceCategory(id, author, updateData)
 
   res.status(204).end()
->>>>>>> 888c4bc (implemented update for resource category)
 }
 
 module.exports = {
   getResourcesCategories,
-<<<<<<< HEAD
   createResourcesCategory,
-  getResourcesCategoriesNames
-=======
+  getResourcesCategoriesNames,
   updateResourceCategory
->>>>>>> 888c4bc (implemented update for resource category)
 }

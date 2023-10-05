@@ -1,4 +1,5 @@
 const ResourcesCategory = require('~/models/resourcesCategory')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const resourcesCategoryService = {
   createResourcesCategory: async (author, data) => {

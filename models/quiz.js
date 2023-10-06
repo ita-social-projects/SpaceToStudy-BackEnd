@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { QUIZ, USER, CATEGORY, QUESTION } = require('~/consts/models')
+const { QUIZ, USER, RESOURCES_CATEGORY, QUESTION } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER } = require('~/consts/errors')
 
 const quizSchema = new Schema(
@@ -22,7 +22,7 @@ const quizSchema = new Schema(
     },
     category: {
       type: Schema.Types.ObjectId,
-      ref: CATEGORY,
+      ref: RESOURCES_CATEGORY,
       default: null
     }
   },

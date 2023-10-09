@@ -45,7 +45,7 @@ paths:
                     fileName: EnglishB2Level
                     link: 'https://english-b2-test.com'
                     size: 230
-                    category: [{ _id: 6502ec2060ec37be943353e2, name: 'New Category 1' }]
+                    category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
                     createdAt: 2023-02-14T23:44:21.334Z
                     updatedAt: 2023-02-14T23:44:21.334Z
         401:

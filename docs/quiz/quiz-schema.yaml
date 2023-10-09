@@ -9,14 +9,14 @@ definitions:
         title:
           type: string
         items:
-            type: array
-            ref: '#/components/question'
+          type: array
+          ref: '#/components/question'
         author:
           type: string
           ref: '#/components/user'
         category:
           type: string
-          ref: '#/components/category'
+          ref: '#/definitions/resourcesCategory'
         createdAt:
           type: string
           format: date-time
@@ -28,19 +28,12 @@ definitions:
     properties:
       title:
         type: string
+      category:
+        type: string
+        ref: '#/definitions/resourcesCategory'
       items:
         type: array
-        items:
-          type: object
-          properties:
-            question:
-              type: string
-            answers:
-              type: array
-              items:
-                type: object
-                text: string
-                isCorrect: boolean
+        ref: '#/components/question'
   quiz:
     type: object
     properties:
@@ -49,14 +42,14 @@ definitions:
       title:
         type: string
       items:
-          type: array
-          ref: '#/components/question'
+        type: array
+        ref: '#/components/question'
       author:
         type: string
         ref: '#/components/user'
       category:
-          type: string
-          ref: '#/components/category'
+        type: string
+        ref: '#/definitions/resourcesCategory'
       createdAt:
         type: string
         format: date-time

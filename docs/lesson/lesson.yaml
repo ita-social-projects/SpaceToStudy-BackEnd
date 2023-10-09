@@ -43,7 +43,7 @@ paths:
                 content: <h1>Title</h1>
                 author: 63da8767c9ad4c9a0b0eacd3
                 attachments: [63ed1cd25e9d781cdb6a6b15]
-                category: [3da8767c9ad4c9a0b0eacd3]
+                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -88,7 +88,7 @@ paths:
               content: <h1>Title</h1>
               author: 63da8767c9ad4c9a0b0eacd3
               attachments: [63ed1cd25e9d781cdb6a6b15]
-              category: [3da8767c9ad4c9a0b0eacd3]
+              category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
       responses:
         201:
           description: Created
@@ -102,7 +102,7 @@ paths:
                 content: <h1>Title</h1>
                 author: 63da8767c9ad4c9a0b0eacd3
                 attachments: [63ed1cd25e9d781cdb6a6b15]
-                category: [3da8767c9ad4c9a0b0eacd3]
+                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -162,6 +162,7 @@ paths:
                     size: 230
                     createdAt: 2023-02-14T23:44:21.334Z
                     updatedAt: 2023-02-14T23:44:21.334Z
+                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
                 _id: 93ec1cd51e9d781cdb6f5b56
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

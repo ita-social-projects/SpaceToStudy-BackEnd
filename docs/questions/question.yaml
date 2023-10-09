@@ -74,7 +74,6 @@ paths:
                 status: 401
                 code: UNAUTHORIZED
                 message: The requested URL requires user authorization.
-  /questions:
     post:
       security:
         - bearerAuth: []

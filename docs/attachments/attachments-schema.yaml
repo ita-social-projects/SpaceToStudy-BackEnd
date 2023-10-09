@@ -8,6 +8,8 @@ definitions:
           type: string
         fileName:
           type: string
+        description:
+          type: string
         link:
           type: string
         size:
@@ -41,6 +43,8 @@ definitions:
       _id:
         type: string
       fileName:
+        type: string
+      description:
         type: string
       link:
         type: string

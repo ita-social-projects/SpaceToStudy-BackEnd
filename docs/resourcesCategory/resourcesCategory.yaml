@@ -133,7 +133,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/resourcesCategory'
-              example: [New Category 1, New Category 2]
+              example: [{ _id: 6502ec2060ec37be943353e2, name: 'New Category 1' }]
         401:
           description: Unauthorized
           content:

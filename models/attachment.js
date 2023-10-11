@@ -1,4 +1,4 @@
-const { ATTACHMENT, USER, CATEGORY } = require('~/consts/models')
+const { ATTACHMENT, USER, RESOURCES_CATEGORY } = require('~/consts/models')
 const { Schema, model } = require('mongoose')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
 
@@ -16,6 +16,11 @@ const attachmentSchema = new Schema(
       maxLength: [55, FIELD_CANNOT_BE_LONGER('file name', 55)],
       trim: true
     },
+    description: {
+      type: String,
+      maxLength: [150, FIELD_CANNOT_BE_LONGER('description', 150)],
+      trim: true
+    },
     link: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('link')],
@@ -26,8 +31,9 @@ const attachmentSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('size')]
     },
     category: {
-      type: [Schema.Types.ObjectId],
-      ref: CATEGORY
+      type: Schema.Types.ObjectId,
+      ref: RESOURCES_CATEGORY,
+      default: null
     }
   },
   {

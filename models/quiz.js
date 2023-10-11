@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { QUIZ, USER, CATEGORY, QUESTION } = require('~/consts/models')
+const { QUIZ, USER, RESOURCES_CATEGORY, QUESTION } = require('~/consts/models')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER } = require('~/consts/errors')
 
 const quizSchema = new Schema(
@@ -21,8 +21,9 @@ const quizSchema = new Schema(
       required: [true, FIELD_CANNOT_BE_EMPTY('author')]
     },
     category: {
-      type: [Schema.Types.ObjectId],
-      ref: CATEGORY
+      type: Schema.Types.ObjectId,
+      ref: RESOURCES_CATEGORY,
+      default: null
     }
   },
   { timestamps: true, versionKey: false }

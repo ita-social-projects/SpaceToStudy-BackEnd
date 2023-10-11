@@ -11,22 +11,8 @@ const endpointUrl = '/quizzes/'
 
 const testQuizData = {
   title: 'Assembly',
-  category: ['63bed9ef260f18d04ab15da'],
-  items: [
-    {
-      question: 'Is it the best programming language?',
-      answers: [
-        {
-          text: 'Yes',
-          isCorrect: true
-        },
-        {
-          text: 'Yes, of course',
-          isCorrect: false
-        }
-      ]
-    }
-  ]
+  category: '6502ec2060ec37be943353e2',
+  items: ['64faf47143a2ad4339ec6f5a']
 }
 
 const updateData = {
@@ -58,7 +44,7 @@ describe('Quiz controller', () => {
 
     currentUser = TokenService.validateAccessToken(accessToken)
 
-    testQuiz = await app.post(endpointUrl).send(testQuizData).set('Authorization', `Bearer ${accessToken}`)
+    testQuiz = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testQuizData)
     testQuizId = testQuiz.body._id
   })
 
@@ -92,8 +78,8 @@ describe('Quiz controller', () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .post(endpointUrl)
-        .send(testQuizData)
         .set('Authorization', `Bearer ${studentAccessToken}`)
+        .send(testQuizData)
 
       expectError(403, FORBIDDEN, response)
     })

@@ -8,6 +8,7 @@ const attachmentService = {
   getAttachments: async (match, sort, skip, limit) => {
     const items = await Attachment.find(match)
       .collation({ locale: 'en', strength: 1 })
+      .populate({ path: 'category', select: '_id name' })
       .sort(sort)
       .skip(skip)
       .limit(limit)
@@ -29,7 +30,9 @@ const attachmentService = {
     )
   },
 
-  updateAttachment: async (id, currentUser, fileName) => {
+  updateAttachment: async (id, currentUser, updateData) => {
+    const { fileName, description, category } = updateData
+
     const attachment = await Attachment.findById(id).exec()
 
     if (!attachment) {
@@ -39,6 +42,9 @@ const attachmentService = {
     if (currentUser !== attachment.author.toString()) {
       throw createForbiddenError()
     }
+
+    attachment.description = description
+    attachment.category = category
 
     if (fileName) {
       const [fileExtension] = attachment.fileName.split('.').reverse()

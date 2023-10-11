@@ -29,9 +29,9 @@ const createAttachments = async (req, res) => {
 const updateAttachment = async (req, res) => {
   const { id } = req.params
   const { id: currentUser } = req.user
-  const { fileName } = req.body
+  const updateData = req.body
 
-  await attachmentService.updateAttachment(id, currentUser, fileName)
+  await attachmentService.updateAttachment(id, currentUser, updateData)
 
   res.status(204).end()
 }

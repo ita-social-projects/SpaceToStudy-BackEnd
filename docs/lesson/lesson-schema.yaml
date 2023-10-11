@@ -18,7 +18,7 @@ definitions:
         $ref: '#/components/attachments'
       category:
         type: string
-        ref: '#/components/category'
+        ref: '#/definitions/resourcesCategory'
     required:
       - title
       - description

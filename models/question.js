@@ -45,7 +45,7 @@ const questionSchema = new Schema(
     category: {
       type: Schema.Types.ObjectId,
       ref: RESOURCES_CATEGORY,
-      required: [true, FIELD_CANNOT_BE_EMPTY('category')]
+      default: null
     },
     author: {
       type: Schema.Types.ObjectId,

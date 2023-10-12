@@ -18,6 +18,12 @@ const questionSchema = new Schema(
       minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
       maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
     },
+    text: {
+      type: String,
+      required: [true, FIELD_CANNOT_BE_EMPTY('text')],
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('text', 1)],
+      maxLength: [100, FIELD_CANNOT_BE_LONGER('text', 100)]
+    },
     answers: [
       {
         _id: false,
@@ -29,8 +35,7 @@ const questionSchema = new Schema(
         },
         isCorrect: {
           type: Boolean,
-          default: false,
-          required: true
+          default: false
         }
       }
     ],

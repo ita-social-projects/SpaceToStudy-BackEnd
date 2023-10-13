@@ -12,6 +12,7 @@ const endpointUrl = '/questions/'
 
 const testQuestionData = {
   title: 'Assembly',
+  text: 'What is Assembly',
   answers: [
     {
       text: 'Yes',
@@ -22,6 +23,7 @@ const testQuestionData = {
       isCorrect: false
     }
   ],
+  category: null,
   type: 'multipleChoice'
 }
 

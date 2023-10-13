@@ -17,15 +17,18 @@ const questionService = {
   },
 
   createQuestion: async (author, data) => {
-    const { title, answers, type, category } = data
+    const { title, text, answers, type, category } = data
 
-    return await Question.create({
+    const question = await Question.create({
       title,
+      text,
       answers,
       type,
       category,
       author
     })
+
+    return await question.populate({ path: 'category', select: '_id name' })
   },
 
   deleteQuestion: async (id, currentUser) => {

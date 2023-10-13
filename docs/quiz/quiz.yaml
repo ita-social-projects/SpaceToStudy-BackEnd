@@ -41,6 +41,7 @@ paths:
                 items:
                   - _id: 64ca5914b57f2442403394a5
                     title: IT
+                    description: description
                     items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6]
                     author: '6477007a6fa4d05e1a800ce5'
                     category: '63bed9ef260f18d04ab15da'
@@ -87,6 +88,7 @@ paths:
               $ref: '#/definitions/quizBody'
             example:
               title: Assembly
+              description: Description
               items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6]
               category: 6477007a6fa4d05e1a800ce5
       responses:
@@ -98,6 +100,7 @@ paths:
                 $ref: '#/definitions/lessons'
               example:
                 title: Assembly
+                description: Description
                 items: [6477007a6fa4d05e1a800ce2, 6477007a6fa4d05e1a800ce3]
                 category: 6477007a6fa4d05e1a800ce5
                 _id: 63ec1cd51e9d781cdb6f4b14
@@ -150,6 +153,7 @@ paths:
                 items:
                   - _id: 64ca5914b57f2442403394a5
                     title: IT
+                    description: Description
                     items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6]
                     author: 6477007a6fa4d05e1a800ce5,
                     category: 63bed9ef260f18d04ab15da

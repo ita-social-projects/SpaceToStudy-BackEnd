@@ -8,6 +8,8 @@ definitions:
           type: string
         title:
           type: string
+        description: 
+          type: string
         items:
           type: array
           ref: '#/components/question'
@@ -28,6 +30,8 @@ definitions:
     properties:
       title:
         type: string
+      description: 
+        type: string
       category:
         type: string
         ref: '#/definitions/resourcesCategory'
@@ -40,6 +44,8 @@ definitions:
       _id:
         type: string
       title:
+        type: string
+      description: 
         type: string
       items:
         type: array

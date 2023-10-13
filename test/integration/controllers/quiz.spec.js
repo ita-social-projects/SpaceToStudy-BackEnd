@@ -12,7 +12,7 @@ const endpointUrl = '/quizzes/'
 const testQuizData = {
   title: 'Assembly',
   category: '6502ec2060ec37be943353e2',
-  items: ['64faf47143a2ad4339ec6f5a']
+  items: ['6527ed6c14c6b72f36962364']
 }
 
 const updateData = {

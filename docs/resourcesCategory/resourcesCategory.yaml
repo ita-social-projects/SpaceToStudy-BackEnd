@@ -36,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/resourcesCategory'
+                $ref: "#/definitions/resourcesCategory"
               example:
                 count: 2
                 items:
@@ -50,7 +50,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -60,7 +60,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 403
                 code: FORBIDDEN
@@ -79,7 +79,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/resourcesCategoryBody'
+              $ref: "#/definitions/resourcesCategoryBody"
             example:
               name: Chemical Category
       responses:
@@ -88,7 +88,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/resources-categories'
+                $ref: "#/definitions/resources-categories"
               example:
                 _id: 650b14441e8d4a4484e2e2f5
                 name: Chemical Category
@@ -100,7 +100,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -110,7 +110,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 403
                 code: FORBIDDEN
@@ -132,14 +132,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/resourcesCategory'
-              example: [{ _id: 6502ec2060ec37be943353e2, name: 'New Category 1' }]
+                $ref: "#/definitions/resourcesCategory"
+              example:
+                [{ _id: 6502ec2060ec37be943353e2, name: "New Category 1" }]
         401:
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -149,7 +150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 403
                 code: FORBIDDEN
@@ -176,7 +177,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/resourceCategoryBody'
+              $ref: "#/definitions/resourceCategoryBody"
             example:
               name: Computer Science
       responses:
@@ -187,7 +188,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -197,7 +198,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 403
                 code: FORBIDDEN
@@ -207,11 +208,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 404
                 code: NOT_FOUND
-                message: Resource Category with the specified id was not found.    delete:
+                message: Resource Category with the specified id was not found.
+    delete:
       security:
         - bearerAuth: []
       tags:
@@ -234,7 +236,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 400
                 code: INVALID_ID
@@ -244,7 +246,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -254,7 +256,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 403
                 code: FORBIDDEN
@@ -264,7 +266,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: "#/components/Error"
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND

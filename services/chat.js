@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const Chat = require('~/models/chat')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const chatService = {
   createChat: async (currentUser, data) => {
@@ -33,6 +34,16 @@ const chatService = {
         select: '_id firstName lastName photo professionalSummary'
       }
     ])
+  },
+  deleteChat: async (id, currentUser) => {
+    const item = await Chat.findById(id).exec()
+    const isChatMember = item.members.some((member) => member.user.equals(currentUser))
+
+    if (!isChatMember) {
+      throw createForbiddenError()
+    }
+
+    await Chat.findByIdAndRemove(id).exec()
   }
 }
 

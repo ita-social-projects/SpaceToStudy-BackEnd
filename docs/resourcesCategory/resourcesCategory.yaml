@@ -211,7 +211,8 @@ paths:
               example:
                 status: 404
                 code: NOT_FOUND
-                message: Resource Category with the specified id was not found.    delete:
+                message: Resource Category with the specified id was not found.
+    delete:
       security:
         - bearerAuth: []
       tags:

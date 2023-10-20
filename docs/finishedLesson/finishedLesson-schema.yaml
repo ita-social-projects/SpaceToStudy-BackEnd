@@ -1,0 +1,37 @@
+definitions:
+  finishedLessons:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        lesson:
+          type: string
+          ref: '#/definitions/lesson'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  finishedLessonBody:
+    type: object
+    properties:
+      lesson:
+        type: string
+        ref: '#/definitions/lesson'
+  finishedLesson:
+    type: object
+    properties:
+      _id:
+        type: string
+      lesson:
+        type: string
+        ref: '#/definitions/lesson'
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

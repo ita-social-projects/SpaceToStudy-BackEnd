@@ -1,9 +1,5 @@
 const { Schema, model } = require('mongoose')
-const {
-  CHAT,
-  USER,
-  MESSAGE
-} = require('~/consts/models')
+const { CHAT, USER, MESSAGE } = require('~/consts/models')
 const {
   enums: { MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
@@ -27,7 +23,17 @@ const chatSchema = new Schema(
           required: [true, FIELD_MUST_BE_SELECTED('user role')]
         },
         _id: false
-      },
+      }
+    ],
+    deletedFor: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: USER,
+          required: true
+        },
+        _id: false
+      }
     ],
     latestMessage: {
       type: Schema.Types.ObjectId,

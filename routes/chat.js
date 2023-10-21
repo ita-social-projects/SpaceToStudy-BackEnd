@@ -20,5 +20,6 @@ router.use('/:id/messages', messageRouter)
 router.post('/', isEntityValid({ body }), asyncWrapper(chatController.createChat))
 router.get('/', asyncWrapper(chatController.getChats))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(chatController.deleteChat))
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(chatController.markAsDeletedForCurrentUser))
 
 module.exports = router

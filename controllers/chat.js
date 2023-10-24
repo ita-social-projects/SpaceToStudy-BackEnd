@@ -15,7 +15,17 @@ const getChats = async (req, res) => {
   res.status(200).json(chats)
 }
 
+const deleteChat = async (req, res) => {
+  const { id } = req.params
+  const { id: currentUser } = req.user
+
+  await chatService.deleteChat(id, currentUser)
+
+  res.status(204).end()
+}
+
 module.exports = {
   createChat,
-  getChats
+  getChats,
+  deleteChat
 }

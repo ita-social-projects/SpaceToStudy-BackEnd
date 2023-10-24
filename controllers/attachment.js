@@ -6,9 +6,13 @@ const getRegex = require('~/utils/getRegex')
 
 const getAttachments = async (req, res) => {
   const { id: author } = req.user
-  const { fileName, sort, skip, limit } = req.query
+  const { fileName, sort, skip, limit, categories } = req.query
 
-  const match = getMatchOptions({ author, fileName: getRegex(fileName) })
+  const match = getMatchOptions({
+    author,
+    fileName: getRegex(fileName),
+    ...(categories?.length && { category: categories })
+  })
   const sortOptions = getSortOptions(sort)
 
   const attachments = await attachmentService.getAttachments(match, sortOptions, parseInt(skip), parseInt(limit))

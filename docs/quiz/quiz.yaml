@@ -233,7 +233,6 @@ paths:
                 status: 404
                 code: NOT_FOUND
                 message: Quiz with the specified id was not found.
-  /quizzes/{id}:
     delete:
       security:
         - bearerAuth: [ ]

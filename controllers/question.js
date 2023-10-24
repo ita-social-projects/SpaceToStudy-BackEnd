@@ -5,7 +5,6 @@ const getSortOptions = require('~/utils/getSortOptions')
 const getQuestions = async (req, res) => {
   const { id: author } = req.user
   const { title, sort, skip, limit, categories } = req.query
-  console.log('categories', categories, author)
 
   const match = {
     author,

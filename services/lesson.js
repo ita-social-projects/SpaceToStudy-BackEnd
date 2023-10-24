@@ -5,14 +5,15 @@ const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const lessonService = {
   createLesson: async (author, data) => {
-    const { title, description, attachments, content, category  } = data
+    const { title, description, attachments, content, category } = data
 
-    return await Lesson.create({ author, title, description, attachments, content, category  })
+    return await Lesson.create({ author, title, description, attachments, content, category })
   },
 
   getLessons: async (match, sort, skip, limit) => {
     const items = await Lesson.find(match)
       .collation({ locale: 'en', strength: 1 })
+      .populate({ path: 'category', select: '_id name' })
       .sort(sort)
       .skip(skip)
       .limit(limit)

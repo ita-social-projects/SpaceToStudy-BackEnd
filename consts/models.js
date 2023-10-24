@@ -12,6 +12,7 @@ const refs = {
   NOTIFICATION: 'Notification',
   COMMENT: 'Comment',
   LESSON: 'Lesson',
+  FINISHED_LESSON: 'FinishedLesson',
   COURSE: 'Course',
   QUIZ: 'Quiz',
   FINISHED_QUIZ: 'FinishedQuiz',

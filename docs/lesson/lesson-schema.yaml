@@ -22,3 +22,23 @@ definitions:
     required:
       - title
       - description
+  lesson:
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+        ref: '#components/user'
+      title:
+        type: string
+      description:
+        type: string
+      content:
+        type: string
+      attachments:
+        type: array
+        $ref: '#/components/attachments'
+      category:
+        type: string
+        ref: '#/definitions/resourcesCategory'

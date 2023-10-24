@@ -10,6 +10,11 @@ const quizSchema = new Schema(
       minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
       maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
     },
+    description: {
+      type: String,
+      maxLength: [150, FIELD_CANNOT_BE_LONGER('description', 150)],
+      trim: true
+    },
     items: {
       type: [Schema.Types.ObjectId],
       ref: QUESTION,

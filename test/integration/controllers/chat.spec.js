@@ -1,8 +1,10 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED } = require('~/consts/errors')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const Chat = require('~/models/chat')
 
+const nonExistingChatId = '64a33e71eea95284f397a6e4'
 const endpointUrl = '/chats/'
 
 let accessToken
@@ -28,8 +30,20 @@ let chatData = {
   updatedAt: expect.any(String)
 }
 
+const differentUserData = {
+  role: 'student',
+  firstName: 'Student',
+  lastName: 'Student',
+  email: 'student@gmail.com',
+  password: 'studentpass',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: 'student'
+}
+
 describe('Chat controller', () => {
-  let app, server
+  let app, server, testChat, studentAccessToken
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -37,6 +51,7 @@ describe('Chat controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
+    studentAccessToken = await testUserAuthentication(app, differentUserData)
   })
 
   afterEach(async () => {
@@ -60,6 +75,38 @@ describe('Chat controller', () => {
       expect(newChat.statusCode).toBe(201)
 
       expect(newChat._body).toEqual(expect.objectContaining(chatData))
+    })
+  })
+
+  describe(`DELETE ${endpointUrl}:id`, () => {
+    beforeEach(async () => {
+      testChat = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .delete(endpointUrl + testChat._body._id)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should delete chat by ID', async () => {
+      const response = await app.delete(endpointUrl + testChat._body._id).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.delete(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw NOT_FOUND', async () => {
+      const response = await app.delete(endpointUrl + nonExistingChatId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })
   })
 })

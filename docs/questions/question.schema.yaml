@@ -8,12 +8,17 @@ definitions:
           type: string
         title:
           type: string
+        text:
+          type: string
         answers:
           type: array
           items:
             type: object
-            text: string
-            isCorrect: boolean
+            properties:
+              text:
+                type: string
+              isCorrect:
+                type: boolean
         author:
           type: string
           ref: '#/components/user'
@@ -31,15 +36,20 @@ definitions:
     properties:
       title:
         type: string
+      text:
+        type: string
       answers:
         type: array
         items:
           type: object
-          text: string
-          isCorrect: boolean
+          properties:
+            text:
+              type: string
+            isCorrect:
+              type: boolean
       category:
-          type: string
-          ref: '#/definitions/resourcesCategory'
+        type: string
+        ref: '#/definitions/resourcesCategory'
   question:
     type: object
     properties:
@@ -47,12 +57,17 @@ definitions:
         type: string
       title:
         type: string
+      text:
+        type: string
       answers:
         type: array
         items:
           type: object
-          text: string
-          isCorrect: boolean
+          properties:
+            text:
+              type: string
+            isCorrect:
+              type: boolean
       author:
         type: string
         ref: '#/components/user'

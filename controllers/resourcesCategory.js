@@ -49,9 +49,19 @@ const updateResourceCategory = async (req, res) => {
   res.status(204).end()
 }
 
+const deleteResourceCategory = async (req, res) => {
+  const { id } = req.params
+  const { id: currentUser } = req.user
+
+  await resourcesCategoryService.deleteResourceCategory(id, currentUser)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getResourcesCategories,
   createResourcesCategory,
   getResourcesCategoriesNames,
-  updateResourceCategory
+  updateResourceCategory,
+  deleteResourceCategory
 }

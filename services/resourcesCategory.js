@@ -23,7 +23,7 @@ const resourcesCategoryService = {
     return { count, items }
   },
   getResourcesCategoriesNames: async (match) => {
-    return await ResourcesCategory.find(match).select('-author -createdAt -updatedAt').exec()
+    return await ResourcesCategory.find(match).select('name').exec()
   },
 
   updateResourceCategory: async (id, currentUserId, updateData) => {

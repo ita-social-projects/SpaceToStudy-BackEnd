@@ -26,6 +26,28 @@ let chatData = {
       role: 'student'
     }
   ],
+  deletedFor: [],
+  createdAt: expect.any(String),
+  updatedAt: expect.any(String)
+}
+
+let markedChatData = {
+  _id: expect.any(String),
+  members: [
+    {
+      user: expect.any(String),
+      role: expect.any(String)
+    },
+    {
+      user: '6421d9833cdf38b706756dff',
+      role: 'student'
+    }
+  ],
+  deletedFor: [
+    {
+      user: expect.any(String)
+    }
+  ],
   createdAt: expect.any(String),
   updatedAt: expect.any(String)
 }
@@ -105,6 +127,39 @@ describe('Chat controller', () => {
 
     it('should throw NOT_FOUND', async () => {
       const response = await app.delete(endpointUrl + nonExistingChatId).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}:id`, () => {
+    beforeEach(async () => {
+      testChat = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .patch(endpointUrl + testChat._body._id)
+        .set('Authorization', `Bearer ${studentAccessToken}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should mark chat by ID as deleted', async () => {
+      const response = await app.patch(endpointUrl + testChat._body._id).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response._body).toEqual(expect.objectContaining(markedChatData))
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.patch(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw NOT_FOUND', async () => {
+      const response = await app.patch(endpointUrl + nonExistingChatId).set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })

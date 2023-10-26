@@ -77,7 +77,7 @@ paths:
                       role: tutor
                   createdAt: 2024-08-01T13:25:36.292Z
                   updatedAt: 2024-08-01T13:25:36.292Z
-  '/chats/{id}/messages':
+  /chats/{id}/messages:
     get:
       security:
         - bearerAuth: []
@@ -190,7 +190,7 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Chat with the specified id was not found.
-  '/chats/{id}':
+  /chats/{id}:
     delete:
       security:
         - bearerAuth: []
@@ -209,6 +209,87 @@ paths:
       responses:
         204:
           description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Chat with the specified id was not found.
+    patch:
+      security:
+        - bearerAuth: []
+      tags:
+        - Chats
+      summary: Marks chat as deleted by ID for current user
+      description: Finds Chat with the specified ID and adds `deletedFor` field to it with current user.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the Chat that needs to be marked as deleted
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/chats'
+              example:
+                  - _id: 64a54c6c7bca605aaf2da66c
+                    members: [
+                      {
+                        user: 6491d003a634c3c427b69daa,
+                        role: tutor
+                      },
+                      {
+                        user: 6421d9833cdf38b706756dff,
+                        role: student
+                      }
+                    ]
+                    deletedFor: [
+                      {
+                        user: 6491d003a634c3c427b69daa
+                      }
+                    ]
+                    createdAt: 2023-20-01T13:25:36.292Z
+                    updatedAt: 2023-20-01T13:25:36.292Z
         400:
           description: Bad Request
           content:

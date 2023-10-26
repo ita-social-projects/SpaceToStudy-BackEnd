@@ -1,7 +1,8 @@
 const mongoose = require('mongoose')
+const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const Chat = require('~/models/chat')
-const { createForbiddenError } = require('~/utils/errorsHelper')
+const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 
 const chatService = {
   createChat: async (currentUser, data) => {
@@ -12,7 +13,8 @@ const chatService = {
       members: [
         { user: author, role: authorRole },
         { user: member, role: memberRole }
-      ]
+      ],
+      deletedFor: []
     })
   },
   getChats: async (currentUser) => {
@@ -20,7 +22,8 @@ const chatService = {
 
     return await Chat.find({
       'members.user': mongoose.Types.ObjectId(user),
-      'members.role': userRole
+      'members.role': userRole,
+      'deletedFor.user': { $ne: mongoose.Types.ObjectId(user) }
     }).populate([
       {
         path: 'latestMessage',
@@ -44,6 +47,24 @@ const chatService = {
     }
 
     await Chat.findByIdAndRemove(id).exec()
+  },
+  markAsDeletedForCurrentUser: async (id, currentUser) => {
+    const chat = await Chat.findById(id).exec()
+    const isChatMember = chat.members.some((member) => member.user.equals(currentUser))
+
+    if (!chat) {
+      throw createError(404, DOCUMENT_NOT_FOUND(chat.modelName))
+    }
+
+    if (!isChatMember) {
+      throw createForbiddenError()
+    }
+
+    chat.deletedFor.push({ user: currentUser })
+
+    await chat.validate()
+    await chat.save()
+    return chat
   }
 }
 

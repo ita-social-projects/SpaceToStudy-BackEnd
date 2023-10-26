@@ -55,7 +55,9 @@ const questionService = {
     for (let field in data) {
       question[field] = data[field]
     }
+
     await question.save()
+    return question.populate({ path: 'category', select: '_id name' })
   }
 }
 

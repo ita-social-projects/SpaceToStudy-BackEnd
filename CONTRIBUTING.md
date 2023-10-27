@@ -22,7 +22,7 @@ $ git checkout develop
 - Set up your project by adding your .env variables
 
 ```bash
-$ npm install
+$ npm ci
 ```
 
 ```bash

@@ -20,7 +20,7 @@ const removeUsersWithUnconfirmedEmail = async () => {
     unconfirmedUsersData?.map(async ({ confirmToken }) => {
       const payload = await tokenService.validateConfirmToken(confirmToken)
 
-      if (payload && payload.id) {
+      if (payload?.id) {
         return
       }
 

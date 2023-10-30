@@ -22,9 +22,9 @@ const getLessonById = async (req, res) => {
 
 const getLessons = async (req, res) => {
   const { id: author } = req.user
-  const { title, sort, skip, limit } = req.query
+  const { title, sort, skip, limit, categories } = req.query
 
-  const match = getMatchOptions({ author, title: getRegex(title) })
+  const match = getMatchOptions({ author, title: getRegex(title), ...(categories?.length && { category: categories }) })
   const sortOptions = getSortOptions(sort)
 
   const lessons = await lessonService.getLessons(match, sortOptions, parseInt(skip), parseInt(limit))

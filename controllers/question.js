@@ -4,9 +4,13 @@ const getSortOptions = require('~/utils/getSortOptions')
 
 const getQuestions = async (req, res) => {
   const { id: author } = req.user
-  const { title, sort, skip, limit } = req.query
+  const { title, sort, skip, limit, categories } = req.query
 
-  const match = { author, title: getRegex(title) }
+  const match = {
+    author,
+    title: getRegex(title),
+    ...(categories?.length && { category: categories })
+  }
   const sortOptions = getSortOptions(sort)
 
   const questions = await questionService.getQuestions(match, sortOptions, parseInt(skip), parseInt(limit))

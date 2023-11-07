@@ -147,8 +147,8 @@ paths:
         - bearerAuth: []
       tags:
         - Questions
-      summary: Update question by id.
-      description: Updates question by id.
+      summary: Updates question by id and return it.
+      description: Updates question by id and return it.
       produces:
         - application/json
       parameters:
@@ -166,8 +166,26 @@ paths:
             example:
               title: WebAssembly
       responses:
-        204:
-          description: No content
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#definitions/question'
+              example:
+                _id: 63ec1cd51e9d781cdb6f4b14
+                title: WebAssembly
+                text: What is the chemical symbol for water?
+                answers:
+                  - text: First answer
+                    isCorrect: true
+                  - text: Second answer
+                    isCorrect: false
+                type: multipleChoice
+                author: 63da8767c9ad4c9a0b0eacd3
+                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
+                createdAt: 2023-02-14T23:44:21.334Z
+                updatedAt: 2023-02-14T23:44:21.334Z
         401:
           description: Unauthorized
           content:

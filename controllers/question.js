@@ -40,9 +40,10 @@ const updateQuestion = async (req, res) => {
   const { id } = req.params
   const { id: currentUserId } = req.user
   const data = req.body
-  await questionService.updateQuestion(id, currentUserId, data)
 
-  res.status(204).end()
+  const updatedQuestion = await questionService.updateQuestion(id, currentUserId, data)
+
+  res.status(200).json(updatedQuestion)
 }
 
 module.exports = {

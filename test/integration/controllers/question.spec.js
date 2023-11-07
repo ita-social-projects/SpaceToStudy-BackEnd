@@ -126,7 +126,7 @@ describe('Question controller', () => {
         .patch(endpointUrl + testQuestionId)
         .send(updateData)
         .set('Authorization', `Bearer ${accessToken}`)
-      expect(response.statusCode).toBe(204)
+      expect(response.statusCode).toBe(200)
 
       const updatedQuestion = await Question.findById(testQuestionId)
 

@@ -30,6 +30,11 @@ let chatBody = {
   memberRole: 'student'
 }
 
+let clearedStatusBody = {
+  messagesMarkedAsDeleted: expect.any(Number),
+  messagesDeleted: expect.any(Number)
+}
+
 let userData = {
   role: ['tutor'],
   firstName: 'test',
@@ -151,6 +156,45 @@ describe('Message controller', () => {
 
     it('should throw DOCUMENT_NOT_FOUND for chat', async () => {
       const response = await app.delete(endpointUrl(nonExistingChatId)).set('Authorization', `Bearer ${accessToken}`)
+
+      expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}`, () => {
+    it('should clear chat history for current user', async () => {
+      const response = await app.patch(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(clearedStatusBody)
+    })
+
+    it('should throw NOT MODIFIED if there is nothing to clear', async () => {
+      chatResponse = await app.post(chatEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+      messageBody.chat = chatResponse.body._id
+      const response = await app.patch(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+
+      expect(response.statusCode).toBe(304)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.patch(endpointUrl(messageBody.chat))
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const accessTokenForbidden = await testUserAuthentication(app, userData)
+
+      const response = await app
+        .patch(endpointUrl(messageBody.chat))
+        .set('Authorization', `Bearer ${accessTokenForbidden}`)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND for chat', async () => {
+      const response = await app.patch(endpointUrl(nonExistingChatId)).set('Authorization', `Bearer ${accessToken}`)
 
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })

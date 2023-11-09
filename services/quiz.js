@@ -21,13 +21,14 @@ const quizService = {
   },
 
   createQuiz: async (author, data) => {
-    const { title, category, items } = data
+    const { title, category, items, description } = data
 
     return await Quiz.create({
       title,
       author,
       category,
-      items
+      items,
+      description
     })
   },
 

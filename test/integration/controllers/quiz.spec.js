@@ -11,6 +11,7 @@ const endpointUrl = '/quizzes/'
 
 const testQuizData = {
   title: 'Assembly',
+  description: 'Description',
   category: '6502ec2060ec37be943353e2',
   items: ['6527ed6c14c6b72f36962364']
 }

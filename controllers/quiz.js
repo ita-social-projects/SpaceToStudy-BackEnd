@@ -1,12 +1,15 @@
 const quizService = require('~/services/quiz')
+const getCategoriesOptions = require('~/utils/getCategoriesOption')
+const getMatchOptions = require('~/utils/getMatchOptions')
 const getRegex = require('~/utils/getRegex')
 const getSortOptions = require('~/utils/getSortOptions')
 
 const getQuizzes = async (req, res) => {
   const { id: author } = req.user
   const { title, sort, skip, limit, categories } = req.query
+  const categoriesOptions = getCategoriesOptions(categories)
 
-  const match = { author, title: getRegex(title), ...(categories?.length && { category: categories }) }
+  const match = getMatchOptions({ author, title: getRegex(title), category: categoriesOptions })
   const sortOptions = getSortOptions(sort)
 
   const quizzes = await quizService.getQuiz(match, sortOptions, parseInt(skip), parseInt(limit))

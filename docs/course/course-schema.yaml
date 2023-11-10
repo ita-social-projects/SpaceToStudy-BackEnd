@@ -6,6 +6,8 @@ definitions:
       properties:
         _id:
           type: string
+        banner:
+          type: string
         title:
           type: string
         description:
@@ -34,6 +36,8 @@ definitions:
     properties:
       _id:
         type: string
+      banner:
+        type: string
       title:
         type: string
       description:
@@ -60,6 +64,8 @@ definitions:
   courseBody:
     type: object
     properties:
+      banner:
+        type: string
       title:
         type: string
       description:

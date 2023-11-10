@@ -16,9 +16,10 @@ const courseService = {
   },
 
   createCourse: async (author, data) => {
-    const { title, description, lessons, attachments } = data
+    const { banner, title, description, lessons, attachments } = data
 
     return await Course.create({
+      banner,
       title,
       description,
       author,
@@ -28,7 +29,7 @@ const courseService = {
   },
 
   updateCourse: async (userId, data) => {
-    const { id, title, description, attachments, rewriteAttachments = false } = data
+    const { id, banner, title, description, attachments, rewriteAttachments = false } = data
 
     const course = await Course.findById(id).exec()
 
@@ -46,7 +47,7 @@ const courseService = {
       course.attachments = rewriteAttachments ? attachments : course.attachments.concat(attachments)
     }
 
-    const updateData = { title, description }
+    const updateData = { banner, title, description }
 
     for (const key in updateData) {
       const value = updateData[key]

@@ -5,6 +5,9 @@ const { COURSE, USER, LESSON, ATTACHMENT } = require('~/consts/models')
 
 const courseSchema = new Schema(
   {
+    banner: {
+      type: String
+    },
     title: {
       type: String,
       required: [true, FIELD_CANNOT_BE_EMPTY('title')],

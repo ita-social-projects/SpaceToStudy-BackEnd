@@ -26,6 +26,7 @@ let tutorUser = {
 }
 
 const testCourseData = {
+  banner: 'img-path',
   title: 'assembly',
   description: 'you will learn some modern programming language for all your needs',
   attachments: [
@@ -94,6 +95,7 @@ describe('Course controller', () => {
     it('should create a course', async () => {
       expect(testCourseResponse.statusCode).toBe(201)
       expect(testCourseResponse.body).toMatchObject({
+        banner: testCourseData.banner,
         title: testCourseData.title,
         description: testCourseData.description,
         attachments: ['mocked-file-url'],
@@ -161,6 +163,7 @@ describe('Course controller', () => {
       expect(response.statusCode).toBe(200)
       expect(response.body).toMatchObject({
         _id: expect.any(String),
+        banner: expect.any(String),
         author: expect.any(String),
         title: 'assembly',
         description: 'you will learn some modern programming language for all your needs',

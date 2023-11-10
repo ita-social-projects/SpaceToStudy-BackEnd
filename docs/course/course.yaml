@@ -28,7 +28,8 @@ paths:
               schema:
                 $ref: '#/definitions/course'
               example:
-                - _id: 64045f98b131dd04d7896af6
+                - _id: 64045f98b131dd04d7896af6,
+                  banner: 247829-banner.jpg
                   title: Advanced English
                   description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
@@ -80,6 +81,7 @@ paths:
             schema:
               $ref: '#definitions/courseBody'
             example:
+              banner: 247829-banner.jpg
               title: Advanced English
               description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
               author: 63da8767c9ad4c9a0b0eacd3
@@ -93,6 +95,7 @@ paths:
               schema:
                 $ref: '#definitions/course'
               example:
+                banner: 247829-banner.jpg
                 title: Advanced English
                 description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                 author: 63da8767c9ad4c9a0b0eacd3
@@ -206,6 +209,7 @@ paths:
               schema:
                 $ref: '#definitions/course'
               example:
+                banner: 247829-banner.jpg
                 title: Advanced English
                 description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                 author: 63da8767c9ad4c9a0b0eacd3

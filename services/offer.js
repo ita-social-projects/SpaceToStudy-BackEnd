@@ -73,7 +73,8 @@ const offerService = {
   },
 
   createOffer: async (author, authorRole, data) => {
-    const { price, proficiencyLevel, title, description, languages, subject, category, status, FAQ } = data
+    const { price, proficiencyLevel, title, description, languages, enrolledUsers, subject, category, status, FAQ } =
+      data
 
     return await Offer.create({
       author,
@@ -83,6 +84,7 @@ const offerService = {
       title,
       description,
       languages,
+      enrolledUsers,
       subject,
       category,
       status,

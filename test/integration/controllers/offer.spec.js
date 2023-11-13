@@ -18,6 +18,7 @@ let testOffer = {
   FAQ: [{ question: 'question1', answer: 'answer1' }],
   description: 'TEST 123ASD',
   languages: ['Ukrainian'],
+  enrolledUsers: ['6512e1ca5fd987b6ce926c2e', '652ba66bf6770c3a2d5d8549'],
   subject: '',
   category: {
     _id: '',
@@ -87,6 +88,7 @@ describe('Offer controller', () => {
           subject,
           category,
           status: 'active',
+          enrolledUsers: expect.any(Array),
           createdAt: expect.any(String),
           updatedAt: expect.any(String)
         })

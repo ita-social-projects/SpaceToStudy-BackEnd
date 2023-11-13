@@ -1,8 +1,6 @@
 const getCategoriesOptions = (categories) => {
   if (categories) {
-    const filtredItems = categories.map((item) => (item === 'null' ? null : item))
-
-    return filtredItems
+    return categories.map((item) => (item === 'null' ? null : item))
   } else {
     return
   }

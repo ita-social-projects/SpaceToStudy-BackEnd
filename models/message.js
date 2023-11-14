@@ -49,7 +49,17 @@ const messageSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: CHAT,
       required: [true, FIELD_CANNOT_BE_EMPTY('chat')]
-    }
+    },
+    clearedFor: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: USER,
+          required: true
+        },
+        _id: false
+      }
+    ]
   },
   {
     timestamps: true,

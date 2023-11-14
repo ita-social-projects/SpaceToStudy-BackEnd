@@ -35,8 +35,27 @@ const deleteMessages = async (req, res) => {
   res.status(204).end()
 }
 
+const clearHistory = async (req, res) => {
+  const { id: user } = req.user
+  const { id: chat } = req.params
+
+  const responseFunctions = {
+    304: (res) => res.status(304).end(),
+    200: (res, data) => res.status(200).json(data)
+  }
+  const defaultResponse = (res) => {
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+
+  const { statusCode, stats } = await messageService.clearHistory({ user, chat })
+  const responseFunction = responseFunctions[statusCode] || defaultResponse
+
+  responseFunction(res, stats)
+}
+
 module.exports = {
   sendMessage,
   getMessages,
-  deleteMessages
+  deleteMessages,
+  clearHistory
 }

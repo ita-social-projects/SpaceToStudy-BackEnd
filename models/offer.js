@@ -62,6 +62,11 @@ const offerSchema = new Schema(
       ref: USER,
       required: true
     },
+    enrolledUsers: {
+      type: [Schema.Types.ObjectId],
+      ref: USER,
+      required: false
+    },
     subject: {
       type: Schema.Types.ObjectId,
       ref: SUBJECT,

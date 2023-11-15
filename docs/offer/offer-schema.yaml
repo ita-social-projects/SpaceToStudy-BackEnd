@@ -40,6 +40,9 @@ definitions:
         author:
           type: string
           ref: '#components/user'
+        enrolledUsers:
+          type: array
+          ref: '#components/user'
         subject:
           type: string
           ref: '#components/subject'
@@ -104,6 +107,9 @@ definitions:
             - Arabic
       authorRole:
         type: string
+      enrolledUsers:
+        type: array
+        ref: '#components/user'
       subject:
         type: string
         ref: '#components/subject'
@@ -163,6 +169,9 @@ definitions:
         type: string
       author:
         type: string
+        ref: '#components/user'
+      enrolledUsers:
+        type: array
         ref: '#components/user'
       subject:
         type: string

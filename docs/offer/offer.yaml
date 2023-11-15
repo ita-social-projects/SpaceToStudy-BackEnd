@@ -87,6 +87,7 @@ paths:
                     title: this is a new title for test purposes
                     description: this is a new description for test purposes
                     languages: [English]
+                    enrolledUsers: [6512e1ca5fd987b6ce926c2e]
                     authorRole: tutor
                     authorFirstName: Amanda
                     authorLastName: Smith
@@ -96,11 +97,7 @@ paths:
                       totalReviews:
                         student: 0
                         tutor: 0
-                      FAQ: {
-                        question: tutor question,
-                        _id: 63525e23bf163f5ea609ff2b,
-                        answer: tutor answer
-                      }
+                      FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
                       professionalSummary: My professional summary
                       photo: link-to-photo.png
                     subject:
@@ -108,17 +105,14 @@ paths:
                       name: english
                     category: 63525e23bf163f5ea609ff2b
                     chatId: '64be59667f4136e211435a55'
-                    FAQ: {
-                      question: offer question,
-                      _id: 63525e23bf163f5ea609ff2b,
-                      answer: offer answer
-                    }
+                    FAQ: { question: offer question, _id: 63525e23bf163f5ea609ff2b, answer: offer answer }
                   - _id: 63ebc6fbd2f34037d0aba791
                     price: 300
                     proficiencyLevel: [Intermediate, Advanced]
                     title: this is a new title for test purposes
                     description: Lorem ipsum dolor sit amet consectetur
                     languages: [English, Ukrainian]
+                    enrolledUsers: [6512e1ca5fd987b6ce926c2e]
                     authorRole: tutor
                     authorFirstName: John
                     authorLastName: Smith
@@ -200,11 +194,7 @@ paths:
                 subject: 63da8767c9ad4c9a0b0eacd3
                 category: 63525e23bf163f5ea609ff2b
                 status: pending
-                FAQ: {
-                  question: tutor question,
-                  _id: 63525e23bf163f5ea609ff2b,
-                  answer: tutor answer
-                }
+                FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -258,6 +248,7 @@ paths:
                 title: this is a new title for test purposes
                 description: Lorem ipsum dolor sit amet consectetur
                 languages: [English, Ukrainian]
+                enrolledUsers: [6512e1ca5fd987b6ce926c2e]
                 authorRole: tutor
                 authorFirstName: John
                 authorLastName: Smith
@@ -267,11 +258,7 @@ paths:
                   totalReviews:
                     student: 0
                     tutor: 0
-                  FAQ: {
-                    question: tutor question,
-                    _id: 63525e23bf163f5ea609ff2b,
-                    answer: tutor answer
-                  }
+                  FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
                   professionalSummary: My professional summary
                   photo: link-to-photo.png
                 subject:
@@ -279,11 +266,7 @@ paths:
                   name: piano
                 category: 63525e23bf163f5ea609ff2b
                 chatId: '64be59667f4136e211435a55'
-                FAQ: {
-                  question: tutor question,
-                  _id: 63525e23bf163f5ea609ff2b,
-                  answer: tutor answer
-                }
+                FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
         400:
@@ -364,6 +347,7 @@ paths:
               title: this is a new title for test purposes
               description: this is a test text 123
               languages: [Ukrainian, Polish]
+              enrolledUsers: [6512e1ca5fd987b6ce926c2e]
               subjectId: 63da8767c9ad4c9a0b0eacd3
               categoryId: 63525e23bf163f5ea609ff2b
       responses:

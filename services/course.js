@@ -16,14 +16,23 @@ const courseService = {
   },
 
   createCourse: async (author, data) => {
-    const { title, description, lessons, attachments } = data
+    const {
+      title,
+      description,
+      category,
+      subject,
+      proficiencyLevel,
+      sections
+    } = data
 
     return await Course.create({
       title,
       description,
       author,
-      lessons,
-      attachments
+      category,
+      subject,
+      proficiencyLevel,
+      sections
     })
   },
 

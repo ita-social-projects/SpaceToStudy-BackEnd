@@ -17,7 +17,7 @@ const quizService = {
   },
 
   getQuizById: async (id) => {
-    return await Quiz.findById(id).lean().exec()
+    return await Quiz.findById(id).populate({ path: 'items', select: 'title answers text' }).lean().exec()
   },
 
   createQuiz: async (author, data) => {

@@ -2,7 +2,7 @@ paths:
   /chats:
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Chats
       summary: Create a new chat.
@@ -46,7 +46,7 @@ paths:
                 message: The requested URL requires user authorization.
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Chats
       summary: Find all chats for current user.
@@ -80,7 +80,7 @@ paths:
   /chats/{id}/messages:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Chats
       summary: Find your messages in chat
@@ -144,7 +144,7 @@ paths:
                 message: Chat with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Chats
       summary: Delete all messages from the specified chat
@@ -248,7 +248,7 @@ paths:
   /chats/{id}:
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Chats
       summary: Deletes Chat by ID
@@ -306,7 +306,7 @@ paths:
                 message: Chat with the specified id was not found.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Chats
       summary: Marks chat as deleted by ID for current user

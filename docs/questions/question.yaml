@@ -2,7 +2,7 @@ paths:
   /questions:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Questions
       summary: Find all questions.
@@ -77,7 +77,7 @@ paths:
                 message: The requested URL requires user authorization.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Questions
       summary: Creates a new question.
@@ -144,7 +144,7 @@ paths:
   /questions/{id}:
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Questions
       summary: Updates question by id and return it.
@@ -218,7 +218,7 @@ paths:
                 message: Question with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Questions
       summary: Find and delete question by ID

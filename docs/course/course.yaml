@@ -2,7 +2,7 @@ paths:
   /courses:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Courses
       summary: Find all courses.
@@ -66,7 +66,7 @@ paths:
                 message: You do not have permission to perform this action.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Courses
       summary: Creates a new course.
@@ -124,7 +124,7 @@ paths:
   /courses/{id}:
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Courses
       summary: Update a course.
@@ -185,7 +185,7 @@ paths:
                 message: Course with the specified id was not found.
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Courses
       summary: Find course by id.
@@ -236,7 +236,7 @@ paths:
                 message: Course with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Courses
       summary: Delete a course.

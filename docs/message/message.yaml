@@ -2,7 +2,7 @@ paths:
   /messages:
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Messages
       summary: Create a new message.
@@ -49,7 +49,7 @@ paths:
                 message: 'The requested URL requires user authorization.'
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Messages
       summary: Find your messages in chat

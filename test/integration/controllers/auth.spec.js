@@ -218,9 +218,17 @@ describe('Auth controller', () => {
 
       const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
 
-      const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+      console.log(loginUserResponse)
 
-      const refreshResponse = await app.get('/auth/refresh').set('Cookie', `refreshToken=${refreshToken}`)
+      const refreshToken = loginUserResponse.header['set-cookie'][1].split(';')[0].split('=')[1]
+      const accessToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+
+      console.log('refresh: ', refreshToken)
+      console.log('access: ', accessToken)
+
+      const refreshResponse = await app
+        .get('/auth/refresh')
+        .set('Cookie', [`refreshToken=${refreshToken}`, `accessToken=${accessToken}`])
 
       expect(refreshResponse.statusCode).toBe(200)
       expect(refreshResponse.body).toEqual(

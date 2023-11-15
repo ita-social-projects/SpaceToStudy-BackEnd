@@ -55,7 +55,7 @@ paths:
       tags:
         - Auth
       summary: User authentication
-      description: Authenticates a user, returns an access token and sets cookie with a refresh token.
+      description: Authenticates a user, returns an access token and sets cookie with a refresh and access tokens.
       produces:
         - application/json
       requestBody:
@@ -75,7 +75,7 @@ paths:
             Set-Cookie:
               schema:
                 type: string
-                example: refreshToken=eyJhbGciOiJIUzI1NiIsInRI.0IiwiaXNatalXJzdExvZ2A5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4O; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
+                example: refreshToken=eyJhbGciOiJIUzI1NiIsInRI.0IiwiaXNatalXJzdExvZ2A5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx5O; refreshToken=eyJhbGciOiJIUzI1NiIsInRI.0IiwiaXNatalXJzdExvZ2A5Mjg4ODMsImV4cCI6MWomanzMjQ4M30.gn_hJqB9zVi5Ux5oRu22hGQ9W4z2njkdnx4O; Max-Age=86400; Domain=s2s-back-stage.azurewebsites.net; Path=/; Expires=Sat, 20 Aug 2022 17:32:57 GMT; HttpOnly; Secure; SameSite=None
           content:
             application/json:
               schema:
@@ -104,7 +104,7 @@ paths:
       tags:
         - Auth
       summary: Logs the current user out
-      description: Logs the current user out, deletes a refresh token from the DB and clears cookie.
+      description: Logs the current user out, deletes a refresh and access tokens from the DB and clears cookie.
       produces:
         - application/json
       parameters:

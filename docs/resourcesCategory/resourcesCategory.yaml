@@ -2,7 +2,7 @@ paths:
   /resources-categories:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Resources Categories
       summary: Find all resources categories.
@@ -67,7 +67,7 @@ paths:
                 message: You do not have permission to perform this action.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Resources Categories
       summary: Creates a new resource category.
@@ -119,7 +119,7 @@ paths:
   /resources-categories/names:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Resources Categories
       summary: Find all resources categories names.
@@ -158,7 +158,7 @@ paths:
   /resources-categories/{id}:
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Resources Categories
       summary: Update resource category by id.
@@ -214,7 +214,7 @@ paths:
                 message: Resource Category with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - ResourcesCategories
       summary: Delete ResourcesCategory by ID

@@ -42,7 +42,7 @@ const testCooperationData = {
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   additionalInfo:
-    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student"
+    'I don`t like both Dark Arts and Voldemort that`s why i want to learn your subject and became your student'
 }
 
 const testOfferData = {
@@ -106,7 +106,7 @@ describe('Cooperation controller', () => {
 
     testCooperation = await app
       .post(endpointUrl)
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
       .send({
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
@@ -131,7 +131,10 @@ describe('Cooperation controller', () => {
         sort: JSON.stringify({ order: 'asc', orderBy: 'updatedAt' })
       }
 
-      const response = await app.get(endpointUrl).query(query).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app
+        .get(endpointUrl)
+        .query(query)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.status).toBe(200)
       expect(response.body.count).toBe(1)
@@ -164,7 +167,7 @@ describe('Cooperation controller', () => {
     it('get cooperation by ID', async () => {
       const response = await app
         .get(endpointUrl + testCooperation.body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
@@ -190,7 +193,7 @@ describe('Cooperation controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .get(endpointUrl + nonExistingCooperationId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
     })
@@ -224,7 +227,7 @@ describe('Cooperation controller', () => {
     it('should throw DOCUMENT_NOT_FOUND for offer entity', async () => {
       const response = await app
         .post(endpointUrl)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send({
           initiator: testStudentUser.id,
           receiver: testTutorUser._id,
@@ -246,12 +249,12 @@ describe('Cooperation controller', () => {
     it('should update a cooperation', async () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send({ ...updateData, availableQuizzes: [testActiveQuiz._id] })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(updateData.status)
@@ -261,7 +264,7 @@ describe('Cooperation controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = (testCooperation = await app
         .patch(endpointUrl + nonExistingCooperationId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(updateData))
 
       expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)

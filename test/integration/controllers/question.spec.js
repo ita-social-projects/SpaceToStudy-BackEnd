@@ -57,7 +57,10 @@ describe('Question controller', () => {
 
     currentUser = TokenService.validateAccessToken(accessToken)
 
-    testQuestion = await app.post(endpointUrl).send(testQuestionData).set('Authorization', `Bearer ${accessToken}`)
+    testQuestion = await app
+      .post(endpointUrl)
+      .send(testQuestionData)
+      .set('Cookie', [`accessToken=${accessToken}`])
     testQuestionId = testQuestion.body._id
   })
 
@@ -71,7 +74,7 @@ describe('Question controller', () => {
 
   describe(`GET ${endpointUrl}`, () => {
     it('should return list of questions', async () => {
-      const questions = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const questions = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(questions.statusCode).toBe(200)
       expect(questions.body.count).toBe(1)
@@ -114,7 +117,7 @@ describe('Question controller', () => {
       const response = await app
         .post(endpointUrl)
         .send(testQuestionData)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -125,7 +128,7 @@ describe('Question controller', () => {
       const response = await app
         .patch(endpointUrl + testQuestionId)
         .send(updateData)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
       expect(response.statusCode).toBe(200)
 
       const updatedQuestion = await Question.findById(testQuestionId)
@@ -146,7 +149,7 @@ describe('Question controller', () => {
       const response = await app
         .patch(endpointUrl + testQuestionId)
         .send(updateData)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

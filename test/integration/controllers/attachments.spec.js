@@ -66,7 +66,7 @@ describe('Attachments controller', () => {
 
     testAttachmentsResponse = await app
       .post(endpointUrl)
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
       .send({ testFile })
   })
 
@@ -102,7 +102,10 @@ describe('Attachments controller', () => {
     it('should throw FORBIDDEN', async () => {
       accessToken = await testUserAuthentication(app)
 
-      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${tutorAccessToken}`).send(testFile)
+      const response = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+        .send(testFile)
 
       expectError(403, FORBIDDEN, response)
     })

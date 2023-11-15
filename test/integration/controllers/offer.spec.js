@@ -47,16 +47,22 @@ describe('Offer controller', () => {
     const { _id, appearance } = categoryResponse[0]
     const category = { _id: _id.toString(), appearance }
 
-    const subjectResponse = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send({
-      name: 'testSubject',
-      category: category
-    })
+    const subjectResponse = await app
+      .post('/subjects/')
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send({
+        name: 'testSubject',
+        category: category
+      })
     const subject = subjectResponse.body._id
 
     testOffer.category = category
     testOffer.subject = subject
 
-    testOfferResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testOffer)
+    testOfferResponse = await app
+      .post(endpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(testOffer)
 
     testOffer = testOfferResponse.body
     testOffer.category = category
@@ -98,7 +104,7 @@ describe('Offer controller', () => {
 
   describe(`test GET ${endpointUrl}`, () => {
     it('should GET all offers', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining({ count: 1, items: [expect.any(Object)] }))
@@ -107,7 +113,7 @@ describe('Offer controller', () => {
 
   describe(`test GET ${endpointUrl}:id`, () => {
     it('should get an offer by ID', async () => {
-      const response = await app.get(endpointUrl + testOffer._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + testOffer._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.body).toEqual({
         ...testOffer,
@@ -135,7 +141,7 @@ describe('Offer controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + nonExistingOfferId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })
@@ -145,7 +151,7 @@ describe('Offer controller', () => {
     it('should update offer by ID', async () => {
       const response = await app
         .patch(endpointUrl + testOffer._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(updateData)
 
       expect(response.statusCode).toBe(204)
@@ -154,7 +160,7 @@ describe('Offer controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .patch(endpointUrl + nonExistingOfferId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(updateData)
 
       expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
@@ -163,13 +169,13 @@ describe('Offer controller', () => {
 
   describe(`test DELETE ${endpointUrl}:id`, () => {
     it('should delete offer by ID', async () => {
-      const response = await app.delete(endpointUrl + testOffer._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + testOffer._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingOfferId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + nonExistingOfferId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
     })

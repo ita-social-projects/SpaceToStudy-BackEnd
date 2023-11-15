@@ -4,7 +4,7 @@ const {
   config: { COOKIE_DOMAIN }
 } = require('~/configs/config')
 const {
-  tokenNames: { REFRESH_TOKEN }
+  tokenNames: { REFRESH_TOKEN, ACCESS_TOKEN }
 } = require('~/consts/auth')
 
 const COOKIE_OPTIONS = {
@@ -29,6 +29,7 @@ const login = async (req, res) => {
 
   const tokens = await authService.login(email, password)
 
+  res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
   res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
 
   delete tokens.refreshToken
@@ -42,6 +43,7 @@ const googleAuth = async (req, res) => {
 
   const tokens = await authService.googleAuth(token.credential, role, lang)
 
+  res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
   res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
 
   delete tokens.refreshToken
@@ -53,7 +55,9 @@ const logout = async (req, res) => {
   const { refreshToken } = req.cookies
 
   await authService.logout(refreshToken)
+
   res.clearCookie(REFRESH_TOKEN)
+  res.clearCookie(ACCESS_TOKEN)
 
   res.status(204).end()
 }
@@ -69,7 +73,15 @@ const confirmEmail = async (req, res) => {
 const refreshAccessToken = async (req, res) => {
   const { refreshToken } = req.cookies
 
+  if (!refreshToken) {
+    res.clearCookie(ACCESS_TOKEN)
+
+    return res.status(401).end()
+  }
+
   const tokens = await authService.refreshAccessToken(refreshToken)
+
+  res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
   res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
 
   delete tokens.refreshToken

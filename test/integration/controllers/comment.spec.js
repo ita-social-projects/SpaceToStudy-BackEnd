@@ -17,7 +17,7 @@ const testCooperationData = {
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   additionalInfo:
-    'I don\'t like both Dark Arts and Voldemort that\'s why i want to learn your subject and became your student',
+    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student",
   receiver: '649c147ac75d3e44440e3a12',
   offer: '649c148cc75d3e44440e3a13',
   initiatorRole: 'student',
@@ -47,7 +47,7 @@ describe('Comment controller', () => {
 
     testComment = await app
       .post(endpointUrl(testCooperation._id))
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
       .send(testCommentData)
   })
 
@@ -61,7 +61,7 @@ describe('Comment controller', () => {
 
   describe(`GET ${endpointUrl()}`, () => {
     it('get all comments', async () => {
-      const response = await app.get(endpointUrl(testCooperation._id)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl(testCooperation._id)).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.status).toBe(200)
       expect(response.body.length).toBe(1)
@@ -86,7 +86,7 @@ describe('Comment controller', () => {
         initiator: mockedInitiatorId
       })
 
-      const response = await app.post(endpointUrl(cooperation._id)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.post(endpointUrl(cooperation._id)).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -94,7 +94,7 @@ describe('Comment controller', () => {
     it('should throw DOCUMENT_NOT_FOUND for cooperation', async () => {
       const response = await app
         .post(endpointUrl(nonExistingCooperationId))
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
     })
@@ -125,7 +125,7 @@ describe('Comment controller', () => {
         initiator: mockedInitiatorId
       })
 
-      const response = await app.post(endpointUrl(cooperation._id)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.post(endpointUrl(cooperation._id)).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -133,7 +133,7 @@ describe('Comment controller', () => {
     it('should throw DOCUMENT_NOT_FOUND for cooperation', async () => {
       const response = await app
         .post(endpointUrl(nonExistingCooperationId))
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
     })

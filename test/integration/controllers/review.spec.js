@@ -65,12 +65,15 @@ describe('Review controller', () => {
     offerBody.category = category
     subjectBody.category = category
 
-    testSubject = await app.post(subjectEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
+    testSubject = await app
+      .post(subjectEndpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(subjectBody)
     subjectBody = testSubject.body
 
     testOffer = await app
       .post(offerEndpointUrl)
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
       .send({ ...offerBody, subject: subjectBody._id })
 
     offerBody = testOffer.body
@@ -78,7 +81,7 @@ describe('Review controller', () => {
 
     testReview = await app
       .post(endpointUrl)
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
       .send({ ...reviewBody, offer: offerBody._id })
 
     reviewBody = testReview.body
@@ -125,7 +128,7 @@ describe('Review controller', () => {
     })
 
     it('should get all reviews', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
       const { author } = reviewBody
       const { _id } = offerBody
       const { _id: subject } = subjectBody
@@ -171,7 +174,7 @@ describe('Review controller', () => {
     })
 
     it('should get a review by ID', async () => {
-      const response = await app.get(endpointUrl + reviewBody._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + reviewBody._id).set('Cookie', [`accessToken=${accessToken}`])
       const { author } = reviewBody
       const { _id } = offerBody
       const { _id: subject } = subjectBody
@@ -203,7 +206,7 @@ describe('Review controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + nonExistingReviewId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
     })
@@ -219,7 +222,7 @@ describe('Review controller', () => {
     it('should update a review by ID', async () => {
       const response = await app
         .patch(endpointUrl + reviewBody._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(updateData)
 
       expect(response.statusCode).toBe(204)
@@ -228,7 +231,7 @@ describe('Review controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .patch(endpointUrl + nonExistingReviewId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(updateData)
 
       expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
@@ -243,13 +246,13 @@ describe('Review controller', () => {
     })
 
     it('should delete a review by ID', async () => {
-      const response = await app.delete(endpointUrl + reviewBody._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + reviewBody._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.delete(endpointUrl + nonExistingReviewId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + nonExistingReviewId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
     })

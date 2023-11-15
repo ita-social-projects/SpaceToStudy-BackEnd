@@ -10,7 +10,6 @@ const {
 } = require('~/consts/auth')
 const TokenService = require('~/services/token')
 
-
 const endpointUrl = '/finished-quizzes/'
 const nonExistingQuiz = '64cf8a3d40135fba5a0c8fa2'
 
@@ -37,29 +36,16 @@ const testFinishedQuizData = {
 
 const testQuizData = {
   title: 'Assembly',
-  items: [
-    {
-      question: 'Is it the best programming language?',
-      answers: [
-        {
-          text: 'Yes',
-          isCorrect: true
-        },
-        {
-          text: 'Yes, of course',
-          isCorrect: false
-        }
-      ]
-    }
-  ]
+  description: 'Description',
+  category: '6502ec2060ec37be943353e2',
+  items: ['6527ed6c14c6b72f36962364']
 }
-
 
 describe('Quiz controller', () => {
   let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -72,7 +58,10 @@ describe('Quiz controller', () => {
       ...testQuizData
     })
 
-    testFinishedQuiz = await app.post(endpointUrl).send({ quiz: testQuiz._id, ...testFinishedQuizData }).set('Authorization', `Bearer ${accessToken}`)
+    testFinishedQuiz = await app
+      .post(endpointUrl)
+      .send({ quiz: testQuiz._id, ...testFinishedQuizData })
+      .set('Cookie', [`accessToken=${accessToken}`])
   })
 
   afterEach(async () => {
@@ -102,10 +91,13 @@ describe('Quiz controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND for quiz', async () => {
-      const response = await app.post(endpointUrl).send({
-        ...testFinishedQuizData,
-        quiz: nonExistingQuiz
-      }).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app
+        .post(endpointUrl)
+        .send({
+          ...testFinishedQuizData,
+          quiz: nonExistingQuiz
+        })
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Quiz.modelName]), response)
     })

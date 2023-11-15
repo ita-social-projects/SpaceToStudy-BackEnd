@@ -2,7 +2,7 @@ paths:
   /categories:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Categories
       summary: Find all categories
@@ -61,7 +61,7 @@ paths:
                 message: The requested URL requires user authorization.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Category
       summary: Create new category.
@@ -129,7 +129,7 @@ paths:
   /categories/{id}/subjects/names:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Categories
       summary: Find subjects' names for category
@@ -177,7 +177,7 @@ paths:
   /categories/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Categories
       summary: Find category by ID
@@ -239,7 +239,7 @@ paths:
   /categories/{categoryId}/subject/{subjectId}/price-range:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Offers
       summary: Find and return min and max price.
@@ -288,7 +288,7 @@ paths:
   /categories/{id}/subjects:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Categories
       summary: Find subjects by category

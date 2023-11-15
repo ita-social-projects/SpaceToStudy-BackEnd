@@ -2,7 +2,7 @@ paths:
   /subjects:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Subjects
       summary: Find all subjects
@@ -41,7 +41,7 @@ paths:
                 message: 'The requested URL requires user authorization.'
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Subjects
       summary: Create new subject.
@@ -105,7 +105,7 @@ paths:
   /subjects/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Subjects
       summary: Find subject by ID
@@ -164,7 +164,7 @@ paths:
                 message: Subject with the specified id was not found.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Subjects
       summary: Update subject by ID
@@ -233,7 +233,7 @@ paths:
                 message: Subject with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Subjects
       summary: Delete subject by ID

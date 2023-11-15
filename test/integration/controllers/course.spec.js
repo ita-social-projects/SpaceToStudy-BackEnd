@@ -57,7 +57,10 @@ describe('Course controller', () => {
 
     uploadService.uploadFile = mockUploadFile
 
-    testCourseResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testCourseData)
+    testCourseResponse = await app
+      .post(endpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(testCourseData)
     testCourse = testCourseResponse.body
   })
 
@@ -71,7 +74,7 @@ describe('Course controller', () => {
 
   describe(`GET ${endpointUrl}`, () => {
     it('should get all courses', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual({ count: 1, items: [expect.objectContaining(testCourseData)] })
@@ -84,7 +87,7 @@ describe('Course controller', () => {
     })
 
     it('should throw FORBIDDEN', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -110,7 +113,7 @@ describe('Course controller', () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .patch(endpointUrl)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(testCourseData)
 
       expectError(403, FORBIDDEN, response)
@@ -121,7 +124,7 @@ describe('Course controller', () => {
     it('should update a course', async () => {
       const response = await app
         .patch(endpointUrl + testCourse._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(updateData)
 
       const { title, description } = await Course.findById(testCourse._id)
@@ -137,7 +140,7 @@ describe('Course controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.patch(endpointUrl + nonExistingCourseId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.patch(endpointUrl + nonExistingCourseId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Course.modelName]), response)
     })
@@ -145,7 +148,7 @@ describe('Course controller', () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .patch(endpointUrl)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(updateData)
 
       expectError(403, FORBIDDEN, response)
@@ -156,7 +159,7 @@ describe('Course controller', () => {
     it('should get course by id', async () => {
       const response = await app
         .get(endpointUrl + testCourseResponse.body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toMatchObject({
@@ -172,7 +175,7 @@ describe('Course controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingCourseId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + nonExistingCourseId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Course.modelName]), response)
     })
@@ -186,7 +189,7 @@ describe('Course controller', () => {
 
   describe(`DELETE ${endpointUrl}:id`, () => {
     it('should delete a course', async () => {
-      const response = await app.delete(endpointUrl + testCourse._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + testCourse._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
@@ -198,13 +201,13 @@ describe('Course controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.delete(endpointUrl + nonExistingCourseId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + nonExistingCourseId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Course.modelName]), response)
     })
 
     it('should throw FORBIDDEN', async () => {
-      const response = await app.delete(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+      const response = await app.delete(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

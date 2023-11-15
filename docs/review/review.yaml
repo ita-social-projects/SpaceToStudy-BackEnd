@@ -2,7 +2,7 @@ paths:
   /reviews:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Reviews
       summary: Find all reviews
@@ -100,7 +100,7 @@ paths:
                 message: 'The requested URL requires user authorization.'
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Reviews
       summary: Create new review.
@@ -207,7 +207,7 @@ paths:
   /reviews/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Reviews
       summary: Find review by ID
@@ -319,7 +319,7 @@ paths:
                 message: Review with the specified id was not found.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Reviews
       summary: Update review by ID
@@ -387,7 +387,7 @@ paths:
                 message: Review with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Reviews
       summary: Find and delete review by ID

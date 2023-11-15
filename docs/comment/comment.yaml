@@ -2,7 +2,7 @@ paths:
   /cooperations/{id}/comments:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Comments
       summary: Find your comments of cooperation
@@ -64,7 +64,7 @@ paths:
                 message: Cooperation with the specified id was not found.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Comments
       summary: Create new comment.

@@ -27,7 +27,7 @@ const lessonService = {
   },
 
   updateLesson: async (id, currentUser, updateData) => {
-    const { title, description, attachments, rewriteAttachments = false } = updateData
+    const { title, description, attachments, content } = updateData
 
     const lesson = await Lesson.findById(id).exec()
 
@@ -41,11 +41,7 @@ const lessonService = {
       throw createForbiddenError()
     }
 
-    if (attachments) {
-      lesson.attachments = rewriteAttachments ? attachments : lesson.attachments.concat(attachments)
-    }
-
-    for (const [key, value] of Object.entries({ title, description })) {
+    for (const [key, value] of Object.entries({ title, description, content, attachments })) {
       if (value) lesson[key] = value
     }
 

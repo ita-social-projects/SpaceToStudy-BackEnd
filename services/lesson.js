@@ -27,8 +27,6 @@ const lessonService = {
   },
 
   updateLesson: async (id, currentUser, updateData) => {
-    const { title, description, attachments, content } = updateData
-
     const lesson = await Lesson.findById(id).exec()
 
     if (!lesson) {
@@ -41,8 +39,8 @@ const lessonService = {
       throw createForbiddenError()
     }
 
-    for (const [key, value] of Object.entries({ title, description, content, attachments })) {
-      if (value) lesson[key] = value
+    for (const field in updateData) {
+      lesson[field] = updateData[field]
     }
 
     await lesson.validate()

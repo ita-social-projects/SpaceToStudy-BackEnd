@@ -85,7 +85,7 @@ const messageService = {
 
     if (!existingChat) throw createForbiddenError()
 
-    const deleteResult = await Message.deleteMany({ chat, 'clearedFor.user': { $exists: true } }).exec()
+    const deleteResult = await Message.deleteMany({ chat, 'clearedFor.user': { $exists: true, $ne: user } }).exec()
 
     const updateResult = await Message.updateMany(
       { chat, 'clearedFor.user': { $exists: false } },

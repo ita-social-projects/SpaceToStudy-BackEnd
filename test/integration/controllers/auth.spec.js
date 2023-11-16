@@ -73,7 +73,7 @@ describe('Auth controller', () => {
       expectError(422, error, signupResponse)
     })
 
-    it("should throw validation errors for the password's length", async () => {
+    it('should throw validation errors for the password`s length', async () => {
       const responseForMax = await app
         .post('/auth/signup')
         .send({ ...user, password: '1'.repeat(MAX_PASSWORD_LENGTH + 1) })
@@ -218,13 +218,8 @@ describe('Auth controller', () => {
 
       const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
 
-      console.log(loginUserResponse)
-
       const refreshToken = loginUserResponse.header['set-cookie'][1].split(';')[0].split('=')[1]
       const accessToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
-
-      console.log('refresh: ', refreshToken)
-      console.log('access: ', accessToken)
 
       const refreshResponse = await app
         .get('/auth/refresh')

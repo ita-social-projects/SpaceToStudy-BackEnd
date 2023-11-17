@@ -58,10 +58,16 @@ describe('Message controller', () => {
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
 
-    chatResponse = await app.post(chatEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+    chatResponse = await app
+      .post(chatEndpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(chatBody)
     messageBody.chat = chatResponse.body._id
 
-    await app.post(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`).send(messageBody)
+    await app
+      .post(endpointUrl(messageBody.chat))
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(messageBody)
   })
 
   afterEach(async () => {
@@ -76,7 +82,7 @@ describe('Message controller', () => {
     it('should create a new message', async () => {
       const response = await app
         .post(endpointUrl(messageBody.chat))
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(messageBody)
 
       expect(response.statusCode).toBe(201)
@@ -92,7 +98,7 @@ describe('Message controller', () => {
 
   describe(`GET ${endpointUrl}`, () => {
     it('should get all messages related to a chat', async () => {
-      const response = await app.get(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl(messageBody.chat)).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body[0]).toEqual(expect.objectContaining(messageData))
@@ -101,7 +107,7 @@ describe('Message controller', () => {
     it('should get messages matching the text query', async () => {
       const response = await app
         .get(endpointUrl(messageBody.chat))
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .query({ message: searchText })
 
       expect(response.statusCode).toBe(200)
@@ -119,13 +125,13 @@ describe('Message controller', () => {
 
       const response = await app
         .get(endpointUrl(messageBody.chat))
-        .set('Authorization', `Bearer ${accessTokenForbidden}`)
+        .set('Cookie', [`accessToken=${accessTokenForbidden}`])
 
       expectError(403, FORBIDDEN, response)
     })
 
     it('should throw DOCUMENT_NOT_FOUND for chat', async () => {
-      const response = await app.get(endpointUrl(nonExistingChatId)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl(nonExistingChatId)).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })
@@ -133,7 +139,7 @@ describe('Message controller', () => {
 
   describe(`DELETE ${endpointUrl}`, () => {
     it('should delete all messages related to a chat', async () => {
-      const response = await app.delete(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl(messageBody.chat)).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
@@ -149,13 +155,13 @@ describe('Message controller', () => {
 
       const response = await app
         .delete(endpointUrl(messageBody.chat))
-        .set('Authorization', `Bearer ${accessTokenForbidden}`)
+        .set('Cookie', [`accessToken=${accessTokenForbidden}`])
 
       expectError(403, FORBIDDEN, response)
     })
 
     it('should throw DOCUMENT_NOT_FOUND for chat', async () => {
-      const response = await app.delete(endpointUrl(nonExistingChatId)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl(nonExistingChatId)).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })

@@ -92,7 +92,10 @@ describe('Chat controller', () => {
     })
 
     it('should create a new chat', async () => {
-      const newChat = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+      const newChat = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(chatBody)
 
       expect(newChat.statusCode).toBe(201)
 
@@ -102,19 +105,22 @@ describe('Chat controller', () => {
 
   describe(`DELETE ${endpointUrl}:id`, () => {
     beforeEach(async () => {
-      testChat = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+      testChat = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(chatBody)
     })
 
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .delete(endpointUrl + testChat._body._id)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
 
     it('should delete chat by ID', async () => {
-      const response = await app.delete(endpointUrl + testChat._body._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + testChat._body._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
@@ -126,7 +132,7 @@ describe('Chat controller', () => {
     })
 
     it('should throw NOT_FOUND', async () => {
-      const response = await app.delete(endpointUrl + nonExistingChatId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + nonExistingChatId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })
@@ -134,19 +140,22 @@ describe('Chat controller', () => {
 
   describe(`PATCH ${endpointUrl}:id`, () => {
     beforeEach(async () => {
-      testChat = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+      testChat = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(chatBody)
     })
 
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .patch(endpointUrl + testChat._body._id)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
 
     it('should mark chat by ID as deleted', async () => {
-      const response = await app.patch(endpointUrl + testChat._body._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.patch(endpointUrl + testChat._body._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response._body).toEqual(expect.objectContaining(markedChatData))
@@ -159,7 +168,7 @@ describe('Chat controller', () => {
     })
 
     it('should throw NOT_FOUND', async () => {
-      const response = await app.patch(endpointUrl + nonExistingChatId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.patch(endpointUrl + nonExistingChatId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })

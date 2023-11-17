@@ -2,7 +2,7 @@ paths:
   /offers:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Offers
       summary: Find all offers
@@ -148,7 +148,7 @@ paths:
                 message: The requested URL requires user authorization.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Offers
       summary: Create new offer.
@@ -221,7 +221,7 @@ paths:
   /offers/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Offers
       summary: Find and return offer by ID
@@ -321,7 +321,7 @@ paths:
                 message: Subject with the specified id was not found.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Offers
       summary: Find and update offer by ID
@@ -395,7 +395,7 @@ paths:
                 message: Offer with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Offers
       summary: Find and delete offer by ID

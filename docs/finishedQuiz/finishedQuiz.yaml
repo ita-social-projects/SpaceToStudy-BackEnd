@@ -2,7 +2,7 @@ paths:
   /finished-quizzes:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Finished quizzes
       summary: Find all finished quizzes.
@@ -80,7 +80,7 @@ paths:
                 message: You do not have permission to perform this action.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Finished quizzes
       summary: Creates a new finished quiz.

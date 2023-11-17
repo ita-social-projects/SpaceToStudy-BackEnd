@@ -12,7 +12,6 @@ const endpointUrl = '/quizzes/'
 const testQuizData = {
   title: 'Assembly',
   description: 'Description',
-  category: '6502ec2060ec37be943353e2',
   items: ['6527ed6c14c6b72f36962364']
 }
 
@@ -45,7 +44,10 @@ describe('Quiz controller', () => {
 
     currentUser = TokenService.validateAccessToken(accessToken)
 
-    testQuiz = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testQuizData)
+    testQuiz = await app
+      .post(endpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(testQuizData)
     testQuizId = testQuiz.body._id
   })
 
@@ -65,7 +67,6 @@ describe('Quiz controller', () => {
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         author: currentUser.id,
-        category: testQuizData.category,
         ...testQuizData
       })
     })
@@ -79,7 +80,7 @@ describe('Quiz controller', () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .post(endpointUrl)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(testQuizData)
 
       expectError(403, FORBIDDEN, response)
@@ -88,7 +89,7 @@ describe('Quiz controller', () => {
 
   describe(`GET ${endpointUrl}`, () => {
     it('should get all quizzes', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body.items)).toBeTruthy()
@@ -99,8 +100,8 @@ describe('Quiz controller', () => {
             author: currentUser.id,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
-            category: testQuizData.category,
-            ...testQuizData
+            ...testQuizData,
+            category: null
           }
         ],
         count: 1
@@ -114,7 +115,7 @@ describe('Quiz controller', () => {
     })
 
     it('should throw FORBIDDEN', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -122,13 +123,12 @@ describe('Quiz controller', () => {
 
   describe(`GET ${endpointUrl}:id`, () => {
     it('should get quiz by id', async () => {
-      const response = await app.get(endpointUrl + testQuizId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + testQuizId).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toMatchObject({
         _id: expect.any(String),
         author: currentUser.id,
-        category: testQuizData.category,
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         ...testQuizData
@@ -142,7 +142,7 @@ describe('Quiz controller', () => {
     })
 
     it('should throw FORBIDDEN', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -153,9 +153,9 @@ describe('Quiz controller', () => {
       await app
         .patch(endpointUrl + testQuizId)
         .send(updateData)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
-      const quizResponse = await app.get(endpointUrl + testQuizId).set('Authorization', `Bearer ${accessToken}`)
+      const quizResponse = await app.get(endpointUrl + testQuizId).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(quizResponse.body).toMatchObject({
         ...testQuizData,
@@ -173,7 +173,7 @@ describe('Quiz controller', () => {
       const response = await app
         .patch(endpointUrl + testQuizId)
         .send(updateData)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

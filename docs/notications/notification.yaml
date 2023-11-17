@@ -2,7 +2,7 @@ paths:
   /notifications:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Notifications
       summary: Find and count user's notifications
@@ -38,7 +38,7 @@ paths:
                 message: The requested URL requires user authorization.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Notifications
       summary: Remove all user's notifications
@@ -61,7 +61,7 @@ paths:
   /notifications/{id}:
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Notifications
       summary: Remove certain notification

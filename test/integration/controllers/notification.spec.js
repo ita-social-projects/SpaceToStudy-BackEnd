@@ -43,8 +43,8 @@ describe('Notification controller', () => {
   })
 
   describe(`GET ${endpointUrl}`, () => {
-    it('should get user\'s notifications and count them', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+    it("should get user's notifications and count them", async () => {
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body.count).toBe(1)
@@ -64,10 +64,10 @@ describe('Notification controller', () => {
   })
 
   describe(`DELETE ${endpointUrl}`, () => {
-    it('should clear all user\'s notifications', async () => {
-      const response = await app.delete(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+    it("should clear all user's notifications", async () => {
+      const response = await app.delete(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
-      const notifications = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const notifications = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
       expect(notifications.body.count).toBe(0)
@@ -84,7 +84,7 @@ describe('Notification controller', () => {
     it('should delete notification by id', async () => {
       const response = await app
         .delete(endpointUrl + testNotification._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
 
@@ -102,7 +102,7 @@ describe('Notification controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .delete(endpointUrl + nonExistingNotificationId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Notification.modelName]), response)
     })

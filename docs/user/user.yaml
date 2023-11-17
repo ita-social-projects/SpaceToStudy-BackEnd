@@ -1,18 +1,8 @@
-components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    role:
-      type: apiKey
-      name: Authorization
-      in: header
 paths:
   /users:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Users
       summary: Find all users
@@ -119,7 +109,7 @@ paths:
   /users/{id}/change-status:
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Users
       summary: Find and update user status by ID
@@ -187,7 +177,7 @@ paths:
   /users/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Users
       summary: Find user by ID
@@ -329,7 +319,7 @@ paths:
                 message: 'User with the specified id was not found.'
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Users
       summary: Find and update current user info
@@ -377,7 +367,7 @@ paths:
                 message: 'User with the specified id was not found.'
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
         - role:
             - admin
       tags:
@@ -438,7 +428,7 @@ paths:
   /users/{id}/reviews:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Users
       summary: Find all reviews for a user with the specified ID and role
@@ -558,7 +548,7 @@ paths:
   /users/{id}/reviews/stats:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Users
       summary: Find review statistics for a user with the specified ID and role
@@ -607,7 +597,7 @@ paths:
   /users/{id}/cooperations:
     get:
       security:
-        - bearerAuth: [ ]
+        - cookieAuth: [ ]
       tags:
         - Users
       summary: Find cooperations for a user with the specified ID
@@ -671,7 +661,7 @@ paths:
   /users/{id}/offers:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Users
       summary: Find offers for a user with the specified ID

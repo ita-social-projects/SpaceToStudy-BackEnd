@@ -2,7 +2,7 @@ paths:
   /attachments:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Attachments
       summary: Find all attachments.
@@ -70,7 +70,7 @@ paths:
                 message: You do not have permission to perform this action.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Attachments
       summary: Create new attachments.
@@ -130,7 +130,7 @@ paths:
   /attachments/{id}:
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Attachments
       summary: Finds and updates an attachment.
@@ -214,7 +214,7 @@ paths:
                 message: Attachment with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Attachments
       summary: Delete attachment by ID

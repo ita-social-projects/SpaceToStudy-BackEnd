@@ -82,7 +82,7 @@ describe('User controller', () => {
       })
 
       it('should GET all users', async () => {
-        const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+        const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
         expect(response.statusCode).toBe(200)
         expect(Array.isArray(response.body.items)).toBeTruthy()
@@ -120,7 +120,10 @@ describe('User controller', () => {
           email: testUser.email
         }
 
-        const response = await app.get(endpointUrl).query(query).set('Authorization', `Bearer ${accessToken}`)
+        const response = await app
+          .get(endpointUrl)
+          .query(query)
+          .set('Cookie', [`accessToken=${accessToken}`])
 
         expect(response.status).toBe(200)
         expect(Array.isArray(response.body.items)).toBeTruthy()
@@ -170,7 +173,7 @@ describe('User controller', () => {
       })
 
       it('should GET user by ID', async () => {
-        const response = await app.get(endpointUrl + user._id).set('Authorization', `Bearer ${accessToken}`)
+        const response = await app.get(endpointUrl + user._id).set('Cookie', [`accessToken=${accessToken}`])
 
         expect(response.statusCode).toBe(200)
         expect(response.body).toMatchObject({
@@ -203,7 +206,7 @@ describe('User controller', () => {
       })
 
       it('should throw DOCUMENT_NOT_FOUND', async () => {
-        const response = await app.get(endpointUrl + nonExistingUserId).set('Authorization', `Bearer ${accessToken}`)
+        const response = await app.get(endpointUrl + nonExistingUserId).set('Cookie', [`accessToken=${accessToken}`])
         expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
       })
     })
@@ -215,7 +218,7 @@ describe('User controller', () => {
         const response = await app
           .patch(endpointUrl + currentUserId)
           .send(updateUserData)
-          .set('Authorization', `Bearer ${accessToken}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
 
         expect(response.statusCode).toBe(204)
       })
@@ -232,7 +235,7 @@ describe('User controller', () => {
         const response = await app
           .patch(endpointUrl + user._id)
           .send(updateUserData)
-          .set('Authorization', `Bearer ${accessToken}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
 
         expectError(403, FORBIDDEN, response)
       })
@@ -258,7 +261,7 @@ describe('User controller', () => {
         const response = await app
           .patch(endpointUrl + currentUser.id + changeStatusPath)
           .send(mockedStatus)
-          .set('Authorization', `Bearer ${accessToken}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
 
         expect(response.statusCode).toBe(204)
       })
@@ -267,7 +270,7 @@ describe('User controller', () => {
         const response = await app
           .patch(endpointUrl + nonExistingUserId + changeStatusPath)
           .send(mockedStatus)
-          .set('Authorization', `Bearer ${accessToken}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
 
         expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
       })
@@ -284,7 +287,7 @@ describe('User controller', () => {
         const response = await app
           .patch(endpointUrl + userWithNoPermissions.id + changeStatusPath)
           .send(mockedStatus)
-          .set('Authorization', `Bearer ${noPermissionsAccessToken}`)
+          .set('Cookie', [`accessToken=${noPermissionsAccessToken}`])
 
         expectError(403, FORBIDDEN, response)
       })
@@ -298,13 +301,13 @@ describe('User controller', () => {
 
     describe(`DELETE ${endpointUrl}:id`, () => {
       it('should DELETE user by ID', async () => {
-        const response = await app.delete(endpointUrl + currentUser.id).set('Authorization', `Bearer ${accessToken}`)
+        const response = await app.delete(endpointUrl + currentUser.id).set('Cookie', [`accessToken=${accessToken}`])
 
         expect(response.statusCode).toBe(204)
       })
 
       it('should throw DOCUMENT_NOT_FOUND', async () => {
-        const response = await app.delete(endpointUrl + nonExistingUserId).set('Authorization', `Bearer ${accessToken}`)
+        const response = await app.delete(endpointUrl + nonExistingUserId).set('Cookie', [`accessToken=${accessToken}`])
 
         expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
       })
@@ -320,7 +323,7 @@ describe('User controller', () => {
 
         const response = await app
           .delete(endpointUrl + userWithNoPermissions.id)
-          .set('Authorization', `Bearer ${noPermissionsAccessToken}`)
+          .set('Cookie', [`accessToken=${noPermissionsAccessToken}`])
 
         expectError(403, FORBIDDEN, response)
       })

@@ -2,7 +2,7 @@ paths:
   /quizzes:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Quizzes
       summary: Find all quizzes.
@@ -73,7 +73,7 @@ paths:
                 message: You do not have permission to perform this action.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Quizzes
       summary: Creates a new quiz.
@@ -129,7 +129,7 @@ paths:
   /quizzes/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Quizzes
       summary: Find quiz by id.
@@ -179,7 +179,7 @@ paths:
                 message: You do not have permission to perform this action.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Quizzes
       summary: Update quiz by id.
@@ -235,7 +235,7 @@ paths:
                 message: Quiz with the specified id was not found.
     delete:
       security:
-        - bearerAuth: [ ]
+        - cookieAuth: [ ]
       tags:
         - Quizzes
       summary: Delete quiz by ID

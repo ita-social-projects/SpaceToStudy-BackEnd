@@ -18,42 +18,18 @@ let categoryBody = {
 }
 
 const subjectBody = [
-  {
-    name: 'Web design'
-  },
-  {
-    name: 'Guitar'
-  },
-  {
-    name: 'Bass'
-  },
-  {
-    name: 'Piano'
-  },
-  {
-    name: 'Spanish'
-  },
-  {
-    name: 'Cybersecurity'
-  },
-  {
-    name: 'Violins'
-  },
-  {
-    name: 'pian'
-  },
-  {
-    name: 'Sound design'
-  },
-  {
-    name: 'Drums'
-  },
-  {
-    name: 'English'
-  },
-  {
-    name: 'Danish'
-  }
+  { name: 'Web design' },
+  { name: 'Guitar' },
+  { name: 'Bass' },
+  { name: 'Piano' },
+  { name: 'Spanish' },
+  { name: 'Cybersecurity' },
+  { name: 'Violins' },
+  { name: 'pian' },
+  { name: 'Sound design' },
+  { name: 'Drums' },
+  { name: 'English' },
+  { name: 'Danish' }
 ]
 
 describe('Category controller', () => {
@@ -76,7 +52,10 @@ describe('Category controller', () => {
 
       subject.category = category._id
 
-      testSubject = await app.post('/subjects/').set('Authorization', `Bearer ${accessToken}`).send(subject)
+      testSubject = await app
+        .post('/subjects/')
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(subject)
 
       subject._id = testSubject.body._id
     }
@@ -98,7 +77,10 @@ describe('Category controller', () => {
     })
 
     it('should create a new category', async () => {
-      testCategory = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(categoryBody)
+      testCategory = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(categoryBody)
 
       subjectBody.category = testCategory.body._id
       categoryBody._id = testCategory.body._id
@@ -127,7 +109,7 @@ describe('Category controller', () => {
     })
 
     it('should get all categories', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 7 }))
@@ -139,7 +121,7 @@ describe('Category controller', () => {
 
       const response = await app
         .get(endpointUrl + '?' + params.toString())
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 1 }))
@@ -151,8 +133,7 @@ describe('Category controller', () => {
 
       const response = await app
         .get(endpointUrl + '?' + params.toString())
-        .set('Authorization', `Bearer ${accessToken}`)
-
+        .set('Cookie', [`accessToken=${accessToken}`])
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 5 }))
       expect(response.body.items.length).toBe(5)
@@ -165,7 +146,7 @@ describe('Category controller', () => {
 
       const response = await app
         .get(endpointUrl + '?' + params.toString())
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 2 }))
@@ -180,7 +161,7 @@ describe('Category controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingCategoryId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + nonExistingCategoryId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Category.modelName]), response)
     })
@@ -188,7 +169,7 @@ describe('Category controller', () => {
     it('should get a category by id', async () => {
       const response = await app
         .get(endpointUrl + categoryResponse[0]._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(expect.objectContaining(categoryData))
@@ -197,7 +178,7 @@ describe('Category controller', () => {
 
   describe(`GET ${endpointUrl}names`, () => {
     it('should return categories names', async () => {
-      const response = await app.get(endpointUrl + 'names').set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + 'names').set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body)).toBeTruthy()
@@ -209,7 +190,7 @@ describe('Category controller', () => {
     it('should throw NOT_FOUND', async () => {
       const response = await app
         .get(endpointUrl + `${categoryBody._id}/price-range?authorRole=student`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, NOT_FOUND, response)
     })
@@ -217,7 +198,7 @@ describe('Category controller', () => {
     it('should return min and max prices for student offers', async () => {
       const response = await app
         .get(endpointUrl + `${categoryResponse[0]._id}/subjects/${subjectBody[0]._id}/price-range?authorRole=student`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(typeof response.body).toBe('object')
@@ -230,7 +211,7 @@ describe('Category controller', () => {
     it('should return min and max prices for tutor offers', async () => {
       const response = await app
         .get(endpointUrl + `${categoryResponse[0]._id}/subjects/${subjectBody[0]._id}/price-range?authorRole=tutor`)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(typeof response.body).toBe('object')

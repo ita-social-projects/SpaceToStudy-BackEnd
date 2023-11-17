@@ -2,7 +2,7 @@ paths:
   /cooperations:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Cooperations
       summary: Find all cooperations
@@ -51,7 +51,7 @@ paths:
                 message: 'The requested URL requires user authorization.'
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Cooperations
       summary: Create new cooperation.
@@ -112,7 +112,7 @@ paths:
   /cooperations/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Cooperations
       summary: Find cooperation by ID
@@ -176,7 +176,7 @@ paths:
                 message: Cooperation with the specified id was not found.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Cooperations
       summary: Update cooperation by ID

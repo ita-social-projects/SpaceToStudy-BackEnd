@@ -56,7 +56,10 @@ describe('Lesson controller', () => {
     accessToken = await testUserAuthentication(app, tutorUser)
     studentAccessToken = await testUserAuthentication(app)
 
-    testLessonResponse = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(testLesson)
+    testLessonResponse = await app
+      .post(endpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(testLesson)
     testLessonId = testLessonResponse.body._id
 
     studentAccessToken = await testUserAuthentication(app, studentUserData)
@@ -90,7 +93,10 @@ describe('Lesson controller', () => {
     it('should throw FORBIDDEN', async () => {
       accessToken = await testUserAuthentication(app)
 
-      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`).send(testLesson)
+      const response = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
+        .send(testLesson)
 
       expectError(403, FORBIDDEN, response)
     })
@@ -98,7 +104,7 @@ describe('Lesson controller', () => {
 
   describe(`GET ${endpointUrl}`, () => {
     it('get all lessons', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.status).toBe(200)
       expect(response.body).toEqual(expect.objectContaining({ count: 1, items: [expect.any(Object)] }))
@@ -113,7 +119,10 @@ describe('Lesson controller', () => {
     it('should throw FORBIDDEN', async () => {
       accessToken = await testUserAuthentication(app)
 
-      const response = await app.post(endpointUrl).set('Authorization', `Bearer ${studentAccessToken}`).send(testLesson)
+      const response = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
+        .send(testLesson)
 
       expectError(403, FORBIDDEN, response)
     })
@@ -123,14 +132,14 @@ describe('Lesson controller', () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .delete(endpointUrl + testLessonResponse.body._id)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
     it('should delete lesson by ID', async () => {
       const response = await app
         .delete(endpointUrl + testLessonResponse.body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
@@ -142,7 +151,7 @@ describe('Lesson controller', () => {
     })
 
     it('should throw NOT_FOUND', async () => {
-      const response = await app.delete(endpointUrl + nonExistingLessonId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.delete(endpointUrl + nonExistingLessonId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
     })
@@ -152,7 +161,7 @@ describe('Lesson controller', () => {
     it('should update a lesson', async () => {
       const response = await app
         .patch(endpointUrl + testLessonId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send(updateData)
       expect(response.statusCode).toBe(204)
 
@@ -171,7 +180,7 @@ describe('Lesson controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.patch(endpointUrl + nonExistingLessonId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.patch(endpointUrl + nonExistingLessonId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
     })
@@ -179,7 +188,7 @@ describe('Lesson controller', () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .patch(endpointUrl)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(updateData)
 
       expectError(403, FORBIDDEN, response)
@@ -190,7 +199,7 @@ describe('Lesson controller', () => {
     it('Should get lesson by ID', async () => {
       const response = await app
         .get(endpointUrl + testLessonResponse.body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
 
@@ -207,7 +216,7 @@ describe('Lesson controller', () => {
       })
     })
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingLessonId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + nonExistingLessonId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
     })
@@ -219,7 +228,7 @@ describe('Lesson controller', () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .get(endpointUrl + testLessonResponse.body._id)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

@@ -2,12 +2,8 @@ const { createUnauthorizedError, createForbiddenError } = require('~/utils/error
 const tokenService = require('~/services/token')
 
 const authMiddleware = (req, _res, next) => {
-  const authorizationHeader = req.headers.authorization
-  if (!authorizationHeader) {
-    throw createUnauthorizedError()
-  }
+  const { accessToken } = req.cookies
 
-  const accessToken = authorizationHeader.split(' ')[1]
   if (!accessToken) {
     throw createUnauthorizedError()
   }

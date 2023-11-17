@@ -2,7 +2,7 @@ paths:
   /admin-invitations:
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Admin invitations
       summary: Invite admins
@@ -62,7 +62,7 @@ paths:
                 message: You do not have permission to perform this action.
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Admin invitations
       summary: Find all admin invitations

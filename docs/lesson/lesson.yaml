@@ -2,7 +2,7 @@ paths:
   /lessons:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Lessons
       summary: Find all lessons.
@@ -69,7 +69,7 @@ paths:
                 message: You do not have permission to perform this action.
     post:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Lessons
       summary: Creates a new lesson.
@@ -129,7 +129,7 @@ paths:
   /lessons/{id}:
     get:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Lessons
       summary: Find and return lesson by ID
@@ -208,7 +208,7 @@ paths:
                 message: You do not have permission to perform this action.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Lessons
       summary: Update a lesson.
@@ -267,7 +267,7 @@ paths:
                 message: Lesson with the specified id was not found.
     delete:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Lessons
       summary: Delete lesson by ID

@@ -24,12 +24,15 @@ describe('Subject controller', () => {
 
     const categoryResponse = await app
       .post('/categories/')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
       .send(categoryBody)
     const category = categoryResponse.body._id
     subjectBody.category = category
 
-    testSubject = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
+    testSubject = await app
+      .post(endpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(subjectBody)
   })
 
   afterEach(async () => {
@@ -42,7 +45,10 @@ describe('Subject controller', () => {
 
   describe(`POST ${endpointUrl}`, () => {
     it('should throw DOCUMENT_ALREADY_EXISTS', async () => {
-      const error = await app.post(endpointUrl).set('Authorization', `Bearer ${accessToken}`).send(subjectBody)
+      const error = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(subjectBody)
 
       expectError(409, DOCUMENT_ALREADY_EXISTS('name'), error)
     })
@@ -67,7 +73,7 @@ describe('Subject controller', () => {
 
   describe(`GET ${endpointUrl}`, () => {
     it('should GET all subjects', async () => {
-      const response = await app.get(endpointUrl).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body.items)).toBeTruthy()
@@ -89,7 +95,7 @@ describe('Subject controller', () => {
 
   describe(`GET ${endpointUrl}:id`, () => {
     it('should get a subject by ID', async () => {
-      const response = await app.get(endpointUrl + testSubject.body._id).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + testSubject.body._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(
@@ -108,7 +114,7 @@ describe('Subject controller', () => {
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
-      const response = await app.get(endpointUrl + nonExistingSubjectId).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.get(endpointUrl + nonExistingSubjectId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Subject.modelName]), response)
     })
@@ -118,7 +124,7 @@ describe('Subject controller', () => {
     it('should update subject by ID', async () => {
       const response = await app
         .patch(endpointUrl + testSubject.body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send({ name: 'Eng' })
 
       expect(response.statusCode).toBe(204)
@@ -127,7 +133,7 @@ describe('Subject controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .patch(endpointUrl + nonExistingSubjectId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
         .send({ name: 'Eng' })
 
       expectError(404, DOCUMENT_NOT_FOUND([Subject.modelName]), response)
@@ -138,7 +144,7 @@ describe('Subject controller', () => {
     it('should delete subject by ID', async () => {
       const response = await app
         .delete(endpointUrl + testSubject.body._id)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
@@ -146,7 +152,7 @@ describe('Subject controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .delete(endpointUrl + nonExistingSubjectId)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Subject.modelName]), response)
     })

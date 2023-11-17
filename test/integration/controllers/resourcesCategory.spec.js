@@ -45,7 +45,7 @@ describe('ResourceCategory controller', () => {
     testResourceCategory = await app
       .post(endpointUrl)
       .send(testResourceCategoryData)
-      .set('Authorization', `Bearer ${accessToken}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
   })
 
   afterEach(async () => {
@@ -78,18 +78,18 @@ describe('ResourceCategory controller', () => {
       const response = await app
         .post(endpointUrl)
         .send(testResourceCategoryData)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
   })
 
-  describe(`PATCH ${endpointUrl}`, () => {
+  describe(`PATCH ${endpointUrl}:id`, () => {
     it('should update resource category', async () => {
       const response = await app
-        .patch(endpointUrl)
+        .patch(endpointUrl + testResourceCategory.body._id)
         .send(updateResourceCategoryData)
-        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
     })
@@ -104,7 +104,7 @@ describe('ResourceCategory controller', () => {
       const response = await app
         .patch(endpointUrl)
         .send(updateResourceCategoryData)
-        .set('Authorization', `Bearer ${studentAccessToken}`)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

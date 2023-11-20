@@ -1,7 +1,7 @@
 definitions:
   courses:
     type: array
-    items: 
+    items:
       type: object
       properties:
         _id:
@@ -13,16 +13,47 @@ definitions:
         author:
           type: string
           ref: '#components/user'
-        lessons:
+        category:
+          type: string
+          ref: '#components/category'
+        subject:
+          type: string
+          ref: '#components/subject'
+        proficiencyLevel:
           type: array
           items:
             type: string
-            ref: '#/components/lesson'
-        attachments:
+            enum:
+              - Beginner
+              - Intermediate
+              - Advanced
+              - Test Preparation
+              - Professional
+              - Specialized
+        sections:
           type: array
           items:
-            type: string
-            ref: '#/components/attachments'
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              lessons:
+                type: array
+                items:
+                  type: string
+                  ref: '#/components/lesson'
+              quizzes:
+                type: array
+                items:
+                  type: string
+                  ref: '#/components/quiz'
+              attachments:
+                type: array
+                items:
+                  type: string
+                  ref: '#/components/attachments'
         createdAt:
           type: string
           format: date-time
@@ -41,22 +72,53 @@ definitions:
       author:
         type: string
         ref: '#components/user'
-      lessons:
+      category:
+        type: string
+        ref: '#components/category'
+      subject:
+        type: string
+        ref: '#components/subject'
+      proficiencyLevel:
         type: array
         items:
           type: string
-          ref: '#/components/lesson'
-      attachments:
+          enum:
+            - Beginner
+            - Intermediate
+            - Advanced
+            - Test Preparation
+            - Professional
+            - Specialized
+      sections:
         type: array
         items:
-          type: string
-          ref: '#/components/attachments'
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            lessons:
+              type: array
+              items:
+                type: string
+                ref: '#/components/lesson'
+            quizzes:
+              type: array
+              items:
+                type: string
+                ref: '#/components/quiz'
+            attachments:
+              type: array
+              items:
+                type: string
+                ref: '#/components/attachments'
       createdAt:
-          type: string
-          format: date-time
+        type: string
+        format: date-time
       updatedAt:
-          type: string
-          format: date-time
+        type: string
+        format: date-time
   courseBody:
     type: object
     properties:
@@ -67,16 +129,47 @@ definitions:
       author:
         type: string
         ref: '#components/user'
-      lessons:
+      category:
+        type: string
+        ref: '#components/category'
+      subject:
+        type: string
+        ref: '#components/subject'
+      proficiencyLevel:
         type: array
         items:
           type: string
-          ref: '#/components/lesson'
-      attachments:
+          enum:
+            - Beginner
+            - Intermediate
+            - Advanced
+            - Test Preparation
+            - Professional
+            - Specialized
+      sections:
         type: array
         items:
-          type: string
-          ref: '#/components/attachments'
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            lessons:
+              type: array
+              items:
+                type: string
+                ref: '#/components/lesson'
+            quizzes:
+              type: array
+              items:
+                type: string
+                ref: '#/components/quiz'
+            attachments:
+              type: array
+              items:
+                type: string
+                ref: '#/components/attachments'
     required:
       - title
       - description

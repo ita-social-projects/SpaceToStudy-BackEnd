@@ -32,16 +32,30 @@ paths:
                   title: Advanced English
                   description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
-                  attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
-                  lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
-                  createdAt: 2023-02-14T23:44:21.334Z
-                  updatedAt: 2023-02-14T23:44:21.334Z
+                  category: 64884f33fdc2d1a130c24ac2
+                  subject: 6488509cfdc2d1a130c24ae4
+                  proficiencyLevel: [Advanced]
+                  sections:
+                    - title: Section First
+                      description: some description
+                      lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
+                      quizzes: [64ba39c714b7bc037a29d712]
+                      attachments: [63ed1cd25e9d781cdb6a6b15]
+                  createdAt: 2023-11-15T16:15:09.004Z
+                  updatedAt: 2023-11-15T16:15:09.004Z
                 - _id: 640461e3cfdda3f3d16dcac5
                   title: Advanced Ukrainian
                   description: Advanced Ukrainian course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
-                  attachments: []
-                  lessons: []
+                  category: 64884f33fdc2d1a130c24ac2
+                  subject: 6488509cfdc2d1a130c24ae4
+                  proficiencyLevel: [Advanced]
+                  sections:
+                    - title: Section Second
+                    - description: some description
+                    - lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
+                    - quizzes: [64ba39c714b7bc037a29d712]
+                    - attachments: [63ed1cd25e9d781cdb6a6b15]
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -83,8 +97,15 @@ paths:
               title: Advanced English
               description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
               author: 63da8767c9ad4c9a0b0eacd3
-              attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
-              lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
+              category: 64884f33fdc2d1a130c24ac2
+              subject: 6488509cfdc2d1a130c24ae4
+              proficiencyLevel: [Advanced]
+              sections:
+                - title: Section First
+                  description: some description
+                  lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
+                  quizzes: [64ba39c714b7bc037a29d712]
+                  attachments: [63ed1cd25e9d781cdb6a6b15]
       responses:
         201:
           description: Created
@@ -96,8 +117,15 @@ paths:
                 title: Advanced English
                 description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                 author: 63da8767c9ad4c9a0b0eacd3
-                attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
-                lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
+                category: 64884f33fdc2d1a130c24ac2
+                subject: 6488509cfdc2d1a130c24ae4
+                proficiencyLevel: [Advanced]
+                sections:
+                  - title: Section First
+                    description: some description
+                    lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
+                    quizzes: [64ba39c714b7bc037a29d712]
+                    attachments: [63ed1cd25e9d781cdb6a6b15]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -209,8 +237,15 @@ paths:
                 title: Advanced English
                 description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                 author: 63da8767c9ad4c9a0b0eacd3
-                attachments: [ 63ed1cd25e9d781cdb6a6b15 ]
-                lessons: [ 63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51 ]
+                category: 64884f33fdc2d1a130c24ac2
+                subject: 6488509cfdc2d1a130c24ae4
+                proficiencyLevel: [Advanced]
+                sections:
+                  - title: Section First
+                    description: some description
+                    lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
+                    quizzes: [64ba39c714b7bc037a29d712]
+                    attachments: [63ed1cd25e9d781cdb6a6b15]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

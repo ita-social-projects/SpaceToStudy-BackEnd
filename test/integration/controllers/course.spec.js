@@ -28,13 +28,18 @@ let tutorUser = {
 const testCourseData = {
   title: 'assembly',
   description: 'you will learn some modern programming language for all your needs',
-  attachments: [
+  category: 'computer science',
+  subject: 'English',
+  proficiencyLevel: ['Advanced'],
+  sections: [
     {
-      src: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-      name: 'example1.jpg'
+      title: 'Section First',
+      description: 'description',
+      lessons: [],
+      quizzes: [],
+      attachments: []
     }
-  ],
-  lessons: []
+  ]
 }
 
 const updateData = {
@@ -46,7 +51,7 @@ describe('Course controller', () => {
   let app, server, accessToken, studentAccessToken, testCourseResponse, testCourse
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -99,8 +104,10 @@ describe('Course controller', () => {
       expect(testCourseResponse.body).toMatchObject({
         title: testCourseData.title,
         description: testCourseData.description,
-        attachments: ['mocked-file-url'],
-        lessons: expect.any(Array)
+        category: testCourseData.category,
+        subject: testCourseData.subject,
+        proficiencyLevel: testCourseData.proficiencyLevel,
+        sections: expect.any(Array)
       })
     })
 

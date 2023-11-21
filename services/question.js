@@ -16,6 +16,10 @@ const questionService = {
     return { items, count }
   },
 
+  getQuestionById: async (id) => {
+    return await Question.findById(id).populate({ path: 'category', select: 'name' }).lean().exec()
+  },
+
   createQuestion: async (author, data) => {
     const { title, text, answers, type, category } = data
 

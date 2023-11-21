@@ -21,6 +21,14 @@ const getQuestions = async (req, res) => {
   res.status(200).json(questions)
 }
 
+const getQuestionById = async (req, res) => {
+  const { id } = req.params
+
+  const question = await questionService.getQuestionById(id)
+
+  res.status(200).json(question)
+}
+
 const createQuestion = async (req, res) => {
   const { id: author } = req.user
   const data = req.body
@@ -51,6 +59,7 @@ const updateQuestion = async (req, res) => {
 
 module.exports = {
   getQuestions,
+  getQuestionById,
   createQuestion,
   deleteQuestion,
   updateQuestion

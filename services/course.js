@@ -15,6 +15,7 @@ const courseService = {
       ])
       .lean()
       .exec()
+
     const count = await Course.countDocuments({ author })
 
     return { items, count }

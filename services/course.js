@@ -5,7 +5,16 @@ const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 
 const courseService = {
   getCourses: async ({ author, skip, limit }) => {
-    const items = await Course.find({ author }).skip(skip).limit(limit).sort({ updatedAt: -1 }).lean().exec()
+    const items = await Course.find({ author })
+      .skip(skip)
+      .limit(limit)
+      .sort({ updatedAt: -1 })
+      .populate([
+        { path: 'subject', select: '_id name' },
+        { path: 'category', select: 'appearance' }
+      ])
+      .lean()
+      .exec()
     const count = await Course.countDocuments({ author })
 
     return { items, count }

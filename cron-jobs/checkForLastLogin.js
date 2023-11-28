@@ -8,15 +8,28 @@ const DAYS_TO_SEND_EMAILS = 173
 const DAYS_TO_DELETE_USER = 180
 const EVERY_DAY_AT_3AM = '00 00 03 * * *'
 const timeZone = 'UTC'
+const defaultFilter = {
+  name: '',
+  email: '',
+  status: [],
+  lastLogin: {
+    from: '',
+    to: ''
+  },
+  createdAt: {
+    from: '',
+    to: ''
+  }
+}
 
 const checkUsersForLastLogin = new CronJob(EVERY_DAY_AT_3AM, () => checkLastLogin(), null, false, timeZone)
 
 const checkLastLogin = async () => {
-  const users = await userService.getUsers()
+  const users = await userService.getUsers(defaultFilter)
   const dateNow = new Date()
 
   return Promise.all(
-    users.map(async ({ email, firstName, lastLogin, language, _id }) => {
+    users.items.map(async ({ email, firstName, lastLogin, language, _id }) => {
       if (!lastLogin) {
         return
       }

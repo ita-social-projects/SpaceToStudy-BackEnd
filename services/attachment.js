@@ -43,7 +43,6 @@ const attachmentService = {
       throw createForbiddenError()
     }
 
-    attachment.description = description
     attachment.category = category
 
     if (fileName) {
@@ -57,6 +56,10 @@ const attachmentService = {
       const newLink = await uploadService.updateFile(attachment.link, newFileName, ATTACHMENT)
 
       attachment.link = newLink
+    }
+
+    if(description) {
+      attachment.description = description
     }
 
     await attachment.validate()

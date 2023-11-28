@@ -1,6 +1,9 @@
 const { Schema, model } = require('mongoose')
 const { QUIZ, USER, RESOURCES_CATEGORY, QUESTION } = require('~/consts/models')
-const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER } = require('~/consts/errors')
+const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER, FIELD_CANNOT_BE_SHORTER, ENUM_CAN_BE_ONE_OF } = require('~/consts/errors')
+const { enums: {
+  QUIZ_VIEW_ENUM
+} } = require('~/consts/validation')
 
 const quizSchema = new Schema(
   {
@@ -29,6 +32,32 @@ const quizSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: RESOURCES_CATEGORY,
       default: null
+    },
+    settings: {
+      view: {
+        type: String,
+        enum: {
+          values: QUIZ_VIEW_ENUM,
+          message: ENUM_CAN_BE_ONE_OF('quiz view', QUIZ_VIEW_ENUM)
+        },
+        default: 'Scroll'
+      },
+      shuffle: {
+        type: Boolean,
+        default: false
+      },
+      pointValues: {
+        type: Boolean,
+        default: false
+      },
+      scoredResponces: {
+        type: Boolean,
+        default: false
+      },
+      correctAnswers: {
+        type: Boolean,
+        default: false
+      }
     }
   },
   { timestamps: true, versionKey: false }

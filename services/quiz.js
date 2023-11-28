@@ -40,8 +40,16 @@ const quizService = {
       throw createForbiddenError()
     }
 
-    for (let field in updateData) {
-      quiz[field] = updateData[field]
+    const { settings } = updateData
+
+    if (settings) {
+      for (let props in settings) {
+        quiz.settings[props] = settings[props]
+      }
+    } else {
+      for (let field in updateData) {
+        quiz[field] = updateData[field]
+      }
     }
 
     await quiz.save()

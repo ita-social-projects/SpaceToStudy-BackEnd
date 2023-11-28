@@ -45,11 +45,25 @@ paths:
                     items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6]
                     author: '6477007a6fa4d05e1a800ce5'
                     category: '63bed9ef260f18d04ab15da'
+                    settings: {
+                      view: Scroll,
+                      shuffle: true,
+                      pointValues: false,
+                      scoredResponces: false,
+                      correctAnswers: true
+                    }
                   - _id: 64ca5932b57f2442403394a9
                     title: Chemistry
                     items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6]
                     author: '6477007a6fa4d05e1a800ce5'
                     category: '63bed9ef260f18d04ab15da'
+                    settings: {
+                      view: Scroll,
+                      shuffle: true,
+                      pointValues: false,
+                      scoredResponces: false,
+                      correctAnswers: true
+                    }
                 count: 2
         401:
           description: Unauthorized
@@ -104,6 +118,13 @@ paths:
                 items: [6477007a6fa4d05e1a800ce2, 6477007a6fa4d05e1a800ce3]
                 category: 6477007a6fa4d05e1a800ce5
                 _id: 63ec1cd51e9d781cdb6f4b14
+                settings: {
+                  view: Scroll,
+                  shuffle: false,
+                  pointValues: false,
+                  scoredResponces: false,
+                  correctAnswers: false
+                }
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
         401:
@@ -157,6 +178,13 @@ paths:
                     items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6]
                     author: 6477007a6fa4d05e1a800ce5,
                     category: 63bed9ef260f18d04ab15da
+                    settings: {
+                      view: Scroll,
+                      shuffle: true,
+                      pointValues: false,
+                      scoredResponces: false,
+                      correctAnswers: true
+                    }
         401:
           description: Unauthorized
           content:

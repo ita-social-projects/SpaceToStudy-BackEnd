@@ -4,6 +4,7 @@ const allowedOfferFieldsForUpdate = {
   title: true,
   description: true,
   languages: true,
+  enrolledUsers: true,
   subject: true,
   category: true,
   status: true,

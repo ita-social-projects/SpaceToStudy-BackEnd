@@ -215,11 +215,19 @@ paths:
       description: Update a lesson by ID and restricted only for tutor
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of category
+          type: string
       requestBody:
-        required: false
+        required: true
         description: Data for update a lesson.
         content:
           application/json:
+            schema:
+              $ref: '#definitions/updateLessonRequest'
             example:
               title: Nature in english
       responses:

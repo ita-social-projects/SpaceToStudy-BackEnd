@@ -555,13 +555,19 @@ paths:
       description: Finds and returns a review statistics for a user with the specified ID and role.
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user for which we are looking for review statistics
+          type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/definitions/reviewResponse'
+                $ref: '#/definitions/userStatsResponse'
               example:
                 stats: [{ rating: 5, count: 1 }, { rating: 3, count: 1 }]
         400:
@@ -604,6 +610,12 @@ paths:
       description: Finds and returns all cooperations for a user with the specified ID.
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user for whom we trying to find cooperations
+          type: string
       responses:
         200:
           description: OK
@@ -668,6 +680,12 @@ paths:
       description: Finds and returns all offers for a user with the specified ID.
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user for whom we trying to find offers
+          type: string
       responses:
         200:
           description: OK

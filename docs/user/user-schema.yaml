@@ -1,4 +1,13 @@
 definitions:
+  userStatsResponse:
+    type: array
+    items:
+      type: object
+      properties:
+        rating:
+          type: number
+        count:
+          type: number
   users:
     type: array
     items:

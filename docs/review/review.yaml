@@ -25,16 +25,6 @@ paths:
           schema:
             type: integer
           required: false
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-        - in: path
-          name: role
-          required: true
-          schema:
-            type: string
       responses:
         200:
           description: OK

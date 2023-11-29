@@ -3,12 +3,12 @@ const mongoose = require('mongoose')
 const condition = (data) => {
   const condition = {}
 
-  if (data.catid) {
-    condition.categoryId = mongoose.Types.ObjectId(data.catid)
+  if (data.categoryId) {
+    condition.category = mongoose.Types.ObjectId(data.categoryId)
   }
 
-  if (data.subid) {
-    condition.subjectId = mongoose.Types.ObjectId(data.subid)
+  if (data.subjectId) {
+    condition.subject = mongoose.Types.ObjectId(data.subjectId)
   }
 
   if (data.authorRole) {

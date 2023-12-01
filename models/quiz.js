@@ -40,7 +40,7 @@ const quizSchema = new Schema(
           values: QUIZ_VIEW_ENUM,
           message: ENUM_CAN_BE_ONE_OF('quiz view', QUIZ_VIEW_ENUM)
         },
-        default: 'Scroll'
+        default: QUIZ_VIEW_ENUM[1]
       },
       shuffle: {
         type: Boolean,

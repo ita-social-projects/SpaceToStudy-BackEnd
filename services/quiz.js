@@ -42,12 +42,10 @@ const quizService = {
 
     const { settings } = updateData
 
-    if (settings) {
-      for (let props in settings) {
-        quiz.settings[props] = settings[props]
-      }
-    } else {
-      for (let field in updateData) {
+    for (let field in updateData) {
+      if (field === 'settings') {
+        Object.assign(quiz.settings, settings)
+      } else {
         quiz[field] = updateData[field]
       }
     }

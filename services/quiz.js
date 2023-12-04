@@ -40,8 +40,14 @@ const quizService = {
       throw createForbiddenError()
     }
 
+    const { settings } = updateData
+
     for (let field in updateData) {
-      quiz[field] = updateData[field]
+      if (field === 'settings') {
+        Object.assign(quiz.settings, settings)
+      } else {
+        quiz[field] = updateData[field]
+      }
     }
 
     await quiz.save()

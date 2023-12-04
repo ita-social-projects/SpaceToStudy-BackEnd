@@ -19,6 +19,22 @@ definitions:
         category:
           type: string
           ref: '#/definitions/resourcesCategory'
+        settings: 
+          type: object
+          properties: 
+            view:
+              type: string
+              enum: 
+                - Stepper
+                - Scroll
+            shuffle:
+              type: boolean
+            pointValues:
+              type: boolean
+            scoredResponces: 
+              type: boolean
+            correctAnswers: 
+              type: boolean
         createdAt:
           type: string
           format: date-time
@@ -38,6 +54,22 @@ definitions:
       items:
         type: array
         ref: '#/components/question'
+      settings: 
+          type: object
+          properties: 
+            view:
+              type: string
+              enum: 
+                - Stepper
+                - Scroll
+            shuffle:
+              type: boolean
+            pointValues:
+              type: boolean
+            scoredResponces: 
+              type: boolean
+            correctAnswers: 
+              type: boolean
   quiz:
     type: object
     properties:
@@ -56,9 +88,26 @@ definitions:
       category:
         type: string
         ref: '#/definitions/resourcesCategory'
+      settings: 
+          type: object
+          properties: 
+            view:
+              type: string
+              enum: 
+                - Stepper
+                - Scroll
+            shuffle:
+              type: boolean
+            pointValues:
+              type: boolean
+            scoredResponces: 
+              type: boolean
+            correctAnswers: 
+              type: boolean
       createdAt:
         type: string
         format: date-time
       updatedAt:
         type: string
         format: date-time
+        

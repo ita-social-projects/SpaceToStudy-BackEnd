@@ -23,7 +23,8 @@ const enums = {
   PARAMS_ENUM: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS_ENUM: ['active', 'draft', 'closed'],
   NOTIFICATION_TYPE_ENUM: ['new', 'requested', 'active', 'declined', 'updated', 'closed', 'deleted'],
-  QUESTION_TYPE_ENUM: ['multipleChoice', 'openAnswer', 'oneAnswer']
+  QUESTION_TYPE_ENUM: ['multipleChoice', 'openAnswer', 'oneAnswer'],
+  QUIZ_VIEW_ENUM: ['Stepper', 'Scroll']
 }
 
 module.exports = {

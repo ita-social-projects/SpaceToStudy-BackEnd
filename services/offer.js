@@ -101,8 +101,9 @@ const offerService = {
     }
 
     const author = offer.author.toString()
+    const enrollUpdate = Boolean(Object.keys(updateData).length === 1 && updateData.enrolledUsers)
 
-    if (author !== currentUserId) {
+    if (author !== currentUserId && !enrollUpdate) {
       throw createForbiddenError()
     }
 

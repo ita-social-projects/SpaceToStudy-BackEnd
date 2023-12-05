@@ -71,6 +71,12 @@ paths:
       description: Creates and saves a new comment for specific cooperation.
       produces:
         - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation is required, to which the comment will be added
+          type: string
       requestBody:
         required: true
         description: Create new comment.

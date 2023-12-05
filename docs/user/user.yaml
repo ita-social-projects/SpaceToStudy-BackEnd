@@ -345,6 +345,16 @@ paths:
       responses:
         204:
           description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
         401:
           description: Unauthorized
           content:
@@ -597,7 +607,7 @@ paths:
   /users/{id}/cooperations:
     get:
       security:
-        - cookieAuth: [ ]
+        - cookieAuth: []
       tags:
         - Users
       summary: Find cooperations for a user with the specified ID

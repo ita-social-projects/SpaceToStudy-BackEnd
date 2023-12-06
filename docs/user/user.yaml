@@ -561,13 +561,18 @@ paths:
           required: true
           description: ID of the user for which we are looking for review statistics
           type: string
+        - in: query
+          name: role
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/definitions/userStatsResponse'
+                $ref: '#/definitions/reviewStats'
               example:
                 stats: [{ rating: 5, count: 1 }, { rating: 3, count: 1 }]
         400:
@@ -616,6 +621,29 @@ paths:
           required: true
           description: ID of the user for whom we trying to find cooperations
           type: string
+        - in: query
+          name: sort
+          schema:
+            type: string
+            default: { "order": "asc", "orderBy":"updatedAt" }
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: status
+          schema:
+            type: string
+            default: 0
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 5
+          required: false
       responses:
         200:
           description: OK
@@ -681,7 +709,6 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: id
           in: path
           required: true
           description: ID of the user for whom we trying to find offers

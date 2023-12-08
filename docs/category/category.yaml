@@ -236,7 +236,7 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Category with the specified id was not found.
-  /categories/{categoryId}/subject/{subjectId}/price-range:
+  /categories/{categoryId}/subjects/{subjectId}/price-range:
     get:
       security:
         - cookieAuth: []
@@ -249,12 +249,22 @@ paths:
       parameters:
         - name: query
           in: path
-          required: true
-          description: The query with the role "?authorRole=tutor" or "?authorRole=student"
+          required: false
+          description: The query with the role "?authorRole=tutor" or "?authorRole=student" (tutor selected by default if query is not provided)
           type: string
           enum:
             - student
             - tutor
+        - name: categoryId
+          in: path
+          required: false
+          description: ID of the offers category
+          type: string
+        - name: subjectId
+          in: path
+          required: false
+          description: ID of the category subject
+          type: string
       responses:
         200:
           description: OK

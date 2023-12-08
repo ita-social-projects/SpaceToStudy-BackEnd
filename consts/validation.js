@@ -24,7 +24,8 @@ const enums = {
   OFFER_STATUS_ENUM: ['active', 'draft', 'closed'],
   NOTIFICATION_TYPE_ENUM: ['new', 'requested', 'active', 'declined', 'updated', 'closed', 'deleted'],
   QUESTION_TYPE_ENUM: ['multipleChoice', 'openAnswer', 'oneAnswer'],
-  QUIZ_VIEW_ENUM: ['Stepper', 'Scroll']
+  QUIZ_VIEW_ENUM: ['Stepper', 'Scroll'],
+  RESOURCES_TYPES_ENUM: ['lessons', 'attachments', 'questions', 'quizzes']
 }
 
 module.exports = {

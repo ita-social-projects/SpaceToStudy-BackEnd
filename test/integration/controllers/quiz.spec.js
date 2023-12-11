@@ -6,17 +6,38 @@ const TokenService = require('~/services/token')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
+const {
+  enums: { QUIZ_VIEW_ENUM }
+} = require('~/consts/validation')
 
 const endpointUrl = '/quizzes/'
+const questionEndpointUrl = '/questions/'
 
 const testQuizData = {
   title: 'Assembly',
   description: 'Description',
-  items: ['6527ed6c14c6b72f36962364']
+  settings: {
+    correctAnswers: false,
+    pointValues: false,
+    scoredResponses: false,
+    shuffle: false,
+    view: QUIZ_VIEW_ENUM[1]
+  }
 }
 
 const updateData = {
   title: 'WebAssembly'
+}
+
+const testQuestionData = {
+  title: 'Assembly',
+  text: 'What is Assembly',
+  answers: [
+    { text: 'Yes', isCorrect: true },
+    { text: 'Yes, of course', isCorrect: false }
+  ],
+  category: null,
+  type: 'multipleChoice'
 }
 
 const studentUserData = {
@@ -32,7 +53,7 @@ const studentUserData = {
 }
 
 describe('Quiz controller', () => {
-  let app, server, accessToken, currentUser, studentAccessToken, testQuiz, testQuizId
+  let app, server, accessToken, currentUser, studentAccessToken, testQuiz, testQuizId, testQuestion, testQuestionId
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -44,10 +65,16 @@ describe('Quiz controller', () => {
 
     currentUser = TokenService.validateAccessToken(accessToken)
 
+    testQuestion = await app
+      .post(questionEndpointUrl)
+      .send(testQuestionData)
+      .set('Cookie', [`accessToken=${accessToken}`])
+    testQuestionId = testQuestion._body._id
+
     testQuiz = await app
       .post(endpointUrl)
       .set('Cookie', [`accessToken=${accessToken}`])
-      .send(testQuizData)
+      .send({ ...testQuizData, items: [testQuestionId] })
     testQuizId = testQuiz.body._id
   })
 
@@ -101,7 +128,8 @@ describe('Quiz controller', () => {
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
             ...testQuizData,
-            category: null
+            category: null,
+            items: [testQuestionId]
           }
         ],
         count: 1
@@ -131,7 +159,15 @@ describe('Quiz controller', () => {
         author: currentUser.id,
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        ...testQuizData
+        ...testQuizData,
+        items: [
+          {
+            _id: testQuestionId,
+            title: testQuestionData.title,
+            text: testQuestionData.text,
+            answers: testQuestionData.answers
+          }
+        ]
       })
     })
 

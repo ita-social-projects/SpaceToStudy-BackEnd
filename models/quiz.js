@@ -63,7 +63,7 @@ const quizSchema = new Schema(
         type: Boolean,
         default: false
       },
-      scoredResponces: {
+      scoredResponses: {
         type: Boolean,
         default: false
       },

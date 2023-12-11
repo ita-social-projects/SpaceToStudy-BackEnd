@@ -84,3 +84,15 @@ definitions:
         type: string
       rating:
         type: number
+  reviewStats:
+    type: object
+    properties:
+      stats:
+        type: array
+        items:
+          type: object
+          properties:
+            rating:
+              type: integer
+            count:
+              type: integer

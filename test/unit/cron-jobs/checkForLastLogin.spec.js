@@ -23,11 +23,16 @@ jest.mock('~/services/email', () => ({
 let mockedUsersList
 
 describe('checkForLastUserLogin cron-job', () => {
-  beforeEach(async () => {
-    mockedUsersList = [{ ...mockedUser, lastLogin: mockedLastLoginDateToSendEmail }]
+  beforeEach(() => {
+    mockedUsersList = {items: [{ ...mockedUser, lastLogin: mockedLastLoginDateToSendEmail }]}
     userService.getUsers = jest.fn(() => mockedUsersList)
     const mockedCurrentDate = new Date(2023, 7, 23, 25, 0, 0, 0)
     jest.useFakeTimers('modern').setSystemTime(mockedCurrentDate)
+  })
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers()
+    jest.useRealTimers()
   })
 
   it('should send email if last login date is equal to days to send email', async () => {
@@ -44,7 +49,7 @@ describe('checkForLastUserLogin cron-job', () => {
   })
 
   it('should delete user if last login date is equal or more to days to delete user', async () => {
-    mockedUsersList = [{ ...mockedUser, lastLogin: mockedLastLoginDateToDeleteUser }]
+    mockedUsersList = {items: [{ ...mockedUser, lastLogin: mockedLastLoginDateToDeleteUser }]}
     userService.getUsers.mockImplementation(() => mockedUsersList)
 
     await checkLastLogin()
@@ -56,7 +61,7 @@ describe('checkForLastUserLogin cron-job', () => {
 
   it('should return array of undefined if user lastLogin date is less than days to send email', async () => {
     const optimalDate = new Date(2023, 5, 23, 25, 0, 0, 0)
-    mockedUsersList = [{ ...mockedUser, lastLogin: optimalDate }]
+    mockedUsersList = {items: [{ ...mockedUser, lastLogin: optimalDate }]}
     userService.getUsers.mockImplementation(() => mockedUsersList)
 
     const res = await checkLastLogin()
@@ -65,8 +70,10 @@ describe('checkForLastUserLogin cron-job', () => {
     expect(res.length).toBe(1)
     expect(res).toContain(undefined)
   })
+
   it('should return array of undefined if user has no lastLogin field', async () => {
-    userService.getUsers.mockImplementation(() => [mockedUser])
+    mockedUsersList = {items: [{ ...mockedUser}]}
+    userService.getUsers.mockImplementation(() => mockedUsersList)
 
     const res = await checkLastLogin()
 

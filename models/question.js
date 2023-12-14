@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { QUESTION_TYPE_ENUM }
+  enums: { QUESTION_TYPE_ENUM, RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
 const { QUESTION, USER, RESOURCES_CATEGORY } = require('~/consts/models')
 const {
@@ -56,6 +56,14 @@ const questionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: USER,
       required: [true, FIELD_CANNOT_BE_EMPTY('author')]
+    },
+    resourceType: {
+      type: String,
+      enum: {
+        values: RESOURCES_TYPES_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
+      },
+      default: RESOURCES_TYPES_ENUM[2]
     }
   },
   { timestamps: true, versionKey: false }

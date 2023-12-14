@@ -21,18 +21,18 @@ const courseService = {
   },
 
   getCourseById: async (id) => {
-    return await Course.findById(id).lean().exec()
+    return await Course.findById(id)
+      .populate([
+        { path: 'sections.lessons', select: '_id title resourceType' },
+        { path: 'sections.attachments', select: '_id fileName resourceType' },
+        { path: 'sections.quizzes', select: '_id title resourceType' }
+      ])
+      .lean()
+      .exec()
   },
 
   createCourse: async (author, data) => {
-    const {
-      title,
-      description,
-      category,
-      subject,
-      proficiencyLevel,
-      sections
-    } = data
+    const { title, description, category, subject, proficiencyLevel, sections } = data
 
     return await Course.create({
       title,
@@ -46,7 +46,7 @@ const courseService = {
   },
 
   updateCourse: async (userId, data) => {
-    const { id, title, description, attachments, rewriteAttachments = false } = data
+    const { id, title, description, category, subject, proficiencyLevel, sections } = data
 
     const course = await Course.findById(id).exec()
 
@@ -60,11 +60,7 @@ const courseService = {
       throw createForbiddenError()
     }
 
-    if (attachments) {
-      course.attachments = rewriteAttachments ? attachments : course.attachments.concat(attachments)
-    }
-
-    const updateData = { title, description }
+    const updateData = { title, description, category, subject, proficiencyLevel, sections }
 
     for (const key in updateData) {
       const value = updateData[key]

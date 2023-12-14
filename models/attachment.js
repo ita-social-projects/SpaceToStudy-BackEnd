@@ -1,6 +1,14 @@
 const { ATTACHMENT, USER, RESOURCES_CATEGORY } = require('~/consts/models')
 const { Schema, model } = require('mongoose')
-const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_SHORTER, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
+const {
+  FIELD_CANNOT_BE_EMPTY,
+  FIELD_CANNOT_BE_SHORTER,
+  FIELD_CANNOT_BE_LONGER,
+  ENUM_CAN_BE_ONE_OF
+} = require('~/consts/errors')
+const {
+  enums: { RESOURCES_TYPES_ENUM }
+} = require('~/consts/validation')
 
 const attachmentSchema = new Schema(
   {
@@ -34,6 +42,14 @@ const attachmentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: RESOURCES_CATEGORY,
       default: null
+    },
+    resourceType: {
+      type: String,
+      enum: {
+        values: RESOURCES_TYPES_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
+      },
+      default: RESOURCES_TYPES_ENUM[1]
     }
   },
   {

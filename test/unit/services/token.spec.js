@@ -7,6 +7,15 @@ const {
 const { createError } = require('~/utils/errorsHelper')
 const { INVALID_TOKEN_NAME } = require('~/consts/errors')
 
+jest.mock('~/configs/config', () => ({
+  config: {
+    JWT_ACCESS_SECRET: 'access-secret',
+    JWT_ACCESS_EXPIRES_IN: '1h',
+    JWT_REFRESH_SECRET: 'refresh-secret',
+    JWT_REFRESH_EXPIRES_IN: '7d'
+  }
+}))
+
 describe('Token service', () => {
   const data = { id: 'testExample' }
   const tokenValue = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ8'
@@ -21,9 +30,17 @@ describe('Token service', () => {
   it('Should set new token value', async () => {
     const obj = { resetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' }
     const tokenData = { resetToken: tokenValue }
-    Token.findOne = jest.fn().mockResolvedValue({ ...obj, save: jest.fn().mockResolvedValue(tokenData) })
-    const result = await tokenService.saveToken(userId, tokenValue, RESET_TOKEN)
+    const mockSave = jest.fn().mockResolvedValue(tokenData)
 
+    Token.findOne = jest
+      .fn()
+      .mockResolvedValue({ ...obj })
+      .mockImplementation(() => ({ exec: jest.fn().mockResolvedValue({ save: mockSave }) }))
+
+    const result = await tokenService.saveToken(userId, tokenValue, RESET_TOKEN)
+    
+    expect(Token.findOne).toHaveBeenCalledWith({ user: userId })
+    expect(mockSave).toHaveBeenCalled()
     expect(result).toEqual(tokenData)
   })
   it('Should throw error INVALID_TOKEN_NAME in saveToken func', () => {

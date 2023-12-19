@@ -4,18 +4,20 @@ const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 
 const courseService = {
-  getCourses: async ({ author, skip, limit }) => {
-    const items = await Course.find({ author })
-      .skip(skip)
-      .limit(limit)
-      .sort({ updatedAt: -1 })
+  getCourses: async (match, skip, limit) => {
+    const items = await Course.find(match)
+      .collation({ locale: 'en', strength: 1 })
       .populate([
         { path: 'subject', select: '_id name' },
         { path: 'category', select: 'appearance' }
       ])
+      .sort({ updatedAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .lean()
       .exec()
-    const count = await Course.countDocuments({ author })
+
+    const count = await Course.countDocuments(match)
 
     return { items, count }
   },

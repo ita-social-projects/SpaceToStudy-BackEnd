@@ -41,6 +41,7 @@ paths:
                       lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                       quizzes: [64ba39c714b7bc037a29d712]
                       attachments: [63ed1cd25e9d781cdb6a6b15]
+                      order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
                   createdAt: 2023-11-15T16:15:09.004Z
                   updatedAt: 2023-11-15T16:15:09.004Z
                 - _id: 640461e3cfdda3f3d16dcac5
@@ -52,10 +53,11 @@ paths:
                   proficiencyLevel: [Advanced]
                   sections:
                     - title: Section Second
-                    - description: some description
-                    - lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
-                    - quizzes: [64ba39c714b7bc037a29d712]
-                    - attachments: [63ed1cd25e9d781cdb6a6b15]
+                      description: some description
+                      lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
+                      quizzes: [64ba39c714b7bc037a29d712]
+                      attachments: [63ed1cd25e9d781cdb6a6b15]
+                      order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -106,6 +108,7 @@ paths:
                   lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                   quizzes: [64ba39c714b7bc037a29d712]
                   attachments: [63ed1cd25e9d781cdb6a6b15]
+                  order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
       responses:
         201:
           description: Created
@@ -126,6 +129,7 @@ paths:
                     lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                     quizzes: [64ba39c714b7bc037a29d712]
                     attachments: [63ed1cd25e9d781cdb6a6b15]
+                    order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -246,6 +250,7 @@ paths:
                     lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                     quizzes: [64ba39c714b7bc037a29d712]
                     attachments: [63ed1cd25e9d781cdb6a6b15]
+                    order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

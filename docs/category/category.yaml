@@ -45,7 +45,7 @@ paths:
                   name: music
                   categoryIcon:
                     path: categories-icons/link-to-icon.png
-                    color: '#66c42c'
+                    color: '#F67C41'
                   totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z

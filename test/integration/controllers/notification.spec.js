@@ -1,6 +1,9 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const {
+  enums: { NOTIFICATION_TYPE_ENUM }
+} = require('~/consts/validation')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Notification = require('~/models/notification')
 const TokenService = require('~/services/token')
@@ -29,7 +32,7 @@ describe('Notification controller', () => {
     testNotification = await Notification.create({
       user: currentUser.id,
       userRole: currentUser.role,
-      type: 'review',
+      type: NOTIFICATION_TYPE_ENUM[0],
       ...testNotificationData
     })
   })
@@ -43,7 +46,7 @@ describe('Notification controller', () => {
   })
 
   describe(`GET ${endpointUrl}`, () => {
-    it("should get user's notifications and count them", async () => {
+    it('should get user`s notifications and count them', async () => {
       const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
@@ -64,7 +67,7 @@ describe('Notification controller', () => {
   })
 
   describe(`DELETE ${endpointUrl}`, () => {
-    it("should clear all user's notifications", async () => {
+    it('should clear all user`s notifications', async () => {
       const response = await app.delete(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       const notifications = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])

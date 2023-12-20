@@ -11,7 +11,7 @@ const testLesson = {
   title: 'title',
   description: 'description',
   category: '6502ec2060ec37be943353e2',
-  content: '<h1>Title</h1>',
+  content: '<h1>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</h1>',
   attachments: ['65bed8ef260f18d04ab22da3', '65bed9ef260f19d05ab25bc6']
 }
 

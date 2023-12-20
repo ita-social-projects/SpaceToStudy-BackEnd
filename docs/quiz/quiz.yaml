@@ -49,7 +49,7 @@ paths:
                       view: Scroll,
                       shuffle: true,
                       pointValues: false,
-                      scoredResponces: false,
+                      scoredResponses: false,
                       correctAnswers: true
                     }
                   - _id: 64ca5932b57f2442403394a9
@@ -61,7 +61,7 @@ paths:
                       view: Scroll,
                       shuffle: true,
                       pointValues: false,
-                      scoredResponces: false,
+                      scoredResponses: false,
                       correctAnswers: true
                     }
                 count: 2
@@ -122,7 +122,7 @@ paths:
                   view: Scroll,
                   shuffle: false,
                   pointValues: false,
-                  scoredResponces: false,
+                  scoredResponses: false,
                   correctAnswers: false
                 }
                 createdAt: 2023-02-14T23:44:21.334Z
@@ -182,7 +182,7 @@ paths:
                       view: Scroll,
                       shuffle: true,
                       pointValues: false,
-                      scoredResponces: false,
+                      scoredResponses: false,
                       correctAnswers: true
                     }
         401:

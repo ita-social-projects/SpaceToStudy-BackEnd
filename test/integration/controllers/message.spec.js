@@ -169,16 +169,19 @@ describe('Message controller', () => {
 
   describe(`PATCH ${endpointUrl}`, () => {
     it('should clear chat history for current user', async () => {
-      const response = await app.patch(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.patch(endpointUrl(messageBody.chat)).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(clearedStatusBody)
     })
 
     it('should throw NOT MODIFIED if there is nothing to clear', async () => {
-      chatResponse = await app.post(chatEndpointUrl).set('Authorization', `Bearer ${accessToken}`).send(chatBody)
+      chatResponse = await app
+        .post(chatEndpointUrl)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(chatBody)
       messageBody.chat = chatResponse.body._id
-      const response = await app.patch(endpointUrl(messageBody.chat)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.patch(endpointUrl(messageBody.chat)).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(304)
     })
@@ -194,13 +197,13 @@ describe('Message controller', () => {
 
       const response = await app
         .patch(endpointUrl(messageBody.chat))
-        .set('Authorization', `Bearer ${accessTokenForbidden}`)
+        .set('Cookie', [`accessToken=${accessTokenForbidden}`])
 
       expectError(403, FORBIDDEN, response)
     })
 
     it('should throw DOCUMENT_NOT_FOUND for chat', async () => {
-      const response = await app.patch(endpointUrl(nonExistingChatId)).set('Authorization', `Bearer ${accessToken}`)
+      const response = await app.patch(endpointUrl(nonExistingChatId)).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Chat.modelName]), response)
     })

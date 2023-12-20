@@ -21,8 +21,8 @@ const createAggregateOptions = (query) => {
     sort = '{}',
     status = []
   } = query
-  const { from, to } = JSON.parse(lastLogin)
-  const { orderBy, order } = JSON.parse(sort)
+  const { from, to } = lastLogin
+  const { orderBy, order } = sort
   const nameArray = name.trim().split(' ')
   const firstNameRegex = getRegex(nameArray[0])
   const lastNameRegex = getRegex(nameArray[1])

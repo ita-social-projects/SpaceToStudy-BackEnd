@@ -1,3 +1,4 @@
+const iconv = require('iconv-lite');
 const attachmentService = require('~/services/attachment')
 
 const getMatchOptions = require('~/utils/getMatchOptions')
@@ -25,8 +26,9 @@ const getAttachments = async (req, res) => {
 const createAttachments = async (req, res) => {
   const { id: author } = req.user
   const { description } = req.body
-  const files = req.files
-
+  const files = req.files.map((file) => ({ ...file,
+    originalname: iconv.decode(Buffer.from(file.originalname, 'binary'), 'utf-8'),
+  }))
   const attachments = await attachmentService.createAttachments({ author, files, description })
 
   res.status(201).json(attachments)

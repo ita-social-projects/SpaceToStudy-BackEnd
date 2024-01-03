@@ -28,8 +28,6 @@ let tutorUser = {
 const testCourseData = {
   title: 'assembly',
   description: 'you will learn some modern programming language for all your needs',
-  category: 'computer science',
-  subject: 'English',
   proficiencyLevel: ['Advanced'],
   sections: [
     {
@@ -47,11 +45,18 @@ const updateData = {
   description: 'new description'
 }
 
+const categoryBody = {
+  name: 'Languages1',
+  appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+}
+
+const subjectBody = { name: 'English' }
+
 describe('Course controller', () => {
-  let app, server, accessToken, studentAccessToken, testCourseResponse, testCourse
+  let app, server, accessToken, studentAccessToken, testCourseResponse, testCourse, testCategory, testSubject
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -61,6 +66,21 @@ describe('Course controller', () => {
     studentAccessToken = await testUserAuthentication(app)
 
     uploadService.uploadFile = mockUploadFile
+
+    testCategory = await app
+      .post('/categories/')
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(categoryBody)
+
+    subjectBody.category = testCategory.body._id
+    testCourseData.category = testCategory.body._id
+
+    testSubject = await app
+      .post('/subjects/')
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(subjectBody)
+
+    testCourseData.subject = testSubject.body._id
 
     testCourseResponse = await app
       .post(endpointUrl)
@@ -77,35 +97,14 @@ describe('Course controller', () => {
     await stopServer(server)
   })
 
-  describe(`GET ${endpointUrl}`, () => {
-    it('should get all courses', async () => {
-      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({ count: 1, items: [expect.objectContaining(testCourseData)] })
-    })
-
-    it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(endpointUrl)
-
-      expectError(401, UNAUTHORIZED, response)
-    })
-
-    it('should throw FORBIDDEN', async () => {
-      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
-
-      expectError(403, FORBIDDEN, response)
-    })
-  })
-
   describe(`POST ${endpointUrl}`, () => {
     it('should create a course', async () => {
       expect(testCourseResponse.statusCode).toBe(201)
       expect(testCourseResponse.body).toMatchObject({
         title: testCourseData.title,
         description: testCourseData.description,
-        category: testCourseData.category,
-        subject: testCourseData.subject,
+        category: testCategory.body._id,
+        subject: testSubject.body._id,
         proficiencyLevel: testCourseData.proficiencyLevel,
         sections: expect.any(Array)
       })
@@ -122,6 +121,36 @@ describe('Course controller', () => {
         .patch(endpointUrl)
         .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(testCourseData)
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}`, () => {
+    it('should get all courses', async () => {
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual({
+        count: 1,
+        items: [
+          expect.objectContaining({
+            ...testCourse,
+            category: { _id: testCategory.body._id, appearance: testCategory.body.appearance },
+            subject: { _id: testSubject.body._id, name: testSubject.body.name }
+          })
+        ]
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -174,8 +203,6 @@ describe('Course controller', () => {
         author: expect.any(String),
         title: 'assembly',
         description: 'you will learn some modern programming language for all your needs',
-        attachments: ['mocked-file-url'],
-        lessons: expect.any(Array),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })

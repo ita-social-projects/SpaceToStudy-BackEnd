@@ -3,6 +3,9 @@ const {
   lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
   enums: { ROLE_ENUM }
 } = require('~/consts/validation')
+const {
+  tokenNames: { RESET_TOKEN }
+} = require('~/consts/auth')
 const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
 const Token = require('~/models/token')
@@ -254,11 +257,12 @@ describe('Auth controller', () => {
 
   describe('UpdatePassword endpoint', () => {
     let resetToken
-    beforeEach(() => {
+    beforeEach(async () => {
       const { firstName, email, role } = user
+
       resetToken = tokenService.generateResetToken({ id: signupResponse.body.userId, firstName, email, role })
 
-      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(resetToken) })
+      await tokenService.saveToken(signupResponse.body.userId, resetToken, RESET_TOKEN)
     })
     afterEach(() => jest.resetAllMocks())
 

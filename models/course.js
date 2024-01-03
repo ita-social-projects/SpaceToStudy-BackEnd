@@ -7,20 +7,10 @@ const {
   FIELD_CANNOT_BE_LONGER
 } = require('~/consts/errors')
 
-const {
-  COURSE,
-  USER,
-  LESSON,
-  ATTACHMENT,
-  QUIZ,
-  CATEGORY,
-  SUBJECT
-} = require('~/consts/models')
+const { COURSE, USER, LESSON, ATTACHMENT, QUIZ, CATEGORY, SUBJECT } = require('~/consts/models')
 
 const {
-  enums: {
-    PROFICIENCY_LEVEL_ENUM
-  }
+  enums: { PROFICIENCY_LEVEL_ENUM }
 } = require('~/consts/validation')
 
 const courseSchema = new Schema(
@@ -50,7 +40,7 @@ const courseSchema = new Schema(
     subject: {
       type: Schema.Types.ObjectId,
       ref: SUBJECT,
-      required: [true, FIELD_CANNOT_BE_EMPTY('author')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('subject')]
     },
     proficiencyLevel: {
       type: [String],
@@ -60,31 +50,33 @@ const courseSchema = new Schema(
       },
       required: [true, FIELD_CANNOT_BE_EMPTY('proficiency level')]
     },
-    sections: [{
-      title: {
-        type: String,
-        required: [true, FIELD_CANNOT_BE_EMPTY('title')],
-        minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
-        maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
-      },
-      description: {
-        type: String,
-        maxLength: [150, FIELD_CANNOT_BE_LONGER('description', 150)],
-        trim: true
-      },
-      lessons: {
-        type: [Schema.Types.ObjectId],
-        ref: LESSON
-      },
-      quizzes: {
-        type: [Schema.Types.ObjectId],
-        ref: QUIZ
-      },
-      attachments: {
-        type: [Schema.Types.ObjectId],
-        ref: ATTACHMENT
+    sections: [
+      {
+        title: {
+          type: String,
+          required: [true, FIELD_CANNOT_BE_EMPTY('title')],
+          minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
+          maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
+        },
+        description: {
+          type: String,
+          maxLength: [150, FIELD_CANNOT_BE_LONGER('description', 150)],
+          trim: true
+        },
+        lessons: {
+          type: [Schema.Types.ObjectId],
+          ref: LESSON
+        },
+        quizzes: {
+          type: [Schema.Types.ObjectId],
+          ref: QUIZ
+        },
+        attachments: {
+          type: [Schema.Types.ObjectId],
+          ref: ATTACHMENT
+        }
       }
-    }]
+    ]
   },
   {
     versionKey: false,

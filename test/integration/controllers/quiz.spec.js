@@ -7,7 +7,7 @@ const {
   roles: { TUTOR }
 } = require('~/consts/auth')
 const {
-  enums: { QUIZ_VIEW_ENUM }
+  enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
 
 const endpointUrl = '/quizzes/'
@@ -16,6 +16,7 @@ const questionEndpointUrl = '/questions/'
 const testQuizData = {
   title: 'Assembly',
   description: 'Description',
+  resourceType: RESOURCES_TYPES_ENUM[3],
   settings: {
     correctAnswers: false,
     pointValues: false,

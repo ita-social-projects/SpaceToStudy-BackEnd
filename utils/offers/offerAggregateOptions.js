@@ -108,8 +108,6 @@ const offerAggregateOptions = (query, params, user) => {
     }
   }
 
-  console.log(sortOption)
-
   return [
     {
       $lookup: {

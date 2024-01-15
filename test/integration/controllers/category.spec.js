@@ -88,7 +88,7 @@ describe('Category controller', () => {
       expect(testCategory.statusCode).toBe(201)
       categoryData = {
         _id: expect.any(String),
-        appearance: categoryBody.appearance,
+        appearance: { ...categoryBody.appearance, color: testCategory.body.appearance.color },
         name: expect.any(String),
         totalOffers: {
           student: 0,

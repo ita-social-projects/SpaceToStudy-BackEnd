@@ -6,14 +6,13 @@ const coopsAggregateOptions = (params = {}, query) => {
   const { skip = 0, limit = 5, status = '', sort = '{ "order": "asc", "orderBy":"updatedAt"}', search } = query
   const match = {}
   const sortOption = {}
-  const parsedSort = JSON.parse(sort)
-  const sortOrder = parsedSort.order === 'asc' ? 1 : -1
+  const sortOrder = sort.order === 'asc' ? 1 : -1
 
-  if (parsedSort.orderBy === 'name') {
+  if (sort.orderBy === 'name') {
     sortOption['user.firstName'] = sortOrder
     sortOption['user.lastName'] = sortOrder
   } else {
-    sortOption[parsedSort.orderBy] = sortOrder
+    sortOption[sort.orderBy] = sortOrder
   }
 
   if (status) match.status = getRegex(status)

@@ -90,8 +90,7 @@ const offerAggregateOptions = (query, params, user) => {
 
   if (sort) {
     try {
-      const parsedSort = JSON.parse(sort)
-      const { order, orderBy } = parsedSort
+      const { order, orderBy } = sort
       const sortOrder = order === 'asc' ? 1 : -1
       sortOption = { [orderBy]: sortOrder }
     } catch {

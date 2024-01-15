@@ -54,6 +54,10 @@ definitions:
                 items:
                   type: string
                   ref: '#/components/attachments'
+              order:
+                type: array
+                items:
+                  type: string
         createdAt:
           type: string
           format: date-time
@@ -113,6 +117,10 @@ definitions:
               items:
                 type: string
                 ref: '#/components/attachments'
+            order:
+              type: array
+              items:
+                type: string
       createdAt:
         type: string
         format: date-time
@@ -170,6 +178,10 @@ definitions:
               items:
                 type: string
                 ref: '#/components/attachments'
+            order:
+              type: array
+              items:
+                type: string
     required:
       - title
       - description

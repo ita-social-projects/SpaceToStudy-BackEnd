@@ -74,6 +74,9 @@ const courseSchema = new Schema(
         attachments: {
           type: [Schema.Types.ObjectId],
           ref: ATTACHMENT
+      },
+      order: {
+        type: [String]
         }
       }
     ]

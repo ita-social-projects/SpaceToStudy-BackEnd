@@ -17,19 +17,17 @@ const quizService = {
   },
 
   getQuizById: async (id) => {
-    return await Quiz.findById(id)
-      .populate({ path: 'items', select: 'title answers text type' })
-      .lean()
-      .exec()
+    return await Quiz.findById(id).populate({ path: 'items', select: 'title answers text type' }).lean().exec()
   },
 
   createQuiz: async (author, data) => {
-    const { title, category, items, description } = data
+    const { title, category, items, description, settings } = data
 
     return await Quiz.create({
       title,
       author,
       category,
+      settings,
       items,
       description
     })

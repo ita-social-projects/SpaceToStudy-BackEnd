@@ -5,7 +5,7 @@ const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
 
-const commentRouter = require('~/routes/comment')
+const noteRouter = require('~/routes/note')
 
 const cooperationController = require('~/controllers/cooperation')
 const Offer = require('~/models/offer')
@@ -18,7 +18,7 @@ router.use(authMiddleware)
 
 router.param('id', idValidation)
 
-router.use('/:id/comments', commentRouter)
+router.use('/:id/notes', noteRouter)
 
 router.get('/', asyncWrapper(cooperationController.getCooperations))
 router.post('/', isEntityValid({ body }), asyncWrapper(cooperationController.createCooperation))

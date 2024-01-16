@@ -1,0 +1,275 @@
+paths:
+  /cooperations/{id}/notes:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Notes
+      summary: Find notes of cooperation
+      description: Finds and returns an array with a list of all notes related to specific cooperation.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation that needs to be fetched notes from
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/notes'
+              example:
+                - _id: 63ebc6fbd2f34037d0aba791
+                  text: my note
+                  author:
+                    _id: 64ebc6fbd2f34037d0aba294
+                    firstName: Harry
+                    lastName: Potter
+                  isPrivate: false
+                  cooperation: 63ebc6fbd2f34037d0aba699
+                  createdAt: 2023-02-14T23:44:21.334Z
+                  updatedAt: 2023-02-14T23:44:21.334Z
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found Cooperation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Cooperation with the specified id was not found.
+    post:
+      security:
+        - cookieAuth: []
+      tags:
+        - Notes
+      summary: Create new note.
+      description: Creates and saves a new note for specific cooperation.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation is required, to which the note will be added
+          type: string
+      requestBody:
+        required: true
+        description: Create new note.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/noteBody'
+            example:
+              text: my note
+              isPrivate: true
+      responses:
+        201:
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/note'
+              example:
+                _id: 63ebc6fbd2f34037d0aba791
+                text: my note
+                author:
+                  _id: 64ebc6fbd2f34037d0aba294
+                  firstName: Harry
+                  lastName: Potter
+                isPrivate: true
+                cooperation: 63ebc6fbd2f34037d0aba699
+                createdAt: 2023-02-14T23:44:21.334Z
+                updatedAt: 2023-02-14T23:44:21.334Z
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found Cooperation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Cooperation with the specified id was not found.
+  /cooperations/{id}/notes/{noteId}:
+    patch:
+      security:
+        - cookieAuth: []
+      tags:
+        - Notes
+      summary: Update note by ID
+      description: Finds and updates a note with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation is required, to which the note will be added
+          type: string
+        - name: noteId
+          in: path
+          required: true
+          description: Note ID which will be updated
+          type: string
+      requestBody:
+        required: true
+        description: Provide required data to update a note.
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/noteBody'
+            example:
+              text: Updated note text
+              isPrivate: true
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Note with the specified id was not found.
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+        - Notes
+      summary: Find and delete a note by the ID
+      description: Finds and deletes a note with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the cooperation is required, to which the note will be added
+          type: string
+        - name: noteId
+          in: path
+          required: true
+          description: Note ID which will be updated
+          type: string
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Note with the specified id was not found.

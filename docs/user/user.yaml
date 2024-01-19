@@ -216,13 +216,13 @@ paths:
                           {
                             _id: 64593435163b62124ce4c3ab,
                             name: Cybersecurity,
-                            category: '6421ed8ed991d46a84721df2',
+                            category: { _id: '6421ed8ed991d46a84721df2', name: 'IT' },
                             totalOffers: 0
                           },
                           {
                             _id: 6422d995d898aa732d038e8f,
                             name: Guitar,
-                            category: '6421ed8ed991d46a84721dfa',
+                            category: { _id: '6421ed8ed991d46a84721dfa', name: 'Music' },
                             totalOffers: 0
                           }
                         ]
@@ -635,7 +635,7 @@ paths:
           name: sort
           schema:
             type: string
-            default: { "order": "asc", "orderBy":"updatedAt" }
+            default: { 'order': 'asc', 'orderBy': 'updatedAt' }
           required: false
         - in: query
           name: skip
@@ -719,10 +719,10 @@ paths:
       produces:
         - application/json
       parameters:
-          in: path
-          required: true
-          description: ID of the user for whom we trying to find offers
-          type: string
+        in: path
+        required: true
+        description: ID of the user for whom we trying to find offers
+        type: string
       responses:
         200:
           description: OK

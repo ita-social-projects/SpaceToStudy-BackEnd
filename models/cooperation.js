@@ -51,7 +51,7 @@ const cooperationSchema = new Schema(
       type: String,
       minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
       maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)],
-      equired: [true, FIELD_CANNOT_BE_EMPTY('title')]
+      required: [true, FIELD_CANNOT_BE_EMPTY('title')]
     },
     additionalInfo: {
       type: String,

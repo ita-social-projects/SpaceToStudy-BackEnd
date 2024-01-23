@@ -3,7 +3,7 @@ const {
   enums: { ROLE_ENUM, NOTIFICATION_TYPE_ENUM }
 } = require('~/consts/validation')
 const { ENUM_CAN_BE_ONE_OF, FIELD_MUST_BE_SELECTED } = require('~/consts/errors')
-const { USER, NOTIFICATION, COOPERATION, MESSAGE, REVIEW, COMMENT } = require('~/consts/models')
+const { USER, NOTIFICATION, COOPERATION, MESSAGE, REVIEW, NOTE } = require('~/consts/models')
 
 const notificationSchema = new Schema(
   {
@@ -35,7 +35,7 @@ const notificationSchema = new Schema(
     referenceModel: {
       type: String,
       required: true,
-      enum: [REVIEW, COOPERATION, MESSAGE, COMMENT]
+      enum: [REVIEW, COOPERATION, MESSAGE, NOTE]
     }
   },
   { timestamps: true, versionKey: false }

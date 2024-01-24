@@ -18,8 +18,8 @@ router.param('id', idValidation)
 router.param('noteId', idValidation)
 router.use(authMiddleware)
 
-router.post('/', isEntityValid({ params }), asyncWrapper(noteController.addNote))
-router.get('/', isEntityValid({ params }), asyncWrapper(noteController.getNotes))
+router.post('/:id', isEntityValid({ params }), asyncWrapper(noteController.addNote))
+router.get('/:id', isEntityValid({ params }), asyncWrapper(noteController.getNotes))
 router.patch('/:noteId', isEntityValid({ params }), asyncWrapper(noteController.updateNote))
 router.delete('/:noteId', isEntityValid({ params }), asyncWrapper(noteController.deleteNote))
 

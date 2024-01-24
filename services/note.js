@@ -23,7 +23,13 @@ const noteService = {
 
     if (!foundedCooperation) throw createForbiddenError()
 
-    return await Note.find({ cooperation })
+    return await Note.find({
+      cooperation,
+      $or: [
+        { isPrivate: false }, 
+        { $and: [{ author: userId }, { isPrivate: true }] }
+      ]
+    })
       .populate({
         path: 'author',
         select: ['firstName', 'lastName', 'photo']

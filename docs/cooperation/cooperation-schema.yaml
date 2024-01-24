@@ -59,6 +59,27 @@ definitions:
           - active
           - declined
           - closed
+      sections:
+        type: array
+        items:
+          type: object
+          properties:
+          title: string
+          description: string
+          activities:
+            type: array
+            items:
+              type: object
+              properties:
+                resource:
+                  type: object
+                  additionalProperties: true
+                resourceType:
+                  type: string
+                  enum:
+                    - Lesson
+                    - Attachment
+                    - Quiz
   cooperation:
     type: object
     properties:
@@ -86,6 +107,27 @@ definitions:
           - active
           - declined
           - closed
+      sections:
+        type: array
+        items:
+          type: object
+          properties:
+          title: string
+          description: string
+          activities:
+            type: array
+            items:
+              type: object
+              properties:
+                resource:
+                  type: object
+                  additionalProperties: true
+                resourceType:
+                  type: string
+                  enum:
+                    - Lesson
+                    - Attachment
+                    - Quiz
       needAction:
         type: string
         enum:

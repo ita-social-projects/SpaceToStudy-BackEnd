@@ -141,6 +141,13 @@ paths:
                 receiverRole: student
                 price: 150
                 status: pending
+                sections:
+                  {
+                    title: Section title,
+                    description: Section description,
+                    activities:
+                      { resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: Attachment }
+                  }
                 needAction: student
                 createdAt: 2022-10-18T13:25:36.292+00:00
                 updatedAt: 2022-10-18T13:25:36.292+00:00

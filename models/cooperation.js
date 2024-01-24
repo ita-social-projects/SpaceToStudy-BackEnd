@@ -7,7 +7,7 @@ const {
   FIELD_MUST_BE_SELECTED,
   VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/models')
+const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ, LESSON, ATTACHMENT } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
@@ -88,7 +88,40 @@ const cooperationSchema = new Schema(
     finishedQuizzes: {
       type: [Schema.Types.ObjectId],
       ref: FINISHED_QUIZ
-    }
+    },
+    sections: [
+      {
+        title: {
+          type: String,
+          required: [true, FIELD_CANNOT_BE_EMPTY('section title')],
+          minLength: [1, FIELD_CANNOT_BE_SHORTER('section title', 1)],
+          maxLength: [100, FIELD_CANNOT_BE_LONGER('section title', 100)]
+        },
+        description: {
+          type: String,
+          required: [true, FIELD_CANNOT_BE_EMPTY('section description')],
+          minLength: [1, FIELD_CANNOT_BE_SHORTER('section description', 1)],
+          maxLength: [1000, FIELD_CANNOT_BE_LONGER('section description', 1000)]
+        },
+        activities: [
+          {
+            _id: false,
+            resource: {
+              type: Schema.Types.Mixed,
+              required: [true, FIELD_CANNOT_BE_EMPTY('activity resource')]
+            },
+            resourceType: {
+              type: String,
+              required: [true, FIELD_MUST_BE_SELECTED('activity resource type')],
+              enum: {
+                values: [LESSON, QUIZ, ATTACHMENT],
+                message: ENUM_CAN_BE_ONE_OF('activity resource type', [LESSON, QUIZ, ATTACHMENT])
+              }
+            }
+          }
+        ]
+      }
+    ]
   },
   {
     timestamps: true,

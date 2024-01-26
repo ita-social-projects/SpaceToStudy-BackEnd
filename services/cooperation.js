@@ -16,7 +16,7 @@ const cooperationService = {
   },
 
   createCooperation: async (initiator, initiatorRole, data) => {
-    const { offer, proficiencyLevel, additionalInfo, receiver, receiverRole, price } = data
+    const { offer, proficiencyLevel, additionalInfo, receiver, receiverRole, price, sections } = data
 
     return await Cooperation.create({
       initiator,
@@ -24,6 +24,7 @@ const cooperationService = {
       receiver,
       receiverRole,
       offer,
+      sections,
       price,
       proficiencyLevel,
       additionalInfo,
@@ -33,7 +34,7 @@ const cooperationService = {
 
   updateCooperation: async (id, currentUser, updateData) => {
     const { id: currentUserId, role: currentUserRole } = currentUser
-    const { price, status, availableQuizzes, finishedQuizzes } = updateData
+    const { price, status, availableQuizzes, finishedQuizzes, sections } = updateData
 
     if (price && status) {
       throw createError(409, VALIDATION_ERROR('You can change only either the status or the price in one operation'))
@@ -61,6 +62,12 @@ const cooperationService = {
     }
     if (status) {
       await Cooperation.findByIdAndUpdate(id, { status }).exec()
+    }
+    if (sections) {
+      cooperation.sections = sections
+
+      await cooperation.validate()
+      await cooperation.save()
     }
     if (availableQuizzes) {
       cooperation.availableQuizzes = mergeArraysUniqueValues(cooperation.availableQuizzes, availableQuizzes)

@@ -103,6 +103,9 @@ const coopsAggregateOptions = (params = {}, query) => {
       }
     },
     {
+      $unset: 'sections'
+    },
+    {
       $match: match
     },
     {

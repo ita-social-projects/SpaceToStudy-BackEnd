@@ -21,6 +21,8 @@ definitions:
           type: string
         price:
           type: number
+        title:
+          type: string
         status:
           type: string
           enum:
@@ -100,6 +102,8 @@ definitions:
         type: string
       price:
         type: number
+      title: 
+        type: string
       status:
         type: string
         enum:

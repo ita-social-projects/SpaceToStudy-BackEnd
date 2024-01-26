@@ -41,6 +41,7 @@ const testCooperationData = {
   price: 99,
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
+  title: 'First-class teacher. Director of the Hogwarts school of magic',
   additionalInfo:
     'I don`t like both Dark Arts and Voldemort that`s why i want to learn your subject and became your student'
 }
@@ -149,6 +150,7 @@ describe('Cooperation controller', () => {
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
+        title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
         createdAt: testCooperation._body.createdAt,
@@ -183,6 +185,7 @@ describe('Cooperation controller', () => {
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
+        title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
         createdAt: testCooperation._body.createdAt,
@@ -217,6 +220,7 @@ describe('Cooperation controller', () => {
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
+        title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
         createdAt: testCooperation._body.createdAt,

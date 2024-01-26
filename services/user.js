@@ -29,7 +29,11 @@ const userService = {
   getUserById: async (id, role) => {
     return await User.findOne({ _id: id, ...(role && { role }) })
       .populate([
-        { path: 'mainSubjects.tutor', select: ['-createdAt', '-updatedAt'] },
+        {
+          path: 'mainSubjects.tutor',
+          select: ['-createdAt', '-updatedAt'],
+          populate: { path: 'category', select: 'name' }
+        },
         { path: 'mainSubjects.student', select: ['-createdAt', '-updatedAt'] }
       ])
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers')

@@ -28,9 +28,15 @@ definitions:
           type: string
         email:
           type: string
-        categories:
-          type: array
-          $ref: '#/components/category'
+        mainSubjects:
+          type: object
+          properties:
+            student:
+              type: array
+              $ref: '#/components/subject'
+            tutor:
+              type: array
+              $ref: '#/components/subject'
         totalReviews:
           type: object
           properties:
@@ -128,9 +134,15 @@ definitions:
         type: string
       email:
         type: string
-      categories:
-        type: array
-        $ref: '#/components/category'
+        mainSubjects:
+          type: object
+          properties:
+            student:
+              type: array
+              $ref: '#/components/subject'
+            tutor:
+              type: array
+              $ref: '#/components/subject'
       totalReviews:
         type: object
         properties:

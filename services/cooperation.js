@@ -11,34 +11,32 @@ const cooperationService = {
     return result
   },
 
-  getCooperationById: async (id) => {
-    return await Cooperation.findById(id)
-      .populate({
-        path: 'offer',
-        populate: [
-          {
-            path: 'category',
-            select: ['name', 'appearance']
-          },
-          {
-            path: 'subject',
-            select: 'name'
-          }
-        ],
-        select: ['id', 'author', 'title', 'price', 'category', 'subject']
-      })
-      .lean()
-      .exec()
+  getCooperationById: async (id, pipeline) => {
+    return await (await Cooperation.findById(id)).populate({
+      path: 'offer',
+      populate: [
+        {
+          path: 'category',
+          select: ['name', 'appearance']
+        },
+        {
+          path: 'subject',
+          select: 'name'
+        }
+      ],
+      select: ['id', 'author', 'category', 'subject']
+    })
   },
 
   createCooperation: async (initiator, initiatorRole, data) => {
-    const { offer, proficiencyLevel, additionalInfo, receiver, receiverRole, price, sections } = data
+    const { offer, proficiencyLevel, additionalInfo, receiver, receiverRole, price, title, sections } = data
 
     return await Cooperation.create({
       initiator,
       initiatorRole,
       receiver,
       receiverRole,
+      title,
       offer,
       sections,
       price,

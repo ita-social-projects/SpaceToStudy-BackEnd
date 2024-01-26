@@ -24,6 +24,7 @@ paths:
                   receiver: 6255bc080a75adf9223df100
                   receiverRole: student
                   price: 200
+                  title: 'Violin lessons'
                   status: active
                   needAction: student
                   createdAt: 2021-05-09T11:34:53.243+00:00
@@ -35,6 +36,7 @@ paths:
                   receiver: 6255bc080a75adf9223df100
                   receiverRole: student
                   price: 300
+                  title: 'Violin lessons'
                   status: closed
                   needAction: tutor
                   createdAt: 2021-04-09T11:34:53.243+00:00
@@ -85,6 +87,7 @@ paths:
                 receiver: 6255bc080a75adf9223df100
                 receiverRole: student
                 price: 300
+                title: 'Violin lessons'
                 status: pending
                 needAction: student
                 createdAt: 2021-04-09T11:34:53.243+00:00
@@ -140,6 +143,7 @@ paths:
                 receiver: 6255bc080a75adf9223df100
                 receiverRole: student
                 price: 150
+                title: 'Violin lessons'
                 status: pending
                 sections:
                   {

@@ -47,6 +47,11 @@ const cooperationSchema = new Schema(
         required: [true, FIELD_MUST_BE_SELECTED('receiver role')]
       }
     },
+    title: {
+      type: String,
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('title', 1)],
+      maxLength: [100, FIELD_CANNOT_BE_LONGER('title', 100)]
+    },
     additionalInfo: {
       type: String,
       minLength: [30, FIELD_CANNOT_BE_SHORTER('additional info', 30)],

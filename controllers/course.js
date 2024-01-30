@@ -4,14 +4,14 @@ const getRegex = require('~/utils/getRegex')
 
 const getCourses = async (req, res) => {
   const { id: author } = req.user
-  const { skip, limit, title } = req.query
+  const { skip, limit, title, sort } = req.query
 
   const match = getMatchOptions({
     author,
     title: getRegex(title),
   })
 
-  const course = await courseService.getCourses(match, parseInt(skip), parseInt(limit))
+  const course = await courseService.getCourses(match, parseInt(skip), parseInt(limit), sort)
 
   res.status(200).json(course)
 }

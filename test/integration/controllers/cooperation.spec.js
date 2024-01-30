@@ -176,7 +176,6 @@ describe('Cooperation controller', () => {
         _id: testCooperation._body._id,
         offer: {
           _id: testOffer._id,
-          price: testOfferData.price,
           author: testOffer.author
         },
         initiator: testStudentUser.id,

@@ -3,7 +3,7 @@ const uploadService = require('~/services/upload')
 
 jest.mock('azure-storage')
 
-describe('uploadService', () => {
+describe('uploadService`', () => {
   it('Should upload a file to Azure Blob Storage', async () => {
     const file = {
       buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
@@ -24,7 +24,7 @@ describe('uploadService', () => {
 
     expect(result).toContain(blobName)
   }),
-    it('Should show an error during the upload', async () => {
+    it('Should show an err during the upload', async () => {
       const file = {
         buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
         name: 'example.jpg'

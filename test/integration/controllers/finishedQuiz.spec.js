@@ -101,5 +101,31 @@ describe('Quiz controller', () => {
 
       expectError(404, DOCUMENT_NOT_FOUND([Quiz.modelName]), response)
     })
-  })
+  }),
+    describe(`GET ${endpointUrl}`, () => {
+      it('should get all finished quizzes', async () => {
+        const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
+
+        expect(response.statusCode).toBe(200)
+        expect(Array.isArray(response.body.items)).toBeTruthy()
+        expect(response.body).toEqual({
+          items: [
+            {
+              _id: expect.any(String),
+              createdAt: expect.any(String),
+              updatedAt: expect.any(String),
+              quiz: String(testQuiz._id),
+              ...testFinishedQuizData
+            }
+          ],
+          count: 1
+        })
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.get(endpointUrl)
+
+        expectError(401, UNAUTHORIZED, response)
+      })
+    })
 })

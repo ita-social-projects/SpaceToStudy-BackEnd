@@ -4,7 +4,7 @@ const getFinishedQuizzes = async (req, res) => {
   const { skip, limit } = req.query
   const { id: author } = req.user
 
-  const quizzes = await finishedQuizService.getFinishedQuizzes(author, parseInt(skip), parseInt(limit))
+  const quizzes = await finishedQuizService.getFinishedQuizzes(author, skip, limit)
 
   res.status(200).json(quizzes)
 }

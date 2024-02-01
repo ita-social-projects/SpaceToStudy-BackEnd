@@ -109,4 +109,63 @@ describe('ResourceCategory controller', () => {
       expectError(403, FORBIDDEN, response)
     })
   })
+
+  describe(`GET ${endpointUrl}`, () => {
+    it('should get resource categories', async () => {
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body.items).toEqual(expect.arrayContaining([expect.objectContaining(testResourceCategoryData)]))
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}names`, () => {
+    const testResourceCategoryResponse = [
+      {
+        _id: expect.any(String),
+        name: testResourceCategoryData.name
+      }
+    ]
+
+    it('should get resource categories names', async () => {
+      const response = await app.get(endpointUrl + 'names').set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(testResourceCategoryResponse)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl + 'names')
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`DELETE ${endpointUrl}:id`, () => {
+    it('should delete resource category', async () => {
+      const response = await app
+        .delete(endpointUrl + testResourceCategory.body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.delete(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app.delete(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
 })

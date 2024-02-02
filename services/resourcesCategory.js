@@ -25,12 +25,9 @@ const resourcesCategoryService = {
     return await ResourcesCategory.find(match).select('name').exec()
   },
 
-  updateResourceCategory: async (id, currentUserId, updateData) => {
+  updateResourceCategory: async (id, updateData) => {
     const resourceCategory = await ResourcesCategory.findById(id).exec()
 
-    const author = resourceCategory.author.toString()
-
-    currentUserId !== author
     for (let field in updateData) {
       resourceCategory[field] = updateData[field]
     }
@@ -38,12 +35,7 @@ const resourcesCategoryService = {
     await resourceCategory.save()
   },
 
-  deleteResourceCategory: async (id, currentUser) => {
-    const item = await ResourcesCategory.findById(id).exec()
-
-    const resourceCategoryAuthor = item.author.toString()
-
-    resourceCategoryAuthor !== currentUser
+  deleteResourceCategory: async (id) => {
     await ResourcesCategory.findByIdAndRemove(id).exec()
   }
 }

@@ -111,21 +111,6 @@ describe('ResourceCategory controller', () => {
   })
 
   describe(`GET ${endpointUrl}`, () => {
-    it('should get resource categories', async () => {
-      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body.items).toEqual(expect.arrayContaining([expect.objectContaining(testResourceCategoryData)]))
-    })
-
-    it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(endpointUrl)
-
-      expectError(401, UNAUTHORIZED, response)
-    })
-  })
-
-  describe(`GET ${endpointUrl}names`, () => {
     const testResourceCategoryResponse = [
       {
         _id: expect.any(String),
@@ -133,15 +118,38 @@ describe('ResourceCategory controller', () => {
       }
     ]
 
-    it('should get resource categories names', async () => {
-      const response = await app.get(endpointUrl + 'names').set('Cookie', [`accessToken=${accessToken}`])
+    const nameEnpointUrl = endpointUrl + 'names'
 
+    it('should get resource categories', async () => {
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toMatchObject({
+        items: [
+          {
+            _id: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            ...testResourceCategoryData
+          }
+        ],
+        count: 1
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should get resource categories names', async () => {
+      const response = await app.get(nameEnpointUrl).set('Cookie', [`accessToken=${accessToken}`])
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(testResourceCategoryResponse)
     })
 
     it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(endpointUrl + 'names')
+      const response = await app.get(nameEnpointUrl)
 
       expectError(401, UNAUTHORIZED, response)
     })

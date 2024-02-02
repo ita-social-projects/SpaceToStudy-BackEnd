@@ -3,7 +3,31 @@ const uploadService = require('~/services/upload')
 
 jest.mock('azure-storage')
 
-describe('uploadService`', () => {
+const getBlobName = (containerName, blobName, cb) => {
+  cb(null, blobName)
+}
+
+const getBlobNameWithError = (containerName, blobName, cb) => {
+  cb('error', blobName)
+}
+
+const getNewBlobName = (blobUrl, containerName, newBlobName, cb) => {
+  cb(null, newBlobName)
+}
+
+const getBlobPropertiesStatus = (container, blobName, cb) => {
+  cb(null, { copy: { status: 'success' } })
+}
+
+const getNewBlobNameWithError = (blobUrl, containerName, newBlobName, cb) => {
+  cb('error', newBlobName)
+}
+
+const getBlobPropertiesStatusWithError = (container, blobName, cb) => {
+  cb('error', blobName)
+}
+
+describe('uploadService', () => {
   it('Should upload a file to Azure Blob Storage', async () => {
     const file = {
       buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
@@ -11,12 +35,8 @@ describe('uploadService`', () => {
     }
     const blobName = `${file.name}`
 
-    const fn = (containerName, blobName, cb) => {
-      cb(null, blobName)
-    }
-
     const blobServiceStub = {
-      createWriteStreamToBlockBlob: fn
+      createWriteStreamToBlockBlob: getBlobName
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
@@ -30,12 +50,8 @@ describe('uploadService`', () => {
         name: 'example.jpg'
       }
 
-      const fn = (containerName, blobName, cb) => {
-        cb('error', blobName)
-      }
-
       const blobServiceStub = {
-        createWriteStreamToBlockBlob: fn
+        createWriteStreamToBlockBlob: getBlobNameWithError
       }
       azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
@@ -48,12 +64,8 @@ describe('uploadService`', () => {
     it('Should delete a file from Azure Blob Storage', async () => {
       const fileName = 'example.jpg'
 
-      const fn = (containerName, blobName, cb) => {
-        cb(null, blobName)
-      }
-
       const blobServiceStub = {
-        deleteBlobIfExists: fn
+        deleteBlobIfExists: getBlobName
       }
       azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
@@ -64,12 +76,8 @@ describe('uploadService`', () => {
     it('Should show an error during the delete', async () => {
       const fileName = 'example.jpg'
 
-      const fn = (containerName, blobName, cb) => {
-        cb('error', blobName)
-      }
-
       const blobServiceStub = {
-        deleteBlobIfExists: fn
+        deleteBlobIfExists: getBlobNameWithError
       }
       azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
@@ -87,16 +95,9 @@ describe('uploadService`', () => {
     }
     const blobNameNew = `${file.newName}`
 
-    const fn = (blobUrl, containerName, newBlobName, cb) => {
-      cb(null, newBlobName)
-    }
-    const fnP = (container, blobName, cb) => {
-      cb(null, { copy: { status: 'success' } })
-    }
-
     const blobServiceStub = {
-      startCopyBlob: fn,
-      getBlobProperties: fnP
+      startCopyBlob: getNewBlobName,
+      getBlobProperties: getBlobPropertiesStatus
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
@@ -110,11 +111,9 @@ describe('uploadService`', () => {
       name: 'example.jpg',
       newName: 'exampleName.jpg'
     }
-    const fn = (blobUrl, containerName, newBlobName, cb) => {
-      cb('error', newBlobName)
-    }
+
     const blobServiceStub = {
-      startCopyBlob: fn
+      startCopyBlob: getNewBlobNameWithError
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
@@ -131,15 +130,10 @@ describe('uploadService`', () => {
       name: 'example.jpg',
       newName: 'exampleName.jpg'
     }
-    const fn = (blobUrl, containerName, newBlobName, cb) => {
-      cb(null, newBlobName)
-    }
-    const fnP = (container, blobName, cb) => {
-      cb('error', blobName)
-    }
+
     const blobServiceStub = {
-      startCopyBlob: fn,
-      getBlobProperties: fnP
+      startCopyBlob: getNewBlobName,
+      getBlobProperties: getBlobPropertiesStatusWithError
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 

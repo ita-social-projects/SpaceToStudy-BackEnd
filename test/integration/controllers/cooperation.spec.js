@@ -1,6 +1,6 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
 
@@ -14,8 +14,9 @@ const Quiz = require('~/models/quiz')
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 const nonExistingOfferId = '648ae644aa322613ba08e69e'
+const validationErrorMessage = 'You can change only either the status or the price in one operation'
 
-let tutorUserData = {
+const tutorUserData = {
   role: ['tutor'],
   firstName: 'albus',
   lastName: 'dumbledore',
@@ -26,12 +27,23 @@ let tutorUserData = {
   lastLogin: new Date().toJSON()
 }
 
-let studentUserData = {
+const studentUserData = {
   role: ['student'],
   firstName: 'harry',
   lastName: 'potter',
   email: 'potter@gmail.com',
   password: 'supermagicpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON()
+}
+
+const anotherUserData = {
+  role: ['tutor'],
+  firstName: 'james',
+  lastName: 'potter',
+  email: 'jamespotter@gmail.com',
+  password: 'supersecretpass888',
   appLanguage: 'en',
   isEmailConfirmed: true,
   lastLogin: new Date().toJSON()
@@ -61,12 +73,33 @@ const testActiveQuizData = {
   items: []
 }
 
-const updateData = {
+const updateStatus = {
   status: 'active'
 }
 
+const updatePrice = {
+  price: 150
+}
+
+const updateSections = [
+  {
+    _id: '65bc2bec67c9f1ec287a1514',
+    title: 'Updated Section',
+    description: 'This is the updated section description',
+    activities: []
+  }
+]
+
 describe('Cooperation controller', () => {
-  let app, server, accessToken, testOffer, testCooperation, testStudentUser, testTutorUser, testActiveQuiz
+  let app,
+    server,
+    accessToken,
+    testOffer,
+    anotherUserAccessToken,
+    testCooperation,
+    testStudentUser,
+    testTutorUser,
+    testActiveQuiz
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -74,6 +107,8 @@ describe('Cooperation controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, studentUserData)
+
+    anotherUserAccessToken = await testUserAuthentication(app, anotherUserData)
 
     testStudentUser = TokenService.validateAccessToken(accessToken)
 
@@ -249,26 +284,76 @@ describe('Cooperation controller', () => {
   })
 
   describe(`PATCH ${endpointUrl}:id`, () => {
-    it('should update a cooperation', async () => {
+    it('should throw FORBIDDEN if user role does not match needAction role when updating price', async () => {
+      const response = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(updatePrice)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should update the status of a cooperation', async () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
         .set('Cookie', [`accessToken=${accessToken}`])
-        .send({ ...updateData, availableQuizzes: [testActiveQuiz._id] })
+        .send(updateStatus)
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
         .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(updateResponse.status).toBe(204)
-      expect(response.body.status).toBe(updateData.status)
+      expect(response.body.status).toBe(updateStatus.status)
+    })
+
+    it('should update the sections of a cooperation', async () => {
+      const updateResponse = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send({ sections: updateSections })
+
+      const response = await app
+        .get(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(updateResponse.status).toBe(204)
+      expect(response.body.sections).toEqual(updateSections)
+    })
+
+    it('should update the available quizzes of a cooperation', async () => {
+      const updateResponse = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send({ availableQuizzes: [testActiveQuiz._id] })
+
+      const response = await app
+        .get(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(updateResponse.status).toBe(204)
       expect(response.body.availableQuizzes).toEqual([testActiveQuiz._id.toString()])
+    })
+
+    it('should update the finished quizzes of a cooperation', async () => {
+      const updateResponse = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send({ finishedQuizzes: [testActiveQuiz._id] })
+
+      const response = await app
+        .get(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(updateResponse.status).toBe(204)
+      expect(response.body.finishedQuizzes).toEqual([testActiveQuiz._id.toString()])
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = (testCooperation = await app
         .patch(endpointUrl + nonExistingCooperationId)
         .set('Cookie', [`accessToken=${accessToken}`])
-        .send(updateData))
+        .send(updateStatus))
 
       expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
     })
@@ -277,6 +362,24 @@ describe('Cooperation controller', () => {
       const response = await app.patch(endpointUrl)
 
       expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw VALIDATION_ERROR', async () => {
+      const response = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send({ ...updateStatus, ...updatePrice })
+
+      expectError(409, VALIDATION_ERROR(validationErrorMessage), response)
+    })
+
+    it('should throw FORBIDDEN if user is not the initiator or receiver', async () => {
+      const response = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${anotherUserAccessToken}`])
+        .send(updateStatus)
+
+      expectError(403, FORBIDDEN, response)
     })
   })
 })

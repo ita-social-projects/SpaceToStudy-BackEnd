@@ -3,11 +3,14 @@ const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
+
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
 
 const endpointUrl = '/resources-categories/'
+
+const nameEnpointUrl = endpointUrl + 'names'
 
 const testResourceCategoryData = {
   name: 'Chemical Category'
@@ -40,6 +43,13 @@ const tutorUserData = {
 const updateResourceCategoryData = {
   name: 'Computer Science'
 }
+
+const testResourceCategoryResponse = [
+  {
+    _id: expect.any(String),
+    name: testResourceCategoryData.name
+  }
+]
 
 describe('ResourceCategory controller', () => {
   let app, server, accessToken, currentUser, studentAccessToken, tutorAccessToken, testResourceCategory
@@ -123,15 +133,6 @@ describe('ResourceCategory controller', () => {
   })
 
   describe(`GET ${endpointUrl}`, () => {
-    const testResourceCategoryResponse = [
-      {
-        _id: expect.any(String),
-        name: testResourceCategoryData.name
-      }
-    ]
-
-    const nameEnpointUrl = endpointUrl + 'names'
-
     it('should get resource categories', async () => {
       const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
       expect(response.statusCode).toBe(200)
@@ -148,22 +149,24 @@ describe('ResourceCategory controller', () => {
       })
     })
 
-    it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(endpointUrl)
+    describe(`GET ${endpointUrl}names`, () => {
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.get(endpointUrl)
 
-      expectError(401, UNAUTHORIZED, response)
-    })
+        expectError(401, UNAUTHORIZED, response)
+      })
 
-    it('should get resource categories names', async () => {
-      const response = await app.get(nameEnpointUrl).set('Cookie', [`accessToken=${accessToken}`])
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(testResourceCategoryResponse)
-    })
+      it('should get resource categories names', async () => {
+        const response = await app.get(nameEnpointUrl).set('Cookie', [`accessToken=${accessToken}`])
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toEqual(testResourceCategoryResponse)
+      })
 
-    it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(nameEnpointUrl)
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.get(nameEnpointUrl)
 
-      expectError(401, UNAUTHORIZED, response)
+        expectError(401, UNAUTHORIZED, response)
+      })
     })
   })
 

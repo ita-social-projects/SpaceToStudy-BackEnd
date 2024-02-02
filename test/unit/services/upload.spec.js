@@ -27,12 +27,16 @@ const getBlobPropertiesStatusWithError = (container, blobName, cb) => {
   cb('error', blobName)
 }
 
+const file = {
+  buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
+  name: 'example.jpg',
+  newName: 'exampleName.jpg'
+}
+
+const fileName = 'example.jpg'
+
 describe('uploadService', () => {
   it('Should upload a file to Azure Blob Storage', async () => {
-    const file = {
-      buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-      name: 'example.jpg'
-    }
     const blobName = `${file.name}`
 
     const blobServiceStub = {
@@ -45,11 +49,6 @@ describe('uploadService', () => {
     expect(result).toContain(blobName)
   }),
     it('Should show an err during the upload', async () => {
-      const file = {
-        buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-        name: 'example.jpg'
-      }
-
       const blobServiceStub = {
         createWriteStreamToBlockBlob: getBlobNameWithError
       }
@@ -62,8 +61,6 @@ describe('uploadService', () => {
       }
     }),
     it('Should delete a file from Azure Blob Storage', async () => {
-      const fileName = 'example.jpg'
-
       const blobServiceStub = {
         deleteBlobIfExists: getBlobName
       }
@@ -74,8 +71,6 @@ describe('uploadService', () => {
       expect(result).toContain(fileName)
     }),
     it('Should show an error during the delete', async () => {
-      const fileName = 'example.jpg'
-
       const blobServiceStub = {
         deleteBlobIfExists: getBlobNameWithError
       }
@@ -88,11 +83,6 @@ describe('uploadService', () => {
       }
     })
   it('should update a file in Azure Blob Storage successfully', async () => {
-    const file = {
-      buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-      name: 'example.jpg',
-      newName: 'exampleName.jpg'
-    }
     const blobNameNew = `${file.newName}`
 
     const blobServiceStub = {
@@ -106,12 +96,6 @@ describe('uploadService', () => {
     expect(result).toContain(blobNameNew)
   })
   it('Should show an err on startCopyBlob during the update', async () => {
-    const file = {
-      buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-      name: 'example.jpg',
-      newName: 'exampleName.jpg'
-    }
-
     const blobServiceStub = {
       startCopyBlob: getNewBlobNameWithError
     }
@@ -125,12 +109,6 @@ describe('uploadService', () => {
   })
 
   it('Should show an err on getBlobProperties during the update', async () => {
-    const file = {
-      buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
-      name: 'example.jpg',
-      newName: 'exampleName.jpg'
-    }
-
     const blobServiceStub = {
       startCopyBlob: getNewBlobName,
       getBlobProperties: getBlobPropertiesStatusWithError

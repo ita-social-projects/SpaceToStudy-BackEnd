@@ -25,12 +25,24 @@ const studentUserData = {
   lastLoginAs: 'student'
 }
 
+const tutorUserData = {
+  role: TUTOR,
+  firstName: 'albus',
+  lastName: 'dumbledore',
+  email: 'lovemagic@gmail.com',
+  password: 'supermagicpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: TUTOR
+}
+
 const updateResourceCategoryData = {
   name: 'Computer Science'
 }
 
 describe('ResourceCategory controller', () => {
-  let app, server, accessToken, currentUser, studentAccessToken, testResourceCategory
+  let app, server, accessToken, currentUser, studentAccessToken, tutorAccessToken, testResourceCategory
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -39,7 +51,7 @@ describe('ResourceCategory controller', () => {
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, { role: TUTOR })
     studentAccessToken = await testUserAuthentication(app, studentUserData)
-
+    tutorAccessToken = await testUserAuthentication(app, tutorUserData)
     currentUser = TokenService.validateAccessToken(accessToken)
 
     testResourceCategory = await app
@@ -102,9 +114,9 @@ describe('ResourceCategory controller', () => {
 
     it('should throw FORBIDDEN', async () => {
       const response = await app
-        .patch(endpointUrl)
+        .patch(endpointUrl + testResourceCategory.body._id)
         .send(updateResourceCategoryData)
-        .set('Cookie', [`accessToken=${studentAccessToken}`])
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -171,7 +183,9 @@ describe('ResourceCategory controller', () => {
     })
 
     it('should throw FORBIDDEN', async () => {
-      const response = await app.delete(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
+      const response = await app
+        .delete(endpointUrl + testResourceCategory.body._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

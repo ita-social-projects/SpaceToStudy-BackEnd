@@ -4,13 +4,14 @@ const {
   enums: { ROLE_ENUM }
 } = require('~/consts/validation')
 const {
-  tokenNames: { RESET_TOKEN }
+  tokenNames: { RESET_TOKEN, ACCESS_TOKEN }
 } = require('~/consts/auth')
 const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
 const Token = require('~/models/token')
 const { expectError } = require('~/test/helpers')
 const { OAuth2Client } = require('google-auth-library')
+const authController = require('~/controllers/auth')
 
 jest.mock('google-auth-library')
 
@@ -239,6 +240,23 @@ describe('Auth controller', () => {
       const response = await app.get('/auth/refresh').set('Cookie', 'refreshToken=invalid-token')
 
       expectError(400, errors.BAD_REFRESH_TOKEN, response)
+    })
+  })
+
+  describe('refreshAccessToken', () => {
+    it('should clear cookies and return 401 if refreshToken is falsy', () => {
+      const req = { cookies: { refreshToken: null } }
+      const res = {
+        clearCookie: jest.fn(),
+        status: jest.fn().mockReturnThis(),
+        end: jest.fn()
+      }
+
+      authController.refreshAccessToken(req, res)
+
+      expect(res.clearCookie).toHaveBeenCalledWith(ACCESS_TOKEN)
+      expect(res.status).toHaveBeenCalledWith(401)
+      expect(res.end).toHaveBeenCalled()
     })
   })
 

@@ -9,6 +9,7 @@ const jwt = require('jsonwebtoken')
 const {
   config: { JWT_ACCESS_SECRET }
 } = require('~/configs/config')
+const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 
 const endpointUrl = '/reviews/'
 const offerEndpointUrl = '/offers/'
@@ -45,7 +46,7 @@ describe('Review controller', () => {
   let app, server, accessToken, testOffer, testReview, testSubject, userId
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -255,6 +256,13 @@ describe('Review controller', () => {
       const response = await app.delete(endpointUrl + nonExistingReviewId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
+    })
+  })
+
+  describe('reviewStatsAggregation block', () => {
+    it('should return empty stats with no reviews', async () => {
+      const stats = await calculateReviewStats(nonExistingReviewId, reviewBody.targetUserRole)
+      expect(stats).toEqual({})
     })
   })
 })

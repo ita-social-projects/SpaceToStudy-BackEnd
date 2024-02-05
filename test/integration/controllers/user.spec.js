@@ -8,7 +8,9 @@ const {
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
+
 const testUserAuthentication = require('~/utils/testUserAuth')
+const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const TokenService = require('~/services/token')
 
 const endpointUrl = '/users/'
@@ -43,12 +45,20 @@ const updateUserData = {
 }
 
 const nonExistingUserId = '6329a8c501bd35b52a5ecf8c'
+const limit = '10'
+const skip = '5'
+const orderBy = 'name'
+const order = 'asc'
+const role = 'admin'
+const from = '2024-11-12'
+const to = '2024-12-12'
+const status = ['active', 'inactive']
 
 describe('User controller', () => {
   let app, server
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ({ app, server } = await serverInit())
   })
 
   afterEach(async () => {
@@ -332,6 +342,58 @@ describe('User controller', () => {
         const response = await app.delete(endpointUrl + testUser._id)
 
         expectError(401, UNAUTHORIZED, response)
+      })
+    })
+
+    describe('createAggregateOptions block', () => {
+      it('should handle boolean isFirstLogin field', () => {
+        const optionsTrue = createAggregateOptions({ isFirstLogin: 'true' }).match.isFirstLogin.$in
+        expect(optionsTrue).toEqual([true])
+
+        const optionsFalse = createAggregateOptions({ isFirstLogin: 'false' }).match.isFirstLogin.$in
+        expect(optionsFalse).toEqual([false])
+      })
+
+      it('should handle limit and skip fields', () => {
+        const options = createAggregateOptions({ limit, skip })
+
+        expect(options.limit).toEqual(parseInt(limit))
+        expect(options.skip).toEqual(parseInt(skip))
+      })
+
+      it('should handle sort by name correct', () => {
+        const options = createAggregateOptions({
+          sort: { orderBy, order }
+        }).sort
+
+        expect(options).toEqual({ firstName: 1, lastName: 1 })
+      })
+
+      it('should include role in match object when role is provided', () => {
+        const options = createAggregateOptions({ role }).match
+        expect(options.role).toEqual(role)
+      })
+
+      it('should include both conditions when dates are provided', () => {
+        const options = createAggregateOptions({
+          lastLogin: { from, to }
+        }).match.lastLogin
+
+        expect(options.$gte).toEqual(new Date(from))
+        expect(options.$lte).toEqual(new Date(new Date(to).setHours(23, 59, 59)))
+      })
+
+      it('should handle status when the role is provided', () => {
+        const options = createAggregateOptions({ status, role }).match['status.' + role]
+        expect(options).toEqual({ $in: status })
+      })
+
+      it('should handle mixed array with boolean strings', () => {
+        const options = createAggregateOptions({
+          isFirstLogin: ['true', 'false']
+        }).match.isFirstLogin.$in
+
+        expect(options).toEqual([true, false])
       })
     })
   })

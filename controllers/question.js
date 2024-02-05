@@ -16,7 +16,7 @@ const getQuestions = async (req, res) => {
   })
   const sortOptions = getSortOptions(sort)
 
-  const questions = await questionService.getQuestions(match, sortOptions, parseInt(skip), parseInt(limit))
+  const questions = await questionService.getQuestions(match, sortOptions, skip, limit)
 
   res.status(200).json(questions)
 }

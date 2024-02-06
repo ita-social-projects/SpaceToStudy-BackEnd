@@ -21,7 +21,7 @@ const errors = {
   }),
   FIELD_IS_NOT_DEFINED: (field) => ({
     code: 'FIELD_IS_NOT_DEFINED',
-    message: `${field} should be defined and not be null or undefined`
+    message: `${field} field should be defined`
   }),
   FIELD_IS_NOT_OF_PROPER_TYPE: (field, type) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',

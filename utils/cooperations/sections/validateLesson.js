@@ -10,25 +10,25 @@ const validateLesson = (resource) => {
   validateCommonFields(resource)
 
   if (!resource.content) {
-    throw createError(400, FIELD_IS_NOT_DEFINED('resource content'))
+    throw createError(400, FIELD_IS_NOT_DEFINED('lesson content'))
   }
 
   if (typeof resource.content !== 'string') {
-    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('resource content', 'string'))
+    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('lesson content', 'string'))
   }
 
   if (resource.attachments) {
     if (!Array.isArray(resource.attachments)) {
-      throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('resource attachments', 'array'))
+      throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('lesson attachments', 'array'))
     }
 
     for (const attachment of resource.attachments) {
-      validateAttachment(attachment) // should throw resource attachments field
+      validateAttachment(attachment)
     }
   }
 
   if (resource.status && !RESOURCE_STATUS_ENUM.includes(resource.status)) {
-    throw createError(400, FIELD_CAN_BE_ONE_OF('resource status', RESOURCE_STATUS_ENUM))
+    throw createError(400, FIELD_CAN_BE_ONE_OF('lesson status', RESOURCE_STATUS_ENUM))
   }
 }
 

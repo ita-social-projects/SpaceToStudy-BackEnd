@@ -4,22 +4,17 @@ const { createError } = require('~/utils/errorsHelper')
 const deleteNotAllowedFields = require('~/utils/cooperations/sections/deleteNotAllowedFields')
 
 const answersFields = ['text', 'isCorrect']
+const textFields = ['title', 'text']
 
 const validateQuestion = (resource) => {
-  if (!resource.title) {
-    throw createError(400, FIELD_IS_NOT_DEFINED('quiz item title'))
-  }
+  for (const field of textFields) {
+    if (!resource[field]) {
+      throw createError(400, FIELD_IS_NOT_DEFINED(`quiz item ${field}`))
+    }
 
-  if (typeof resource.title !== 'string') {
-    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('quiz item title', 'string'))
-  }
-
-  if (!resource.text) {
-    throw createError(400, FIELD_IS_NOT_DEFINED('quiz item text'))
-  }
-
-  if (typeof resource.text !== 'string') {
-    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('quiz item text', 'string'))
+    if (typeof resource[field] !== 'string') {
+      throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`quiz item ${field}`, 'string'))
+    }
   }
 
   if (!resource.answers) {

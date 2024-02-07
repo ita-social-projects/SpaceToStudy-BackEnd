@@ -24,29 +24,29 @@ const validateCommonFields = (resource, resourceType, requiredFields = commonReq
     throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${resourceType} description`, 'string'))
   }
 
-  if (typeof resource.availability !== 'object' || Array.isArray(resource.availability)) {
+  validateAvailabilityFields(resource.availability, resourceType)
+}
+
+const validateAvailabilityFields = (availability, resourceType) => {
+  if (typeof availability !== 'object' || Array.isArray(availability)) {
     throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${resourceType} availability`, 'object'))
   }
 
-  deleteNotAllowedFields(resource.availability, availabilityFields)
+  deleteNotAllowedFields(availability, availabilityFields)
 
   for (const property of availabilityFields) {
-    if (!(property in resource.availability)) {
+    if (!(property in availability)) {
       throw createError(400, FIELD_IS_NOT_DEFINED(`${property} of ${resourceType} availability`))
     }
 
-    if (property === 'status' && !RESOURCE_AVAILABILITY_STATUS_ENUM.includes(resource.availability[property])) {
+    if (property === 'status' && !RESOURCE_AVAILABILITY_STATUS_ENUM.includes(availability[property])) {
       throw createError(
         400,
         FIELD_CAN_BE_ONE_OF(`${property} of ${resourceType} availability`, RESOURCE_AVAILABILITY_STATUS_ENUM)
       )
     }
 
-    if (
-      property === 'date' &&
-      resource.availability[property] !== null &&
-      typeof resource.availability[property] !== 'string'
-    ) {
+    if (property === 'date' && availability[property] !== null && typeof availability[property] !== 'string') {
       throw createError(400, FIELD_CAN_BE_ONE_OF(`${property} of ${resourceType} availability`, ['string', 'null']))
     }
   }

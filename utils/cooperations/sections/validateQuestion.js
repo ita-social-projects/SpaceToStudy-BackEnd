@@ -21,11 +21,15 @@ const validateQuestion = (resource) => {
     throw createError(400, FIELD_IS_NOT_DEFINED('quiz item answers'))
   }
 
-  if (!Array.isArray(resource.answers)) {
+  validateAnswersFields(resource.answers)
+}
+
+const validateAnswersFields = (answers) => {
+  if (!Array.isArray(answers)) {
     throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('quiz item answers', 'array'))
   }
 
-  for (const answer of resource.answers) {
+  for (const answer of answers) {
     deleteNotAllowedFields(answer, answersFields)
 
     for (const property of answersFields) {

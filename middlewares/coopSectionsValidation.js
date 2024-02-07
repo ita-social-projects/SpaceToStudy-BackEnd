@@ -26,29 +26,33 @@ const coopSectionsValidation = (req, _res, next) => {
     for (const section of sections) {
       if (Array.isArray(section.activities)) {
         for (const activity of section.activities) {
-          if (typeof activity.resource !== 'object' || Array.isArray(activity.resource)) {
-            throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('activity resource', 'object'))
-          } else {
-            deleteNotAllowedFields(activity.resource, resourceAllowedFields)
-
-            switch (activity.resourceType) {
-              case QUIZ:
-                validateQuiz(activity.resource)
-                break
-              case LESSON:
-                validateLesson(activity.resource)
-                break
-              case ATTACHMENT:
-                validateAttachment(activity.resource)
-                break
-            }
-          }
+          validateActivity(activity)
         }
       }
     }
   }
 
   next()
+}
+
+const validateActivity = (activity) => {
+  if (typeof activity.resource !== 'object' || Array.isArray(activity.resource)) {
+    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('activity resource', 'object'))
+  }
+
+  deleteNotAllowedFields(activity.resource, resourceAllowedFields)
+
+  switch (activity.resourceType) {
+    case QUIZ:
+      validateQuiz(activity.resource)
+      break
+    case LESSON:
+      validateLesson(activity.resource)
+      break
+    case ATTACHMENT:
+      validateAttachment(activity.resource)
+      break
+  }
 }
 
 module.exports = coopSectionsValidation

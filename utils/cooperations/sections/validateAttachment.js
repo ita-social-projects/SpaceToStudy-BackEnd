@@ -1,10 +1,11 @@
 const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
+const { ATTACHMENT } = require('~/consts/models')
 
 const { createError } = require('~/utils/errorsHelper')
 const validateCommonFields = require('~/utils/cooperations/sections/validateCommonFields')
 
 const validateAttachment = (resource) => {
-  validateCommonFields(resource)
+  validateCommonFields(resource, ATTACHMENT)
 
   if (!resource.link) {
     throw createError(400, FIELD_IS_NOT_DEFINED('lesson attachment link'))

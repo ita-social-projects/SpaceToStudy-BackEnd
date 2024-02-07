@@ -38,7 +38,7 @@ const validateQuestion = (resource) => {
       }
 
       if (property === 'isCorrect' && typeof answer[property] !== 'boolean') {
-        throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${property} of quiz question answers`, 'boolean'))
+        throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${property} of quiz item answers`, 'boolean'))
       }
     }
   }

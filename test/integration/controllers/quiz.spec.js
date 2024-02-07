@@ -215,4 +215,18 @@ describe('Quiz controller', () => {
       expectError(403, FORBIDDEN, response)
     })
   })
+
+  describe(`DELETE ${endpointUrl}:id`, () => {
+    it('should delete quiz by ID', async () => {
+      const response = await app.delete(endpointUrl + testQuizId).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app.delete(endpointUrl + testQuizId).set('Cookie', [`accessToken=${studentAccessToken}`])
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
 })

@@ -89,21 +89,19 @@ const offerAggregateOptions = (query, params, user) => {
   let sortOption = {}
 
   if (sort) {
-    try {
+    if (typeof sort === 'object' && sort.order && sort.orderBy) {
       const { order, orderBy } = sort
       const sortOrder = order === 'asc' ? 1 : -1
       sortOption = { [orderBy]: sortOrder }
-    } catch {
-      if (typeof sort === 'string') {
-        if (sort === 'priceAsc') {
-          sortOption['price'] = 1
-        } else if (sort === 'priceDesc') {
-          sortOption['price'] = -1
-        } else if (sort === 'rating') {
-          sortOption[`author.averageRating.${authorRole}`] = -1
-        } else {
-          sortOption[sort] = -1
-        }
+    } else if (typeof sort === 'string') {
+      if (sort === 'priceAsc') {
+        sortOption['price'] = 1
+      } else if (sort === 'priceDesc') {
+        sortOption['price'] = -1
+      } else if (sort === 'rating') {
+        sortOption[`author.averageRating.${authorRole}`] = -1
+      } else {
+        sortOption[sort] = -1
       }
     }
   }

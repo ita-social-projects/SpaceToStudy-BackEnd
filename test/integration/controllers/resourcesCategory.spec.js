@@ -1,12 +1,12 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const TokenService = require('~/services/token')
+const { UNAUTHORIZED, FORBIDDEN } = require('~/app/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const TokenService = require('~/app/services/token')
 
 const {
   roles: { TUTOR }
-} = require('~/consts/auth')
+} = require('~/app/consts/auth')
 
 const endpointUrl = '/resources-categories/'
 
@@ -55,7 +55,7 @@ describe('ResourceCategory controller', () => {
   let app, server, accessToken, currentUser, studentAccessToken, tutorAccessToken, testResourceCategory
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

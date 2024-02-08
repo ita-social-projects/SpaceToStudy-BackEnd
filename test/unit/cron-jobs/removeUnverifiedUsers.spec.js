@@ -1,6 +1,6 @@
-const tokenService = require('~/services/token')
-const userService = require('~/services/user')
-const { removeUsersWithUnconfirmedEmail } = require('~/cron-jobs/removeUnverifiedUsers')
+const tokenService = require('~/app/services/token')
+const userService = require('~/app/services/user')
+const { removeUsersWithUnconfirmedEmail } = require('~/app/cron-jobs/removeUnverifiedUsers')
 
 const userId = 'testId'
 const confirmToken = '78fdh78fsd78h'
@@ -14,11 +14,11 @@ const mockedUsersList = [
   }
 ]
 
-jest.mock('~/services/token', () => ({
+jest.mock('~/app/services/token', () => ({
   removeConfirmToken: jest.fn()
 }))
 
-jest.mock('~/services/user', () => ({
+jest.mock('~/app/services/user', () => ({
   deleteUser: jest.fn()
 }))
 

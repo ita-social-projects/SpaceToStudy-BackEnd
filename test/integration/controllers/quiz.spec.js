@@ -1,14 +1,14 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const TokenService = require('~/services/token')
+const { UNAUTHORIZED, FORBIDDEN } = require('~/app/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const TokenService = require('~/app/services/token')
 const {
   roles: { TUTOR }
-} = require('~/consts/auth')
+} = require('~/app/consts/auth')
 const {
   enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM }
-} = require('~/consts/validation')
+} = require('~/app/consts/validation')
 
 const endpointUrl = '/quizzes/'
 const questionEndpointUrl = '/questions/'
@@ -57,7 +57,7 @@ describe('Quiz controller', () => {
   let app, server, accessToken, currentUser, studentAccessToken, testQuiz, testQuizId, testQuestion, testQuestionId
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

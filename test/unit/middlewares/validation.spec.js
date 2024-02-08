@@ -1,7 +1,7 @@
-const validationMiddleware = require('~/middlewares/validation')
-const { createError } = require('~/utils/errorsHelper')
-const { BODY_IS_NOT_DEFINED } = require('~/consts/errors')
-const signupValidationSchema = require('~/validation/schemas/signup')
+const validationMiddleware = require('~/app/middlewares/validation')
+const { createError } = require('~/app/utils/errorsHelper')
+const { BODY_IS_NOT_DEFINED } = require('~/app/consts/errors')
+const signupValidationSchema = require('~/app/validation/schemas/signup')
 
 describe('Validation middleware', () => {
   const middlewareToTest = validationMiddleware(signupValidationSchema)

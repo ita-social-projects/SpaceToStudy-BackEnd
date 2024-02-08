@@ -1,10 +1,10 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
-const checkCategoryExistence = require('~/seed/checkCategoryExistence')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const Course = require('~/models/course')
+const checkCategoryExistence = require('~/app/seed/checkCategoryExistence')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const Course = require('~/app/models/course')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
-const uploadService = require('~/services/upload')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/app/consts/errors')
+const uploadService = require('~/app/services/upload')
 
 const endpointUrl = '/courses/'
 
@@ -56,7 +56,7 @@ describe('Course controller', () => {
   let app, server, accessToken, studentAccessToken, testCourseResponse, testCourse, testCategory, testSubject
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

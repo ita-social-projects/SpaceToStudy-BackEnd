@@ -2,16 +2,16 @@ const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const {
   lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
   enums: { ROLE_ENUM }
-} = require('~/consts/validation')
+} = require('~/app/consts/validation')
 const {
   tokenNames: { RESET_TOKEN, ACCESS_TOKEN }
-} = require('~/consts/auth')
-const errors = require('~/consts/errors')
-const tokenService = require('~/services/token')
-const Token = require('~/models/token')
+} = require('~/app/consts/auth')
+const errors = require('~/app/consts/errors')
+const tokenService = require('~/app/services/token')
+const Token = require('~/app/models/token')
 const { expectError } = require('~/test/helpers')
 const { OAuth2Client } = require('google-auth-library')
-const authController = require('~/controllers/auth')
+const authController = require('~/app/controllers/auth')
 
 jest.mock('google-auth-library')
 
@@ -19,7 +19,7 @@ describe('Auth controller', () => {
   let app, server, signupResponse
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

@@ -1,9 +1,9 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const request = require('supertest')
-require('~/initialization/envSetup')
+require('~/app/initialization/envSetup')
 
-const serverSetup = require('~/initialization/serverSetup')
+const serverSetup = require('~/app/initialization/serverSetup')
 
 const serverInit = async () => {
   const app = express()

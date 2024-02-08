@@ -1,8 +1,8 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
-const testUserAuthentication = require('~/utils/testUserAuth')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
-const Chat = require('~/models/chat')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/app/consts/errors')
+const Chat = require('~/app/models/chat')
 
 const nonExistingChatId = '64a33e71eea95284f397a6e4'
 const endpointUrl = '/chats/'
@@ -68,7 +68,7 @@ describe('Chat controller', () => {
   let app, server, testChat, studentAccessToken
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

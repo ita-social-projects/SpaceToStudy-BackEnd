@@ -1,9 +1,9 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, DOCUMENT_ALREADY_EXISTS } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const Subject = require('~/models/subject')
-const checkCategoryExistence = require('~/seed/checkCategoryExistence')
+const { DOCUMENT_NOT_FOUND, DOCUMENT_ALREADY_EXISTS } = require('~/app/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const Subject = require('~/app/models/subject')
+const checkCategoryExistence = require('~/app/seed/checkCategoryExistence')
 
 const endpointUrl = '/subjects/'
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
@@ -15,7 +15,7 @@ describe('Subject controller', () => {
   let app, server, accessToken, testSubject
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

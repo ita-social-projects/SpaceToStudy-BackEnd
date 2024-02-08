@@ -1,15 +1,15 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const TokenService = require('~/services/token')
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/app/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const TokenService = require('~/app/services/token')
 
-const Offer = require('~/models/offer')
-const User = require('~/models/user')
-const Category = require('~/models/category')
-const Subject = require('~/models/subject')
-const Cooperation = require('~/models/cooperation')
-const Quiz = require('~/models/quiz')
+const Offer = require('~/app/models/offer')
+const User = require('~/app/models/user')
+const Category = require('~/app/models/category')
+const Subject = require('~/app/models/subject')
+const Cooperation = require('~/app/models/cooperation')
+const Quiz = require('~/app/models/quiz')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
@@ -102,7 +102,7 @@ describe('Cooperation controller', () => {
     testActiveQuiz
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

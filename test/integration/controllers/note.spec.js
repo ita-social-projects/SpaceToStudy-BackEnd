@@ -1,11 +1,11 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const TokenService = require('~/services/token')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/app/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const TokenService = require('~/app/services/token')
 
-const Cooperation = require('~/models/cooperation')
-const Note = require('~/models/note')
+const Cooperation = require('~/app/models/cooperation')
+const Note = require('~/app/models/note')
 
 const endpointUrl = (id = ':id', noteId = '') => `/cooperations/${id}/notes/${noteId}`
 
@@ -18,7 +18,7 @@ const testCooperationData = {
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   additionalInfo:
-    "I don't like both Dark Arts and Voldemort that's why i want to learn your subject and became your student",
+    'I don`t like both Dark Arts and Voldemort that`s why i want to learn your subject and became your student',
   receiver: '649c147ac75d3e44440e3a12',
   offer: '649c148cc75d3e44440e3a13',
   title: 'First class teacher. Director of the Hogwarts school witchcraft and wizardry.',
@@ -40,7 +40,7 @@ describe('Note controller', () => {
   let app, server, accessToken, testUser, testCooperation, testNote
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

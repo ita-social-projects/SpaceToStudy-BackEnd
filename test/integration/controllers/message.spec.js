@@ -1,8 +1,8 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const Chat = require('~/models/chat')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const Chat = require('~/app/models/chat')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/app/consts/errors')
 
 const endpointUrl = (id) => `/chats/${id}/messages/`
 
@@ -52,7 +52,7 @@ describe('Message controller', () => {
   let app, server, chatResponse, accessToken
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

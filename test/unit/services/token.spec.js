@@ -1,13 +1,13 @@
-require('~/initialization/envSetup')
-const Token = require('~/models/token')
-const tokenService = require('~/services/token')
+require('~/app/initialization/envSetup')
+const Token = require('~/app/models/token')
+const tokenService = require('~/app/services/token')
 const {
   tokenNames: { RESET_TOKEN }
-} = require('~/consts/auth')
-const { createError } = require('~/utils/errorsHelper')
-const { INVALID_TOKEN_NAME } = require('~/consts/errors')
+} = require('~/app/consts/auth')
+const { createError } = require('~/app/utils/errorsHelper')
+const { INVALID_TOKEN_NAME } = require('~/app/consts/errors')
 
-jest.mock('~/configs/config', () => ({
+jest.mock('~/app/configs/config', () => ({
   config: {
     JWT_ACCESS_SECRET: 'access-secret',
     JWT_ACCESS_EXPIRES_IN: '1h',
@@ -38,7 +38,7 @@ describe('Token service', () => {
       .mockImplementation(() => ({ exec: jest.fn().mockResolvedValue({ save: mockSave }) }))
 
     const result = await tokenService.saveToken(userId, tokenValue, RESET_TOKEN)
-    
+
     expect(Token.findOne).toHaveBeenCalledWith({ user: userId })
     expect(mockSave).toHaveBeenCalled()
     expect(result).toEqual(tokenData)

@@ -1,9 +1,9 @@
 require('module-alias/register')
 require('./module-aliases')
-require('~/initialization/envSetup')
+require('~/app/initialization/envSetup')
 const express = require('express')
-const serverSetup = require('~/initialization/serverSetup')
-const logger = require('~/logger/logger')
+const serverSetup = require('~/app/initialization/serverSetup')
+const logger = require('~/app/logger/logger')
 
 const app = express()
 

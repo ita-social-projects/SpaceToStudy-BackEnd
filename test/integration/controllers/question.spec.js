@@ -1,12 +1,12 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const TokenService = require('~/services/token')
-const Question = require('~/models/question')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/app/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const TokenService = require('~/app/services/token')
+const Question = require('~/app/models/question')
 const {
   roles: { TUTOR, STUDENT }
-} = require('~/consts/auth')
+} = require('~/app/consts/auth')
 
 const endpointUrl = '/questions/'
 const nonExistingQuestionId = '64a51e41de4debbccf0b39b0'
@@ -61,7 +61,7 @@ describe('Question controller', () => {
   let app, server, accessToken, tutorAccessToken, currentUser, studentAccessToken, testQuestion, testQuestionId
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

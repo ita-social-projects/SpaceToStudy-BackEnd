@@ -1,12 +1,12 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/app/consts/errors')
 const {
   enums: { NOTIFICATION_TYPE_ENUM }
-} = require('~/consts/validation')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const Notification = require('~/models/notification')
-const TokenService = require('~/services/token')
+} = require('~/app/consts/validation')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const Notification = require('~/app/models/notification')
+const TokenService = require('~/app/services/token')
 
 const endpointUrl = '/notifications/'
 
@@ -21,7 +21,7 @@ describe('Notification controller', () => {
   let app, server, accessToken, currentUser, testNotification
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

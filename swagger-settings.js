@@ -1,6 +1,6 @@
 const {
   config: { SERVER_URL }
-} = require('~/configs/config')
+} = require('~/app/configs/config')
 
 const swagger = {
   definition: {

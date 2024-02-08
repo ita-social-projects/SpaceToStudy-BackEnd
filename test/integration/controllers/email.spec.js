@@ -1,13 +1,13 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const errors = require('~/consts/errors')
-const emailSubject = require('~/consts/emailSubject')
+const errors = require('~/app/consts/errors')
+const emailSubject = require('~/app/consts/emailSubject')
 
 describe('Email controller', () => {
   let app, server
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   afterEach(async () => {

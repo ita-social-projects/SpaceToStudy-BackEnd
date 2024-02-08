@@ -1,6 +1,6 @@
-const { INTERNAL_SERVER_ERROR } = require('~/consts/errors')
-const errorMiddleware = require('~/middlewares/error')
-const { createNotFoundError } = require('~/utils/errorsHelper')
+const { INTERNAL_SERVER_ERROR } = require('~/app/consts/errors')
+const errorMiddleware = require('~/app/middlewares/error')
+const { createNotFoundError } = require('~/app/utils/errorsHelper')
 
 describe('Error middleware', () => {
   const jsonFunc = jest.fn()

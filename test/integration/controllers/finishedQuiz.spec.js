@@ -1,14 +1,14 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 
-const Quiz = require('~/models/quiz')
+const Quiz = require('~/app/models/quiz')
 
-const testUserAuthentication = require('~/utils/testUserAuth')
-const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/app/consts/errors')
 const {
   roles: { TUTOR }
-} = require('~/consts/auth')
-const TokenService = require('~/services/token')
+} = require('~/app/consts/auth')
+const TokenService = require('~/app/services/token')
 
 const endpointUrl = '/finished-quizzes/'
 const nonExistingQuiz = '64cf8a3d40135fba5a0c8fa2'
@@ -45,7 +45,7 @@ describe('Quiz controller', () => {
   let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -101,31 +101,31 @@ describe('Quiz controller', () => {
 
       expectError(404, DOCUMENT_NOT_FOUND([Quiz.modelName]), response)
     })
-  }),
-    describe(`GET ${endpointUrl}`, () => {
-      it('should get all finished quizzes', async () => {
-        const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
+  })
+  describe(`GET ${endpointUrl}`, () => {
+    it('should get all finished quizzes', async () => {
+      const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
 
-        expect(response.statusCode).toBe(200)
-        expect(Array.isArray(response.body.items)).toBeTruthy()
-        expect(response.body).toEqual({
-          items: [
-            {
-              _id: expect.any(String),
-              createdAt: expect.any(String),
-              updatedAt: expect.any(String),
-              quiz: String(testQuiz._id),
-              ...testFinishedQuizData
-            }
-          ],
-          count: 1
-        })
-      })
-
-      it('should throw UNAUTHORIZED', async () => {
-        const response = await app.get(endpointUrl)
-
-        expectError(401, UNAUTHORIZED, response)
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body.items)).toBeTruthy()
+      expect(response.body).toEqual({
+        items: [
+          {
+            _id: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            quiz: String(testQuiz._id),
+            ...testFinishedQuizData
+          }
+        ],
+        count: 1
       })
     })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
 })

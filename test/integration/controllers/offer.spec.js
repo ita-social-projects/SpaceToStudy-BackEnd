@@ -1,10 +1,10 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const Offer = require('~/models/offer')
-const Category = require('~/models/category')
-const checkCategoryExistence = require('~/seed/checkCategoryExistence')
+const { DOCUMENT_NOT_FOUND } = require('~/app/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const Offer = require('~/app/models/offer')
+const Category = require('~/app/models/category')
+const checkCategoryExistence = require('~/app/seed/checkCategoryExistence')
 
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
@@ -34,7 +34,7 @@ describe('Offer controller', () => {
   let app, server, accessToken, testOfferResponse
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

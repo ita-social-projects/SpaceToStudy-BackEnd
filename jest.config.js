@@ -9,10 +9,10 @@ module.exports = {
   collectCoverageFrom: [
     '!<rootDir>/node_modules/*',
     '!<rootDir>/test/**/*',
-    '!<rootDir>/consts/*',
-    '!<rootDir>/configs/*',
+    '!<rootDir>/app/consts/*',
+    '!<rootDir>/app/configs/*',
     '!<rootDir>/docs/*',
-    '!<rootDir>/emails/*',
+    '!<rootDir>/app/emails/*',
     '!<rootDir>/*.json',
     '!<rootDir>/*.yaml'
   ],

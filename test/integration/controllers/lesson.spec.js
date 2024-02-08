@@ -1,8 +1,8 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const Lesson = require('~/models/lesson')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const Lesson = require('~/app/models/lesson')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/app/consts/errors')
 
 const endpointUrl = '/lessons/'
 const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
@@ -49,7 +49,7 @@ describe('Lesson controller', () => {
   let app, server, accessToken, studentAccessToken, testLessonResponse, testLessonId
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

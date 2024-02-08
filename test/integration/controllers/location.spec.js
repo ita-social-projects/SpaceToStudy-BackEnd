@@ -2,11 +2,11 @@ const { request } = require('gaxios')
 
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const { UNAUTHORIZED } = require('~/consts/errors')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const { UNAUTHORIZED } = require('~/app/consts/errors')
 const {
   roles: { TUTOR }
-} = require('~/consts/auth')
+} = require('~/app/consts/auth')
 
 jest.mock('gaxios')
 
@@ -18,7 +18,7 @@ describe('Location controller', () => {
   let app, server, accessToken
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

@@ -1,17 +1,17 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
-const User = require('~/models/user')
-const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/consts/errors')
+const User = require('~/app/models/user')
+const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/app/consts/errors')
 const { expectError } = require('~/test/helpers')
 const {
   roles: { TUTOR }
-} = require('~/consts/auth')
+} = require('~/app/consts/auth')
 const {
   enums: { STATUS_ENUM }
-} = require('~/consts/validation')
+} = require('~/app/consts/validation')
 
-const testUserAuthentication = require('~/utils/testUserAuth')
-const createAggregateOptions = require('~/utils/users/createAggregateOptions')
-const TokenService = require('~/services/token')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
+const createAggregateOptions = require('~/app/utils/users/createAggregateOptions')
+const TokenService = require('~/app/services/token')
 
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'

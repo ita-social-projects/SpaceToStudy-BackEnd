@@ -1,9 +1,9 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
-const testUserAuthentication = require('~/utils/testUserAuth')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, NOT_FOUND } = require('~/consts/errors')
-const Category = require('~/models/category')
-const checkCategoryExistence = require('~/seed/checkCategoryExistence')
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, NOT_FOUND } = require('~/app/consts/errors')
+const Category = require('~/app/models/category')
+const checkCategoryExistence = require('~/app/seed/checkCategoryExistence')
 
 const endpointUrl = '/categories/'
 const nonExistingCategoryId = '63bed9ef260f18d04ab15da2'
@@ -36,7 +36,7 @@ describe('Category controller', () => {
   let app, server, testCategory, testSubject
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

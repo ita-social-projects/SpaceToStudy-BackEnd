@@ -1,6 +1,6 @@
-const idValidation = require('~/middlewares/idValidation')
-const { createError } = require('~/utils/errorsHelper')
-const { INVALID_ID } = require('~/consts/errors')
+const idValidation = require('~/app/middlewares/idValidation')
+const { createError } = require('~/app/utils/errorsHelper')
+const { INVALID_ID } = require('~/app/consts/errors')
 
 describe('idValidation middleware', () => {
   const mockResponse = {}

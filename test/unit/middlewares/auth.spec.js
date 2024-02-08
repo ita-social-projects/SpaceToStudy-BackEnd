@@ -1,7 +1,7 @@
-require('~/initialization/envSetup')
-const { authMiddleware } = require('~/middlewares/auth')
-const { createUnauthorizedError } = require('~/utils/errorsHelper')
-const tokenService = require('~/services/token')
+require('~/app/initialization/envSetup')
+const { authMiddleware } = require('~/app/middlewares/auth')
+const { createUnauthorizedError } = require('~/app/utils/errorsHelper')
+const tokenService = require('~/app/services/token')
 
 describe('Auth middleware', () => {
   const error = createUnauthorizedError()

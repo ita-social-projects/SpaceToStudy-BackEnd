@@ -1,7 +1,7 @@
 const { request } = require('express')
-const { INVALID_LANGUAGE } = require('~/consts/errors')
-const langMiddleware = require('~/middlewares/appLanguage')
-const { createError } = require('~/utils/errorsHelper')
+const { INVALID_LANGUAGE } = require('~/app/consts/errors')
+const langMiddleware = require('~/app/middlewares/appLanguage')
+const { createError } = require('~/app/utils/errorsHelper')
 
 describe('Language middleware', () => {
   let mockResponse = {}

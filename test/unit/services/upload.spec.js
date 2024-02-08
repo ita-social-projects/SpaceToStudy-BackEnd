@@ -1,5 +1,5 @@
 const azureStorage = require('azure-storage')
-const uploadService = require('~/services/upload')
+const uploadService = require('~/app/services/upload')
 
 jest.mock('azure-storage')
 
@@ -47,41 +47,44 @@ describe('uploadService', () => {
     const result = await uploadService.uploadFile(file.name, file.buffer)
 
     expect(result).toContain(blobName)
-  }),
-    it('Should show an err during the upload', async () => {
-      const blobServiceStub = {
-        createWriteStreamToBlockBlob: getBlobNameWithError
-      }
-      azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+  })
+  it('Should show an err during the upload', async () => {
+    const blobServiceStub = {
+      createWriteStreamToBlockBlob: getBlobNameWithError
+    }
+    azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
-      try {
-        await uploadService.uploadFile(file.name, file.buffer)
-      } catch (err) {
-        expect(err).toBe('error')
-      }
-    }),
-    it('Should delete a file from Azure Blob Storage', async () => {
-      const blobServiceStub = {
-        deleteBlobIfExists: getBlobName
-      }
-      azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+    try {
+      await uploadService.uploadFile(file.name, file.buffer)
+    } catch (err) {
+      expect(err).toBe('error')
+    }
+  })
 
-      const result = await uploadService.deleteFile(fileName)
+  it('Should delete a file from Azure Blob Storage', async () => {
+    const blobServiceStub = {
+      deleteBlobIfExists: getBlobName
+    }
+    azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
-      expect(result).toContain(fileName)
-    }),
-    it('Should show an error during the delete', async () => {
-      const blobServiceStub = {
-        deleteBlobIfExists: getBlobNameWithError
-      }
-      azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+    const result = await uploadService.deleteFile(fileName)
 
-      try {
-        await uploadService.deleteFile(fileName)
-      } catch (err) {
-        expect(err).toBe('error')
-      }
-    })
+    expect(result).toContain(fileName)
+  })
+
+  it('Should show an error during the delete', async () => {
+    const blobServiceStub = {
+      deleteBlobIfExists: getBlobNameWithError
+    }
+    azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+
+    try {
+      await uploadService.deleteFile(fileName)
+    } catch (err) {
+      expect(err).toBe('error')
+    }
+  })
+
   it('should update a file in Azure Blob Storage successfully', async () => {
     const blobNameNew = `${file.newName}`
 

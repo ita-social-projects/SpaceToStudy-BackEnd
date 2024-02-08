@@ -1,7 +1,7 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
-const testUserAuthentication = require('~/utils/testUserAuth')
+const testUserAuthentication = require('~/app/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
+const { UNAUTHORIZED, FORBIDDEN } = require('~/app/consts/errors')
 
 jest.mock('azure-storage', () => {
   const fn = (containerName, blobName, cb) => {
@@ -57,7 +57,7 @@ describe('Attachments controller', () => {
   let app, server, accessToken, tutorAccessToken, testAttachmentsResponse
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ; ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

@@ -1,7 +1,6 @@
 const Course = require('~/models/course')
 
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
-const { createError, createForbiddenError } = require('~/utils/errorsHelper')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const courseService = {
   getCourses: async (match, skip, limit, sort) => {
@@ -52,10 +51,6 @@ const courseService = {
 
     const course = await Course.findById(id).exec()
 
-    if (!course) {
-      throw createError(DOCUMENT_NOT_FOUND(Course.modelName))
-    }
-
     const courseAuthor = course.author.toString()
 
     if (userId !== courseAuthor) {
@@ -75,10 +70,6 @@ const courseService = {
 
   deleteCourse: async (id, currentUser) => {
     const course = await Course.findById(id).exec()
-
-    if (!course) {
-      throw createError(DOCUMENT_NOT_FOUND(Course.modelName))
-    }
 
     const author = course.author.toString()
 

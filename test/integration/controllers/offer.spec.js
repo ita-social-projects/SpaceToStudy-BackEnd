@@ -1,10 +1,13 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
+const {
+  roles: { TUTOR }
+} = require('~/consts/auth')
 
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
@@ -26,12 +29,24 @@ let testOffer = {
   }
 }
 
+const tutorUserData = {
+  role: TUTOR,
+  firstName: 'albus',
+  lastName: 'dumbledore',
+  email: 'lovemagic@gmail.com',
+  password: 'supermagicpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: TUTOR
+}
+
 const updateData = {
   price: 555
 }
 
 describe('Offer controller', () => {
-  let app, server, accessToken, testOfferResponse
+  let app, server, accessToken, tutorAccessToken, testOfferResponse
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -41,6 +56,7 @@ describe('Offer controller', () => {
     await checkCategoryExistence()
 
     accessToken = await testUserAuthentication(app)
+    tutorAccessToken = await testUserAuthentication(app, tutorUserData)
 
     const categoryResponse = await Category.find()
 
@@ -155,6 +171,15 @@ describe('Offer controller', () => {
         .send(updateData)
 
       expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .patch(endpointUrl + testOffer._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+        .send(updateData)
+
+      expectError(403, FORBIDDEN, response)
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {

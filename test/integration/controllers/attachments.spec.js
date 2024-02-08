@@ -229,7 +229,7 @@ describe('Attachments controller', () => {
       const response = await app
         .patch(endpointUrl + testAttachmentId)
         .send(updateData)
-        .set('Cookie', [`accessToken=${token}`]) //
+        .set('Cookie', [`accessToken=${token}`])
 
       expectError(403, FORBIDDEN, response)
     })

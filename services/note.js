@@ -1,7 +1,6 @@
 const Note = require('~/models/note')
 const Cooperation = require('~/models/cooperation')
-const { createForbiddenError, createError } = require('~/utils/errorsHelper')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const noteService = {
   addNote: async (data, author, cooperation) => {
@@ -25,10 +24,7 @@ const noteService = {
 
     return await Note.find({
       cooperation,
-      $or: [
-        { isPrivate: false }, 
-        { $and: [{ author: userId }, { isPrivate: true }] }
-      ]
+      $or: [{ isPrivate: false }, { $and: [{ author: userId }, { isPrivate: true }] }]
     })
       .populate({
         path: 'author',
@@ -46,8 +42,6 @@ const noteService = {
     if (!foundedCooperation) throw createForbiddenError()
 
     const note = await Note.findById(noteId).exec()
-
-    if (!note) throw createError(404, DOCUMENT_NOT_FOUND(note.modelName))
 
     for (const field in updateData) {
       note[field] = updateData[field]

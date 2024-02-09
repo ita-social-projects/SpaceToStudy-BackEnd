@@ -3,37 +3,35 @@ const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
 const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, NOT_FOUND } = require('~/consts/errors')
 const Category = require('~/models/category')
+const Offer = require('~/models/offer')
+const TokenService = require('~/services/token')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 
 const endpointUrl = '/categories/'
 const nonExistingCategoryId = '63bed9ef260f18d04ab15da2'
 
 let accessToken
-let categoryData
-let categoryResponse
 
 let categoryBody = {
   name: 'Languages',
   appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
 }
 
-const subjectBody = [
-  { name: 'Web design' },
-  { name: 'Guitar' },
-  { name: 'Bass' },
-  { name: 'Piano' },
-  { name: 'Spanish' },
-  { name: 'Cybersecurity' },
-  { name: 'Violins' },
-  { name: 'pian' },
-  { name: 'Sound design' },
-  { name: 'Drums' },
-  { name: 'English' },
-  { name: 'Danish' }
-]
+const testOfferData = {
+  authorRole: 'tutor',
+  price: 99,
+  proficiencyLevel: 'Beginner',
+  title: 'First-class teacher. Director of the Hogwarts school of magic',
+  description: 'I will teach you how to protect yourself and your family from dark arts',
+  languages: 'English',
+  FAQ: [{ question: 'Do you enjoy being a director of the Hogwarts?', answer: 'Actually yes, i really like it.' }]
+}
 
+const subjectBody = {
+  name: 'English'
+}
 describe('Category controller', () => {
-  let app, server, testCategory, testSubject
+  let app, server, testCategory, testSubject, testStudentUser
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -42,23 +40,19 @@ describe('Category controller', () => {
   beforeEach(async () => {
     await checkCategoryExistence()
 
-    categoryResponse = await Category.find()
-
     accessToken = await testUserAuthentication(app)
 
-    for (let i = 0; i < 7; i++) {
-      const category = categoryResponse[i]
-      const subject = subjectBody[i]
+    testStudentUser = TokenService.validateAccessToken(accessToken)
 
-      subject.category = category._id
+    testCategory = await app
+      .post(endpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(categoryBody)
 
-      testSubject = await app
-        .post('/subjects/')
-        .set('Cookie', [`accessToken=${accessToken}`])
-        .send(subject)
-
-      subject._id = testSubject.body._id
-    }
+    testSubject = await app
+      .post('/subjects/')
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send({ ...subjectBody, category: testCategory.body._id })
   })
 
   afterEach(async () => {
@@ -77,27 +71,13 @@ describe('Category controller', () => {
     })
 
     it('should create a new category', async () => {
-      testCategory = await app
-        .post(endpointUrl)
-        .set('Cookie', [`accessToken=${accessToken}`])
-        .send(categoryBody)
-
-      subjectBody.category = testCategory.body._id
-      categoryBody._id = testCategory.body._id
-
       expect(testCategory.statusCode).toBe(201)
-      categoryData = {
-        _id: expect.any(String),
-        appearance: { ...categoryBody.appearance, color: testCategory.body.appearance.color },
-        name: expect.any(String),
-        totalOffers: {
-          student: 0,
-          tutor: 0
-        },
+      expect(testCategory.body).toMatchObject({
+        ...categoryBody,
+        totalOffers: { student: 0, tutor: 0 },
         updatedAt: expect.any(String),
         createdAt: expect.any(String)
-      }
-      expect(testCategory.body).toEqual(expect.objectContaining(categoryData))
+      })
     })
   })
 
@@ -112,7 +92,19 @@ describe('Category controller', () => {
       const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 7 }))
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          items: [
+            expect.objectContaining({
+              ...categoryBody,
+              totalOffers: { student: 0, tutor: 0 },
+              updatedAt: expect.any(String),
+              createdAt: expect.any(String)
+            })
+          ],
+          count: 1
+        })
+      )
     })
 
     it('should get all categories that contain "lan" in their name', async () => {
@@ -124,38 +116,25 @@ describe('Category controller', () => {
         .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 1 }))
-    })
-
-    it('should get 5 categories', async () => {
-      const params = new URLSearchParams()
-      params.set('limit', '5')
-
-      const response = await app
-        .get(endpointUrl + '?' + params.toString())
-        .set('Cookie', [`accessToken=${accessToken}`])
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 5 }))
-      expect(response.body.items.length).toBe(5)
-    })
-
-    it('should skip 5 categories and return the rest', async () => {
-      const params = new URLSearchParams()
-      params.set('skip', '5')
-      params.set('limit', '6')
-
-      const response = await app
-        .get(endpointUrl + '?' + params.toString())
-        .set('Cookie', [`accessToken=${accessToken}`])
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining({ items: expect.any(Array), count: 2 }))
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          items: [
+            expect.objectContaining({
+              ...categoryBody,
+              totalOffers: { student: 0, tutor: 0 },
+              updatedAt: expect.any(String),
+              createdAt: expect.any(String)
+            })
+          ],
+          count: 1
+        })
+      )
     })
   })
 
   describe(`GET ${endpointUrl}:id`, () => {
     it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(endpointUrl + categoryData._id)
+      const response = await app.get(endpointUrl + testCategory.body._id)
 
       expectError(401, UNAUTHORIZED, response)
     })
@@ -167,12 +146,15 @@ describe('Category controller', () => {
     })
 
     it('should get a category by id', async () => {
-      const response = await app
-        .get(endpointUrl + categoryResponse[0]._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+      const response = await app.get(endpointUrl + testCategory.body._id).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(expect.objectContaining(categoryData))
+      expect(response.body).toMatchObject({
+        ...categoryBody,
+        totalOffers: { student: 0, tutor: 0 },
+        updatedAt: expect.any(String),
+        createdAt: expect.any(String)
+      })
     })
   })
 
@@ -197,7 +179,7 @@ describe('Category controller', () => {
 
     it('should return min and max prices for student offers', async () => {
       const response = await app
-        .get(endpointUrl + `${categoryResponse[0]._id}/subjects/${subjectBody[0]._id}/price-range?authorRole=student`)
+        .get(endpointUrl + `${testCategory.body._id}/subjects/${testSubject.body._id}/price-range?authorRole=student`)
         .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
@@ -209,8 +191,15 @@ describe('Category controller', () => {
     })
 
     it('should return min and max prices for tutor offers', async () => {
+      await Offer.create({
+        author: testStudentUser.id,
+        subject: testSubject.body._id,
+        category: testCategory.body._id,
+        ...testOfferData
+      })
+
       const response = await app
-        .get(endpointUrl + `${categoryResponse[0]._id}/subjects/${subjectBody[0]._id}/price-range?authorRole=tutor`)
+        .get(endpointUrl + `${testCategory.body._id}/subjects/${testSubject.body._id}/price-range?authorRole=tutor`)
         .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)

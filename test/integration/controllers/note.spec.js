@@ -94,7 +94,7 @@ describe('Note controller', () => {
         initiator: mockedInitiatorId
       })
 
-      const response = await app.post(endpointUrl(cooperation._id)).set('Cookie', [`accessToken=${accessToken}`])
+      const response = await app.get(endpointUrl(cooperation._id)).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })
@@ -169,6 +169,20 @@ describe('Note controller', () => {
       expect(response.statusCode).toBe(204)
     })
 
+    it('should throw FORBIDDEN', async () => {
+      const cooperation = await Cooperation.create({
+        ...testCooperationData,
+        initiator: mockedInitiatorId
+      })
+
+      const response = await app
+        .patch(endpointUrl(cooperation._id, testNote._body._id))
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(updateNoteData)
+
+      expectError(403, FORBIDDEN, response)
+    })
+
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .patch(endpointUrl(testCooperation._id, nonExistingCooperationId))
@@ -192,6 +206,33 @@ describe('Note controller', () => {
         .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw FORBIDDEN if cooperation doesn`t exist', async () => {
+      const cooperation = await Cooperation.create({
+        ...testCooperationData,
+        initiator: mockedInitiatorId
+      })
+
+      const response = await app
+        .delete(endpointUrl(cooperation._id, testNote._body._id))
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(403, FORBIDDEN, response)
+    })
+
+    it('should throw FORBIDDEN if note doesn`t exist', async () => {
+      const note = await Note.create({
+        ...testNoteData,
+        cooperation: testCooperation._id,
+        author: mockedInitiatorId
+      })
+
+      const response = await app
+        .delete(endpointUrl(testCooperation._id, note._id))
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(403, FORBIDDEN, response)
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {

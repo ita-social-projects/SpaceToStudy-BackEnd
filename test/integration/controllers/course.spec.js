@@ -5,15 +5,18 @@ const Course = require('~/models/course')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 const uploadService = require('~/services/upload')
+const {
+  roles: { STUDENT, TUTOR }
+} = require('~/consts/auth')
 
 const endpointUrl = '/courses/'
 
-let mockUploadFile = jest.fn().mockResolvedValue('mocked-file-url')
+const mockUploadFile = jest.fn().mockResolvedValue('mocked-file-url')
 
 const nonExistingCourseId = '64a51e41de4debbccf0b39b0'
 
-let tutorUser = {
-  role: 'tutor',
+const tutorUser = {
+  role: TUTOR,
   firstName: 'albus',
   lastName: 'dumbledore',
   email: 'lovemagic@gmail.com',
@@ -22,7 +25,19 @@ let tutorUser = {
   FAQ: { student: [{ question: 'question1', answer: 'answer1' }] },
   isEmailConfirmed: true,
   lastLogin: new Date().toJSON(),
-  lastLoginAs: 'tutor'
+  lastLoginAs: TUTOR
+}
+
+const studentUser = {
+  role: STUDENT,
+  firstName: 'harry',
+  lastName: 'potter',
+  email: 'ilovehogwarts@gmail.com',
+  password: 'supermagicpass555',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: STUDENT
 }
 
 const testCourseData = {
@@ -53,7 +68,15 @@ const categoryBody = {
 const subjectBody = { name: 'English' }
 
 describe('Course controller', () => {
-  let app, server, accessToken, studentAccessToken, testCourseResponse, testCourse, testCategory, testSubject
+  let app,
+    server,
+    accessToken,
+    tutorAccessToken,
+    studentAccessToken,
+    testCourseResponse,
+    testCourse,
+    testCategory,
+    testSubject
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -63,7 +86,8 @@ describe('Course controller', () => {
     await checkCategoryExistence()
 
     accessToken = await testUserAuthentication(app, tutorUser)
-    studentAccessToken = await testUserAuthentication(app)
+    tutorAccessToken = await testUserAuthentication(app, { role: TUTOR })
+    studentAccessToken = await testUserAuthentication(app, studentUser)
 
     uploadService.uploadFile = mockUploadFile
 
@@ -183,8 +207,8 @@ describe('Course controller', () => {
 
     it('should throw FORBIDDEN', async () => {
       const response = await app
-        .patch(endpointUrl)
-        .set('Cookie', [`accessToken=${studentAccessToken}`])
+        .patch(endpointUrl + testCourse._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
         .send(updateData)
 
       expectError(403, FORBIDDEN, response)
@@ -241,7 +265,7 @@ describe('Course controller', () => {
     })
 
     it('should throw FORBIDDEN', async () => {
-      const response = await app.delete(endpointUrl).set('Cookie', [`accessToken=${studentAccessToken}`])
+      const response = await app.delete(endpointUrl + testCourse._id).set('Cookie', [`accessToken=${tutorAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

@@ -3,8 +3,7 @@ const Offer = require('~/models/offer')
 
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedOfferFieldsForUpdate } = require('~/validation/services/offer')
-const { createError, createForbiddenError } = require('~/utils/errorsHelper')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const offerService = {
   getOffers: async (pipeline) => {
@@ -96,9 +95,6 @@ const offerService = {
     const filteredUpdateData = filterAllowedFields(updateData, allowedOfferFieldsForUpdate)
 
     const offer = await Offer.findById(id)
-    if (!offer) {
-      throw createError(DOCUMENT_NOT_FOUND(Offer.modelName))
-    }
 
     const author = offer.author.toString()
     const enrollUpdate = Boolean(Object.keys(updateData).length === 1 && updateData.enrolledUsers)

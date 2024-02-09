@@ -4,6 +4,7 @@ const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
+const uploadService = require('~/services/upload')
 
 jest.mock('azure-storage', () => {
   const fn = (containerName, blobName, cb) => {
@@ -187,6 +188,41 @@ describe('Attachments controller', () => {
         ],
         count: 1
       })
+    })
+
+    it('should update an attachment file name and link', async () => {
+      const newFileName = 'newFileName'
+      const newLink = 'newLink'
+      const updateAttachmentSpy = jest.spyOn(uploadService, 'updateFile').mockResolvedValue(newLink)
+
+      await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ fileName: newFileName })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      const attachmentsResponse = await app
+        .get(endpointUrl + '?fileName:newFileName')
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(attachmentsResponse.body).toMatchObject({
+        items: [
+          {
+            _id: expect.any(String),
+            author: currentUser.id,
+            category: null,
+            createdAt: expect.any(String),
+            description: 'Here is everything you need to study this subject.',
+            fileName: `${newFileName}.pdf`,
+            link: newLink,
+            resourceType: 'attachments',
+            size: 1524,
+            updatedAt: expect.any(String)
+          }
+        ],
+        count: 1
+      })
+
+      expect(updateAttachmentSpy).toHaveBeenCalledWith(expect.any(String), `${newFileName}.pdf`, 'attachment')
     })
 
     it('should update an attachment description', async () => {

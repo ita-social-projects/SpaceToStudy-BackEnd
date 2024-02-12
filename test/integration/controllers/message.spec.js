@@ -7,8 +7,16 @@ const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors
 const endpointUrl = (id) => `/chats/${id}/messages/`
 
 const chatEndpointUrl = '/chats'
+const messagesEndpointUrl = '/messages'
 
 const nonExistingChatId = '64a54c0db1948d5b9d29314a'
+
+const messagesData = {
+  text: 'Mocked text chat',
+  member: '6421d9833cdf38b706756dff',
+  memberRole: 'student',
+  authorRole: 'tutor'
+}
 
 let messageBody = {
   text: 'SOme amount of text',
@@ -52,7 +60,7 @@ describe('Message controller', () => {
   let app, server, chatResponse, accessToken
 
   beforeAll(async () => {
-    ;({ app, server } = await serverInit())
+    ({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -68,6 +76,11 @@ describe('Message controller', () => {
       .post(endpointUrl(messageBody.chat))
       .set('Cookie', [`accessToken=${accessToken}`])
       .send(messageBody)
+
+    await app
+      .post(messagesEndpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(messagesData)
   })
 
   afterEach(async () => {

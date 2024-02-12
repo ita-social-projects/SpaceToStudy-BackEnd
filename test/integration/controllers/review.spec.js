@@ -1,5 +1,5 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
-const { DOCUMENT_NOT_FOUND, UNAUTHORIZED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Review = require('~/models/review')
@@ -9,6 +9,9 @@ const jwt = require('jsonwebtoken')
 const {
   config: { JWT_ACCESS_SECRET }
 } = require('~/configs/config')
+const {
+  roles: { TUTOR }
+} = require('~/consts/auth')
 const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 
 const endpointUrl = '/reviews/'
@@ -42,8 +45,20 @@ const updateData = {
   rating: 1
 }
 
+const tutorUserData = {
+  role: TUTOR,
+  firstName: 'Jack',
+  lastName: 'Restlow',
+  email: 'jack353523@gmail.com',
+  password: 'jack12345',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: TUTOR
+}
+
 describe('Review controller', () => {
-  let app, server, accessToken, testOffer, testReview, testSubject, userId
+  let app, server, accessToken, tutorAccessToken, testOffer, testReview, testSubject, userId
 
   beforeAll(async () => {
     ({ app, server } = await serverInit())
@@ -52,6 +67,7 @@ describe('Review controller', () => {
   beforeEach(async () => {
     await checkCategoryExistence()
     accessToken = await testUserAuthentication(app)
+    tutorAccessToken = await testUserAuthentication(app, tutorUserData)
 
     const decoded = jwt.verify(accessToken, JWT_ACCESS_SECRET)
     userId = decoded.id
@@ -218,6 +234,15 @@ describe('Review controller', () => {
       const response = await app.patch(endpointUrl + reviewBody._id).send(updateData)
 
       expectError(401, UNAUTHORIZED, response)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app
+        .patch(endpointUrl + reviewBody._id)
+        .send(updateData)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+
+      expectError(403, FORBIDDEN, response)
     })
 
     it('should update a review by ID', async () => {

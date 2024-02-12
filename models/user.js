@@ -88,9 +88,10 @@ const userSchema = new Schema(
     nativeLanguage: {
       type: String,
       enum: {
-        values: SPOKEN_LANG_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('native language', SPOKEN_LANG_ENUM)
-      }
+        values: [...SPOKEN_LANG_ENUM, null],
+        message: ENUM_CAN_BE_ONE_OF('native language', [...SPOKEN_LANG_ENUM, null])
+      },
+      default: null
     },
     isEmailConfirmed: {
       type: Boolean,

@@ -200,6 +200,24 @@ describe('Quiz controller', () => {
       })
     })
 
+    it('should update a quiz settings', async () => {
+      const updatedSettings = {
+        correctAnswers: true,
+        pointValues: true,
+        scoredResponses: true,
+        shuffle: true,
+        view: QUIZ_VIEW_ENUM[0]
+      }
+
+      await app
+        .patch(endpointUrl + testQuizId)
+        .send({ settings: updatedSettings })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      const updatedQuiz = await app.get(endpointUrl + testQuizId).set('Cookie', [`accessToken=${accessToken}`])
+      expect(updatedQuiz._body.settings).toEqual(updatedSettings)
+    })
+
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.patch(endpointUrl + testQuizId).send(updateData)
 
@@ -211,6 +229,20 @@ describe('Quiz controller', () => {
         .patch(endpointUrl + testQuizId)
         .send(updateData)
         .set('Cookie', [`accessToken=${studentAccessToken}`])
+
+      expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`DELETE ${endpointUrl}:id`, () => {
+    it('should delete quiz by ID', async () => {
+      const response = await app.delete(endpointUrl + testQuizId).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw FORBIDDEN', async () => {
+      const response = await app.delete(endpointUrl + testQuizId).set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
     })

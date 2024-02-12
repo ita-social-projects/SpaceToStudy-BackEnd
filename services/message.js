@@ -1,14 +1,11 @@
 const mongoose = require('mongoose')
 const Message = require('~/models/message')
 const Chat = require('~/models/chat')
-const { createForbiddenError, createBadRequestError, createError } = require('~/utils/errorsHelper')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const messageService = {
   sendMessage: async (author, authorRole, data) => {
     const { text, member, chat, memberRole } = data
-
-    if (!chat && (!member || !memberRole)) throw createBadRequestError()
 
     if (!chat) {
       const newChat = await Chat.create({
@@ -27,10 +24,6 @@ const messageService = {
         clearedFor: []
       })
     }
-
-    const existingChat = await Chat.findById(chat)
-
-    if (!existingChat) throw createError(404, DOCUMENT_NOT_FOUND(Chat.modelName))
 
     return await Message.create({
       author,

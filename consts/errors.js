@@ -15,9 +15,13 @@ const errors = {
     code: 'BODY_IS_NOT_DEFINED',
     message: 'request body should not be null or undefined'
   },
+  FIELD_CAN_BE_ONE_OF: (field, enums) => ({
+    code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
+    message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}`
+  }),
   FIELD_IS_NOT_DEFINED: (field) => ({
     code: 'FIELD_IS_NOT_DEFINED',
-    message: `${field} should not be null or undefined`
+    message: `${field} field should be defined`
   }),
   FIELD_IS_NOT_OF_PROPER_TYPE: (field, type) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',

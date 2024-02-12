@@ -11,8 +11,10 @@ const cooperationService = {
     return result
   },
 
-  getCooperationById: async (id, pipeline) => {
-    return await (await Cooperation.findById(id)).populate({
+  getCooperationById: async (id) => {
+    return await (
+      await Cooperation.findById(id)
+    ).populate({
       path: 'offer',
       populate: [
         {
@@ -24,7 +26,7 @@ const cooperationService = {
           select: 'name'
         }
       ],
-      select: ['id', 'author', 'category', 'subject']
+      select: ['id', 'author', 'category', 'subject', 'price']
     })
   },
 
@@ -56,7 +58,7 @@ const cooperationService = {
 
     const cooperation = await Cooperation.findById(id).exec()
     if (!cooperation) {
-      throw createError(DOCUMENT_NOT_FOUND(Cooperation.modelName))
+      throw createError(404, DOCUMENT_NOT_FOUND(Cooperation.modelName))
     }
 
     const initiator = cooperation.initiator.toString()
@@ -79,6 +81,8 @@ const cooperationService = {
     }
     if (sections) {
       cooperation.sections = sections
+
+      cooperation.markModified('sections')
 
       await cooperation.validate()
       await cooperation.save()

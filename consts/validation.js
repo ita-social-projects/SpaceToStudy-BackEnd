@@ -25,6 +25,9 @@ const enums = {
   NOTIFICATION_TYPE_ENUM: ['new', 'requested', 'active', 'declined', 'updated', 'closed', 'deleted'],
   QUESTION_TYPE_ENUM: ['multipleChoice', 'openAnswer', 'oneAnswer'],
   QUIZ_VIEW_ENUM: ['Stepper', 'Scroll'],
+  QUIZ_SETTINGS_ENUM: ['view', 'shuffle', 'pointValues', 'scoredResponses', 'correctAnswers'],
+  RESOURCE_STATUS_ENUM: ['available', 'finished'],
+  RESOURCE_AVAILABILITY_STATUS_ENUM: ['open', 'closed'],
   RESOURCES_TYPES_ENUM: ['lessons', 'attachments', 'questions', 'quizzes']
 }
 

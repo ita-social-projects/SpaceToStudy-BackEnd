@@ -10,7 +10,7 @@ const courseService = {
         { path: 'subject', select: '_id name' },
         { path: 'category', select: 'appearance' }
       ])
-      .sort({ updatedAt: sort })
+      .sort(sort)
       .skip(skip)
       .limit(limit)
       .lean()

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, CHAT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const Chat = require('~/models/chat')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
@@ -8,6 +8,27 @@ const chatService = {
   createChat: async (currentUser, data) => {
     const { id: author, role: authorRole } = currentUser
     const { member, memberRole } = data
+
+    const existingChat = await Chat.findOne({
+      $or: [
+        {
+          members: [
+            { user: author, role: authorRole },
+            { user: member, role: memberRole }
+          ]
+        },
+        {
+          members: [
+            { user: member, role: memberRole },
+            { user: author, role: authorRole }
+          ]
+        }
+      ]
+    })
+
+    if (existingChat) {
+      throw createError(401, CHAT_ALREADY_EXISTS)
+    }
 
     return await Chat.create({
       members: [

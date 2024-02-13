@@ -40,6 +40,10 @@ const errors = {
     code: 'FIELD_IS_NOT_OF_PROPER_ENUM_VALUE',
     message: `${field} should be either one of the values: [${enumSet.join(', ')}]`
   }),
+  CHAT_ALREADY_EXISTS: {
+    code: 'CHAT_ALREADY_EXISTS',
+    message: 'The chat with this user already exists.'
+  },
   ALREADY_REGISTERED: {
     code: 'ALREADY_REGISTERED',
     message: 'User with the specified email already exists.'

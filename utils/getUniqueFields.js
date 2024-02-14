@@ -1,9 +1,9 @@
 const getUniqueFields = (message) => {
-  const content = message.match(/\{([^}]+)\}/)[1]
+  const contentMatch = message.match(/\{([^{}]*?)\}/)
+  const content = contentMatch ? contentMatch[1] : ''
 
-  const uniqueFields = content.match(/\b(\w+)(?=:)/g).join(', ')
-
-  return uniqueFields
+  const uniqueFields = content.match(/\b(\w+)(?=:)/g)
+  return uniqueFields ? uniqueFields.join(', ') : ''
 }
 
 module.exports = getUniqueFields

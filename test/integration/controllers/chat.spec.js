@@ -1,7 +1,7 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
-const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND, CHAT_ALREADY_EXISTS } = require('~/consts/errors')
 const Chat = require('~/models/chat')
 
 const nonExistingChatId = '64a33e71eea95284f397a6e4'
@@ -74,6 +74,11 @@ describe('Chat controller', () => {
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
     studentAccessToken = await testUserAuthentication(app, differentUserData)
+
+    testChat = await app
+      .post(endpointUrl)
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(chatBody)
   })
 
   afterEach(async () => {
@@ -92,25 +97,21 @@ describe('Chat controller', () => {
     })
 
     it('should create a new chat', async () => {
-      const newChat = await app
+      expect(testChat.statusCode).toBe(201)
+      expect(testChat._body).toEqual(expect.objectContaining(chatData))
+    })
+
+    it('should throw CHAT_ALREADY_EXISTS', async () => {
+      const response = await app
         .post(endpointUrl)
         .set('Cookie', [`accessToken=${accessToken}`])
         .send(chatBody)
 
-      expect(newChat.statusCode).toBe(201)
-
-      expect(newChat._body).toEqual(expect.objectContaining(chatData))
+      expectError(401, CHAT_ALREADY_EXISTS, response)
     })
   })
 
   describe(`DELETE ${endpointUrl}:id`, () => {
-    beforeEach(async () => {
-      testChat = await app
-        .post(endpointUrl)
-        .set('Cookie', [`accessToken=${accessToken}`])
-        .send(chatBody)
-    })
-
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .delete(endpointUrl + testChat._body._id)
@@ -139,13 +140,6 @@ describe('Chat controller', () => {
   })
 
   describe(`PATCH ${endpointUrl}:id`, () => {
-    beforeEach(async () => {
-      testChat = await app
-        .post(endpointUrl)
-        .set('Cookie', [`accessToken=${accessToken}`])
-        .send(chatBody)
-    })
-
     it('should throw FORBIDDEN', async () => {
       const response = await app
         .patch(endpointUrl + testChat._body._id)

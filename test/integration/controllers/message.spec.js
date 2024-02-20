@@ -60,7 +60,7 @@ describe('Message controller', () => {
   let app, server, chatResponse, accessToken
 
   beforeAll(async () => {
-    ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -189,11 +189,8 @@ describe('Message controller', () => {
     })
 
     it('should throw NOT MODIFIED if there is nothing to clear', async () => {
-      chatResponse = await app
-        .post(chatEndpointUrl)
-        .set('Cookie', [`accessToken=${accessToken}`])
-        .send(chatBody)
-      messageBody.chat = chatResponse.body._id
+      await app.patch(endpointUrl(messageBody.chat)).set('Cookie', [`accessToken=${accessToken}`])
+
       const response = await app.patch(endpointUrl(messageBody.chat)).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(304)

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { CHAT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const Chat = require('~/models/chat')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
@@ -8,6 +8,27 @@ const chatService = {
   createChat: async (currentUser, data) => {
     const { id: author, role: authorRole } = currentUser
     const { member, memberRole } = data
+
+    const existingChat = await Chat.findOne({
+      $or: [
+        {
+          members: [
+            { user: author, role: authorRole },
+            { user: member, role: memberRole }
+          ]
+        },
+        {
+          members: [
+            { user: member, role: memberRole },
+            { user: author, role: authorRole }
+          ]
+        }
+      ]
+    })
+
+    if (existingChat) {
+      throw createError(401, CHAT_ALREADY_EXISTS)
+    }
 
     return await Chat.create({
       members: [
@@ -51,10 +72,6 @@ const chatService = {
   markAsDeletedForCurrentUser: async (id, currentUser) => {
     const chat = await Chat.findById(id).exec()
     const isChatMember = chat.members.some((member) => member.user.equals(currentUser))
-
-    if (!chat) {
-      throw createError(404, DOCUMENT_NOT_FOUND(chat.modelName))
-    }
 
     if (!isChatMember) {
       throw createForbiddenError()

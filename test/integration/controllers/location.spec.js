@@ -10,9 +10,11 @@ const {
 
 jest.mock('gaxios')
 
-const country = 'Country1'
-const mockedCountriesResponse = { data: { data: [{ name: country }] } }
-const mockedCitiesResponse = { data: { data: ['City1', 'City2'] } }
+const country = 'Australia'
+const countryCode = 'AU'
+const mockedCountriesResponse = { data: [{ name: country, iso2: countryCode }] }
+const mockedCitiesResponse = { data: [{ name: 'Abbey' }, { name: 'Abbotsbury' }] }
+const cities = ['Abbey', 'Abbotsbury']
 
 describe('Location controller', () => {
   let app, server, accessToken
@@ -40,7 +42,7 @@ describe('Location controller', () => {
       const response = await app.get('/location/countries').set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
-      expect(response._body).toEqual([country])
+      expect(response._body).toEqual(mockedCountriesResponse.data)
     })
 
     it('should throw UNAUTHORIZED', async () => {
@@ -54,14 +56,14 @@ describe('Location controller', () => {
     it('should return a list of cities for a specific country', async () => {
       request.mockResolvedValueOnce(mockedCitiesResponse)
 
-      const response = await app.get(`/location/cities/${country}`).set('Cookie', [`accessToken=${accessToken}`])
+      const response = await app.get(`/location/cities/${countryCode}`).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
-      expect(response._body).toEqual(['City1', 'City2'])
+      expect(response._body).toEqual(cities)
     })
 
     it('should throw UNAUTHORIZED', async () => {
-      const response = await app.get(`/location/cities/${country}`)
+      const response = await app.get(`/location/cities/${countryCode}`)
 
       expectError(401, UNAUTHORIZED, response)
     })

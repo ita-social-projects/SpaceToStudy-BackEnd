@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-/test/coverage
+/src/test/coverage
 test-report.xml
 /build
 

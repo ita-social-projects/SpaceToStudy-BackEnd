@@ -2,13 +2,13 @@ const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const User = require('~/models/user')
 const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
+const { USER } = require('~/consts/upload')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
-const { USER } = require('~/consts/upload')
 
 const testUserAuthentication = require('~/utils/testUserAuth')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')

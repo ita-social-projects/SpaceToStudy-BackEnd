@@ -24,9 +24,13 @@ const cooperationService = {
         {
           path: 'subject',
           select: 'name'
+        },
+        {
+          path: 'author',
+          select: ['firstName', 'lastName', 'photo', 'professionalSummary', 'totalReviews', 'FAQ', 'averageRatingts']
         }
       ],
-      select: ['id', 'author', 'category', 'subject', 'price']
+      select: ['id', 'author', 'category', 'subject', 'title', 'languages', 'proficiencyLevel', 'description']
     })
   },
 

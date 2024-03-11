@@ -1,7 +1,6 @@
 const Lesson = require('~/models/lesson')
 
-const { createForbiddenError, createError } = require('~/utils/errorsHelper')
-const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const lessonService = {
   createLesson: async (author, data) => {
@@ -28,10 +27,6 @@ const lessonService = {
 
   updateLesson: async (id, currentUser, updateData) => {
     const lesson = await Lesson.findById(id).exec()
-
-    if (!lesson) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Lesson.modelName))
-    }
 
     const author = lesson.author.toString()
 

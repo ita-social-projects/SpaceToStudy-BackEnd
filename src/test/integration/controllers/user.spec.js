@@ -2,6 +2,7 @@ const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const User = require('~/models/user')
 const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/consts/errors')
 const { expectError } = require('~/test/helpers')
+const { USER } = require('~/consts/upload')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
@@ -12,9 +13,13 @@ const {
 const testUserAuthentication = require('~/utils/testUserAuth')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const TokenService = require('~/services/token')
+const userService = require('~/services/user')
+const uploadService = require('~/services/upload')
 
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'
+
+let userStudent, userAdmin
 
 let testUser = {
   role: ['student'],
@@ -253,6 +258,17 @@ describe('User controller', () => {
         expectError(403, FORBIDDEN, response)
       })
     })
+
+    describe(`POST ${endpointUrl}`, () => {
+      it('should create a new user', async () => {
+        const newUser = await userService.createUser('student', 'Vika', 'Douglas', 'vika123@gmail.com', 'pass123word', 'en')
+        expect(newUser).toMatchObject({
+          email: 'vika123@gmail.com',
+          firstName: 'Vika',
+          lastName: 'Douglas',
+        })
+      })
+    })
   })
   describe('Restricted endpoints only by admin access rights', () => {
     let accessToken, currentUser
@@ -341,6 +357,14 @@ describe('User controller', () => {
         expectError(403, FORBIDDEN, response)
       })
 
+      it('should throw private DOCUMENT_NOT_FOUND', async () => {
+        await expect(userService.privateUpdateUser(nonExistingUserId, {
+          firstName: 'NewName'
+        }))
+          .rejects
+          .toThrow('User with the specified ID was not found.')
+      })
+
       it('should throw UNAUTHORIZED', async () => {
         const response = await app.delete(endpointUrl + testUser._id)
 
@@ -414,6 +438,124 @@ describe('User controller', () => {
 
         expect(options).toEqual([true, false])
       })
+    })
+
+    describe('getUserById block', () => {
+      beforeAll(async () => {
+        userStudent = await User.create({
+          role: 'student',
+          firstName: 'Anna',
+          lastName: 'Douglas',
+          email: 'anna123@gmail.com',
+          password: 'password',
+          appLanguage: 'en',
+        })
+
+        userAdmin = await User.create({
+          role: 'admin',
+          firstName: 'Admin',
+          lastName: 'User',
+          email: 'admin.user@admin.com',
+          password: 'adminpassword',
+          appLanguage: 'en',
+        })
+      })
+
+      afterAll(async () => {
+        await User.deleteMany({
+          email: {
+            $in: ['anna123@gmail.com', 'admin.user@admin.com']
+          }
+        })
+      })
+
+      it('should return the user regardless of their role when no role is specified', async () => {
+        const foundUser = await userService.getUserById(userStudent._id)
+
+        expect(foundUser).toBeTruthy()
+        expect(foundUser.email).toBe('anna123@gmail.com')
+      })
+
+      it('should not return the user if the specified role does not match', async () => {
+        const foundUser = await userService.getUserById(userAdmin._id, 'student')
+        expect(foundUser).toBeNull()
+      })
+    })
+
+    describe('createUser block', () => {
+      beforeEach(async () => {
+        await User.create({
+          role: 'student',
+          firstName: 'Existing',
+          lastName: 'User',
+          email: 'existing.email@example.com',
+          password: 'password',
+          appLanguage: 'en',
+          isEmailConfirmed: true,
+        })
+      })
+
+      afterEach(async () => {
+        await User.deleteMany({ email: 'existing.email@example.com' })
+      })
+
+      it('should throw a 409 error if a user with the given email already exists', async () => {
+        await expect(userService.createUser(
+          'student', 'Vika', 'Anderson', 'existing.email@example.com', 'password123', 'en'
+        ))
+          .rejects
+          .toThrowError(new Error('User with the specified email already exists.'))
+      })
+    })
+
+    it('should throw a 404 error if no user is found with the given ID', async () => {
+      await expect(userService.updateUser(nonExistingUserId, 'student', {}))
+        .rejects
+        .toThrowError('User with the specified ID was not found.')
+    })
+
+    it('should delete the users existing photo if one exists', async () => {
+      const mockDeleteFile = jest.spyOn(uploadService, 'deleteFile').mockResolvedValue(null)
+
+      const userWithPhoto = await User.create({
+        firstName: 'Anna',
+        lastName: 'Douglas',
+        email: 'anna123@gmail.com',
+        password: 'password123',
+        photo: 'http://example.com/photo.jpg'
+      })
+
+      await userService.updateUser(userWithPhoto._id.toString(), userWithPhoto.role, { firstName: 'UpdatedName' })
+
+      expect(mockDeleteFile).toHaveBeenCalledWith('http://example.com/photo.jpg', USER)
+
+      mockDeleteFile.mockRestore()
+    })
+
+    it('should upload a new photo and update the users photo', async () => {
+      const mockUploadFile = jest.spyOn(uploadService, 'uploadFile').mockResolvedValue('http://example.com/newPhoto.jpg')
+
+      const user = await User.create({
+        firstName: 'Oleg',
+        lastName: 'Mongol',
+        email: 'o.mongodb76@example.com',
+        password: '12345deutchsecurity',
+      })
+
+      const newPhotoData = {
+        name: 'newPhoto.jpg',
+        src: 'data:image/jpegbase64,...'
+      }
+
+      await userService.updateUser(user._id.toString(), user.role, { photo: newPhotoData })
+
+      expect(mockUploadFile).toHaveBeenCalledWith(newPhotoData.name, expect.any(Buffer), USER)
+
+      const updatedUser = await User.findById(user._id)
+
+      expect(updatedUser.photo).toBe('http://example.com/newPhoto.jpg')
+
+      mockUploadFile.mockRestore()
     })
   })
 })

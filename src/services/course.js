@@ -8,7 +8,10 @@ const courseService = {
       .collation({ locale: 'en', strength: 1 })
       .populate([
         { path: 'subject', select: '_id name' },
-        { path: 'category', select: 'appearance' }
+        { path: 'category', select: 'appearance' },
+        { path: 'sections.lessons', select: '-createdAt -updatedAt' },
+        { path: 'sections.quizzes', select: '-createdAt -updatedAt' },
+        { path: 'sections.attachments', select: '-createdAt -updatedAt' }
       ])
       .sort(sort)
       .skip(skip)

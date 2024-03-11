@@ -32,16 +32,56 @@ paths:
                   title: Advanced English
                   description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
-                  category: 64884f33fdc2d1a130c24ac2
-                  subject: 6488509cfdc2d1a130c24ae4
+                  category:
+                    { _id: 64884f33fdc2d1a130c24ac2, appearance: { path: 'mocked-path-to-icon', color: '#66C42C' } }
+                  subject: { _id: 6488509cfdc2d1a130c24ae4, name: Languages }
                   proficiencyLevel: [Advanced]
                   sections:
                     - title: Section First
                       description: some description
-                      lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
-                      quizzes: [64ba39c714b7bc037a29d712]
-                      attachments: [63ed1cd25e9d781cdb6a6b15]
-                      order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
+                      lessons:
+                        [
+                          {
+                            title: Colors in English,
+                            description: With this lesson you will learn all about colors in English.,
+                            content: <h1>Title</h1>,
+                            author: 63da8767c9ad4c9a0b0eacd3,
+                            attachments: [63ed1cd25e9d781cdb6a6b15],
+                            category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
+                            _id: 63ed1cd25e9d781cdb6a6b17
+                          }
+                        ]
+                      quizzes:
+                        [
+                          {
+                            _id: 64ba39c714b7bc037a29d712,
+                            title: Title,
+                            description: description,
+                            items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6],
+                            author: '6477007a6fa4d05e1a800ce5',
+                            category: '63bed9ef260f18d04ab15da',
+                            settings:
+                              {
+                                view: Scroll,
+                                shuffle: true,
+                                pointValues: false,
+                                scoredResponses: false,
+                                correctAnswers: true
+                              }
+                          }
+                        ]
+                      attachments:
+                        [
+                          {
+                            _id: 63ed1cd25e9d781cdb6a6b15,
+                            author: 648afee884936e09a37deaaa,
+                            fileName: EnglishB2Level,
+                            link: 'https://english-b2-test.com',
+                            size: 230,
+                            category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
+                          }
+                        ]
+                      order: ['63ed1cd25e9d781cdb6a6b17', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
                   createdAt: 2023-11-15T16:15:09.004Z
                   updatedAt: 2023-11-15T16:15:09.004Z
                 - _id: 640461e3cfdda3f3d16dcac5
@@ -57,7 +97,13 @@ paths:
                       lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                       quizzes: [64ba39c714b7bc037a29d712]
                       attachments: [63ed1cd25e9d781cdb6a6b15]
-                      order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
+                      order:
+                        [
+                          '63ed1cd25e9d781cdb6a6b17',
+                          '63ac1ad47e9d526cdb6f4n51',
+                          '64ba39c714b7bc037a29d712',
+                          '63ed1cd25e9d781cdb6a6b15'
+                        ]
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -108,7 +154,13 @@ paths:
                   lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                   quizzes: [64ba39c714b7bc037a29d712]
                   attachments: [63ed1cd25e9d781cdb6a6b15]
-                  order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
+                  order:
+                    [
+                      '63ed1cd25e9d781cdb6a6b17',
+                      '63ac1ad47e9d526cdb6f4n51',
+                      '64ba39c714b7bc037a29d712',
+                      '63ed1cd25e9d781cdb6a6b15'
+                    ]
       responses:
         201:
           description: Created
@@ -129,7 +181,13 @@ paths:
                     lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                     quizzes: [64ba39c714b7bc037a29d712]
                     attachments: [63ed1cd25e9d781cdb6a6b15]
-                    order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
+                    order:
+                      [
+                        '63ed1cd25e9d781cdb6a6b17',
+                        '63ac1ad47e9d526cdb6f4n51',
+                        '64ba39c714b7bc037a29d712',
+                        '63ed1cd25e9d781cdb6a6b15'
+                      ]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -250,7 +308,13 @@ paths:
                     lessons: [63ed1cd25e9d781cdb6a6b17, 63ac1ad47e9d526cdb6f4n51]
                     quizzes: [64ba39c714b7bc037a29d712]
                     attachments: [63ed1cd25e9d781cdb6a6b15]
-                    order: ['63ed1cd25e9d781cdb6a6b17', '63ac1ad47e9d526cdb6f4n51', '64ba39c714b7bc037a29d712', '63ed1cd25e9d781cdb6a6b15']
+                    order:
+                      [
+                        '63ed1cd25e9d781cdb6a6b17',
+                        '63ac1ad47e9d526cdb6f4n51',
+                        '64ba39c714b7bc037a29d712',
+                        '63ed1cd25e9d781cdb6a6b15'
+                      ]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

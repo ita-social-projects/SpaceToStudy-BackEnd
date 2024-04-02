@@ -36,7 +36,7 @@ const userService = {
         },
         { path: 'mainSubjects.student', select: ['-createdAt', '-updatedAt'] }
       ])
-      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers')
+      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink')
       .lean()
       .exec()
   },
@@ -105,6 +105,7 @@ const userService = {
     }
 
     filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
+    filteredUpdateData.videoLink = { ...user.videoLink, [role]: updateData.videoLink }
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },

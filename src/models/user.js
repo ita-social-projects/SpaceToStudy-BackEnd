@@ -206,6 +206,14 @@ const userSchema = new Schema(
           }
         ]
       }
+    },
+    videoLink: {
+      student: {
+        type: String
+      },
+      tutor: {
+        type: String
+      }
     }
   },
   {

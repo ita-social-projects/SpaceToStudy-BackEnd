@@ -10,7 +10,8 @@ const allowedUserFieldsForUpdate = {
   mainSubjects: true,
   nativeLanguage: true,
   appLanguage: true,
-  FAQ: true
+  FAQ: true,
+  videoLink: true
 }
 
 module.exports = {

@@ -110,6 +110,13 @@ definitions:
                     type: string
                   answer:
                     type: string
+        videoLink:
+          type: object
+          properties:
+            student:
+              type: string
+            tutor:
+              type: string
         createdAt:
           type: string
           format: date-time
@@ -223,6 +230,13 @@ definitions:
                   type: string
                 answer:
                   type: string
+      videoLink:
+          type: object
+          properties:
+            student:
+              type: string
+            tutor:
+              type: string
       createdAt:
         type: string
         format: date-time

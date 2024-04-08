@@ -92,7 +92,7 @@ const userService = {
       throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
 
-    if (user.photo) {
+    if (user.photo && (updateData.photo || updateData.photo === null)) {
       await uploadService.deleteFile(user.photo, USER)
     }
 

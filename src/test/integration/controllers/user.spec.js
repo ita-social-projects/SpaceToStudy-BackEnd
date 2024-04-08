@@ -66,7 +66,7 @@ describe('User controller', () => {
   let app, server
 
   beforeAll(async () => {
-    ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   afterEach(async () => {
@@ -261,11 +261,18 @@ describe('User controller', () => {
 
     describe(`POST ${endpointUrl}`, () => {
       it('should create a new user', async () => {
-        const newUser = await userService.createUser('student', 'Vika', 'Douglas', 'vika123@gmail.com', 'pass123word', 'en')
+        const newUser = await userService.createUser(
+          'student',
+          'Vika',
+          'Douglas',
+          'vika123@gmail.com',
+          'pass123word',
+          'en'
+        )
         expect(newUser).toMatchObject({
           email: 'vika123@gmail.com',
           firstName: 'Vika',
-          lastName: 'Douglas',
+          lastName: 'Douglas'
         })
       })
     })
@@ -358,11 +365,11 @@ describe('User controller', () => {
       })
 
       it('should throw private DOCUMENT_NOT_FOUND', async () => {
-        await expect(userService.privateUpdateUser(nonExistingUserId, {
-          firstName: 'NewName'
-        }))
-          .rejects
-          .toThrow('User with the specified ID was not found.')
+        await expect(
+          userService.privateUpdateUser(nonExistingUserId, {
+            firstName: 'NewName'
+          })
+        ).rejects.toThrow('User with the specified ID was not found.')
       })
 
       it('should throw UNAUTHORIZED', async () => {
@@ -448,7 +455,7 @@ describe('User controller', () => {
           lastName: 'Douglas',
           email: 'anna123@gmail.com',
           password: 'password',
-          appLanguage: 'en',
+          appLanguage: 'en'
         })
 
         userAdmin = await User.create({
@@ -457,7 +464,7 @@ describe('User controller', () => {
           lastName: 'User',
           email: 'admin.user@admin.com',
           password: 'adminpassword',
-          appLanguage: 'en',
+          appLanguage: 'en'
         })
       })
 
@@ -491,7 +498,7 @@ describe('User controller', () => {
           email: 'existing.email@example.com',
           password: 'password',
           appLanguage: 'en',
-          isEmailConfirmed: true,
+          isEmailConfirmed: true
         })
       })
 
@@ -500,21 +507,19 @@ describe('User controller', () => {
       })
 
       it('should throw a 409 error if a user with the given email already exists', async () => {
-        await expect(userService.createUser(
-          'student', 'Vika', 'Anderson', 'existing.email@example.com', 'password123', 'en'
-        ))
-          .rejects
-          .toThrowError(new Error('User with the specified email already exists.'))
+        await expect(
+          userService.createUser('student', 'Vika', 'Anderson', 'existing.email@example.com', 'password123', 'en')
+        ).rejects.toThrowError(new Error('User with the specified email already exists.'))
       })
     })
 
     it('should throw a 404 error if no user is found with the given ID', async () => {
-      await expect(userService.updateUser(nonExistingUserId, 'student', {}))
-        .rejects
-        .toThrowError('User with the specified ID was not found.')
+      await expect(userService.updateUser(nonExistingUserId, 'student', {})).rejects.toThrowError(
+        'User with the specified ID was not found.'
+      )
     })
 
-    it('should delete the users existing photo if one exists', async () => {
+    it('should delete the users existing photo if one exists and the photo data was sent', async () => {
       const mockDeleteFile = jest.spyOn(uploadService, 'deleteFile').mockResolvedValue(null)
 
       const userWithPhoto = await User.create({
@@ -525,7 +530,10 @@ describe('User controller', () => {
         photo: 'http://example.com/photo.jpg'
       })
 
-      await userService.updateUser(userWithPhoto._id.toString(), userWithPhoto.role, { firstName: 'UpdatedName' })
+      await userService.updateUser(userWithPhoto._id.toString(), userWithPhoto.role, {
+        firstName: 'UpdatedName',
+        photo: null
+      })
 
       expect(mockDeleteFile).toHaveBeenCalledWith('http://example.com/photo.jpg', USER)
 
@@ -533,13 +541,15 @@ describe('User controller', () => {
     })
 
     it('should upload a new photo and update the users photo', async () => {
-      const mockUploadFile = jest.spyOn(uploadService, 'uploadFile').mockResolvedValue('http://example.com/newPhoto.jpg')
+      const mockUploadFile = jest
+        .spyOn(uploadService, 'uploadFile')
+        .mockResolvedValue('http://example.com/newPhoto.jpg')
 
       const user = await User.create({
         firstName: 'Oleg',
         lastName: 'Mongol',
         email: 'o.mongodb76@example.com',
-        password: '12345deutchsecurity',
+        password: '12345deutchsecurity'
       })
 
       const newPhotoData = {

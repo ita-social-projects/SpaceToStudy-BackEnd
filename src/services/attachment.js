@@ -64,6 +64,7 @@ const attachmentService = {
 
     await attachment.validate()
     await attachment.save()
+    return attachment.populate({ path: 'category', select: '_id name' })
   },
 
   deleteAttachment: async (id, currentUser) => {

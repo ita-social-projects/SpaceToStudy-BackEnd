@@ -40,9 +40,9 @@ const updateAttachment = async (req, res) => {
   const { id: currentUser } = req.user
   const updateData = req.body
 
-  await attachmentService.updateAttachment(id, currentUser, updateData)
+  const attachment = await attachmentService.updateAttachment(id, currentUser, updateData)
 
-  res.status(204).end()
+  res.status(200).json(attachment).end()
 }
 
 const deleteAttachment = async (req, res) => {

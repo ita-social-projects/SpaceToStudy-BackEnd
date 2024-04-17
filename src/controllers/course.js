@@ -5,11 +5,15 @@ const getSortOptions = require('~/utils/getSortOptions')
 
 const getCourses = async (req, res) => {
   const { id: author } = req.user
-  const { skip, limit, title, sort } = req.query
+  const { skip, limit, title, sort, category, subject, proficiencyLevel } = req.query
 
+  const proficiencyLevelMatch = proficiencyLevel ? { $in: proficiencyLevel } : undefined
   const match = getMatchOptions({
     author,
-    title: getRegex(title)
+    title: getRegex(title),
+    category,
+    subject,
+    proficiencyLevel: proficiencyLevelMatch
   })
 
   const sortOptions = getSortOptions(sort)

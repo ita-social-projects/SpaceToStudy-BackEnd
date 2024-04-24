@@ -18,11 +18,11 @@ router.use(authMiddleware)
 
 router.param('id', idValidation)
 
-router.use(restrictTo(TUTOR))
+router.get('/:id', isEntityValid({ params }), asyncWrapper(lessonController.getLessonById))
 router.get('/', asyncWrapper(lessonController.getLessons))
+router.use(restrictTo(TUTOR))
 router.post('/', isEntityValid({ body }), asyncWrapper(lessonController.createLesson))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(lessonController.updateLesson))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(lessonController.deleteLesson))
-router.get('/:id', isEntityValid({ params }), asyncWrapper(lessonController.getLessonById))
 
 module.exports = router

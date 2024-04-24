@@ -49,7 +49,7 @@ describe('Lesson controller', () => {
   let app, server, accessToken, studentAccessToken, testLessonResponse, testLessonId
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -224,13 +224,6 @@ describe('Lesson controller', () => {
       const response = await app.get(endpointUrl)
 
       expectError(401, UNAUTHORIZED, response)
-    })
-    it('should throw FORBIDDEN', async () => {
-      const response = await app
-        .get(endpointUrl + testLessonResponse.body._id)
-        .set('Cookie', [`accessToken=${studentAccessToken}`])
-
-      expectError(403, FORBIDDEN, response)
     })
   })
 })

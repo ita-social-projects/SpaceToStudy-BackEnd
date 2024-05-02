@@ -57,7 +57,8 @@ const deactivateUser = async (req, res) => {
 
   if (id !== currentUserId) throw createForbiddenError()
 
-  await userService.updateStatus(id, { [role]: STATUS_ENUM[2] })
+  const DEACTIVATED_STATUS = STATUS_ENUM[2]
+  await userService.updateStatus(id, { [role]: DEACTIVATED_STATUS })
 
   res.status(204).end()
 }
@@ -68,7 +69,8 @@ const activateUser = async (req, res) => {
 
   if (id !== currentUserId) throw createForbiddenError()
 
-  await userService.updateStatus(id, { [role]: STATUS_ENUM[0] })
+  const ACTIVE_STATUS = STATUS_ENUM[0]
+  await userService.updateStatus(id, { [role]: ACTIVE_STATUS })
 
   res.status(204).end()
 }

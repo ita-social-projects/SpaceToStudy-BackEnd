@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
 const {
-  enums: { STATUS_ENUM }
+  enums: { STATUS_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
 
 const offerAggregateOptions = (query, params, user) => {
@@ -41,16 +41,19 @@ const offerAggregateOptions = (query, params, user) => {
   }
 
   if (authorId !== userId) {
+    const ACTIVE_STATUS = STATUS_ENUM[0]
+
     if (authorRole) {
-      match[`author.status.${authorRole}`] = STATUS_ENUM[0]
+      match[`author.status.${authorRole}`] = ACTIVE_STATUS
     } else {
+      const cases = LOGIN_ROLE_ENUM.map((role) => ({
+        case: { $eq: ['$authorRole', role] },
+        then: { $eq: [`$author.status.${role}`, ACTIVE_STATUS] }
+      }))
+
       match['$expr'] = {
         $switch: {
-          branches: [
-            { case: { $eq: ['$authorRole', 'student'] }, then: { $eq: ['$author.status.student', 'active'] } },
-            { case: { $eq: ['$authorRole', 'tutor'] }, then: { $eq: ['$author.status.tutor', 'active'] } },
-            { case: { $eq: ['$authorRole', 'admin'] }, then: { $eq: ['$author.status.admin', 'active'] } }
-          ]
+          branches: cases
         }
       }
     }

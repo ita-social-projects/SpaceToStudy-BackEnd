@@ -26,7 +26,7 @@ const validateLesson = (resource) => {
       throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('lesson attachments', 'array'))
     }
   }
-  console.log(RESOURCE_STATUS_ENUM, resource)
+
   if (resource.status && !RESOURCE_STATUS_ENUM.includes(resource.status)) {
     throw createError(400, FIELD_CAN_BE_ONE_OF('lesson status', RESOURCE_STATUS_ENUM))
   }

@@ -11,13 +11,18 @@ const commonRequiredFields = ['title', 'availability']
 
 const validateCommonFields = (resource, resourceType, requiredFields = commonRequiredFields) => {
   for (const property of requiredFields) {
-    if (!resource[property]) {
+    if (!resource) {
       throw createError(400, FIELD_IS_NOT_DEFINED(`${resourceType} ${property}`))
     }
   }
 
-  if (typeof resource.title !== 'string') {
-    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${resourceType} title`, 'string'))
+  if (resource.fileName) {
+    if (typeof resource.fileName !== 'string')
+      throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${resourceType} title`, 'string'))
+  } else {
+    if (typeof resource.title !== 'string') {
+      throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${resourceType} title`, 'string'))
+    }
   }
 
   if (resource.description && typeof resource.description !== 'string') {

@@ -7,7 +7,7 @@ const {
   FIELD_MUST_BE_SELECTED,
   VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ, LESSON, ATTACHMENT } = require('~/consts/models')
+const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ, ATTACHMENTS, LESSONS, QUIZZES } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
 } = require('~/consts/validation')
@@ -114,14 +114,13 @@ const cooperationSchema = new Schema(
             _id: false,
             resource: {
               type: Schema.Types.Mixed,
-              required: [true, FIELD_CANNOT_BE_EMPTY('activity resource')]
+              values: [LESSONS, QUIZZES, ATTACHMENTS]
             },
             resourceType: {
               type: String,
-              required: [true, FIELD_MUST_BE_SELECTED('activity resource type')],
               enum: {
-                values: [LESSON, QUIZ, ATTACHMENT],
-                message: ENUM_CAN_BE_ONE_OF('activity resource type', [LESSON, QUIZ, ATTACHMENT])
+                values: [LESSONS, QUIZZES, ATTACHMENTS],
+                message: ENUM_CAN_BE_ONE_OF('activity resource type', [LESSONS, QUIZZES, ATTACHMENTS])
               }
             }
           }

@@ -8,7 +8,7 @@ describe('validateAttachment', () => {
 
   beforeEach(() => {
     resource = {
-      title: 'attachment.jpg',
+      fileName: 'attachment.jpg',
       availability: { status: 'open', date: null },
       link: '434054054-attachment.jpg'
     }

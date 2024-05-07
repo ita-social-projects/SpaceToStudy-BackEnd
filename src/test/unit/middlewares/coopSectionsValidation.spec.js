@@ -1,23 +1,35 @@
 const { createError } = require('~/utils/errorsHelper')
 const coopSectionsValidation = require('~/middlewares/coopSectionsValidation')
 
-const { QUIZ, LESSON, ATTACHMENT } = require('~/consts/models')
+const { QUIZZES, LESSONS, ATTACHMENTS } = require('~/consts/models')
 const { FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
 
 jest.mock('~/utils/cooperations/sections/validateAttachment')
 jest.mock('~/utils/cooperations/sections/validateLesson')
 jest.mock('~/utils/cooperations/sections/validateQuiz')
 
-const quizMock = {
-  title: 'Title',
-  text: 'Text',
-  availability: { status: 'open', date: null },
-  answers: [{ text: 'Answer 1', isCorrect: true }]
-}
+const quizMock = [
+  {
+    title: 'Title',
+    text: 'Text',
+    availability: { status: 'open', date: null },
+    answers: [{ text: 'Answer 1', isCorrect: true }],
+    resourceType: QUIZZES
+  }
+]
 
-const attachmentMock = { title: 'Title.png', link: '5534-Title.png', availability: { status: 'open', date: null } }
+const attachmentMock = [
+  {
+    title: 'Title.png',
+    link: '5534-Title.png',
+    availability: { status: 'open', date: null },
+    resourceType: ATTACHMENTS
+  }
+]
 
-const lessonMock = { title: 'Title', availability: { status: 'open', date: null }, content: 'Content' }
+const lessonMock = [
+  { title: 'Title', availability: { status: 'open', date: null }, content: 'Content', resourceType: LESSONS }
+]
 
 const next = jest.fn()
 
@@ -25,11 +37,9 @@ const req = {
   body: {
     sections: [
       {
-        activities: [
-          { resource: lessonMock, resourceType: LESSON },
-          { resource: quizMock, resourceType: QUIZ },
-          { resource: attachmentMock, resourceType: ATTACHMENT }
-        ]
+        lessons: lessonMock,
+        attachments: attachmentMock,
+        quizzes: quizMock
       }
     ]
   }
@@ -51,7 +61,17 @@ describe('coopSectionsValidation', () => {
   })
 
   it('should throw error if activity resource is not an object', () => {
-    const errReq = { body: { sections: [{ activities: [{ resource: 'string', resourceType: QUIZ }] }] } }
+    const errReq = {
+      body: {
+        sections: [
+          {
+            lessons: 'string',
+            attachments: 'string',
+            quizzes: 'string'
+          }
+        ]
+      }
+    }
 
     const middlewareFunc = () => coopSectionsValidation(errReq, {}, next)
 

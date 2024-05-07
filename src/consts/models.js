@@ -18,7 +18,10 @@ const refs = {
   ATTACHMENT: 'Attachment',
   NOTE: 'Note',
   QUESTION: 'Question',
-  RESOURCES_CATEGORY: 'ResourcesCategory'
+  RESOURCES_CATEGORY: 'ResourcesCategory',
+  QUIZZES: 'quizzes',
+  LESSONS: 'lessons',
+  ATTACHMENTS: 'attachments'
 }
 
 module.exports = refs

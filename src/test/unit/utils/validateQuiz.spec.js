@@ -14,7 +14,7 @@ describe('validateQuiz', () => {
       title: 'Quiz',
       availability: { status: 'open', date: null },
       settings: {
-        view: false,
+        view: 'Scroll',
         shuffle: false,
         pointValues: false,
         scoredResponses: false,

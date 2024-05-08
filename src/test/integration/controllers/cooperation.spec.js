@@ -87,7 +87,18 @@ const updatePrice = {
   price: 150
 }
 
-const updateSections = [
+const updatingSections = [
+  {
+    _id: '65bc2bec67c9f1ec287a1514',
+    title: 'Updated Section',
+    description: 'This is the updated section description',
+    quizzes: [],
+    lessons: [],
+    attachments: []
+  }
+]
+
+const updatedSections = [
   {
     _id: '65bc2bec67c9f1ec287a1514',
     title: 'Updated Section',
@@ -108,7 +119,7 @@ describe('Cooperation controller', () => {
     testActiveQuiz
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -317,14 +328,14 @@ describe('Cooperation controller', () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
         .set('Cookie', [`accessToken=${accessToken}`])
-        .send({ sections: updateSections })
+        .send({ sections: updatingSections })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
         .set('Cookie', [`accessToken=${accessToken}`])
 
       expect(updateResponse.status).toBe(204)
-      expect(response.body.sections).toEqual(updateSections)
+      expect(response.body.sections).toEqual(updatedSections)
     })
 
     it('should update the available quizzes of a cooperation', async () => {

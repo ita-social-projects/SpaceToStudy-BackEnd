@@ -6,8 +6,11 @@ const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const {
-  roles: { TUTOR }
+  roles: { TUTOR, STUDENT }
 } = require('~/consts/auth')
+const {
+  enums: { STATUS_ENUM }
+} = require('~/consts/validation')
 
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
@@ -41,6 +44,21 @@ const tutorUserData = {
   lastLoginAs: TUTOR
 }
 
+const deactivatedUserData = {
+  role: STUDENT,
+  firstName: 'albus',
+  lastName: 'dumbledore',
+  email: 'albus_dumbledore@gmail.com',
+  password: 'supermagicpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON(),
+  lastLoginAs: STUDENT,
+  status: {
+    [STUDENT]: STATUS_ENUM[2]
+  }
+}
+
 const updateData = {
   price: 555
 }
@@ -49,7 +67,7 @@ describe('Offer controller', () => {
   let app, server, accessToken, tutorAccessToken, testOfferResponse
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -119,7 +137,15 @@ describe('Offer controller', () => {
   })
 
   describe(`test GET ${endpointUrl}`, () => {
-    it('should GET all offers', async () => {
+    beforeEach(async () => {
+      const deactivatedUserAccessToken = await testUserAuthentication(app, deactivatedUserData)
+      await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${deactivatedUserAccessToken}`])
+        .send(testOffer)
+    })
+
+    it('should GET all offers of active users', async () => {
       const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)

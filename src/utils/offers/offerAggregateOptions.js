@@ -1,5 +1,8 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
+const {
+  enums: { STATUS_ENUM, LOGIN_ROLE_ENUM }
+} = require('~/consts/validation')
 
 const offerAggregateOptions = (query, params, user) => {
   const {
@@ -35,6 +38,25 @@ const offerAggregateOptions = (query, params, user) => {
         ]
 
     match['$or'] = [{ title: getRegex(search) }, ...additionalFields]
+  }
+
+  if (authorId !== userId) {
+    const ACTIVE_STATUS = STATUS_ENUM[0]
+
+    if (authorRole) {
+      match[`author.status.${authorRole}`] = ACTIVE_STATUS
+    } else {
+      const cases = LOGIN_ROLE_ENUM.map((role) => ({
+        case: { $eq: ['$authorRole', role] },
+        then: { $eq: [`$author.status.${role}`, ACTIVE_STATUS] }
+      }))
+
+      match['$expr'] = {
+        $switch: {
+          branches: cases
+        }
+      }
+    }
   }
 
   if (authorId) {
@@ -122,7 +144,8 @@ const offerAggregateOptions = (query, params, user) => {
               nativeLanguage: 1,
               photo: 1,
               professionalSummary: 1,
-              FAQ: 1
+              FAQ: 1,
+              status: 1
             }
           }
         ],

@@ -18,7 +18,7 @@ const enums = {
   ROLE_ENUM: ['student', 'tutor', 'admin', 'superadmin'],
   LOGIN_ROLE_ENUM: ['student', 'tutor', 'admin'],
   MAIN_ROLE_ENUM: ['student', 'tutor'],
-  STATUS_ENUM: ['active', 'blocked'],
+  STATUS_ENUM: ['active', 'blocked', 'deactivated'],
   COOPERATION_STATUS_ENUM: ['pending', 'active', 'declined', 'closed'],
   PARAMS_ENUM: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS_ENUM: ['active', 'draft', 'closed'],

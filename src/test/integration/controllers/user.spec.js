@@ -29,7 +29,10 @@ let testUser = {
   password: 'supersecretpass123',
   appLanguage: 'en',
   isEmailConfirmed: true,
-  lastLogin: new Date().toJSON()
+  lastLogin: new Date().toJSON(),
+  status: {
+    student: STATUS_ENUM[0]
+  }
 }
 
 let adminUser = {
@@ -254,6 +257,41 @@ describe('User controller', () => {
           .patch(endpointUrl + user._id)
           .send(updateUserData)
           .set('Cookie', [`accessToken=${accessToken}`])
+
+        expectError(403, FORBIDDEN, response)
+      })
+    })
+
+    describe('account deactivation and activation', () => {
+      it("should deactivate user's account", async () => {
+        const { id: currentUserId } = TokenService.validateAccessToken(accessToken)
+
+        const response = await app
+          .patch(`${endpointUrl}/${currentUserId}/deactivate`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expect(response.statusCode).toBe(204)
+      })
+
+      it("should activate user's account", async () => {
+        const { id: currentUserId } = TokenService.validateAccessToken(accessToken)
+
+        const response = await app
+          .patch(`${endpointUrl}/${currentUserId}/activate`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expect(response.statusCode).toBe(204)
+      })
+
+      it('should return FORBIDDEN when one account tries to deactivate another account', async () => {
+        const user = await User.create(testUser)
+
+        const response = await app
+          .patch(`${endpointUrl}/${user._id}/deactivate`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
 
         expectError(403, FORBIDDEN, response)
       })

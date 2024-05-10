@@ -14,6 +14,17 @@ const allowedUserFieldsForUpdate = {
   videoLink: true
 }
 
+const allowedTutorFieldsForUpdate = {
+  professionalBlock: {
+    categories: true,
+    awards: true,
+    scientificActivities: true,
+    workExperience: true,
+    education: true
+  }
+}
+
 module.exports = {
-  allowedUserFieldsForUpdate
+  allowedUserFieldsForUpdate,
+  allowedTutorFieldsForUpdate
 }

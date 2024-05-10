@@ -7,6 +7,9 @@ const { createError } = require('~/utils/errorsHelper')
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
+const { enums } = require('../consts/validation')
+const { allowedTutorFieldsForUpdate } = require('../validation/services/user')
+const { shouldDeletePreviousPhoto } = require('../utils/users/photoCheck')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -84,7 +87,12 @@ const userService = {
   },
 
   updateUser: async (id, role, updateData) => {
-    const filteredUpdateData = filterAllowedFields(updateData, allowedUserFieldsForUpdate)
+    const allowedFields =
+      role === enums.MAIN_ROLE_ENUM[1]
+        ? { ...allowedUserFieldsForUpdate, ...allowedTutorFieldsForUpdate }
+        : allowedUserFieldsForUpdate
+
+    const filteredUpdateData = filterAllowedFields(updateData, allowedFields)
 
     const user = await User.findById(id).lean().exec()
 
@@ -92,7 +100,7 @@ const userService = {
       throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
     }
 
-    if (user.photo && (updateData.photo || updateData.photo === null)) {
+    if (shouldDeletePreviousPhoto(user.photo, updateData.photo)) {
       await uploadService.deleteFile(user.photo, USER)
     }
 
@@ -105,7 +113,12 @@ const userService = {
     }
 
     filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
-    filteredUpdateData.videoLink = { ...user.videoLink, [role]: updateData.videoLink }
+
+    if (Object.keys(updateData).includes('videoLink'))
+      filteredUpdateData.videoLink = {
+        ...user.videoLink,
+        [role]: updateData.videoLink
+      }
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },

@@ -66,7 +66,7 @@ describe('Attachments controller', () => {
   let app, server, accessToken, tutorAccessToken, testAttachmentsResponse, currentUser, testAttachmentId
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -138,6 +138,10 @@ describe('Attachments controller', () => {
             link: expect.any(String),
             size: 1524,
             category: null,
+            availability: {
+              status: 'open',
+              date: null
+            },
             resourceType: 'attachments',
             createdAt: expect.any(String),
             updatedAt: expect.any(String)

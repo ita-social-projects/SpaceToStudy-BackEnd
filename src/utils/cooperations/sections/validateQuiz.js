@@ -23,7 +23,7 @@ const validateQuiz = (resource) => {
 
     if (property === 'view') {
       if (typeof resource.settings[property] !== 'string') {
-        throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${property} of quiz settings`, 'boolean'))
+        throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE(`${property} of quiz settings`, 'string'))
       }
     } else {
       if (typeof resource.settings[property] !== 'boolean') {

@@ -1,8 +1,8 @@
 const { Schema, model } = require('mongoose')
 const {
-  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM }
+  enums: { APP_LANG_ENUM, SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM, LOGIN_ROLE_ENUM, PROFICIENCY_LEVEL_ENUM }
 } = require('~/consts/validation')
-const { SUBJECT, OFFER, USER } = require('~/consts/models')
+const { SUBJECT, OFFER, USER, CATEGORY } = require('~/consts/models')
 const {
   FIELD_CANNOT_BE_EMPTY,
   ENUM_CAN_BE_ONE_OF,
@@ -14,6 +14,33 @@ const {
 } = require('~/consts/errors')
 
 const offerSchema = require('~/models/offer')
+
+const UserSubject = new Schema(
+  {
+    subject: {
+      type: Schema.Types.ObjectId,
+      ref: SUBJECT
+    },
+    proficiencyLevel: {
+      type: [String],
+      enum: {
+        values: PROFICIENCY_LEVEL_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('proficiency level', PROFICIENCY_LEVEL_ENUM)
+      }
+    },
+    isActivated: { type: Boolean, default: true }
+  },
+  { _id: false }
+)
+
+const UserMainSubject = new Schema({
+  category: {
+    type: Schema.Types.ObjectId,
+    ref: CATEGORY
+  },
+  subjects: [UserSubject],
+  isActivated: { type: Boolean, default: true }
+})
 
 const userSchema = new Schema(
   {
@@ -56,14 +83,8 @@ const userSchema = new Schema(
     photo: String,
     professionalSummary: String,
     mainSubjects: {
-      student: {
-        type: [Schema.Types.ObjectId],
-        ref: SUBJECT
-      },
-      tutor: {
-        type: [Schema.Types.ObjectId],
-        ref: SUBJECT
-      }
+      student: [UserMainSubject],
+      tutor: [UserMainSubject]
     },
     totalReviews: {
       student: { type: Number, default: 0 },
@@ -216,10 +237,14 @@ const userSchema = new Schema(
       }
     },
     professionalBlock: {
-      awards: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('awards', 1000)] },
-      scientificActivities: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('scientific activities', 1000)] },
-      workExperience: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('work experience', 1000)] },
-      education: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('education', 1000)] }
+      awards: { type: String, default: '', maxLength: [1000, FIELD_CANNOT_BE_LONGER('awards', 1000)] },
+      scientificActivities: {
+        type: String,
+        default: '',
+        maxLength: [1000, FIELD_CANNOT_BE_LONGER('scientific activities', 1000)]
+      },
+      workExperience: { type: String, default: '', maxLength: [1000, FIELD_CANNOT_BE_LONGER('work experience', 1000)] },
+      education: { type: String, default: '', maxLength: [1000, FIELD_CANNOT_BE_LONGER('education', 1000)] }
     }
   },
   {

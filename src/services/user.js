@@ -32,15 +32,34 @@ const userService = {
   },
 
   getUserById: async (id, role) => {
+    const select = ['-createdAt', '-updatedAt', 'name']
     return await User.findOne({ _id: id, ...(role && { role }) })
-      .populate([
-        {
-          path: 'mainSubjects.tutor',
-          select: ['-createdAt', '-updatedAt'],
-          populate: { path: 'category', select: 'name' }
-        },
-        { path: 'mainSubjects.student', select: ['-createdAt', '-updatedAt'] }
-      ])
+      .populate({
+        path: 'mainSubjects.tutor',
+        select,
+        populate: {
+          path: 'subjects.subject',
+          model: 'Subject'
+        }
+      })
+      .populate({
+        path: 'mainSubjects.student',
+        select,
+        populate: {
+          path: 'subjects.subject',
+          model: 'Subject'
+        }
+      })
+      // { path: 'mainSubjects.student', select },
+      // {
+      //   path: 'mainSubjects.tutor.subjects',
+      //   select: ['_id', 'name', 'proficiencyLevel', 'isActivated']
+      // },
+      // {
+      //   path: 'mainSubjects.student.subjects',
+      //   select
+      // }
+
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink')
       .lean()
       .exec()
@@ -114,7 +133,12 @@ const userService = {
       filteredUpdateData.photo = photoUrl
     }
 
-    filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
+    if (Object.keys(updateData).includes('mainSubjects')) {
+      filteredUpdateData.mainSubjects = {
+        ...user.mainSubjects,
+        [role]: [updateData.mainSubjects]
+      }
+    }
 
     if ('videoLink' in updateData) {
       filteredUpdateData.videoLink = {

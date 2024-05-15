@@ -7,9 +7,11 @@ const { createError } = require('~/utils/errorsHelper')
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
-const { enums } = require('../consts/validation')
-const { allowedTutorFieldsForUpdate } = require('../validation/services/user')
-const { shouldDeletePreviousPhoto } = require('../utils/users/photoCheck')
+const {
+  enums: { MAIN_ROLE_ENUM }
+} = require('~/consts/validation')
+const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
+const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -88,7 +90,7 @@ const userService = {
 
   updateUser: async (id, role, updateData) => {
     const allowedFields =
-      role === enums.MAIN_ROLE_ENUM[1]
+      role === MAIN_ROLE_ENUM[1]
         ? { ...allowedUserFieldsForUpdate, ...allowedTutorFieldsForUpdate }
         : allowedUserFieldsForUpdate
 

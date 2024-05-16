@@ -20,8 +20,9 @@ const coopSectionsValidation = (req, _res, next) => {
 
       if (Array.isArray(section.activities)) {
         for (const activity of section.activities) {
+          const data = { ...activity }
           activity.resource = { ...activity }
-          activity.resourceType = activity.resource.resourceType
+          activity.resourceType = data.resourceType
 
           validateActivity(activity)
         }

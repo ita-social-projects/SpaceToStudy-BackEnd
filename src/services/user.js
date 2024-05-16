@@ -116,11 +116,12 @@ const userService = {
 
     filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
 
-    if (Object.keys(updateData).includes('videoLink'))
+    if ('videoLink' in updateData) {
       filteredUpdateData.videoLink = {
         ...user.videoLink,
         [role]: updateData.videoLink
       }
+    }
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },

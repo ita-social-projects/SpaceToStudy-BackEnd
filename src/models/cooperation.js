@@ -14,6 +14,8 @@ const {
 const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
 const notificationService = require('~/services/notification')
 
+const resources = [LESSONS, QUIZZES, ATTACHMENTS]
+
 const cooperationSchema = new Schema(
   {
     offer: {
@@ -114,13 +116,13 @@ const cooperationSchema = new Schema(
             _id: false,
             resource: {
               type: Schema.Types.Mixed,
-              values: [LESSONS, QUIZZES, ATTACHMENTS]
+              values: resources
             },
             resourceType: {
               type: String,
               enum: {
-                values: [LESSONS, QUIZZES, ATTACHMENTS],
-                message: ENUM_CAN_BE_ONE_OF('activity resource type', [LESSONS, QUIZZES, ATTACHMENTS])
+                values: resources,
+                message: ENUM_CAN_BE_ONE_OF('activity resource type', resources)
               }
             }
           }

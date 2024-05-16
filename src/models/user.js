@@ -214,6 +214,12 @@ const userSchema = new Schema(
       tutor: {
         type: String
       }
+    },
+    professionalBlock: {
+      awards: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('awards', 1000)] },
+      scientificActivities: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('scientific activities', 1000)] },
+      workExperience: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('work experience', 1000)] },
+      education: { type: String, maxLength: [1000, FIELD_CANNOT_BE_LONGER('education', 1000)] }
     }
   },
   {

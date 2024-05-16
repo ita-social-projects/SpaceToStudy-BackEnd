@@ -7,7 +7,7 @@ const {
   ENUM_CAN_BE_ONE_OF
 } = require('~/consts/errors')
 const {
-  enums: { RESOURCES_TYPES_ENUM }
+  enums: { RESOURCES_TYPES_ENUM, RESOURCE_AVAILABILITY_STATUS_ENUM }
 } = require('~/consts/validation')
 
 const attachmentSchema = new Schema(
@@ -50,6 +50,20 @@ const attachmentSchema = new Schema(
         message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
       },
       default: RESOURCES_TYPES_ENUM[1]
+    },
+    availability: {
+      status: {
+        type: String,
+        enum: {
+          values: RESOURCE_AVAILABILITY_STATUS_ENUM,
+          message: ENUM_CAN_BE_ONE_OF('resource availability status', RESOURCE_AVAILABILITY_STATUS_ENUM)
+        },
+        default: RESOURCE_AVAILABILITY_STATUS_ENUM[0]
+      },
+      date: {
+        type: Date,
+        default: null
+      }
     }
   },
   {

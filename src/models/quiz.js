@@ -7,7 +7,7 @@ const {
   ENUM_CAN_BE_ONE_OF
 } = require('~/consts/errors')
 const {
-  enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM }
+  enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM, RESOURCE_AVAILABILITY_STATUS_ENUM }
 } = require('~/consts/validation')
 
 const quizSchema = new Schema(
@@ -46,6 +46,20 @@ const quizSchema = new Schema(
       },
       default: RESOURCES_TYPES_ENUM[3]
     },
+    availability: {
+      status: {
+        type: String,
+        enum: {
+          values: RESOURCE_AVAILABILITY_STATUS_ENUM,
+          message: ENUM_CAN_BE_ONE_OF('resource availability status', RESOURCE_AVAILABILITY_STATUS_ENUM)
+        },
+        default: RESOURCE_AVAILABILITY_STATUS_ENUM[0]
+      },
+      date: {
+        type: Date,
+        default: null
+      }
+    },
     settings: {
       view: {
         type: String,
@@ -73,6 +87,7 @@ const quizSchema = new Schema(
       }
     }
   },
+
   { timestamps: true, versionKey: false }
 )
 

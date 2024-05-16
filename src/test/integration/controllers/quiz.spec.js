@@ -17,6 +17,10 @@ const testQuizData = {
   title: 'Assembly',
   description: 'Description',
   resourceType: RESOURCES_TYPES_ENUM[3],
+  availability: {
+    status: 'open',
+    date: null
+  },
   settings: {
     correctAnswers: false,
     pointValues: false,
@@ -57,7 +61,7 @@ describe('Quiz controller', () => {
   let app, server, accessToken, currentUser, studentAccessToken, testQuiz, testQuizId, testQuestion, testQuestionId
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -129,6 +133,7 @@ describe('Quiz controller', () => {
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
             ...testQuizData,
+
             category: null,
             items: [testQuestionId]
           }
@@ -155,6 +160,7 @@ describe('Quiz controller', () => {
       const response = await app.get(endpointUrl + testQuizId).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
+
       expect(response.body).toMatchObject({
         _id: expect.any(String),
         author: currentUser.id,

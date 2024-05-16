@@ -3,9 +3,13 @@ const { ATTACHMENT } = require('~/consts/models')
 
 const { createError } = require('~/utils/errorsHelper')
 const validateCommonFields = require('~/utils/cooperations/sections/validateCommonFields')
+const deleteNotAllowedFields = require('./deleteNotAllowedFields')
+
+const allowedFields = ['_id', 'fileName', 'link', 'availability', 'size']
 
 const validateAttachment = (resource) => {
-  validateCommonFields(resource, ATTACHMENT)
+  deleteNotAllowedFields(resource, allowedFields)
+  validateCommonFields(resource, ATTACHMENT, ['fileName', 'link'])
 
   if (!resource.link) {
     throw createError(400, FIELD_IS_NOT_DEFINED('lesson attachment link'))

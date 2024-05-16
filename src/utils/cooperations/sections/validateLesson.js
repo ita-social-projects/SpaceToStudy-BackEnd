@@ -5,9 +5,12 @@ const {
 } = require('~/consts/validation')
 const { createError } = require('~/utils/errorsHelper')
 const validateCommonFields = require('~/utils/cooperations/sections/validateCommonFields')
-const validateAttachment = require('~/utils/cooperations/sections/validateAttachment')
+const deleteNotAllowedFields = require('./deleteNotAllowedFields')
+
+const allowedFields = ['_id', 'title', 'description', 'availability', 'attachments', 'content', 'status']
 
 const validateLesson = (resource) => {
+  deleteNotAllowedFields(resource, allowedFields)
   validateCommonFields(resource, LESSON)
 
   if (!resource.content) {
@@ -21,10 +24,6 @@ const validateLesson = (resource) => {
   if (resource.attachments) {
     if (!Array.isArray(resource.attachments)) {
       throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('lesson attachments', 'array'))
-    }
-
-    for (const attachment of resource.attachments) {
-      validateAttachment(attachment)
     }
   }
 

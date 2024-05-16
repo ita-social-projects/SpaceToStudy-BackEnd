@@ -1,4 +1,4 @@
-const { QUIZ, LESSON, ATTACHMENT } = require('~/consts/models')
+const { QUIZZES, LESSONS, ATTACHMENTS } = require('~/consts/models')
 const { FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
 
 const { createError } = require('~/utils/errorsHelper')
@@ -7,25 +7,22 @@ const validateLesson = require('~/utils/cooperations/sections/validateLesson')
 const validateQuiz = require('~/utils/cooperations/sections/validateQuiz')
 const deleteNotAllowedFields = require('~/utils/cooperations/sections/deleteNotAllowedFields')
 
-const resourceAllowedFields = [
-  'title',
-  'description',
-  'availability',
-  'content',
-  'link',
-  'settings',
-  'attachments',
-  'items',
-  'status'
-]
+const activitieAllowedFields = ['resourceType', 'resource']
 
 const coopSectionsValidation = (req, _res, next) => {
   const { sections } = req.body
-
   if (sections) {
     for (const section of sections) {
+      if (section.quizzes.length || section.lessons.length || section.attachments.length) {
+        section.activities = [...section.attachments, ...section.quizzes, ...section.lessons]
+      }
+
       if (Array.isArray(section.activities)) {
         for (const activity of section.activities) {
+          const data = { ...activity }
+          activity.resource = { ...activity }
+          activity.resourceType = data.resourceType
+
           validateActivity(activity)
         }
       }
@@ -39,17 +36,16 @@ const validateActivity = (activity) => {
   if (typeof activity.resource !== 'object' || Array.isArray(activity.resource)) {
     throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('activity resource', 'object'))
   }
-
-  deleteNotAllowedFields(activity.resource, resourceAllowedFields)
+  deleteNotAllowedFields(activity, activitieAllowedFields)
 
   switch (activity.resourceType) {
-    case QUIZ:
+    case QUIZZES:
       validateQuiz(activity.resource)
       break
-    case LESSON:
+    case LESSONS:
       validateLesson(activity.resource)
       break
-    case ATTACHMENT:
+    case ATTACHMENTS:
       validateAttachment(activity.resource)
       break
   }

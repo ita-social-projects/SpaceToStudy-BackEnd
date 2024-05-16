@@ -14,8 +14,7 @@ const coopSectionsValidation = (req, _res, next) => {
   if (sections) {
     for (const section of sections) {
       if (section.quizzes.length || section.lessons.length || section.attachments.length) {
-        section.activities = []
-        section.activities.push(...section.attachments, ...section.quizzes, ...section.lessons)
+        section.activities = [...section.attachments, ...section.quizzes, ...section.lessons]
       }
 
       if (Array.isArray(section.activities)) {

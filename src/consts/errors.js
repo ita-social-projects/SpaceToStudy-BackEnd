@@ -56,6 +56,10 @@ const errors = {
     code: 'EMAIL_NOT_CONFIRMED',
     message: 'Please confirm your email to login.'
   },
+  WRONG_CURRENT_PASSWORD: {
+    code: 'WRONG_CURRENT_PASSWORD',
+    message: 'Wrong current password'
+  },
   NOT_FOUND: {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'

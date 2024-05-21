@@ -1,6 +1,8 @@
 const userService = require('~/services/user')
 const { createForbiddenError } = require('~/utils/errorsHelper')
+// const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
+// const { INCORRECT_CREDENTIALS, WRONG_CURRENT_PASSWORD } = require('~/consts/errors')
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
@@ -30,7 +32,29 @@ const updateUser = async (req, res) => {
 
   if (id !== req.user.id) throw createForbiddenError()
 
+  // if (updateData.password) {
+  //   const userById = await userService.getUserById(id)
+  //   const user = await userService.getUserByEmail(userById.email)
+  //   if (!(await comparePasswords(updateData.currentPassword, user.password)))
+  //     throw createError(401, WRONG_CURRENT_PASSWORD)
+  //   if (await comparePasswords(updateData.password, user.password)) throw createError(401, INCORRECT_CREDENTIALS)
+
+  //   const hashedPassword = await hashPassword(updateData.password)
+  //   await userService.privateUpdateUser(id, { password: hashedPassword })
+  // } else await userService.updateUser(id, role, updateData)
+
   await userService.updateUser(id, role, updateData)
+
+  res.status(204).end()
+}
+
+const changePassword = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
+
+  if (id !== req.user.id) throw createForbiddenError()
+
+  await userService.changePassword(id, updateData)
 
   res.status(204).end()
 }
@@ -77,6 +101,7 @@ const activateUser = async (req, res) => {
 }
 
 module.exports = {
+  changePassword,
   getUsers,
   getUserById,
   deleteUser,

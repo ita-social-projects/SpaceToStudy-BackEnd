@@ -32,34 +32,22 @@ const userService = {
   },
 
   getUserById: async (id, role) => {
-    const select = ['-createdAt', '-updatedAt', 'name']
+    const populateOptions = (role) => ({
+      path: `mainSubjects.${role}`,
+      populate: [
+        {
+          path: 'category',
+          select: ['_id', 'name']
+        },
+        {
+          path: 'subjects',
+          select: ['_id', 'name']
+        }
+      ]
+    })
     return await User.findOne({ _id: id, ...(role && { role }) })
-      .populate({
-        path: 'mainSubjects.tutor',
-        select,
-        populate: {
-          path: 'subjects.subject',
-          model: 'Subject'
-        }
-      })
-      .populate({
-        path: 'mainSubjects.student',
-        select,
-        populate: {
-          path: 'subjects.subject',
-          model: 'Subject'
-        }
-      })
-      // { path: 'mainSubjects.student', select },
-      // {
-      //   path: 'mainSubjects.tutor.subjects',
-      //   select: ['_id', 'name', 'proficiencyLevel', 'isActivated']
-      // },
-      // {
-      //   path: 'mainSubjects.student.subjects',
-      //   select
-      // }
-
+      .populate(populateOptions('tutor'))
+      .populate(populateOptions('student'))
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink')
       .lean()
       .exec()
@@ -133,11 +121,13 @@ const userService = {
       filteredUpdateData.photo = photoUrl
     }
 
-    if (Object.keys(updateData).includes('mainSubjects')) {
-      filteredUpdateData.mainSubjects = {
-        ...user.mainSubjects,
-        [role]: [updateData.mainSubjects]
-      }
+    if ('mainSubjects' in updateData) {
+      filteredUpdateData.mainSubjects = userService._updateMainSubjects(
+        updateData.mainSubjects,
+        user.mainSubjects,
+        role
+      )
+      // filteredUpdateData.mainSubjects = { tutor: [], student: [] }
     }
 
     if ('videoLink' in updateData) {
@@ -148,6 +138,25 @@ const userService = {
     }
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
+  },
+
+  _updateMainSubjects: (mainSubject, userSubjects, role) => {
+    const compareIds = (dbSubject, subject) => dbSubject._id.toString() === subject._id
+
+    const oldSubjects = userSubjects[role]
+    const isUpdate = oldSubjects.some((subj) => compareIds(subj, mainSubject))
+    const isDelete = !mainSubject.category.name
+
+    let newSubjects = { ...userSubjects }
+    if (isDelete) {
+      newSubjects[role] = oldSubjects.filter((subj) => !compareIds(subj, mainSubject))
+    } else if (isUpdate) {
+      newSubjects[role] = oldSubjects.map((subj) => (compareIds(subj, mainSubject) ? mainSubject : subj))
+    } else {
+      newSubjects[role] = [mainSubject, ...oldSubjects]
+    }
+
+    return newSubjects
   },
 
   updateStatus: async (id, updateStatus) => {

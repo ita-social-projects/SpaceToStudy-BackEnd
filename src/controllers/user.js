@@ -4,6 +4,7 @@ const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
+const parseBoolean = require('../utils/parseBoolean')
 
 const getUsers = async (req, res) => {
   const { skip, limit, sort, match } = createAggregateOptions(req.query)
@@ -15,9 +16,9 @@ const getUsers = async (req, res) => {
 
 const getUserById = async (req, res) => {
   const { id } = req.params
-  const { role } = req.query
+  const { role, isEdit } = req.query
 
-  const user = await userService.getUserById(id, role)
+  const user = await userService.getUserById(id, role, parseBoolean(isEdit))
 
   res.status(200).json(user)
 }

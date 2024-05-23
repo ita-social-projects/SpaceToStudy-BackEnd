@@ -486,7 +486,7 @@ describe('User controller', () => {
       })
     })
 
-    describe.only('getUserById block', () => {
+    describe('getUserById block', () => {
       beforeAll(async () => {
         userStudent = await User.create({
           role: 'student',
@@ -529,7 +529,7 @@ describe('User controller', () => {
         expect(foundUser).toBeTruthy()
       })
 
-      it.skip('should not return the user if the specified role does not match', async () => {
+      it('should not return the user if the specified role does not match', async () => {
         const foundUser = await userService.getUserById(userAdmin._id, 'student')
         expect(foundUser).toBeNull()
       })

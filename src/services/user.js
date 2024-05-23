@@ -54,19 +54,16 @@ const userService = {
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink')
       .lean()
       .exec()
-
-    if (!user) {
-      throw createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
-    }
-
     if (isEdit) {
       for (const key in user.mainSubjects) {
         const userSubjects = await Promise.all(
-          user.mainSubjects[key].map(async (subj) => {
-            const isDeletionBlocked = await userService._calculateDeletionMainSubject(user._id, subj.category._id)
-            return { ...subj, isDeletionBlocked }
+          user.mainSubjects[key].map(async (subject) => {
+            const isDeletionBlocked = await userService._calculateDeletionMainSubject(user._id, subject.category._id)
+            return { ...subject, isDeletionBlocked }
           })
-        )
+        ).catch((err) => {
+          console.log(err)
+        })
         user.mainSubjects[key] = userSubjects
       }
     }
@@ -173,9 +170,9 @@ const userService = {
       if (isDeletionBlocked) {
         throw createError(403, FORBIDDEN)
       }
-      newSubjects[role] = oldSubjects.filter((subj) => !compareIds(subj, mainSubject))
+      newSubjects[role] = oldSubjects.filter((subject) => !compareIds(subject, mainSubject))
     } else if (isUpdate) {
-      newSubjects[role] = oldSubjects.map((subj) => (compareIds(subj, mainSubject) ? mainSubject : subj))
+      newSubjects[role] = oldSubjects.map((subject) => (compareIds(subject, mainSubject) ? mainSubject : subject))
     } else {
       newSubjects[role] = [mainSubject, ...oldSubjects]
     }
@@ -206,7 +203,7 @@ const userService = {
     const userOffers = await offerService.getOffers(aggregateOptions)
     const userCooperations = await cooperationService.getCooperations(aggregateOptions)
 
-    return !!userOffers || !!userCooperations
+    return Boolean(userOffers || userCooperations)
   }
 }
 

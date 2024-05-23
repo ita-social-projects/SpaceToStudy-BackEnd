@@ -1,5 +1,5 @@
 function parseBoolean(string) {
-  return string === 'true' ? true : string === 'false' ? false : undefined
+  return string === 'true'
 }
 
 module.exports = parseBoolean

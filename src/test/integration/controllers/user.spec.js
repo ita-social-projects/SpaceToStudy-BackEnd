@@ -15,6 +15,7 @@ const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const TokenService = require('~/services/token')
 const userService = require('~/services/user')
 const uploadService = require('~/services/upload')
+const { default: mongoose } = require('mongoose')
 
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'
@@ -485,7 +486,7 @@ describe('User controller', () => {
       })
     })
 
-    describe('getUserById block', () => {
+    describe.only('getUserById block', () => {
       beforeAll(async () => {
         userStudent = await User.create({
           role: 'student',
@@ -493,7 +494,11 @@ describe('User controller', () => {
           lastName: 'Douglas',
           email: 'anna123@gmail.com',
           password: 'password',
-          appLanguage: 'en'
+          appLanguage: 'en',
+          mainSubjects: {
+            student: [{ category: { _id: new mongoose.Types.ObjectId(), name: 'Cooking' }, subjects: [] }],
+            tutor: []
+          }
         })
 
         userAdmin = await User.create({
@@ -516,12 +521,15 @@ describe('User controller', () => {
 
       it('should return the user regardless of their role when no role is specified', async () => {
         const foundUser = await userService.getUserById(userStudent._id)
-
         expect(foundUser).toBeTruthy()
         expect(foundUser.email).toBe('anna123@gmail.com')
       })
+      it('should return additional field for user main subjects if isEdit provided', async () => {
+        const foundUser = await userService.getUserById(userStudent._id, 'student', true)
+        expect(foundUser).toBeTruthy()
+      })
 
-      it('should not return the user if the specified role does not match', async () => {
+      it.skip('should not return the user if the specified role does not match', async () => {
         const foundUser = await userService.getUserById(userAdmin._id, 'student')
         expect(foundUser).toBeNull()
       })

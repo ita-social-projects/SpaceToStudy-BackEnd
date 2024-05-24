@@ -32,32 +32,21 @@ const updateUser = async (req, res) => {
 
   if (id !== req.user.id) throw createForbiddenError()
 
-  // if (updateData.password) {
-  //   const userById = await userService.getUserById(id)
-  //   const user = await userService.getUserByEmail(userById.email)
-  //   if (!(await comparePasswords(updateData.currentPassword, user.password)))
-  //     throw createError(401, WRONG_CURRENT_PASSWORD)
-  //   if (await comparePasswords(updateData.password, user.password)) throw createError(401, INCORRECT_CREDENTIALS)
-
-  //   const hashedPassword = await hashPassword(updateData.password)
-  //   await userService.privateUpdateUser(id, { password: hashedPassword })
-  // } else await userService.updateUser(id, role, updateData)
-
   await userService.updateUser(id, role, updateData)
 
   res.status(204).end()
 }
 
-const changePassword = async (req, res) => {
-  const { id } = req.params
-  const updateData = req.body
+// const changePassword = async (req, res) => {
+//   const { id } = req.params
+//   const updateData = req.body
 
-  if (id !== req.user.id) throw createForbiddenError()
+//   if (id !== req.user.id) throw createForbiddenError()
 
-  await userService.changePassword(id, updateData)
+//   await userService.changePassword(id, updateData)
 
-  res.status(204).end()
-}
+//   res.status(204).end()
+// }
 
 const updateStatus = async (req, res) => {
   const { id } = req.params
@@ -101,7 +90,7 @@ const activateUser = async (req, res) => {
 }
 
 module.exports = {
-  changePassword,
+  // changePassword,
   getUsers,
   getUserById,
   deleteUser,

@@ -1,4 +1,5 @@
 const authService = require('~/services/auth')
+const { createForbiddenError } = require('~/utils/errorsHelper')
 const { oneDayInMs } = require('~/consts/auth')
 const {
   config: { COOKIE_DOMAIN }
@@ -108,6 +109,16 @@ const updatePassword = async (req, res) => {
   res.status(204).end()
 }
 
+const changePassword = async (req, res) => {
+  const { id } = req.params
+  const updateData = req.body
+
+  if (id !== req.user.id) throw createForbiddenError()
+  await authService.changePassword(id, updateData)
+
+  res.status(204).end()
+}
+
 module.exports = {
   signup,
   login,
@@ -116,5 +127,6 @@ module.exports = {
   confirmEmail,
   refreshAccessToken,
   sendResetPasswordEmail,
-  updatePassword
+  updatePassword,
+  changePassword
 }

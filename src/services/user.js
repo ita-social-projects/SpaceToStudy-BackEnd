@@ -1,7 +1,7 @@
 const User = require('~/models/user')
 const uploadService = require('~/services/upload')
 const { USER } = require('~/consts/upload')
-const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
+const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN, INCORRECT_CREDENTIALS, WRONG_CURRENT_PASSWORD } = require('~/consts/errors')
@@ -187,9 +187,9 @@ const userService = {
       throw createError(401, WRONG_CURRENT_PASSWORD)
     if (await comparePasswords(updateData.password, user.password)) throw createError(401, INCORRECT_CREDENTIALS)
 
-    const hashedPassword = await hashPassword(updateData.password)
-    await userService.privateUpdateUser(id, { password: hashedPassword })
-  },
+  //   const hashedPassword = await hashPassword(updateData.password)
+  //   await userService.privateUpdateUser(id, { password: hashedPassword })
+  // },
 
   updateStatus: async (id, updateStatus) => {
     const statusesForChange = {}

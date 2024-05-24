@@ -2,13 +2,18 @@ const router = require('express').Router()
 
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const validationMiddleware = require('~/middlewares/validation')
+const isEntityValid = require('~/middlewares/entityValidation')
 const langMiddleware = require('~/middlewares/appLanguage')
+const { authMiddleware } = require('~/middlewares/auth')
 
 const authController = require('~/controllers/auth')
 const signupValidationSchema = require('~/validation/schemas/signup')
 const { loginValidationSchema, googleAuthValidationSchema } = require('~/validation/schemas/login')
 const resetPasswordValidationSchema = require('~/validation/schemas/resetPassword')
 const forgotPasswordValidationSchema = require('~/validation/schemas/forgotPassword')
+const changePasswordValidationSchema = require('~/validation/schemas/changePassword')
+
+const User = require('~/models/user')
 
 router.post(
   '/signup',
@@ -37,6 +42,17 @@ router.patch(
   validationMiddleware(resetPasswordValidationSchema),
   langMiddleware,
   asyncWrapper(authController.updatePassword)
+)
+
+const params = [{ model: User, idName: 'id' }]
+
+router.patch(
+  '/change-password/:id',
+  isEntityValid({ params }),
+  validationMiddleware(changePasswordValidationSchema),
+  authMiddleware,
+  langMiddleware,
+  asyncWrapper(authController.changePassword)
 )
 
 module.exports = router

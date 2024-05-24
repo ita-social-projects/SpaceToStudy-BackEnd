@@ -11,7 +11,8 @@ const {
   INCORRECT_CREDENTIALS,
   BAD_RESET_TOKEN,
   BAD_REFRESH_TOKEN,
-  USER_NOT_FOUND
+  USER_NOT_FOUND,
+  WRONG_CURRENT_PASSWORD
 } = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
 const {
@@ -172,6 +173,17 @@ const authService = {
     await emailService.sendEmail(email, emailSubject.SUCCESSFUL_PASSWORD_RESET, language, {
       firstName
     })
+  },
+
+  changePassword: async (id, updateData) => {
+    const userById = await getUserById(id)
+    const user = await getUserByEmail(userById.email)
+    if (!(await comparePasswords(updateData.currentPassword, user.password)))
+      throw createError(401, WRONG_CURRENT_PASSWORD)
+    if (await comparePasswords(updateData.password, user.password)) throw createError(401, INCORRECT_CREDENTIALS)
+
+    const hashedPassword = await hashPassword(updateData.password)
+    await privateUpdateUser(id, { password: hashedPassword })
   }
 }
 

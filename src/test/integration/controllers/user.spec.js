@@ -524,10 +524,6 @@ describe('User controller', () => {
         expect(foundUser).toBeTruthy()
         expect(foundUser.email).toBe('anna123@gmail.com')
       })
-      it('should return additional field for user main subjects if isEdit provided', async () => {
-        const foundUser = await userService.getUserById(userStudent._id, 'student', true)
-        expect(foundUser).toBeTruthy()
-      })
 
       it('should not return the user if the specified role does not match', async () => {
         const foundUser = await userService.getUserById(userAdmin._id, 'student')

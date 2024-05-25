@@ -156,7 +156,7 @@ paths:
                 status: 404
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email was not found.'
-  /auth/change-password/{id}:
+  /auth/change-password:
     post:
       tags:
         - Auth
@@ -166,91 +166,131 @@ paths:
         - application/json
       requestBody:
         required: true
-        description: Provide current password and new password to change the user's password.
+        description: Provide current password and new password to change the user's password
         content:
           application/json:
             schema:
-            type: object
-            properties:
-              currentPassword:
-                type: string
-                example: current_password
-              password:
-                type: string
-                example: new_password
-            required:
-              - currentPassword
-              - password
-          example:
-            currentPassword: current_password
-            password: new_password
-    responses:
-      204:
-        description: No Content
-      # 400:
-      #   description: Bad Request
-      #   content:
-      #     application/json:
-      #       schema:
-      #         type: object
-      #         properties:
-      #           status:
-      #             type: integer
-      #             example: 400
-      #           code:
-      #             type: string
-      #             example: 'INVALID_REQUEST'
-      #           message:
-      #             type: string
-      #             example: 'Invalid request data.'
-      # 401:
-      #   description: Unauthorized
-      #   content:
-      #     application/json:
-      #       schema:
-      #         type: object
-      #         properties:
-      #           status:
-      #             type: integer
-      #             example: 401
-      #           code:
-      #             type: string
-      #             example: 'WRONG_CURRENT_PASSWORD'
-      #           message:
-      #             type: string
-      #             example: 'The current password is incorrect.'
-      # 403:
-      #   description: Forbidden
-      #   content:
-      #     application/json:
-      #       schema:
-      #         type: object
-      #         properties:
-      #           status:
-      #             type: integer
-      #             example: 403
-      #           code:
-      #             type: string
-      #             example: 'FORBIDDEN'
-      #           message:
-      #             type: string
-      #             example: 'User is not authorized to change this password.'
-      # 404:
-      #   description: Not Found
-      #   content:
-      #     application/json:
-      #       schema:
-      #         type: object
-      #         properties:
-      #           status:
-      #             type: integer
-      #             example: 404
-      #           code:
-      #             type: string
-      #             example: 'USER_NOT_FOUND'
-      #           message:
-      #             type: string
-      #             example: 'User not found.'
+              $ref: '#/definitions/change-password'
+            example:
+              currentPassword: 1234abcdefG
+              password: 1234abcdefGH
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'EMAIL_NOT_SENT'
+                message: 'Email has not been sent.'
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: 'USER_NOT_FOUND'
+                message: 'User with the specified email was not found.'
+  #   post:
+  #     tags:
+  #       - Auth
+  #     summary: Change user password
+  #     description: Allows a user to change their password by providing the current password and a new password.
+  #     produces:
+  #       - application/json
+  #     requestBody:
+  #       required: true
+  #       description: Provide current password and new password to change the user's password.
+  #       content:
+  #         application/json:
+  #           schema:
+  #           type: object
+  #           properties:
+  #             currentPassword:
+  #               type: string
+  #               example: current_password
+  #             password:
+  #               type: string
+  #               example: new_password
+  #           required:
+  #             - currentPassword
+  #             - password
+  #         example:
+  #           currentPassword: current_password
+  #           password: new_password
+  #   responses:
+  #     204:
+  #       description: No Content
+  #     400:
+  #       description: Bad Request
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               status:
+  #                 type: integer
+  #                 example: 400
+  #               code:
+  #                 type: string
+  #                 example: 'INVALID_REQUEST'
+  #               message:
+  #                 type: string
+  #                 example: 'Invalid request data.'
+  #     401:
+  #       description: Unauthorized
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               status:
+  #                 type: integer
+  #                 example: 401
+  #               code:
+  #                 type: string
+  #                 example: 'WRONG_CURRENT_PASSWORD'
+  #               message:
+  #                 type: string
+  #                 example: 'The current password is incorrect.'
+  #     403:
+  #       description: Forbidden
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               status:
+  #                 type: integer
+  #                 example: 403
+  #               code:
+  #                 type: string
+  #                 example: 'FORBIDDEN'
+  #               message:
+  #                 type: string
+  #                 example: 'User is not authorized to change this password.'
+  #     404:
+  #       description: Not Found
+  #       content:
+  #         application/json:
+  #           schema:
+  #             type: object
+  #             properties:
+  #               status:
+  #                 type: integer
+  #                 example: 404
+  #               code:
+  #                 type: string
+  #                 example: 'USER_NOT_FOUND'
+  #               message:
+  #                 type: string
+  #                 example: 'User not found.'
   /auth/reset-password/{token}:
     patch:
       tags:

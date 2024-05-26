@@ -1,8 +1,6 @@
 const userService = require('~/services/user')
 const { createForbiddenError } = require('~/utils/errorsHelper')
-// const { hashPassword, comparePasswords } = require('~/utils/passwordHelper')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
-// const { INCORRECT_CREDENTIALS, WRONG_CURRENT_PASSWORD } = require('~/consts/errors')
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
@@ -79,7 +77,6 @@ const activateUser = async (req, res) => {
 }
 
 module.exports = {
-  // changePassword,
   getUsers,
   getUserById,
   deleteUser,

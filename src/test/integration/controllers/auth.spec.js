@@ -298,7 +298,7 @@ describe('Auth controller', () => {
     })
   })
 
-  describe.only('ChangePassword endpoint', () => {
+  describe('ChangePassword endpoint', () => {
     const CURRENT_PASSWORD = 'Qwerty123@'
     const WRONG_PASSWORD = 'Qwerty1@'
 

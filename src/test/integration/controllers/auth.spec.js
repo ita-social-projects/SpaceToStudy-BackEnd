@@ -13,6 +13,8 @@ const { expectError } = require('~/test/helpers')
 const { OAuth2Client } = require('google-auth-library')
 const authController = require('~/controllers/auth')
 
+const testUserAuthentication = require('~/utils/testUserAuth')
+
 jest.mock('google-auth-library')
 
 describe('Auth controller', () => {
@@ -293,6 +295,56 @@ describe('Auth controller', () => {
       const response = await app.patch('/auth/reset-password/invalid-token').send({ password: 'valid_pass1' })
 
       expectError(400, errors.BAD_RESET_TOKEN, response)
+    })
+  })
+
+  describe.only('ChangePassword endpoint', () => {
+    const CURRENT_PASSWORD = 'Qwerty123@'
+    const WRONG_PASSWORD = 'Qwerty1@'
+
+    const updateUserData = {
+      password: 'testpass_1356',
+      currentPassword: 'Qwerty123@'
+    }
+
+    let accessToken
+    beforeEach(async () => {
+      accessToken = await testUserAuthentication(app)
+    })
+
+    afterEach(() => jest.resetAllMocks())
+
+    it('should change user password by his ID', async () => {
+      const { id: currentUserId } = tokenService.validateAccessToken(accessToken)
+
+      const response = await app
+        .patch(`/auth/change-password/${currentUserId}`)
+        .send(updateUserData)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    it('should throw WRONG_CURRENT_PASSWORD error', async () => {
+      const { id: currentUserId } = tokenService.validateAccessToken(accessToken)
+
+      const response = await app
+        .patch(`/auth/change-password/${currentUserId}`)
+        .send({ ...updateUserData, currentPassword: WRONG_PASSWORD })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(400, errors.WRONG_CURRENT_PASSWORD, response)
+    })
+
+    it('should throw WRONG_CURRENT_PASSWORD error', async () => {
+      const { id: currentUserId } = tokenService.validateAccessToken(accessToken)
+
+      const response = await app
+        .patch(`/auth/change-password/${currentUserId}`)
+        .send({ ...updateUserData, password: CURRENT_PASSWORD })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(400, errors.INCORRECT_CREDENTIALS, response)
     })
   })
 

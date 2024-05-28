@@ -179,8 +179,8 @@ const authService = {
     const userById = await getUserById(id)
     const user = await getUserByEmail(userById.email)
     if (!(await comparePasswords(updateData.currentPassword, user.password)))
-      throw createError(401, WRONG_CURRENT_PASSWORD)
-    if (await comparePasswords(updateData.password, user.password)) throw createError(401, INCORRECT_CREDENTIALS)
+      throw createError(400, WRONG_CURRENT_PASSWORD)
+    if (await comparePasswords(updateData.password, user.password)) throw createError(400, INCORRECT_CREDENTIALS)
 
     const hashedPassword = await hashPassword(updateData.password)
     await privateUpdateUser(id, { password: hashedPassword })

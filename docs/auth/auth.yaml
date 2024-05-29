@@ -193,14 +193,14 @@ paths:
                 status: 403
                 code: 'FORBIDDEN'
                 message: 'You do not have permission to perform this action.'
-        401:
-          description: Unauthorized
+        400:
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/Error'
               example:
-                status: 401
+                status: 400
                 code: 'WRONG_CURRENT_PASSWORD or INCORRECT_CREDENTIALS'
                 message: 'Wrong current password or The password you entered is incorrect.'           
   /auth/reset-password/{token}:

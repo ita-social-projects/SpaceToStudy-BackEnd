@@ -267,7 +267,7 @@ describe('User controller', () => {
         const { id: currentUserId } = TokenService.validateAccessToken(accessToken)
 
         const response = await app
-          .patch(`${endpointUrl}/${currentUserId}/deactivate`)
+          .patch(`${endpointUrl}/deactivate/${currentUserId}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 
@@ -278,7 +278,7 @@ describe('User controller', () => {
         const { id: currentUserId } = TokenService.validateAccessToken(accessToken)
 
         const response = await app
-          .patch(`${endpointUrl}/${currentUserId}/activate`)
+          .patch(`${endpointUrl}/activate/${currentUserId}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 

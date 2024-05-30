@@ -8,6 +8,17 @@ definitions:
           type: number
         count:
           type: number
+  userMainSubjects:
+    type: object
+    properties:
+      _id:
+        type: string
+      category:
+        type: object
+        $ref: '#/components/category'
+      subjects: 
+        type: array
+        $ref: '#/components/subject'
   users:
     type: array
     items:
@@ -33,10 +44,10 @@ definitions:
           properties:
             student:
               type: array
-              $ref: '#/components/subject'
+              $ref: '#/userMainSubject'
             tutor:
               type: array
-              $ref: '#/components/subject'
+              $ref: '#/userMainSubjects'
         totalReviews:
           type: object
           properties:

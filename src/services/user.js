@@ -4,14 +4,16 @@ const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
-const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 const {
-  enums: { MAIN_ROLE_ENUM }
+  enums: { MAIN_ROLE_ENUM, OFFER_STATUS_ENUM }
 } = require('~/consts/validation')
 const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
 const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
+const offerService = require('./offer')
+const cooperationService = require('./cooperation')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -31,19 +33,42 @@ const userService = {
     }
   },
 
-  getUserById: async (id, role) => {
-    return await User.findOne({ _id: id, ...(role && { role }) })
-      .populate([
+  getUserById: async (id, role, isEdit = false) => {
+    const populateOptions = (role) => ({
+      path: `mainSubjects.${role}`,
+      populate: [
         {
-          path: 'mainSubjects.tutor',
-          select: ['-createdAt', '-updatedAt'],
-          populate: { path: 'category', select: 'name' }
+          path: 'category',
+          select: ['_id', 'name']
         },
-        { path: 'mainSubjects.student', select: ['-createdAt', '-updatedAt'] }
-      ])
+        {
+          path: 'subjects',
+          select: ['_id', 'name']
+        }
+      ]
+    })
+
+    const user = await User.findOne({ _id: id, ...(role && { role }) })
+      .populate(populateOptions('tutor'))
+      .populate(populateOptions('student'))
       .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink')
       .lean()
       .exec()
+    if (isEdit) {
+      for (const key in user.mainSubjects) {
+        const userSubjects = await Promise.all(
+          user.mainSubjects[key].map(async (subject) => {
+            const isDeletionBlocked = await userService._calculateDeletionMainSubject(user._id, subject.category._id)
+            return { ...subject, isDeletionBlocked }
+          })
+        ).catch((err) => {
+          console.log(err)
+        })
+        user.mainSubjects[key] = userSubjects
+      }
+    }
+
+    return user
   },
 
   getUserByEmail: async (email) => {
@@ -114,7 +139,13 @@ const userService = {
       filteredUpdateData.photo = photoUrl
     }
 
-    filteredUpdateData.mainSubjects = { ...user.mainSubjects, [role]: updateData.mainSubjects }
+    if ('mainSubjects' in updateData) {
+      filteredUpdateData.mainSubjects = await userService._updateMainSubjects(
+        updateData.mainSubjects,
+        user.mainSubjects,
+        role
+      )
+    }
 
     if ('videoLink' in updateData) {
       filteredUpdateData.videoLink = {
@@ -124,6 +155,29 @@ const userService = {
     }
 
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
+  },
+
+  _updateMainSubjects: async (mainSubject, userSubjects, role, userId) => {
+    const compareIds = (dbSubject, subject) => dbSubject._id.toString() === subject._id
+    const oldSubjects = userSubjects[role]
+    const isUpdate = oldSubjects?.some((subj) => compareIds(subj, mainSubject))
+    const isDelete = !mainSubject.category.name
+
+    let newSubjects = { ...userSubjects }
+    if (isDelete) {
+      const isDeletionBlocked = await userService._calculateDeletionMainSubject(userId, mainSubject.category._id)
+
+      if (isDeletionBlocked) {
+        throw createError(403, FORBIDDEN)
+      }
+      newSubjects[role] = oldSubjects.filter((subject) => !compareIds(subject, mainSubject))
+    } else if (isUpdate) {
+      newSubjects[role] = oldSubjects.map((subject) => (compareIds(subject, mainSubject) ? mainSubject : subject))
+    } else {
+      newSubjects[role] = [mainSubject, ...oldSubjects]
+    }
+
+    return newSubjects
   },
 
   updateStatus: async (id, updateStatus) => {
@@ -142,6 +196,14 @@ const userService = {
 
   deleteUser: async (id) => {
     await User.findByIdAndRemove(id).exec()
+  },
+
+  _calculateDeletionMainSubject: async (userId, categoryId) => {
+    const aggregateOptions = [{ $match: { category: categoryId, author: userId, status: OFFER_STATUS_ENUM[0] } }]
+    const userOffers = await offerService.getOffers(aggregateOptions)
+    const userCooperations = await cooperationService.getCooperations(aggregateOptions)
+
+    return Boolean(userOffers || userCooperations)
   }
 }
 

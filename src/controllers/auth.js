@@ -111,10 +111,10 @@ const updatePassword = async (req, res) => {
 
 const changePassword = async (req, res) => {
   const { id } = req.params
-  const updateData = req.body
+  const { currentPassword, password } = req.body
 
   if (id !== req.user.id) throw createForbiddenError()
-  await authService.changePassword(id, updateData)
+  await authService.changePassword(id, { currentPassword, password })
 
   res.status(204).end()
 }

@@ -29,7 +29,6 @@ router.get('/:id', isEntityValid({ params }), asyncWrapper(userController.getUse
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
 router.patch('/deactivate/:id', isEntityValid({ params }), asyncWrapper(userController.deactivateUser))
 router.patch('/activate/:id', isEntityValid({ params }), asyncWrapper(userController.activateUser))
-router.patch('/change-password/:id', isEntityValid({ params }), asyncWrapper(userController.changePassword))
 
 router.use(restrictTo(ADMIN))
 router.patch('/:id/change-status', isEntityValid({ params }), asyncWrapper(userController.updateStatus))

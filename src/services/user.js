@@ -4,7 +4,7 @@ const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
-const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN, INCORRECT_CREDENTIALS, WRONG_CURRENT_PASSWORD } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 const {
@@ -179,17 +179,6 @@ const userService = {
 
     return newSubjects
   },
-
-  changePassword: async (id, updateData) => {
-    const userById = await userService.getUserById(id)
-    const user = await userService.getUserByEmail(userById.email)
-    if (!(await comparePasswords(updateData.currentPassword, user.password)))
-      throw createError(401, WRONG_CURRENT_PASSWORD)
-    if (await comparePasswords(updateData.password, user.password)) throw createError(401, INCORRECT_CREDENTIALS)
-
-  //   const hashedPassword = await hashPassword(updateData.password)
-  //   await userService.privateUpdateUser(id, { password: hashedPassword })
-  // },
 
   updateStatus: async (id, updateStatus) => {
     const statusesForChange = {}

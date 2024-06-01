@@ -184,8 +184,6 @@ const authService = {
 
     const hashedPassword = await hashPassword(updateData.password)
     await privateUpdateUser(id, { password: hashedPassword })
-
-    console.log(hashedPassword)
   }
 }
 

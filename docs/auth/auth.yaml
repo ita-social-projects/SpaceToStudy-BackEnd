@@ -156,6 +156,53 @@ paths:
                 status: 404
                 code: 'USER_NOT_FOUND'
                 message: 'User with the specified email was not found.'
+  /auth/change-password/{id}:
+    patch:
+      tags:
+        - Auth
+      summary: Change user password
+      description: Allows a user to change their password by providing the current password and a new password.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user that needs to be updated
+          type: string
+      requestBody:
+        required: true
+        description: Provide current password and new password to change the user's password
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/change-password'
+            example:
+              currentPassword: 1234abcdefG
+              password: 1234abcdefGH
+      responses:
+        204:
+          description: No Content
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: 'FORBIDDEN'
+                message: 'You do not have permission to perform this action.'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'WRONG_CURRENT_PASSWORD or INCORRECT_CREDENTIALS'
+                message: 'Wrong current password or The password you entered is incorrect.'           
   /auth/reset-password/{token}:
     patch:
       tags:

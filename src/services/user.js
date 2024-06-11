@@ -183,8 +183,7 @@ const userService = {
       formattedSubjects = transformedSubjects
     }
 
-    for (let i = 0; i < formattedSubjects.length; i++) {
-      const currentSubject = formattedSubjects[i]
+    for (const currentSubject of formattedSubjects) {
       const isUpdate = oldSubjects?.some((subj) => compareIds(subj, currentSubject))
       const isDelete = !currentSubject.category.name
 

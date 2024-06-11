@@ -2,7 +2,7 @@ const userService = require('~/services/user')
 const offerService = require('~/services/offer')
 const cooperationService = require('~/services/cooperation')
 const User = require('~/models/user')
-const { FORBIDDEN } = require('~/consts/errors')
+const { FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const {
   enums: { OFFER_STATUS_ENUM }
 } = require('~/consts/validation')
@@ -23,6 +23,30 @@ describe('User service', () => {
       const expected = [
         { category: { _id: '1', name: 'Math' }, subjects: [{ _id: '1', name: undefined }] },
         { _id: '2', category: { name: 'Physics' } }
+      ]
+      expect(result.tutor).toEqual(expect.arrayContaining(expected))
+    })
+
+    it('should group subjects by category', async () => {
+      const mainSubjects = [
+        { _id: '1', category: { _id: '1', name: 'Math' } },
+        { _id: '2', category: { _id: '1', name: 'Math' } }
+      ]
+      const userSubjects = { tutor: [{ _id: '3', category: { name: 'Physics' } }] }
+      const role = 'tutor'
+      const userId = '123'
+
+      const result = await userService._updateMainSubjects(mainSubjects, userSubjects, role, userId)
+
+      const expected = [
+        {
+          category: { _id: '1', name: 'Math' },
+          subjects: [
+            { _id: '1', name: undefined },
+            { _id: '2', name: undefined }
+          ]
+        },
+        { _id: '3', category: { name: 'Physics' } }
       ]
       expect(result.tutor).toEqual(expect.arrayContaining(expected))
     })
@@ -148,6 +172,19 @@ describe('User service', () => {
         expect.objectContaining({ videoLink: expectedVideoLink }),
         expect.anything()
       )
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND error if user is not found', async () => {
+      const id = '123'
+      const role = 'tutor'
+      const updateData = {}
+
+      jest.spyOn(User, 'findById').mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(null)
+      })
+
+      await expect(userService.updateUser(id, role, updateData)).rejects.toThrow(DOCUMENT_NOT_FOUND([User.modelName]))
     })
   })
 })

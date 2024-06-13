@@ -157,24 +157,50 @@ const userService = {
     await User.findByIdAndUpdate(id, filteredUpdateData, { new: true, runValidators: true }).lean().exec()
   },
 
-  _updateMainSubjects: async (mainSubject, userSubjects, role, userId) => {
+  _updateMainSubjects: async (mainSubjects, userSubjects, role, userId) => {
     const compareIds = (dbSubject, subject) => dbSubject._id.toString() === subject._id
     const oldSubjects = userSubjects[role]
-    const isUpdate = oldSubjects?.some((subj) => compareIds(subj, mainSubject))
-    const isDelete = !mainSubject.category.name
-
     let newSubjects = { ...userSubjects }
-    if (isDelete) {
-      const isDeletionBlocked = await userService._calculateDeletionMainSubject(userId, mainSubject.category._id)
+    let formattedSubjects = Array.isArray(mainSubjects) ? mainSubjects : [mainSubjects]
 
-      if (isDeletionBlocked) {
-        throw createError(403, FORBIDDEN)
+    if (formattedSubjects.every((subject) => !subject.subjects)) {
+      const categories = {}
+      mainSubjects.forEach((subject) => {
+        if (!categories[subject.category._id]) {
+          categories[subject.category._id] = [{ ...subject }]
+        } else {
+          categories[subject.category._id].push({ ...subject })
+        }
+      })
+
+      const transformedSubjects = []
+      for (const key in categories) {
+        transformedSubjects.push({
+          category: { _id: key, name: categories[key][0].category.name },
+          subjects: categories[key].map(({ _id, name }) => ({ _id, name }))
+        })
       }
-      newSubjects[role] = oldSubjects.filter((subject) => !compareIds(subject, mainSubject))
-    } else if (isUpdate) {
-      newSubjects[role] = oldSubjects.map((subject) => (compareIds(subject, mainSubject) ? mainSubject : subject))
-    } else {
-      newSubjects[role] = [mainSubject, ...oldSubjects]
+      formattedSubjects = transformedSubjects
+    }
+
+    for (const currentSubject of formattedSubjects) {
+      const isUpdate = oldSubjects?.some((subj) => compareIds(subj, currentSubject))
+      const isDelete = !currentSubject.category.name
+
+      if (isDelete) {
+        const isDeletionBlocked = await userService._calculateDeletionMainSubject(userId, currentSubject.category._id)
+
+        if (isDeletionBlocked) {
+          throw createError(403, FORBIDDEN)
+        }
+        newSubjects[role] = oldSubjects.filter((subject) => !compareIds(subject, currentSubject))
+      } else if (isUpdate) {
+        newSubjects[role] = oldSubjects.map((subject) =>
+          compareIds(subject, currentSubject) ? currentSubject : subject
+        )
+      } else {
+        newSubjects[role] = [currentSubject, ...newSubjects[role]]
+      }
     }
 
     return newSubjects

@@ -9,8 +9,17 @@ definitions:
         name:
           type: string
         category:
-          type: string
-          $ref: '#/components/category'
+          type: object
+          properties:
+            _id:
+              type: string
+            appearance:
+              type: object
+              properties:
+                icon:
+                  type: string
+                color:
+                  type: string
         totalOffers:
           type: object
           properties:

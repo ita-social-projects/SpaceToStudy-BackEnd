@@ -19,13 +19,21 @@ paths:
               example:
                 - _id: 6255bc080a71adf9223df134
                   name: English
-                  category: 63525e23bf163f5ea609ff27
+                  category:
+                    _id: '63525e23bf163f5ea609ff23'
+                    appearance:
+                      color: '#F67C41'
+                      icon: 'mocked-path-to-icon'
                   totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
                 - _id: 6255bc080a71adf9223df135
                   name: Algebra
-                  category: 63525e23bf163f5ea609ff29
+                  category:
+                    _id: '63525e23bf163f5ea609ff23'
+                    appearance:
+                      color: '#F63C43'
+                      icon: 'mocked-path-to-icon'
                   totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z

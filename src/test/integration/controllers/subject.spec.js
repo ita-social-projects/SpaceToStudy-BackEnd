@@ -8,14 +8,14 @@ const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const endpointUrl = '/subjects/'
 const nonExistingSubjectId = '63cf23e07281224fbbee5958'
 
-const categoryBody = { name: 'testCategory' }
+const categoryBody = { name: 'testCategory', appearance: { color: '#F67C41', icon: 'mocked-path-to-icon' } }
 const subjectBody = { name: 'English' }
 
 describe('Subject controller', () => {
   let app, server, accessToken, testSubject
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -26,7 +26,7 @@ describe('Subject controller', () => {
       .post('/categories/')
       .set('Cookie', [`accessToken=${accessToken}`])
       .send(categoryBody)
-    const category = categoryResponse.body._id
+    const category = { _id: categoryResponse.body._id, appearance: categoryResponse.body.appearance }
     subjectBody.category = category
 
     testSubject = await app
@@ -59,7 +59,7 @@ describe('Subject controller', () => {
         expect.objectContaining({
           _id: expect.any(String),
           name: subjectBody.name,
-          category: subjectBody.category,
+          category: subjectBody.category._id,
           totalOffers: {
             student: 0,
             tutor: 0
@@ -102,7 +102,7 @@ describe('Subject controller', () => {
         expect.objectContaining({
           _id: expect.any(String),
           name: subjectBody.name,
-          category: subjectBody.category,
+          category: subjectBody.category._id,
           totalOffers: {
             student: 0,
             tutor: 0

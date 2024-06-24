@@ -1,7 +1,25 @@
 const getRegex = require('~/utils/getRegex')
 
 const categoriesAggregateOptions = (query) => {
-  const { limit = 100, name = '', skip = 0 } = query
+  const { limit = 100, name = '', skip = 0, sort = 'updatedAt' } = query
+
+  let sortOption = {}
+
+  if (sort) {
+    if (typeof sort === 'object' && sort.order && sort.orderBy) {
+      const { order, orderBy } = sort
+      const sortOrder = order === 'asc' ? 1 : -1
+      sortOption = { [orderBy]: sortOrder }
+    } else if (typeof sort === 'string') {
+      if (sort === 'totalOffersAsc') {
+        sortOption['totalOffersSum'] = 1
+      } else if (sort === 'totalOffersDesc') {
+        sortOption['totalOffersSum'] = -1
+      } else {
+        sortOption[sort] = -1
+      }
+    }
+  }
 
   return [
     {
@@ -19,7 +37,12 @@ const categoriesAggregateOptions = (query) => {
       }
     },
     {
-      $sort: { totalOffers: -1, updatedAt: -1 }
+      $addFields: {
+        totalOffersSum: { $add: ['$totalOffers.student', '$totalOffers.tutor'] }
+      }
+    },
+    {
+      $sort: sortOption
     },
     {
       $skip: parseInt(skip)
@@ -34,7 +57,7 @@ const categoriesAggregateOptions = (query) => {
     },
     {
       $facet: {
-        items: [{ $skip: Number(skip) }, { $limit: Number(limit) }],
+        items: [{ $skip: Number(skip) }, { $limit: Number(limit) }, { $project: { totalOffersSum: 0 } }],
         count: [{ $count: 'count' }]
       }
     },

@@ -33,7 +33,7 @@ paths:
                   description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
                   category:
-                    { _id: 64884f33fdc2d1a130c24ac2, appearance: { path: 'mocked-path-to-icon', color: '#66C42C' } }
+                    { _id: 64884f33fdc2d1a130c24ac2, appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' } }
                   subject: { _id: 6488509cfdc2d1a130c24ae4, name: Languages }
                   proficiencyLevel: [Advanced]
                   sections:

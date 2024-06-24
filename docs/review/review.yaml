@@ -268,8 +268,8 @@ paths:
                   category:
                     _id: 64045f98b131dd04d7896af6
                     name: languages
-                    categoryIcon: 
-                      path: categories-icons/link-to-icon.png
+                    appearance:
+                      icon: categories-icons/link-to-icon.png
                       color: "#66c42c"
                     totalOffers: 9
                     subjects: [{ _id: 6255bc080a71adf9223df134, name: English }]

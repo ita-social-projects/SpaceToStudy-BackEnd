@@ -51,6 +51,21 @@ describe('User service', () => {
       expect(result.tutor).toEqual(expect.arrayContaining(expected))
     })
 
+    it('should convert mainSubjects to array if not already an array', async () => {
+      const mainSubject = { _id: '1', category: { _id: '1', name: 'Math' } }
+      const userSubjects = { tutor: [{ _id: '2', category: { name: 'Physics' } }] }
+      const role = 'tutor'
+      const userId = '123'
+
+      const result = await userService._updateMainSubjects(mainSubject, userSubjects, role, userId)
+
+      const expected = [
+        { category: { _id: '1', name: 'Math' }, subjects: [{ _id: '1', name: undefined }] },
+        { _id: '2', category: { name: 'Physics' } }
+      ]
+      expect(result.tutor).toEqual(expect.arrayContaining(expected))
+    })
+
     it('should throw FORBIDDEN if deletion is blocked', async () => {
       const mainSubject = [{ _id: '1', category: { _id: '', name: '' } }]
       const userSubjects = { tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }] }
@@ -62,12 +77,28 @@ describe('User service', () => {
       await expect(userService._updateMainSubjects(mainSubject, userSubjects, role, userId)).rejects.toThrow(FORBIDDEN)
     })
 
-    it('повинен видалити основний предмет, якщо він має бути видалений, та функція verifyDeletionSubject працює правильно', async () => {
+    it('should remove main subject if it is to be deleted and verifyDeletionSubject works', async () => {
       const mainSubject = [
-        { _id: '1', category: { _id: '1', name: 'Math' }, subjects: [{ _id: '2', name: 'Algebra' }] }
+        {
+          _id: '1',
+          category: { _id: '1', name: 'Math' },
+          subjects: [
+            { _id: '2', name: 'Algebra' },
+            { _id: '3', name: 'Geometry' }
+          ]
+        }
       ]
       const userSubjects = {
-        tutor: [{ _id: '1', category: { _id: '1', name: 'Math' }, subjects: [{ _id: '2', name: 'Algebra' }] }]
+        tutor: [
+          {
+            _id: '1',
+            category: { _id: '1', name: 'Math' },
+            subjects: [
+              { _id: '2', name: 'Algebra' },
+              { _id: '3', name: 'Geometry' }
+            ]
+          }
+        ]
       }
       const role = 'tutor'
       const userId = '123'
@@ -170,6 +201,37 @@ describe('User service', () => {
       const result = await userService.getUserById(userId, role, isEdit)
 
       expect(result.mainSubjects.tutor[0]).toEqual(expect.objectContaining(expectedSubject))
+    })
+
+    it('should log error if _calculateDeletionMainSubject throws an error when isEdit is true', async () => {
+      const userId = '123'
+      const role = 'tutor'
+      const isEdit = true
+
+      const userMock = {
+        _id: userId,
+        mainSubjects: {
+          tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }]
+        }
+      }
+
+      jest.spyOn(User, 'findOne').mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(userMock)
+      })
+
+      const error = new Error('Test error')
+      jest.spyOn(userService, '_calculateDeletionMainSubject').mockImplementation(() => {
+        throw error
+      })
+
+      console.log = jest.fn()
+
+      await userService.getUserById(userId, role, isEdit)
+
+      expect(console.log).toHaveBeenCalledWith(error)
     })
 
     it('should update videoLink if it is in updateData', async () => {

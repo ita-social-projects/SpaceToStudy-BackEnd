@@ -78,16 +78,10 @@ describe('User service', () => {
     })
 
     it('should remove main subject if it is to be deleted and verifyDeletionSubject works', async () => {
-      const mainSubject = [
-        {
-          _id: '1',
-          category: { _id: '1', name: 'Math' },
-          subjects: [
-            { _id: '2', name: 'Algebra' },
-            { _id: '3', name: 'Geometry' }
-          ]
-        }
-      ]
+      const mainSubject = {
+        _id: '1',
+        category: { _id: '1', name: '' }
+      }
       const userSubjects = {
         tutor: [
           {

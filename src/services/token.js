@@ -18,13 +18,13 @@ const { tokenNames } = require('~/consts/auth')
 const { createError } = require('~/utils/errorsHelper')
 
 const tokenService = {
-  generateTokens: (payload, rememberMe) => {
+  generateTokens: (payload) => {
     const accessToken = jwt.sign(payload, JWT_ACCESS_SECRET, {
       expiresIn: JWT_ACCESS_EXPIRES_IN
     })
 
     const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
-      expiresIn: rememberMe ? JWT_REFRESH_LONG_TERM_EXPIRES_IN : JWT_REFRESH_EXPIRES_IN
+      expiresIn: payload.rememberMe ? JWT_REFRESH_LONG_TERM_EXPIRES_IN : JWT_REFRESH_EXPIRES_IN
     })
 
     return {

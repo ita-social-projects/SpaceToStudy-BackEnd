@@ -60,10 +60,10 @@ const authService = {
     }
     const isFromGoogle = true
 
-    return await module.exports.login(payload.email, payload.sub, isFromGoogle)
+    return await module.exports.login(payload.email, payload.sub, { isFromGoogle })
   },
 
-  login: async (email, password, rememberMe = false, isFromGoogle) => {
+  login: async (email, password, { isFromGoogle = false, rememberMe = false } = {}) => {
     const user = await getUserByEmail(email)
 
     if (!user) {
@@ -82,15 +82,13 @@ const authService = {
       throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
-    const tokens = tokenService.generateTokens(
-      {
-        id: _id,
-        role: lastLoginAs,
-        isFirstLogin,
-        status: status[lastLoginAs]
-      },
+    const tokens = tokenService.generateTokens({
+      id: _id,
+      role: lastLoginAs,
+      isFirstLogin,
+      status: status[lastLoginAs],
       rememberMe
-    )
+    })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
     if (isFirstLogin) {
@@ -137,7 +135,8 @@ const authService = {
       id: _id,
       role: lastLoginAs,
       isFirstLogin,
-      status: status[lastLoginAs]
+      status: status[lastLoginAs],
+      rememberMe: tokenData.rememberMe
     })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 

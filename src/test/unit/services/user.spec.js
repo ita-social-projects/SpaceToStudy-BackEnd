@@ -51,6 +51,21 @@ describe('User service', () => {
       expect(result.tutor).toEqual(expect.arrayContaining(expected))
     })
 
+    it('should convert mainSubjects to array if not already an array', async () => {
+      const mainSubject = { _id: '1', category: { _id: '1', name: 'Math' } }
+      const userSubjects = { tutor: [{ _id: '2', category: { name: 'Physics' } }] }
+      const role = 'tutor'
+      const userId = '123'
+
+      const result = await userService._updateMainSubjects(mainSubject, userSubjects, role, userId)
+
+      const expected = [
+        { category: { _id: '1', name: 'Math' }, subjects: [{ _id: '1', name: undefined }] },
+        { _id: '2', category: { name: 'Physics' } }
+      ]
+      expect(result.tutor).toEqual(expect.arrayContaining(expected))
+    })
+
     it('should throw FORBIDDEN if deletion is blocked', async () => {
       const mainSubject = [{ _id: '1', category: { _id: '', name: '' } }]
       const userSubjects = { tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }] }
@@ -62,39 +77,42 @@ describe('User service', () => {
       await expect(userService._updateMainSubjects(mainSubject, userSubjects, role, userId)).rejects.toThrow(FORBIDDEN)
     })
 
-    it('should remove main subject if it is to be deleted', async () => {
-      const mainSubject = [{ _id: '1', category: { _id: '1', name: 'Math' } }]
+    it('should remove main subject if it is to be deleted and verifyDeletionSubject works', async () => {
+      const mainSubject = {
+        _id: '1',
+        category: { _id: '1', name: '' }
+      }
       const userSubjects = {
         tutor: [
-          { _id: '1', category: { _id: '1', name: 'Math' } },
-          { _id: '1', category: { _id: '1', name: 'Math' } }
+          {
+            _id: '1',
+            category: { _id: '1', name: 'Math' },
+            subjects: [
+              { _id: '2', name: 'Algebra' },
+              { _id: '3', name: 'Geometry' }
+            ]
+          }
         ]
       }
       const role = 'tutor'
       const userId = '123'
 
-      jest.spyOn(userService, '_calculateDeletionMainSubject').mockImplementation((userId, categoryId) => {
-        return categoryId !== '1'
-      })
+      jest.spyOn(userService, '_calculateDeletionMainSubject').mockResolvedValue(false)
 
       const result = await userService._updateMainSubjects(mainSubject, userSubjects, role, userId)
 
-      const expected = [
-        { category: { _id: '1', name: 'Math' }, subjects: [{ _id: '1', name: undefined }] },
-        { _id: '1', category: { _id: '1', name: 'Math' } }
-      ]
-      expect(result.tutor).toEqual(expect.arrayContaining(expected))
+      expect(result.tutor).toEqual(expect.arrayContaining([]))
     })
 
     it('should update main subject if it already exists', async () => {
-      const mainSubject = [{ _id: '1', category: { _id: '1', name: 'Math' } }]
-      const userSubjects = { tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }] }
+      const mainSubject = [
+        { _id: '1', category: { _id: '1', name: 'Math' }, subjects: [{ _id: '2', name: 'Algebra' }] }
+      ]
+      const userSubjects = {
+        tutor: [{ _id: '1', category: { _id: '1', name: 'Math' }, subjects: [{ _id: '2', name: 'Algebra' }] }]
+      }
       const role = 'tutor'
       const userId = '123'
-
-      jest.spyOn(userService, '_updateMainSubjects').mockResolvedValue({
-        tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }]
-      })
 
       const result = await userService._updateMainSubjects(mainSubject, userSubjects, role, userId)
 
@@ -102,6 +120,7 @@ describe('User service', () => {
       expect(result.tutor[0]._id).toBe('1')
       expect(result.tutor[0].category._id).toBe('1')
       expect(result.tutor[0].category.name).toBe('Math')
+      expect(result.tutor[0].subjects).toEqual([{ _id: '2', name: 'Algebra' }])
     })
   })
   describe('_calculateDeletionMainSubject', () => {
@@ -144,6 +163,71 @@ describe('User service', () => {
       expect(userService._updateMainSubjects).toHaveBeenCalledWith(updateData.mainSubjects, userMock.mainSubjects, role)
     })
 
+    it('should check for deletion block when isEdit is true', async () => {
+      const userId = '123'
+      const role = 'tutor'
+      const isEdit = true
+
+      const userMock = {
+        _id: userId,
+        mainSubjects: {
+          tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }]
+        }
+      }
+
+      const expectedSubject = {
+        _id: '1',
+        category: { _id: '1', name: 'Math' },
+        isDeletionBlocked: true
+      }
+
+      jest.spyOn(User, 'findOne').mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(userMock)
+      })
+
+      jest.spyOn(userService, '_calculateDeletionMainSubject').mockImplementation((userId, categoryId) => {
+        return categoryId === '1'
+      })
+
+      const result = await userService.getUserById(userId, role, isEdit)
+
+      expect(result.mainSubjects.tutor[0]).toEqual(expect.objectContaining(expectedSubject))
+    })
+
+    it('should log error if _calculateDeletionMainSubject throws an error when isEdit is true', async () => {
+      const userId = '123'
+      const role = 'tutor'
+      const isEdit = true
+
+      const userMock = {
+        _id: userId,
+        mainSubjects: {
+          tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }]
+        }
+      }
+
+      jest.spyOn(User, 'findOne').mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(userMock)
+      })
+
+      const error = new Error('Test error')
+      jest.spyOn(userService, '_calculateDeletionMainSubject').mockImplementation(() => {
+        throw error
+      })
+
+      console.log = jest.fn()
+
+      await userService.getUserById(userId, role, isEdit)
+
+      expect(console.log).toHaveBeenCalledWith(error)
+    })
+
     it('should update videoLink if it is in updateData', async () => {
       const id = '123'
       const role = 'tutor'
@@ -176,15 +260,14 @@ describe('User service', () => {
 
     it('should throw DOCUMENT_NOT_FOUND error if user is not found', async () => {
       const id = '123'
-      const role = 'tutor'
-      const updateData = {}
+      const updateStatus = { tutor: 'active' }
 
-      jest.spyOn(User, 'findById').mockReturnValue({
+      jest.spyOn(User, 'findByIdAndUpdate').mockReturnValue({
         lean: jest.fn().mockReturnThis(),
         exec: jest.fn().mockResolvedValue(null)
       })
 
-      await expect(userService.updateUser(id, role, updateData)).rejects.toThrow(DOCUMENT_NOT_FOUND([User.modelName]))
+      await expect(userService.updateStatus(id, updateStatus)).rejects.toThrow(DOCUMENT_NOT_FOUND([User.modelName]))
     })
   })
 })

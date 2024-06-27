@@ -158,14 +158,21 @@ const userService = {
   },
 
   _updateMainSubjects: async (mainSubjects, userSubjects, role, userId) => {
-    const compareIds = (dbSubject, subject) => dbSubject._id.toString() === subject._id
     const oldSubjects = userSubjects[role]
     let newSubjects = { ...userSubjects }
     let formattedSubjects = Array.isArray(mainSubjects) ? mainSubjects : [mainSubjects]
 
+    const verifyUpdateSubject = (dbSubject, subject) => {
+      return dbSubject._id.toString() === subject._id
+    }
+
+    const verifyDeletionSubject = (dbSubject, subject) => {
+      return !subject.subjects.some((currentSubject) => dbSubject._id.toString() === currentSubject._id)
+    }
+
     if (formattedSubjects.every((subject) => !subject.subjects)) {
       const categories = {}
-      mainSubjects.forEach((subject) => {
+      formattedSubjects.forEach((subject) => {
         if (!categories[subject.category._id]) {
           categories[subject.category._id] = [{ ...subject }]
         } else {
@@ -184,7 +191,7 @@ const userService = {
     }
 
     for (const currentSubject of formattedSubjects) {
-      const isUpdate = oldSubjects?.some((subj) => compareIds(subj, currentSubject))
+      const isUpdate = oldSubjects?.some((subj) => verifyUpdateSubject(subj, currentSubject))
       const isDelete = !currentSubject.category.name
 
       if (isDelete) {
@@ -193,10 +200,10 @@ const userService = {
         if (isDeletionBlocked) {
           throw createError(403, FORBIDDEN)
         }
-        newSubjects[role] = oldSubjects.filter((subject) => !compareIds(subject, currentSubject))
+        newSubjects[role] = oldSubjects.filter((subject) => verifyDeletionSubject(subject, currentSubject))
       } else if (isUpdate) {
         newSubjects[role] = oldSubjects.map((subject) =>
-          compareIds(subject, currentSubject) ? currentSubject : subject
+          verifyUpdateSubject(subject, currentSubject) ? currentSubject : subject
         )
       } else {
         newSubjects[role] = [currentSubject, ...newSubjects[role]]

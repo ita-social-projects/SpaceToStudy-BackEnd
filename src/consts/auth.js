@@ -13,9 +13,11 @@ const tokenNames = {
 }
 
 const oneDayInMs = 86400000
+const thirtyDaysInMs = 30 * oneDayInMs
 
 module.exports = {
   roles,
   oneDayInMs,
+  thirtyDaysInMs,
   tokenNames
 }

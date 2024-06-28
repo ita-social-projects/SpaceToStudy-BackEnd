@@ -36,7 +36,7 @@ paths:
                 - _id: 64045f98b131dd04d7896af6
                   name: languages
                   appearance:
-                    icon: categories-icons/link-to-icon.png
+                    icon: mocked-path-to-icon
                     color: '#66c42c'
                   totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
@@ -44,7 +44,7 @@ paths:
                 - _id: 640461e3cfdda3f3d16dcac5
                   name: music
                   appearance:
-                    icon: categories-icons/link-to-icon.png
+                    icon: mocked-path-to-icon
                     color: '#F67C41'
                   totalOffers: { student: 10, tutor: 8 }
                   createdAt: 2023-20-01T13:25:36.292Z
@@ -78,7 +78,7 @@ paths:
             example:
               name: Languages
               appearance:
-                icon: categories-icons/link-to-icon.png
+                icon: mocked-path-to-icon
                 color: '#66C42C'
       responses:
         201:
@@ -91,7 +91,7 @@ paths:
                 _id: 6255bc080a71adf9223df136
                 name: Languages
                 appearance:
-                  icon: categories-icons/link-to-icon.png
+                  icon: mocked-path-to-icon
                   color: '#66C42C'
                 totalOffers: { student: 10, tutor: 8 }
                 createdAt: 2023-20-01T13:25:36.292Z
@@ -201,7 +201,7 @@ paths:
                 _id: 64045f98b131dd04d7896af6
                 name: Languages
                 appearance:
-                  icon: categories-icons/link-to-icon.png
+                  icon: mocked-path-to-icon
                   color: '#66c42c'
                 totalOffers: { student: 10, tutor: 8 }
                 createdAt: 2023-20-01T13:25:36.292Z

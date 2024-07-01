@@ -25,6 +25,11 @@ paths:
           schema:
             type: string
           required: false
+        - in: query
+          name: sort
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: OK

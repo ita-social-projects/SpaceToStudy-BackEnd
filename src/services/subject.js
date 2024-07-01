@@ -6,6 +6,7 @@ const subjectService = {
     const subjects = await Subject.find(searchFilter)
       .skip(skip)
       .limit(limit)
+      .populate({ path: 'category', select: 'appearance' })
       .sort({ totalOffers: -1, updatedAt: -1 })
       .lean()
       .exec()

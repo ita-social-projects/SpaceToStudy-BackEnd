@@ -7,9 +7,9 @@ const templateList = {
       subject: 'Please confirm your email',
       template: path + '/en/confirm-email'
     },
-    ua: {
+    uk: {
       subject: 'Будь ласка, підтвердіть свою електронну адресу',
-      template: path + '/ua/confirm-email'
+      template: path + '/uk/confirm-email'
     }
   },
   [emailSubject.RESET_PASSWORD]: {
@@ -17,9 +17,9 @@ const templateList = {
       subject: 'Reset your account password',
       template: path + '/en/reset-password'
     },
-    ua: {
+    uk: {
       subject: 'Скиньте пароль для свого акаунту',
-      template: path + '/ua/reset-password'
+      template: path + '/uk/reset-password'
     }
   },
   [emailSubject.SUCCESSFUL_PASSWORD_RESET]: {
@@ -27,9 +27,9 @@ const templateList = {
       subject: 'Your password was changed',
       template: path + '/en/sucessful-password-reset'
     },
-    ua: {
+    uk: {
       subject: 'Ваш пароль було змінено',
-      template: path + '/ua/sucessful-password-reset'
+      template: path + '/uk/sucessful-password-reset'
     }
   },
   [emailSubject.LONG_TIME_WITHOUT_LOGIN]: {
@@ -37,9 +37,9 @@ const templateList = {
       subject: 'You have been inactive for too long',
       template: path + '/en/long-time-without-login'
     },
-    ua: {
+    uk: {
       subject: 'Ви занадто довго були неактивні',
-      template: path + '/ua/long-time-without-login'
+      template: path + '/uk/long-time-without-login'
     }
   },
   [emailSubject.ADMIN_INVITATION]: {
@@ -47,9 +47,9 @@ const templateList = {
       subject: 'Admin invitation',
       template: path + '/en/invite-admin'
     },
-    ua: {
+    uk: {
       subject: 'Запрошення адміна',
-      template: path + '/ua/invite-admin'
+      template: path + '/uk/invite-admin'
     }
   }
 }

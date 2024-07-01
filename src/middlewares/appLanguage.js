@@ -1,13 +1,13 @@
 const { INVALID_LANGUAGE } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const {
-  enums: { APP_LANG_ENUM }
+  enums: { APP_LANG_ENUM, APP_LANG_DEFAULT }
 } = require('~/consts/validation')
 
 const langMiddleware = (req, _res, next) => {
-  let lang = req.acceptsLanguages(...APP_LANG_ENUM)
+  let lang = req.acceptsLanguages(...APP_LANG_ENUM) || APP_LANG_DEFAULT
 
-  if (!lang) {
+  if (!APP_LANG_ENUM.includes(lang)) {
     throw createError(400, INVALID_LANGUAGE)
   }
 

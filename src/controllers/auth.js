@@ -1,6 +1,6 @@
 const authService = require('~/services/auth')
 const { createForbiddenError } = require('~/utils/errorsHelper')
-const { oneDayInMs } = require('~/consts/auth')
+const { oneDayInMs, thirtyDaysInMs } = require('~/consts/auth')
 const {
   config: { COOKIE_DOMAIN }
 } = require('~/configs/config')
@@ -26,12 +26,17 @@ const signup = async (req, res) => {
 }
 
 const login = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password, rememberMe } = req.body
 
-  const tokens = await authService.login(email, password)
+  const tokens = await authService.login(email, password, { rememberMe })
+
+  const refreshTokenCookieOptions = {
+    ...COOKIE_OPTIONS,
+    maxAge: rememberMe ? thirtyDaysInMs : oneDayInMs
+  }
 
   res.cookie(ACCESS_TOKEN, tokens.accessToken, COOKIE_OPTIONS)
-  res.cookie(REFRESH_TOKEN, tokens.refreshToken, COOKIE_OPTIONS)
+  res.cookie(REFRESH_TOKEN, tokens.refreshToken, refreshTokenCookieOptions)
 
   delete tokens.refreshToken
 

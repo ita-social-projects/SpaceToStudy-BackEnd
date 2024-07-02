@@ -60,10 +60,10 @@ const authService = {
     }
     const isFromGoogle = true
 
-    return await module.exports.login(payload.email, payload.sub, isFromGoogle)
+    return await module.exports.login(payload.email, payload.sub, { isFromGoogle })
   },
 
-  login: async (email, password, isFromGoogle) => {
+  login: async (email, password, { isFromGoogle = false, rememberMe = false } = {}) => {
     const user = await getUserByEmail(email)
 
     if (!user) {
@@ -86,7 +86,8 @@ const authService = {
       id: _id,
       role: lastLoginAs,
       isFirstLogin,
-      status: status[lastLoginAs]
+      status: status[lastLoginAs],
+      rememberMe
     })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
@@ -134,7 +135,8 @@ const authService = {
       id: _id,
       role: lastLoginAs,
       isFirstLogin,
-      status: status[lastLoginAs]
+      status: status[lastLoginAs],
+      rememberMe: tokenData.rememberMe
     })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 

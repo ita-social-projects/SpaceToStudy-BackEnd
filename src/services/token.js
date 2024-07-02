@@ -6,6 +6,7 @@ const {
     JWT_ACCESS_EXPIRES_IN,
     JWT_REFRESH_SECRET,
     JWT_REFRESH_EXPIRES_IN,
+    JWT_REFRESH_LONG_TERM_EXPIRES_IN,
     JWT_RESET_SECRET,
     JWT_RESET_EXPIRES_IN,
     JWT_CONFIRM_SECRET,
@@ -23,7 +24,7 @@ const tokenService = {
     })
 
     const refreshToken = jwt.sign(payload, JWT_REFRESH_SECRET, {
-      expiresIn: JWT_REFRESH_EXPIRES_IN
+      expiresIn: payload.rememberMe ? JWT_REFRESH_LONG_TERM_EXPIRES_IN : JWT_REFRESH_EXPIRES_IN
     })
 
     return {

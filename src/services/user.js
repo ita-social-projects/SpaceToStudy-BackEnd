@@ -39,7 +39,7 @@ const userService = {
       populate: [
         {
           path: 'category',
-          select: ['_id', 'name']
+          select: ['_id', 'name', 'appearance']
         },
         {
           path: 'subjects',

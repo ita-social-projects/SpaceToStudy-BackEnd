@@ -111,6 +111,9 @@ const cooperationSchema = new Schema(
           minLength: [1, FIELD_CANNOT_BE_SHORTER('section description', 1)],
           maxLength: [1000, FIELD_CANNOT_BE_LONGER('section description', 1000)]
         },
+        order: {
+          type: [String]
+        },
         activities: [
           {
             _id: false,

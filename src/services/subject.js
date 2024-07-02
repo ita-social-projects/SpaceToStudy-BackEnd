@@ -7,7 +7,7 @@ const subjectService = {
       .skip(skip)
       .limit(limit)
       .populate({ path: 'category', select: 'appearance' })
-      .sort({ totalOffers: -1, updatedAt: -1 })
+      .sort({ totalOffers: -1, updatedAt: -1, _id: 1 })
       .lean()
       .exec()
 

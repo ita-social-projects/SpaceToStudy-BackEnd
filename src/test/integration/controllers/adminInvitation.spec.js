@@ -1,5 +1,4 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
-const logger = require('~/logger/logger')
 
 const emails = ['test1@gmail.com', 'test2@gmail.com']
 const endpointURL = '/admin-invitations'
@@ -26,11 +25,6 @@ describe('Admin invitation controller', () => {
     describe(`POST ${endpointURL}`, () => {
       it('should send admin invitations', async () => {
         expect(response.statusCode).toBe(201)
-
-        logger.error({
-          msg: 'Admin invitation response',
-          data: response.body
-        })
 
         expect(response.body).toEqual(
           expect.arrayContaining([

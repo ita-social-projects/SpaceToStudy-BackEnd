@@ -165,7 +165,7 @@ describe('Auth controller', () => {
     })
 
     // it('should login a user with rememberMe = true', async () => {
-    //   // await app.get(`/auth/confirm-email/${confirmToken}`)
+    //   await app.get(`/auth/confirm-email/${confirmToken}`)
 
     //   const loginUserResponse = await app
     //     .post('/auth/login')

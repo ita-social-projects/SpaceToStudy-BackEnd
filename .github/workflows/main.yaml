@@ -42,7 +42,7 @@ jobs:
         run: npm install
         
       - name : 'Run Tests'
-        run: npm test email
+        run: npm run test
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{secrets.MONGODB_USER}}:${{secrets.MONGODB_PASS}}@localhost:27017/${{secrets.MONGODB_DB}}?authSource=admin

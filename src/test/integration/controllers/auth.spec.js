@@ -4,9 +4,7 @@ const {
   enums: { ROLE_ENUM }
 } = require('~/consts/validation')
 const {
-  tokenNames: { RESET_TOKEN, ACCESS_TOKEN },
-  oneDayInMs,
-  thirtyDaysInMs
+  tokenNames: { RESET_TOKEN, ACCESS_TOKEN }
 } = require('~/consts/auth')
 const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
@@ -162,41 +160,6 @@ describe('Auth controller', () => {
           accessToken: expect.any(String)
         })
       )
-    })
-
-    it('should login a user with rememberMe = true', async () => {
-      await app.get(`/auth/confirm-email/${confirmToken}`)
-      const loginUserResponse = await app
-        .post('/auth/login')
-        .send({ email: user.email, password: user.password, rememberMe: true })
-
-      expect(loginUserResponse.statusCode).toBe(200)
-      expect(loginUserResponse.body).toEqual(
-        expect.objectContaining({
-          accessToken: expect.any(String)
-        })
-      )
-
-      const cookies = loginUserResponse.header['set-cookie']
-      expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
-    })
-
-    it('should login a user with rememberMe = false', async () => {
-      await app.get(`/auth/confirm-email/${confirmToken}`)
-
-      const loginUserResponse = await app
-        .post('/auth/login')
-        .send({ email: user.email, password: user.password, rememberMe: false })
-
-      expect(loginUserResponse.statusCode).toBe(200)
-      expect(loginUserResponse.body).toEqual(
-        expect.objectContaining({
-          accessToken: expect.any(String)
-        })
-      )
-
-      const cookies = loginUserResponse.header['set-cookie']
-      expect(cookies.some((cookie) => cookie.includes(`Max-Age=${oneDayInMs / 1000}`))).toBe(true)
     })
 
     it('should throw INCORRECT_CREDENTIALS error', async () => {

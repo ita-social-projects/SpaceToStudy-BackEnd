@@ -22,6 +22,14 @@ jest.mock('~/configs/config', () => ({
   }
 }))
 
+jest.mock('~/models/token', () => ({
+  findOne: jest.fn(),
+  create: jest.fn(),
+  find: jest.fn(),
+  deleteOne: jest.fn(),
+  updateOne: jest.fn()
+}))
+
 describe('Token service', () => {
   const data = { id: 'testExample' }
   const tokenValue = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ8'
@@ -40,14 +48,10 @@ describe('Token service', () => {
   })
 
   it('Should validate refresh token', () => {
-    const token = 'some-refresh-token'
-    const validateTokenMock = jest.fn().mockReturnValue(data)
-    tokenService.validateToken = validateTokenMock
+    const { refreshToken } = tokenService.generateTokens(data)
+    const testData = tokenService.validateRefreshToken(refreshToken)
 
-    const result = tokenService.validateRefreshToken(token)
-
-    expect(validateTokenMock).toHaveBeenCalledWith(token, 'refresh-secret')
-    expect(result).toEqual(data)
+    expect(testData).toEqual(expect.objectContaining(data))
   })
 
   it('Should generate a reset token', () => {
@@ -97,12 +101,8 @@ describe('Token service', () => {
 
   it('Should return null for an invalid token', () => {
     const token = 'invalid-token'
-    const validateTokenMock = jest.fn().mockReturnValue(null)
-    tokenService.validateToken = validateTokenMock
-
     const result = tokenService.validateToken(token)
 
-    expect(validateTokenMock).toHaveBeenCalledWith(token)
     expect(result).toBeNull()
   })
 
@@ -126,6 +126,7 @@ describe('Token service', () => {
 
     expect(serviceFunc).rejects.toThrow(err)
   })
+
   it('Should throw error INVALID_TOKEN_NAME in findToken func', () => {
     const tokenName = 'invalid'
     const err = createError(404, INVALID_TOKEN_NAME)
@@ -171,26 +172,21 @@ describe('Token service', () => {
 
   it('Should generate refresh token with long term expiration when rememberMe is true', () => {
     const payload = { id: 'testExample', rememberMe: true }
-    const mockSign = jest.fn().mockReturnValue('mocked-refresh-token')
-    jwt.sign = mockSign
 
     const { refreshToken } = tokenService.generateTokens(payload)
 
-    expect(mockSign).toHaveBeenCalledWith(payload, 'refresh-secret', { expiresIn: '10d' })
-    expect(refreshToken).toBeDefined()
-    expect(refreshToken).toBe('mocked-refresh-token')
+    const decoded = jwt.decode(refreshToken)
+
+    expect(decoded.exp).toBe(10 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
   })
 
   it('Should generate refresh token with short term expiration when rememberMe is false', () => {
     const payload = { id: 'testExample', rememberMe: false }
-    const mockSign = jest.fn().mockReturnValue('mocked-refresh-token')
-    jwt.sign = mockSign
-
     const { refreshToken } = tokenService.generateTokens(payload)
 
-    expect(mockSign).toHaveBeenCalledWith(payload, 'refresh-secret', { expiresIn: '7d' })
-    expect(refreshToken).toBeDefined()
-    expect(refreshToken).toBe('mocked-refresh-token')
+    const decoded = jwt.decode(refreshToken)
+
+    expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
   })
 
   it('Should remove refresh token', async () => {

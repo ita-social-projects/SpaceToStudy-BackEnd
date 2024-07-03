@@ -13,11 +13,9 @@ const coopSectionsValidation = (req, _res, next) => {
   const { sections } = req.body
   if (sections) {
     for (const section of sections) {
-      if (section.activities) {
-        if (Array.isArray(section.activities)) {
-          for (const activity of section.activities) {
-            validateActivity(activity)
-          }
+      if (section.activities && Array.isArray(section.activities)) {
+        for (const activity of section.activities) {
+          validateActivity(activity)
         }
       } else if (section.quizzes.length || section.lessons.length || section.attachments.length) {
         section.activities = [...section.attachments, ...section.quizzes, ...section.lessons]

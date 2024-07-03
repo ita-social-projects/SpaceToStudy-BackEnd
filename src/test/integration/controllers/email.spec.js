@@ -2,6 +2,7 @@ const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const errors = require('~/consts/errors')
 const emailSubject = require('~/consts/emailSubject')
+const logger = require('~/logger/logger')
 
 describe('Email controller', () => {
   let app, server
@@ -23,7 +24,10 @@ describe('Email controller', () => {
       const response = await app
         .post('/send-email')
         .send({ email: 'test@gmail.com', subject: emailSubject.EMAIL_CONFIRMATION })
-      console.log('MAIL RESPONSE:', response.body)
+      logger.error({
+        msg: 'Email response',
+        data: response.body
+      })
 
       expect(response.statusCode).toBe(204)
     })

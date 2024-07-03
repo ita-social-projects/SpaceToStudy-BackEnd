@@ -55,6 +55,7 @@ const sendMail = async (mailOptions) => {
     return result
   } catch (err) {
     logger.error(err)
+    console.error('SEND MAIL: ', err)
     throw createError(400, EMAIL_NOT_SENT)
   }
 }

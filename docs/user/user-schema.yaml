@@ -1,3 +1,36 @@
+components:
+  category:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+      appearance: 
+        type: object
+        properties:
+          color:
+            type: string
+          icon:
+            type: string
+  subject:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
+  mainSubjects:
+    type: object
+    properties:
+      _id:
+        type: string
+      category:
+        type: object
+        $ref: '#/components/category'
+      subjects: 
+        type: array
+        $ref: '#/components/subject'
 definitions:
   userStatsResponse:
     type: array
@@ -44,10 +77,10 @@ definitions:
           properties:
             student:
               type: array
-              $ref: '#/userMainSubject'
+              $ref: '#/definitions/userMainSubjects'
             tutor:
               type: array
-              $ref: '#/userMainSubjects'
+              $ref: '#/definitions/userMainSubjects'
         totalReviews:
           type: object
           properties:
@@ -152,15 +185,15 @@ definitions:
         type: string
       email:
         type: string
-        mainSubjects:
-          type: object
-          properties:
-            student:
-              type: array
-              $ref: '#/components/subject'
-            tutor:
-              type: array
-              $ref: '#/components/subject'
+      mainSubjects:
+        type: object
+        properties:
+          student:
+            type: array
+            $ref: '#/definitions/userMainSubjects'
+          tutor:
+            type: array
+            $ref: '#/definitions/userMainSubjects'
       totalReviews:
         type: object
         properties:
@@ -215,7 +248,8 @@ definitions:
               - blocked
       bookmarkedOffers:
         type: array
-        $ref: '#/components/offer'
+        items:
+          type: object
       FAQ:
         type: object
         properties:

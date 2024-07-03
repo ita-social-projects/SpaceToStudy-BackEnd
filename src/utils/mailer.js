@@ -18,7 +18,10 @@ const getAccessToken = async () => {
 
     return accessToken
   } catch (err) {
-    console.log('MAIL TOKEN:', err)
+    logger.error({
+      msg: 'MAIL TOKEN error',
+      data: err
+    })
     throw createError(400, API_TOKEN_NOT_RETRIEVED)
   }
 }
@@ -41,7 +44,10 @@ const createTransport = async () => {
 
     return transporter
   } catch (err) {
-    console.log('TRANSPORTER', err)
+    logger.error({
+      msg: 'TRANSPORTER error',
+      data: err
+    })
     logger.error(err)
   }
 }

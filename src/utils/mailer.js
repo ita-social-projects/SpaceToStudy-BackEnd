@@ -50,7 +50,7 @@ const sendMail = async (mailOptions) => {
     const transporter = await createTransport()
     await transporter.verify()
     const result = await transporter.sendMail(mailOptions)
-    // transporter.close()
+    transporter.close()
 
     return result
   } catch (err) {

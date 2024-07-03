@@ -6,7 +6,7 @@ const endpointURL = '/admin-invitations'
 describe('Admin invitation controller', () => {
   let app, server, response
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -25,6 +25,8 @@ describe('Admin invitation controller', () => {
     describe(`POST ${endpointURL}`, () => {
       it('should send admin invitations', async () => {
         expect(response.statusCode).toBe(201)
+
+        console.log('ADMIN INVITATION RESPONSE:', response.body)
 
         expect(response.body).toEqual(
           expect.arrayContaining([

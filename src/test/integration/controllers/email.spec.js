@@ -7,7 +7,7 @@ describe('Email controller', () => {
   let app, server
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   afterEach(async () => {
@@ -23,6 +23,7 @@ describe('Email controller', () => {
       const response = await app
         .post('/send-email')
         .send({ email: 'test@gmail.com', subject: emailSubject.EMAIL_CONFIRMATION })
+      console.log('MAIL RESPONSE:', response.body)
 
       expect(response.statusCode).toBe(204)
     })

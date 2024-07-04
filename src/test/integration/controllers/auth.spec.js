@@ -157,6 +157,19 @@ describe('Auth controller', () => {
       )
     })
 
+    it('should login a user', async () => {
+      await app.get(`/auth/confirm-email/${confirmToken}`)
+
+      const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
+
+      expect(loginUserResponse.statusCode).toBe(200)
+      expect(loginUserResponse.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
+    })
+
     it('should throw INCORRECT_CREDENTIALS error', async () => {
       const response = await app.post('/auth/login').send({ email: 'invalid@gmail.com', password: 'invalid' })
 
@@ -374,44 +387,44 @@ describe('Auth controller', () => {
     })
   })
 
-  describe('REMEMBER MEEE 1', () => {
-    it('should login a user with rememberMe = true', async () => {
-      const mockUser = {
-        role: 'student',
-        firstName: 'remember',
-        lastName: 'me',
-        email: 'rememberme_test@gmail.com',
-        password: 'testpass_135'
-      }
-      const mockUserResponse = await app.post('/auth/signup').send(mockUser)
-      const tokensResponse = await tokenService.findTokensWithUsersByParams({
-        user: mockUserResponse.body.userId
-      })
-      await app.get(`/auth/confirm-email/${tokensResponse[0].confirmToken}`)
+  // describe('REMEMBER MEEE 1', () => {
+  //   it('should login a user with rememberMe = true', async () => {
+  //     const mockUser = {
+  //       role: 'student',
+  //       firstName: 'remember',
+  //       lastName: 'me',
+  //       email: 'rememberme_test@gmail.com',
+  //       password: 'testpass_135'
+  //     }
+  //     const mockUserResponse = await app.post('/auth/signup').send(mockUser)
+  //     const tokensResponse = await tokenService.findTokensWithUsersByParams({
+  //       user: mockUserResponse.body.userId
+  //     })
+  //     await app.get(`/auth/confirm-email/${tokensResponse[0].confirmToken}`)
 
-      const loginUserResponse = await app
-        .post('/auth/login')
-        .send({ email: mockUser.email, password: mockUser.password, rememberMe: false })
+  //     const loginUserResponse = await app
+  //       .post('/auth/login')
+  //       .send({ email: mockUser.email, password: mockUser.password, rememberMe: false })
 
-      expect(loginUserResponse.statusCode).toBe(200)
-      expect(loginUserResponse.body).toEqual(
-        expect.objectContaining({
-          accessToken: expect.any(String)
-        })
-      )
+  //     expect(loginUserResponse.statusCode).toBe(200)
+  //     expect(loginUserResponse.body).toEqual(
+  //       expect.objectContaining({
+  //         accessToken: expect.any(String)
+  //       })
+  //     )
 
-      // const cookies = loginUserResponse.header['set-cookie']
-      // expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
+  //     // const cookies = loginUserResponse.header['set-cookie']
+  //     // expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
 
-      // const refreshToken = cookies
-      //   .find((cookie) => cookie.includes('refreshToken'))
-      //   .split(';')[0]
-      //   .split('=')[1]
+  //     // const refreshToken = cookies
+  //     //   .find((cookie) => cookie.includes('refreshToken'))
+  //     //   .split(';')[0]
+  //     //   .split('=')[1]
 
-      // const decodedRefreshToken = jwt.decode(refreshToken)
-      // expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
-    })
-  })
+  //     // const decodedRefreshToken = jwt.decode(refreshToken)
+  //     // expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+  //   })
+  // })
 
   // describe('REMEMBER MEEE 2', () => {
   //   it('should login a user with rememberMe = false', async () => {

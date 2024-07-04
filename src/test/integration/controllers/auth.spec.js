@@ -202,11 +202,22 @@ describe('Auth controller', () => {
     })
 
     it('should login a user with rememberMe = false', async () => {
-      await app.get(`/auth/confirm-email/${confirmToken}`)
+      const mockUser = {
+        role: 'student',
+        firstName: 'rememberFalse',
+        lastName: 'mef',
+        email: 'remembermefa_test@gmail.com',
+        password: 'testpass_135'
+      }
+      const mockUserResponse = await app.post('/auth/signup').send(mockUser)
+      const tokensResponse = await tokenService.findTokensWithUsersByParams({
+        user: mockUserResponse.body.userId
+      })
+      await app.get(`/auth/confirm-email/${tokensResponse[0].confirmToken}`)
 
       const loginUserResponse = await app
         .post('/auth/login')
-        .send({ email: user.email, password: user.password, rememberMe: false })
+        .send({ email: mockUser.email, password: mockUser.password, rememberMe: false })
 
       expect(loginUserResponse.statusCode).toBe(200)
       expect(loginUserResponse.body).toEqual(
@@ -238,6 +249,7 @@ describe('Auth controller', () => {
 
       expectError(401, errors.INCORRECT_CREDENTIALS, response)
     })
+
     it('should throw EMAIL_NOT_CONFIRMED error', async () => {
       const email = 'test2@gmail.com'
       await app.post('/auth/signup').send({ ...user, email })

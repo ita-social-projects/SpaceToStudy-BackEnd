@@ -39,8 +39,12 @@ const createTransport = async () => {
       }
     })
 
+    logger.info('MAILER user: ' + user)
+    logger.info('MAILER clientId: ' + clientId)
+    logger.info('MAILER accessToken: ' + accessToken)
     return transporter
   } catch (err) {
+    logger.info('MAILER catch: ' + JSON.stringify(err))
     logger.error(err)
   }
 }
@@ -54,7 +58,7 @@ const sendMail = async (mailOptions) => {
 
     return result
   } catch (err) {
-    logger.info('MAIL INNER ERROR: ' + JSON.stringify(err))
+    logger.info('MAILER INNER ERROR: ' + JSON.stringify(err))
     throw createError(400, EMAIL_NOT_SENT)
   }
 }

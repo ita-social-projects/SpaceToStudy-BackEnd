@@ -35,7 +35,7 @@ const createTransport = async () => {
         clientId,
         clientSecret,
         refreshToken,
-        accessToken
+        accessToken: accessToken?.token
       }
     })
 

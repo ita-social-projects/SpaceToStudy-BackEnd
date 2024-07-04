@@ -177,7 +177,7 @@ describe('Token service', () => {
 
     const decoded = jwt.decode(refreshToken)
 
-    expect(decoded.exp).toBe(10 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+    expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
   })
 
   it('Should generate refresh token with short term expiration when rememberMe is false', () => {

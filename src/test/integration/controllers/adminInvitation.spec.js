@@ -25,6 +25,7 @@ describe('Admin invitation controller', () => {
   describe('admin-invitations endpoint', () => {
     describe(`POST ${endpointURL}`, () => {
       it('should send admin invitations', async () => {
+        logger.info('MAIL: ' + JSON.stringify(response.body))
         expect(response.statusCode).toBe(201)
 
         expect(response.body).toEqual(
@@ -33,8 +34,6 @@ describe('Admin invitation controller', () => {
             expect.objectContaining({ email: emails[1] })
           ])
         )
-
-        logger.info(JSON.stringify(response.body, null, 2))
       })
     })
 

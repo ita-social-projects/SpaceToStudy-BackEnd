@@ -170,6 +170,19 @@ describe('Auth controller', () => {
       )
     })
 
+    it('should login a user', async () => {
+      await app.get(`/auth/confirm-email/${confirmToken}`)
+
+      const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
+
+      expect(loginUserResponse.statusCode).toBe(200)
+      expect(loginUserResponse.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
+    })
+
     it('should throw INCORRECT_CREDENTIALS error', async () => {
       const response = await app.post('/auth/login').send({ email: 'invalid@gmail.com', password: 'invalid' })
 

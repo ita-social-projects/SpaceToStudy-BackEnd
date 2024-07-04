@@ -374,7 +374,7 @@ describe('Auth controller', () => {
     })
   })
 
-  describe('REMEMBER MEEE', () => {
+  describe('REMEMBER MEEE 1', () => {
     it('should login a user with rememberMe = true', async () => {
       const mockUser = {
         role: 'student',
@@ -411,7 +411,9 @@ describe('Auth controller', () => {
       // const decodedRefreshToken = jwt.decode(refreshToken)
       // expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
     })
+  })
 
+  describe('REMEMBER MEEE 2', () => {
     it('should login a user with rememberMe = false', async () => {
       const mockUser = {
         role: 'student',

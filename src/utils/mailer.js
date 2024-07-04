@@ -28,7 +28,7 @@ const createTransport = async () => {
     const accessToken = await getAccessToken()
     const transporter = nodemailer.createTransport({
       service: 'gmail',
-      secure: false,
+      secure: true,
       auth: {
         type: 'OAuth2',
         user,
@@ -36,9 +36,6 @@ const createTransport = async () => {
         clientSecret,
         refreshToken,
         accessToken
-      },
-      tls: {
-        rejectUnauthorized: false
       }
     })
 

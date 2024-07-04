@@ -12,8 +12,8 @@ const {
 } = require('~/consts/validation')
 const {
   tokenNames: { RESET_TOKEN, ACCESS_TOKEN },
-  oneDayInMs
-  // thirtyDaysInMs
+  oneDayInMs,
+  thirtyDaysInMs
 } = require('~/consts/auth')
 const errors = require('~/consts/errors')
 
@@ -164,31 +164,42 @@ describe('Auth controller', () => {
       )
     })
 
-    // it('should login a user with rememberMe = true', async () => {
-    //   await app.get(`/auth/confirm-email/${confirmToken}`)
+    it('should login a user with rememberMe = true', async () => {
+      const mockUser = {
+        role: 'student',
+        firstName: 'remember',
+        lastName: 'me',
+        email: 'rememberme_test@gmail.com',
+        password: 'testpass_135'
+      }
+      const mockUserResponse = await app.post('/auth/signup').send(mockUser)
+      const tokensResponse = await tokenService.findTokensWithUsersByParams({
+        user: mockUserResponse.body.userId
+      })
+      await app.get(`/auth/confirm-email/${tokensResponse[0].confirmToken}`)
 
-    //   const loginUserResponse = await app
-    //     .post('/auth/login')
-    //     .send({ email: user.email, password: user.password, rememberMe: true })
+      const loginUserResponse = await app
+        .post('/auth/login')
+        .send({ email: mockUser.email, password: mockUser.password, rememberMe: true })
 
-    //   expect(loginUserResponse.statusCode).toBe(200)
-    //   expect(loginUserResponse.body).toEqual(
-    //     expect.objectContaining({
-    //       accessToken: expect.any(String)
-    //     })
-    //   )
+      expect(loginUserResponse.statusCode).toBe(200)
+      expect(loginUserResponse.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
 
-    //   const cookies = loginUserResponse.header['set-cookie']
-    //   expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
+      const cookies = loginUserResponse.header['set-cookie']
+      expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
 
-    //   const refreshToken = cookies
-    //     .find((cookie) => cookie.includes('refreshToken'))
-    //     .split(';')[0]
-    //     .split('=')[1]
+      const refreshToken = cookies
+        .find((cookie) => cookie.includes('refreshToken'))
+        .split(';')[0]
+        .split('=')[1]
 
-    //   const decodedRefreshToken = jwt.decode(refreshToken)
-    //   expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
-    // })
+      const decodedRefreshToken = jwt.decode(refreshToken)
+      expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+    })
 
     it('should login a user with rememberMe = false', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)

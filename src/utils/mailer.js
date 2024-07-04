@@ -36,6 +36,9 @@ const createTransport = async () => {
         clientSecret,
         refreshToken,
         accessToken
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     })
 

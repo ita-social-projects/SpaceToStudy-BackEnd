@@ -28,7 +28,7 @@ const createTransport = async () => {
     const accessToken = await getAccessToken()
     const transporter = nodemailer.createTransport({
       service: 'gmail',
-      secure: true,
+      secure: false,
       auth: {
         type: 'OAuth2',
         user,
@@ -58,6 +58,8 @@ const sendMail = async (mailOptions) => {
 
     return result
   } catch (err) {
+    logger.error(`Error sending email: ${err.message}`)
+    logger.debug(`Error sending email: ${err.stack}`)
     logger.info('MAILER INNER ERROR: ' + JSON.stringify(err))
     throw createError(400, EMAIL_NOT_SENT)
   }

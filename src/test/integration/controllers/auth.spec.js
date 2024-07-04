@@ -188,9 +188,6 @@ describe('Auth controller', () => {
 
       const decodedRefreshToken = jwt.decode(refreshToken)
       expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
-
-      const logoutResponse = await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
-      expect(logoutResponse.statusCode).toBe(204)
     })
 
     it('should login a user with rememberMe = false', async () => {
@@ -209,6 +206,14 @@ describe('Auth controller', () => {
 
       const cookies = loginUserResponse.header['set-cookie']
       expect(cookies.some((cookie) => cookie.includes(`Max-Age=${oneDayInMs / 1000}`))).toBe(true)
+
+      const refreshToken = cookies
+        .find((cookie) => cookie.includes('refreshToken'))
+        .split(';')[0]
+        .split('=')[1]
+
+      const decodedRefreshToken = jwt.decode(refreshToken)
+      expect(decodedRefreshToken.exp).toBe(24 * 60 * 60 + Math.floor(Date.now() / 1000))
     })
 
     it('should throw INCORRECT_CREDENTIALS error', async () => {

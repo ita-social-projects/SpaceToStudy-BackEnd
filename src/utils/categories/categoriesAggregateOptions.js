@@ -45,12 +45,6 @@ const categoriesAggregateOptions = (query) => {
       $sort: sortOption
     },
     {
-      $skip: parseInt(skip)
-    },
-    {
-      $limit: parseInt(limit)
-    },
-    {
       $project: {
         subjects: 0
       }

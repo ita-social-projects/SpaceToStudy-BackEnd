@@ -82,18 +82,17 @@ const authService = {
       throw createError(401, EMAIL_NOT_CONFIRMED)
     }
 
-    const tokenPayload = {
-      id: _id,
-      role: lastLoginAs,
-      isFirstLogin,
-      status: status[lastLoginAs]
-    }
-
-    if (!isFromGoogle) {
-      tokenPayload.rememberMe = rememberMe
-    }
-
-    const tokens = tokenService.generateTokens(tokenPayload)
+    const tokens = tokenService.generateTokens(
+      {
+        id: _id,
+        role: lastLoginAs,
+        isFirstLogin,
+        status: status[lastLoginAs]
+      },
+      {
+        rememberMe: isFromGoogle ? false : rememberMe
+      }
+    )
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 
     if (isFirstLogin) {
@@ -140,8 +139,7 @@ const authService = {
       id: _id,
       role: lastLoginAs,
       isFirstLogin,
-      status: status[lastLoginAs],
-      rememberMe: tokenData.rememberMe
+      status: status[lastLoginAs]
     })
     await tokenService.saveToken(_id, tokens.refreshToken, REFRESH_TOKEN)
 

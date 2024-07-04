@@ -171,9 +171,9 @@ describe('Token service', () => {
   })
 
   it('Should generate refresh token with long term expiration when rememberMe is true', () => {
-    const payload = { id: 'testExample', rememberMe: true }
+    const payload = { id: 'testExample' }
 
-    const { refreshToken } = tokenService.generateTokens(payload)
+    const { refreshToken } = tokenService.generateTokens(payload, { rememberMe: true })
 
     const decoded = jwt.decode(refreshToken)
 
@@ -181,8 +181,8 @@ describe('Token service', () => {
   })
 
   it('Should generate refresh token with short term expiration when rememberMe is false', () => {
-    const payload = { id: 'testExample', rememberMe: false }
-    const { refreshToken } = tokenService.generateTokens(payload)
+    const payload = { id: 'testExample' }
+    const { refreshToken } = tokenService.generateTokens(payload, { rememberMe: false })
 
     const decoded = jwt.decode(refreshToken)
 

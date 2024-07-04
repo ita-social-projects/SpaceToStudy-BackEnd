@@ -1,4 +1,5 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
+const logger = require('~/logger/logger')
 
 const emails = ['test1@gmail.com', 'test2@gmail.com']
 const endpointURL = '/admin-invitations'
@@ -32,6 +33,8 @@ describe('Admin invitation controller', () => {
             expect.objectContaining({ email: emails[1] })
           ])
         )
+
+        logger.info(JSON.stringify(response.body, null, 2))
       })
     })
 

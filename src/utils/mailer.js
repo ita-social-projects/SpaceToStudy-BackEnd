@@ -55,7 +55,6 @@ const sendMail = async (mailOptions) => {
     return result
   } catch (err) {
     logger.error(err)
-    logger.info('MAILER INNER ERROR: ' + JSON.stringify(err))
     throw createError(400, EMAIL_NOT_SENT)
   }
 }

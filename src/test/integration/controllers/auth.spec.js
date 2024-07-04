@@ -167,7 +167,7 @@ describe('Auth controller', () => {
         .split('=')[1]
 
       const decodedRefreshToken = jwt.decode(refreshToken)
-      expect(decodedRefreshToken.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+      expect(decodedRefreshToken.exp).toBe(24 * 60 * 60 + Math.floor(Date.now() / 1000))
     })
 
     it('should login a user with [ rememberMe = true ]', async () => {

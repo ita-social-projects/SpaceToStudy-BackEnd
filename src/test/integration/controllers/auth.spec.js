@@ -180,7 +180,7 @@ describe('Auth controller', () => {
 
       const loginUserResponse = await app
         .post('/auth/login')
-        .send({ email: mockUser.email, password: mockUser.password, rememberMe: true })
+        .send({ email: mockUser.email, password: mockUser.password, rememberMe: false })
 
       expect(loginUserResponse.statusCode).toBe(200)
       expect(loginUserResponse.body).toEqual(

@@ -1,5 +1,5 @@
 require('~/initialization/envSetup')
-const jwt = require('jsonwebtoken')
+// const jwt = require('jsonwebtoken')
 const Token = require('~/models/token')
 const tokenService = require('~/services/token')
 const { createError } = require('~/utils/errorsHelper')
@@ -170,24 +170,24 @@ describe('Token service', () => {
     mockFind.mockRestore()
   })
 
-  it('Should generate refresh token with long term expiration when rememberMe is true', () => {
-    const payload = { id: 'testExample' }
+  // it('Should generate refresh token with long term expiration when rememberMe is true', () => {
+  //   const payload = { id: 'testExample' }
 
-    const { refreshToken } = tokenService.generateTokens(payload, { rememberMe: true })
+  //   const { refreshToken } = tokenService.generateTokens(payload, { rememberMe: true })
 
-    const decoded = jwt.decode(refreshToken)
+  //   const decoded = jwt.decode(refreshToken)
 
-    expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
-  })
+  //   expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+  // })
 
-  it('Should generate refresh token with short term expiration when rememberMe is false', () => {
-    const payload = { id: 'testExample' }
-    const { refreshToken } = tokenService.generateTokens(payload, { rememberMe: false })
+  // it('Should generate refresh token with short term expiration when rememberMe is false', () => {
+  //   const payload = { id: 'testExample' }
+  //   const { refreshToken } = tokenService.generateTokens(payload, { rememberMe: false })
 
-    const decoded = jwt.decode(refreshToken)
+  //   const decoded = jwt.decode(refreshToken)
 
-    expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
-  })
+  //   expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+  // })
 
   it('Should remove refresh token', async () => {
     const mockDeleteOne = jest.fn().mockResolvedValue({ deletedCount: 1 })

@@ -26,9 +26,9 @@ const signup = async (req, res) => {
 }
 
 const login = async (req, res) => {
-  const { email, password, rememberMe } = req.body
+  const { email, password } = req.body
 
-  const tokens = await authService.login(email, password, { rememberMe })
+  const tokens = await authService.login(email, password)
 
   // const refreshTokenCookieOptions = {
   //   ...COOKIE_OPTIONS,

@@ -2,10 +2,10 @@ require('~/initialization/envSetup')
 const jwt = require('jsonwebtoken')
 const Token = require('~/models/token')
 const tokenService = require('~/services/token')
+const { createError } = require('~/utils/errorsHelper')
 const {
   tokenNames: { RESET_TOKEN }
 } = require('~/consts/auth')
-const { createError } = require('~/utils/errorsHelper')
 const { INVALID_TOKEN_NAME } = require('~/consts/errors')
 
 jest.mock('~/configs/config', () => ({

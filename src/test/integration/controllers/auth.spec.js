@@ -1,21 +1,21 @@
+const jwt = require('jsonwebtoken')
+const { OAuth2Client } = require('google-auth-library')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
+const { expectError } = require('~/test/helpers')
+const Token = require('~/models/token')
+const tokenService = require('~/services/token')
+const authController = require('~/controllers/auth')
+const testUserAuthentication = require('~/utils/testUserAuth')
 const {
   lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
   enums: { ROLE_ENUM }
 } = require('~/consts/validation')
 const {
   tokenNames: { RESET_TOKEN, ACCESS_TOKEN },
-  oneDayInMs
-  // thirtyDaysInMs
+  oneDayInMs,
+  thirtyDaysInMs
 } = require('~/consts/auth')
 const errors = require('~/consts/errors')
-const tokenService = require('~/services/token')
-const Token = require('~/models/token')
-const { expectError } = require('~/test/helpers')
-const { OAuth2Client } = require('google-auth-library')
-const authController = require('~/controllers/auth')
-
-const testUserAuthentication = require('~/utils/testUserAuth')
 
 jest.mock('google-auth-library')
 
@@ -164,23 +164,34 @@ describe('Auth controller', () => {
       )
     })
 
-    // it('should login a user with rememberMe = true', async () => {
-    //   await app.get(`/auth/confirm-email/${confirmToken}`)
+    it('should login a user with rememberMe = true', async () => {
+      await app.get(`/auth/confirm-email/${confirmToken}`)
 
-    //   const loginUserResponse = await app
-    //     .post('/auth/login')
-    //     .send({ email: user.email, password: user.password, rememberMe: true })
+      const loginUserResponse = await app
+        .post('/auth/login')
+        .send({ email: user.email, password: user.password, rememberMe: true })
 
-    //   expect(loginUserResponse.statusCode).toBe(200)
-    //   expect(loginUserResponse.body).toEqual(
-    //     expect.objectContaining({
-    //       accessToken: expect.any(String)
-    //     })
-    //   )
+      expect(loginUserResponse.statusCode).toBe(200)
+      expect(loginUserResponse.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
 
-    //   const cookies = loginUserResponse.header['set-cookie']
-    //   expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
-    // })
+      const cookies = loginUserResponse.header['set-cookie']
+      expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
+
+      const refreshToken = cookies
+        .find((cookie) => cookie.includes('refreshToken'))
+        .split(';')[0]
+        .split('=')[1]
+
+      const decodedRefreshToken = jwt.decode(refreshToken)
+      expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+
+      const logoutResponse = await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
+      expect(logoutResponse.statusCode).toBe(204)
+    })
 
     it('should login a user with rememberMe = false', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)

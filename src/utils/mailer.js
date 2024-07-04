@@ -41,7 +41,7 @@ const createTransport = async () => {
 
     logger.info('MAILER user: ' + user)
     logger.info('MAILER clientId: ' + clientId)
-    logger.info('MAILER accessToken: ' + accessToken)
+    logger.info('MAILER acs: ' + JSON.stringify(accessToken))
     return transporter
   } catch (err) {
     logger.info('MAILER catch: ' + JSON.stringify(err))

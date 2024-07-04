@@ -1,4 +1,5 @@
 // const jwt = require('jsonwebtoken')
+const userService = require('~/services/user')
 const { OAuth2Client } = require('google-auth-library')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
@@ -155,6 +156,9 @@ describe('Auth controller', () => {
           accessToken: expect.any(String)
         })
       )
+      const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+      await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
+      await userService.deleteUser(signupResponse.body.userId)
     })
 
     it('should login a user', async () => {
@@ -168,6 +172,9 @@ describe('Auth controller', () => {
           accessToken: expect.any(String)
         })
       )
+      const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+      await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
+      await userService.deleteUser(signupResponse.body.userId)
     })
 
     it('should login a user', async () => {
@@ -181,6 +188,9 @@ describe('Auth controller', () => {
           accessToken: expect.any(String)
         })
       )
+      const refreshToken = loginUserResponse.header['set-cookie'][0].split(';')[0].split('=')[1]
+      await app.post('/auth/logout').set('Cookie', `refreshToken=${refreshToken}`)
+      await userService.deleteUser(signupResponse.body.userId)
     })
 
     it('should throw INCORRECT_CREDENTIALS error', async () => {

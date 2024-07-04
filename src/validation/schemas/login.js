@@ -6,6 +6,10 @@ const loginValidationSchema = {
   password: {
     type: 'string',
     required: true
+  },
+  rememberMe: {
+    type: 'boolean',
+    required: false
   }
 }
 

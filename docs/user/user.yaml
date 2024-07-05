@@ -242,102 +242,113 @@ paths:
                 $ref: '#/definitions/user'
               examples:
                 example1:
-                  _id: 6255bc080a75adf9223df100
-                  role: student
-                  firstName: John
-                  lastName: Doe
-                  email: johndoe@gmail.com
-                  mainSubjects:
-                    {
-                      student:
-                        [
-                          {
-                            _id: 64593435163b62124ce4c3ab,
-                            
-                            category: {
-                              _id: '6421ed8ed991d46a84721df2',
-                              name: Cybersecurity,
-                            },
-                            subjects: [{
-                              _id: '6421ed8ed991d46a84721df2',
-                              name: 'XSS Attack'
-                            }],
-                            isDeletionBlocked: false
-                          }
-                        ]
-                    }
-                  totalReviews: { student: 10, tutor: 0 }
-                  averageRating: { student: 4.5, tutor: 0 }
-                  nativeLanguage: english
-                  address: { country: The USA, city: California }
-                  ProfessionalSummary: KNPU H.S. Skovoroda
-                  photo: john-doe-photo.jpg
-                  status: { student: active, tutor: active, admin: active }
-                  isEmailConfirmed: true
-                  isFirstLogin: true
-                  lastLogin: 2022-09-02T11:59:53.243+00:00
-                  bookmarkedOffers: []
-                  FAQ:
-                    {
-                      student: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }],
-                      tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
-                    }
-                  videoLink:
-                    {
-                      student: www.youtube.com/watch?v=ebTnuLRnIOY,
-                      tutor: www.youtube.com/watch?v=ebTnuLRnIOY
-                    }
-                  createdAt: 2021-04-09T11:34:53.243+00:00
-                  updatedAt: 2022-09-02T11:59:53.243+00:00
-                example2:
-                  _id: 6255bc080a75adf9223df100
-                  role: student
-                  firstName: John
-                  lastName: Doe
-                  email: johndoe@gmail.com
-                  mainSubjects:
-                    {
-                      student:
-                      [
-                          {
-                            _id: 64593435163b62124ce4c3ab,
-                            
-                            category: {
-                              _id: '6421ed8ed991d46a84721df2',
-                              name: Cybersecurity,
-                            },
-                            subjects: [{
-                              _id: '6421ed8ed991d46a84721df2',
-                              name: 'XSS Attack'
-                            }],
-                            isDeletionBlocked: false
-                          }
-                        ],
+                  summary: Example 1
+                  value:
+                    _id: 6255bc080a75adf9223df100
+                    role: student
+                    firstName: John
+                    lastName: Doe
+                    email: johndoe@gmail.com
+                    mainSubjects:
+                      {
+                        student:
+                          [
+                            {
+                              _id: 64593435163b62124ce4c3ab,
+                              category: {
+                                _id: '6421ed8ed991d46a84721df2',
+                                name: Cybersecurity,
+                                appearance: {
+                                  icon: 'IconName',
+                                  color: '#123456'
+                                }
+                              },
+                              subjects: [{
+                                _id: '6421ed8ed991d46a84721df2',
+                                name: 'XSS Attack'
+                              }],
+                              isDeletionBlocked: false
+                            }
+                          ],
                         tutor: []
-                    }
-                  totalReviews: { student: 10, tutor: 0 }
-                  averageRating: { student: 4.5, tutor: 0 }
-                  nativeLanguage: english
-                  address: { country: The USA, city: California }
-                  professionalSummary: KNPU H.S. Skovoroda
-                  photo: john-doe-photo.jpg
-                  status: { student: active, tutor: active, admin: active }
-                  isEmailConfirmed: true
-                  isFirstLogin: true
-                  lastLogin: 2022-09-02T11:59:53.243+00:00
-                  bookmarkedOffers: []
-                  FAQ:
-                    {
-                      student: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }],
-                      tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
-                    }
-                  videoLink:
-                    {
-                      student: www.youtube.com/watch?v=ebTnuLRnIOY,
-                      tutor: www.youtube.com/watch?v=ebTnuLRnIOY
-                    }
-                  createdAt: 2021-04-09T11:34:53.243+00:00
-                  updatedAt: 2022-09-02T11:59:53.243+00:00
+                      }
+                    totalReviews: { student: 10, tutor: 0 }
+                    averageRating: { student: 4.5, tutor: 0 }
+                    nativeLanguage: english
+                    address: { country: The USA, city: California }
+                    ProfessionalSummary: KNPU H.S. Skovoroda
+                    photo: john-doe-photo.jpg
+                    status: { student: active, tutor: active, admin: active }
+                    isEmailConfirmed: true
+                    isFirstLogin: true
+                    lastLogin: 2022-09-02T11:59:53.243+00:00
+                    bookmarkedOffers: []
+                    FAQ:
+                      {
+                        student: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }],
+                        tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
+                      }
+                    videoLink:
+                      {
+                        student: www.youtube.com/watch?v=ebTnuLRnIOY,
+                        tutor: www.youtube.com/watch?v=ebTnuLRnIOY
+                      }
+                    createdAt: 2021-04-09T11:34:53.243+00:00
+                    updatedAt: 2022-09-02T11:59:53.243+00:00
+                example2:
+                  summary: Example 2
+                  value:
+                    _id: 6255bc080a75adf9223df100
+                    role: student
+                    firstName: John
+                    lastName: Doe
+                    email: johndoe@gmail.com
+                    mainSubjects:
+                      {
+                        student:
+                        [
+                            {
+                              _id: 64593435163b62124ce4c3ab,
+                              category: {
+                                _id: '6421ed8ed991d46a84721df2',
+                                name: Cybersecurity,
+                                appearance: {
+                                  icon: 'IconName',
+                                  color: '#123456'
+                                }
+                              },
+                              subjects: [{
+                                _id: '6421ed8ed991d46a84721df2',
+                                name: 'XSS Attack'
+                              }],
+                              isDeletionBlocked: false
+                            }
+                          ],
+                        tutor: []
+                      }
+                    totalReviews: { student: 10, tutor: 0 }
+                    averageRating: { student: 4.5, tutor: 0 }
+                    nativeLanguage: english
+                    address: { country: The USA, city: California }
+                    professionalSummary: KNPU H.S. Skovoroda
+                    photo: john-doe-photo.jpg
+                    status: { student: active, tutor: active, admin: active }
+                    isEmailConfirmed: true
+                    isFirstLogin: true
+                    lastLogin: 2022-09-02T11:59:53.243+00:00
+                    bookmarkedOffers: []
+                    FAQ:
+                      {
+                        student: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }],
+                        tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
+                      }
+                    videoLink:
+                      {
+                        student: www.youtube.com/watch?v=ebTnuLRnIOY,
+                        tutor: www.youtube.com/watch?v=ebTnuLRnIOY
+                      }
+                    createdAt: 2021-04-09T11:34:53.243+00:00
+                    updatedAt: 2022-09-02T11:59:53.243+00:00
         400:
           description: Bad Request
           content:

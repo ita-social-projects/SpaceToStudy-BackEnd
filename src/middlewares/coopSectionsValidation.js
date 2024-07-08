@@ -9,22 +9,29 @@ const deleteNotAllowedFields = require('~/utils/cooperations/sections/deleteNotA
 
 const activitieAllowedFields = ['resourceType', 'resource']
 
+const createActivitiesAndValidate = (activities) => {
+  if (Array.isArray(activities)) {
+    for (const activity of activities) {
+      const data = { ...activity }
+      activity.resource = { ...activity }
+      activity.resourceType = data.resourceType
+
+      validateActivity(activity)
+    }
+  }
+}
+
 const coopSectionsValidation = (req, _res, next) => {
   const { sections } = req.body
   if (sections) {
     for (const section of sections) {
-      if (section.quizzes.length || section.lessons.length || section.attachments.length) {
-        section.activities = [...section.attachments, ...section.quizzes, ...section.lessons]
-      }
-
-      if (Array.isArray(section.activities)) {
+      if (section.activities && Array.isArray(section.activities)) {
         for (const activity of section.activities) {
-          const data = { ...activity }
-          activity.resource = { ...activity }
-          activity.resourceType = data.resourceType
-
           validateActivity(activity)
         }
+      } else if (section.quizzes.length || section.lessons.length || section.attachments.length) {
+        section.activities = [...section.attachments, ...section.quizzes, ...section.lessons]
+        createActivitiesAndValidate(section.activities)
       }
     }
   }

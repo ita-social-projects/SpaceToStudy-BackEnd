@@ -19,11 +19,11 @@ const categoryService = {
   },
 
   addCategory: async (data) => {
-    let { name, categoryIcon } = data
+    let { name, appearance } = data
 
     name = capitalizeFirstLetter(name)
 
-    return await Category.create({ name, categoryIcon })
+    return await Category.create({ name, appearance })
   },
 
   priceMinMax: async (searchParams) => {

@@ -2,10 +2,10 @@ require('~/initialization/envSetup')
 const jwt = require('jsonwebtoken')
 const Token = require('~/models/token')
 const tokenService = require('~/services/token')
+const { createError } = require('~/utils/errorsHelper')
 const {
   tokenNames: { RESET_TOKEN }
 } = require('~/consts/auth')
-const { createError } = require('~/utils/errorsHelper')
 const { INVALID_TOKEN_NAME } = require('~/consts/errors')
 
 jest.mock('~/configs/config', () => ({
@@ -22,10 +22,23 @@ jest.mock('~/configs/config', () => ({
   }
 }))
 
+jest.mock('~/models/token', () => ({
+  findOne: jest.fn(),
+  create: jest.fn(),
+  find: jest.fn(),
+  deleteOne: jest.fn(),
+  updateOne: jest.fn()
+}))
+
 describe('Token service', () => {
   const data = { id: 'testExample' }
   const tokenValue = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ8'
   const userId = '631f8e5e587794b884b75483'
+
+  afterEach(() => {
+    jest.resetModules()
+    jest.clearAllMocks()
+  })
 
   it('Should validate access token', () => {
     const { accessToken } = tokenService.generateTokens(data)
@@ -33,29 +46,28 @@ describe('Token service', () => {
 
     expect(testData).toEqual(expect.objectContaining(data))
   })
+
   it('Should validate refresh token', () => {
-    const token = 'some-refresh-token'
-    const mockValidateToken = jest.spyOn(tokenService, 'validateToken').mockReturnValue(data)
+    const { refreshToken } = tokenService.generateTokens(data)
+    const testData = tokenService.validateRefreshToken(refreshToken)
 
-    const result = tokenService.validateRefreshToken(token)
-
-    expect(mockValidateToken).toHaveBeenCalledWith(token, 'refresh-secret')
-    expect(result).toEqual(data)
-
-    mockValidateToken.mockRestore()
+    expect(testData).toEqual(expect.objectContaining(data))
   })
+
   it('Should generate a reset token', () => {
     const resetToken = tokenService.generateResetToken(data)
     const testData = tokenService.validateResetToken(resetToken)
 
     expect(testData).toEqual(expect.objectContaining(data))
   })
+
   it('Should generate a confirm token', () => {
     const confirmToken = tokenService.generateConfirmToken(data)
     const testData = tokenService.validateConfirmToken(confirmToken)
 
     expect(testData).toEqual(expect.objectContaining(data))
   })
+
   it('Should set new token value', async () => {
     const obj = { resetToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9' }
     const tokenData = { resetToken: tokenValue }
@@ -72,6 +84,7 @@ describe('Token service', () => {
     expect(mockSave).toHaveBeenCalled()
     expect(result).toEqual(tokenData)
   })
+
   it('Should create and save a new token if one does not exist', async () => {
     Token.findOne = jest.fn().mockResolvedValue(null)
     Token.create = jest.fn().mockResolvedValue({ user: userId, resetToken: tokenValue })
@@ -82,17 +95,14 @@ describe('Token service', () => {
     expect(Token.create).toHaveBeenCalledWith({ user: userId, resetToken: tokenValue })
     expect(result).toEqual({ user: userId, resetToken: tokenValue })
   })
+
   it('Should return null for an invalid token', () => {
     const token = 'invalid-token'
-    jest.spyOn(jwt, 'verify').mockImplementation(() => {
-      throw new Error('Invalid token')
-    })
-
     const result = tokenService.validateToken(token)
 
     expect(result).toBeNull()
-    jwt.verify.mockRestore()
   })
+
   it('Should return null if an error occurs', async () => {
     Token.find = jest.fn().mockReturnValue({
       exec: jest.fn().mockRejectedValue(new Error('Database error'))
@@ -103,6 +113,7 @@ describe('Token service', () => {
     expect(Token.find).toHaveBeenCalledWith({ resetToken: tokenValue })
     expect(result).toBeNull()
   })
+
   it('Should throw error INVALID_TOKEN_NAME in saveToken func', () => {
     const tokenName = 'invalid'
     const err = createError(404, INVALID_TOKEN_NAME)
@@ -110,6 +121,7 @@ describe('Token service', () => {
 
     expect(serviceFunc).rejects.toThrow(err)
   })
+
   it('Should throw error INVALID_TOKEN_NAME in findToken func', () => {
     const tokenName = 'invalid'
     const err = createError(404, INVALID_TOKEN_NAME)
@@ -117,6 +129,7 @@ describe('Token service', () => {
 
     expect(serviceFunc).rejects.toThrow(err)
   })
+
   it('Should find a token by value and name', async () => {
     const tokenData = { user: userId, resetToken: tokenValue }
     Token.find = jest.fn().mockReturnValue({
@@ -128,6 +141,7 @@ describe('Token service', () => {
     expect(Token.find).toHaveBeenCalledWith({ resetToken: tokenValue })
     expect(result).toEqual(tokenData)
   })
+
   it('Should find tokens with users by params', async () => {
     const params = { resetToken: tokenValue }
     Token.find = jest.fn().mockReturnValue({
@@ -143,45 +157,48 @@ describe('Token service', () => {
     expect(Token.find).toHaveBeenCalledWith(params)
     expect(result).toEqual([{ user: userId, resetToken: tokenValue }])
   })
+
   it('Should generate refresh token with long term expiration when rememberMe is true', () => {
     const payload = { id: 'testExample', rememberMe: true }
-    const mockSign = jest.spyOn(jwt, 'sign')
 
     const { refreshToken } = tokenService.generateTokens(payload)
 
-    expect(mockSign).toHaveBeenCalledWith(payload, 'refresh-secret', { expiresIn: '10d' })
-    expect(refreshToken).toBeDefined()
+    const decoded = jwt.decode(refreshToken)
 
-    mockSign.mockRestore()
+    expect(decoded.exp).toBe(10 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
   })
+
   it('Should generate refresh token with short term expiration when rememberMe is false', () => {
     const payload = { id: 'testExample', rememberMe: false }
-    const mockSign = jest.spyOn(jwt, 'sign')
-
     const { refreshToken } = tokenService.generateTokens(payload)
 
-    expect(mockSign).toHaveBeenCalledWith(payload, 'refresh-secret', { expiresIn: '7d' })
-    expect(refreshToken).toBeDefined()
+    const decoded = jwt.decode(refreshToken)
 
-    mockSign.mockRestore()
+    expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
   })
+
   it('Should remove refresh token', async () => {
     const mockResponse = { deletedCount: 1 }
     Token.deleteOne = jest.fn().mockResolvedValue(mockResponse)
+
     await tokenService.removeRefreshToken(tokenValue)
 
     expect(Token.deleteOne).toHaveBeenCalledWith({ refreshToken: tokenValue })
   })
+
   it('Should remove reset token', async () => {
     const mockResponse = { nModified: 1 }
     Token.updateOne = jest.fn().mockResolvedValue(mockResponse)
+
     await tokenService.removeResetToken(userId)
 
     expect(Token.updateOne).toHaveBeenCalledWith({ user: userId }, { $set: { resetToken: null } })
   })
+
   it('Should remove confirm token', async () => {
     const mockResponse = { deletedCount: 1 }
     Token.deleteOne = jest.fn().mockResolvedValue(mockResponse)
+
     await tokenService.removeConfirmToken(tokenValue)
 
     expect(Token.deleteOne).toHaveBeenCalledWith({ confirmToken: tokenValue })

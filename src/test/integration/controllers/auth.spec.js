@@ -1,4 +1,11 @@
+const jwt = require('jsonwebtoken')
+const { OAuth2Client } = require('google-auth-library')
+const { expectError } = require('~/test/helpers')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
+const tokenService = require('~/services/token')
+const authController = require('~/controllers/auth')
+const testUserAuthentication = require('~/utils/testUserAuth')
+const errors = require('~/consts/errors')
 const {
   lengths: { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH },
   enums: { ROLE_ENUM }
@@ -8,14 +15,6 @@ const {
   oneDayInMs,
   thirtyDaysInMs
 } = require('~/consts/auth')
-const errors = require('~/consts/errors')
-const tokenService = require('~/services/token')
-const Token = require('~/models/token')
-const { expectError } = require('~/test/helpers')
-const { OAuth2Client } = require('google-auth-library')
-const authController = require('~/controllers/auth')
-
-const testUserAuthentication = require('~/utils/testUserAuth')
 
 jest.mock('google-auth-library')
 
@@ -114,10 +113,7 @@ describe('Auth controller', () => {
         user: signupResponse.body.userId
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
-
-      Token.findOne = jest.fn().mockResolvedValue({ confirmToken })
     })
-    afterEach(() => jest.resetAllMocks())
 
     it('should confirm email', async () => {
       const response = await app.get(`/auth/confirm-email/${confirmToken}`)
@@ -146,42 +142,9 @@ describe('Auth controller', () => {
         user: signupResponse.body.userId
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
-
-      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(confirmToken) })
-    })
-    afterEach(() => jest.resetAllMocks())
-
-    it('should login a user', async () => {
-      await app.get(`/auth/confirm-email/${confirmToken}`)
-
-      const loginUserResponse = await app.post('/auth/login').send({ email: user.email, password: user.password })
-
-      expect(loginUserResponse.statusCode).toBe(200)
-      expect(loginUserResponse.body).toEqual(
-        expect.objectContaining({
-          accessToken: expect.any(String)
-        })
-      )
     })
 
-    it('should login a user with rememberMe = true', async () => {
-      await app.get(`/auth/confirm-email/${confirmToken}`)
-      const loginUserResponse = await app
-        .post('/auth/login')
-        .send({ email: user.email, password: user.password, rememberMe: true })
-
-      expect(loginUserResponse.statusCode).toBe(200)
-      expect(loginUserResponse.body).toEqual(
-        expect.objectContaining({
-          accessToken: expect.any(String)
-        })
-      )
-
-      const cookies = loginUserResponse.header['set-cookie']
-      expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
-    })
-
-    it('should login a user with rememberMe = false', async () => {
+    it('should login a user with [ rememberMe = false ]', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
 
       const loginUserResponse = await app
@@ -197,6 +160,39 @@ describe('Auth controller', () => {
 
       const cookies = loginUserResponse.header['set-cookie']
       expect(cookies.some((cookie) => cookie.includes(`Max-Age=${oneDayInMs / 1000}`))).toBe(true)
+
+      const refreshToken = cookies
+        .find((cookie) => cookie.includes('refreshToken'))
+        .split(';')[0]
+        .split('=')[1]
+
+      const decodedRefreshToken = jwt.decode(refreshToken)
+      expect(decodedRefreshToken.exp).toBe(24 * 60 * 60 + Math.floor(Date.now() / 1000))
+    })
+
+    it('should login a user with [ rememberMe = true ]', async () => {
+      await app.get(`/auth/confirm-email/${confirmToken}`)
+      const loginUserResponse = await app
+        .post('/auth/login')
+        .send({ email: user.email, password: user.password, rememberMe: true })
+
+      expect(loginUserResponse.statusCode).toBe(200)
+      expect(loginUserResponse.body).toEqual(
+        expect.objectContaining({
+          accessToken: expect.any(String)
+        })
+      )
+
+      const cookies = loginUserResponse.header['set-cookie']
+      expect(cookies.some((cookie) => cookie.includes(`Max-Age=${thirtyDaysInMs / 1000}`))).toBe(true)
+
+      const refreshToken = cookies
+        .find((cookie) => cookie.includes('refreshToken'))
+        .split(';')[0]
+        .split('=')[1]
+
+      const decodedRefreshToken = jwt.decode(refreshToken)
+      expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
     })
 
     it('should throw INCORRECT_CREDENTIALS error', async () => {
@@ -210,6 +206,7 @@ describe('Auth controller', () => {
 
       expectError(401, errors.INCORRECT_CREDENTIALS, response)
     })
+
     it('should throw EMAIL_NOT_CONFIRMED error', async () => {
       const email = 'test2@gmail.com'
       await app.post('/auth/signup').send({ ...user, email })
@@ -226,10 +223,7 @@ describe('Auth controller', () => {
         user: signupResponse.body.userId
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
-
-      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(confirmToken) })
     })
-    afterEach(() => jest.resetAllMocks())
 
     it('should logout user', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
@@ -251,10 +245,7 @@ describe('Auth controller', () => {
         user: signupResponse.body.userId
       })
       confirmToken = findConfirmTokenResponse[0].confirmToken
-
-      Token.findOne = jest.fn().mockResolvedValue({ save: jest.fn().mockResolvedValue(confirmToken) })
     })
-    afterEach(() => jest.resetAllMocks())
 
     it('should refresh access token', async () => {
       await app.get(`/auth/confirm-email/${confirmToken}`)
@@ -275,6 +266,7 @@ describe('Auth controller', () => {
         })
       )
     })
+
     it('should throw BAD_REFRESH_TOKEN error', async () => {
       const response = await app.get('/auth/refresh').set('Cookie', 'refreshToken=invalid-token')
 
@@ -321,13 +313,13 @@ describe('Auth controller', () => {
 
       await tokenService.saveToken(signupResponse.body.userId, resetToken, RESET_TOKEN)
     })
-    afterEach(() => jest.resetAllMocks())
 
     it('should update a password', async () => {
       const response = await app.patch(`/auth/reset-password/${resetToken}`).send({ password: 'valid_pass1' })
 
       expect(response.statusCode).toBe(204)
     })
+
     it('should throw BAD_RESET_TOKEN error', async () => {
       const response = await app.patch('/auth/reset-password/invalid-token').send({ password: 'valid_pass1' })
 
@@ -348,8 +340,6 @@ describe('Auth controller', () => {
     beforeEach(async () => {
       accessToken = await testUserAuthentication(app)
     })
-
-    afterEach(() => jest.resetAllMocks())
 
     it('should change user password by his ID', async () => {
       const { id: currentUserId } = tokenService.validateAccessToken(accessToken)

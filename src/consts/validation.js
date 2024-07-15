@@ -28,7 +28,7 @@ const enums = {
   QUIZ_VIEW_ENUM: ['Stepper', 'Scroll'],
   QUIZ_SETTINGS_ENUM: ['view', 'shuffle', 'pointValues', 'scoredResponses', 'correctAnswers'],
   RESOURCE_STATUS_ENUM: ['available', 'finished'],
-  RESOURCE_AVAILABILITY_STATUS_ENUM: ['open', 'closed'],
+  RESOURCE_AVAILABILITY_STATUS_ENUM: ['open', 'closed', 'openFrom'],
   RESOURCES_TYPES_ENUM: ['lessons', 'attachments', 'questions', 'quizzes']
 }
 

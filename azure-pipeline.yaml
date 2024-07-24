@@ -2,72 +2,71 @@ trigger:
   batch: true
   branches:
     include:
-    - develop
-    - main
+      - develop
+      - main
 
 pr: none
-  
+
 variables:
   agentOS: ubuntu-latest
 
 stages:
-
-  # - stage: Env
-  #   displayName: Download and set latest .env
-  #   jobs:
-  #     - job: Env 
-  #       pool:
-  #         vmImage: $(agentOS)
-  #       steps:
-  #       - task: DownloadSecureFile@1
-  #         name: envStage
-  #         condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
-  #         inputs:
-  #           secureFile: 'env-back-stage'
-  #       - task: Bash@3
-  #         name: setEnvStage
-  #         inputs:
-  #           targetType: 'inline'
-  #           script: 'mv $(envStage.secureFilePath) .env'
+  - stage: Env
+    displayName: Download and set latest .env
+    jobs:
+      - job: Env
+        pool:
+          vmImage: $(agentOS)
+        steps:
+          - task: DownloadSecureFile@1
+            name: envStage
+            condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+            inputs:
+              secureFile: 'env-back-stage'
+          - task: Bash@3
+            name: setEnvStage
+            inputs:
+              targetType: 'inline'
+              script: 'mv $(envStage.secureFilePath) .env'
 
   - stage: Build
     displayName: Build and push docker image
-    jobs: 
+    jobs:
       - job: Build
         pool:
-         vmImage: $(agentOS)
+          vmImage: $(agentOS)
         steps:
-        - task: Docker@0
-          inputs:
-            containerregistrytype: 'Azure Container Registry'
-            azureSubscription: 'S2s-Service'
-            azureContainerRegistry: '{"loginServer":"s2sstage.azurecr.io", "id" : "/subscriptions/734fc759-c3a2-4e22-a478-301dc5b10496/resourceGroups/Space2Study/providers/Microsoft.ContainerRegistry/registries/S2sStage"}'
-            action: 'Build an image'
-            dockerFile: '**/Dockerfile'
-            buildArguments: 'MONGODB_URL=$(MONGODB_URL)'
-            imageName: 'back-stage:$(Build.BuildId)'
-       
-        - task: Docker@0
-          inputs:
-            containerregistrytype: 'Azure Container Registry'
-            azureSubscription: 'S2s-Service'
-            azureContainerRegistry: '{"loginServer":"s2sstage.azurecr.io", "id" : "/subscriptions/734fc759-c3a2-4e22-a478-301dc5b10496/resourceGroups/Space2Study/providers/Microsoft.ContainerRegistry/registries/S2sStage"}'
-            action: 'Push an image'
-            imageName: 'back-stage:$(Build.BuildId)'
+          - task: Docker@0
+            inputs:
+              containerregistrytype: 'Azure Container Registry'
+              azureSubscription: 'S2s-Service'
+              azureContainerRegistry: '{"loginServer":"s2sstage.azurecr.io", "id" : "/subscriptions/734fc759-c3a2-4e22-a478-301dc5b10496/resourceGroups/Space2Study/providers/Microsoft.ContainerRegistry/registries/S2sStage"}'
+              action: 'Build an image'
+              dockerFile: '**/Dockerfile'
+              buildArguments: 'MONGODB_URL=$(MONGODB_URL)'
+              imageName: 'back-stage:$(Build.BuildId)'
+
+          - task: Docker@0
+            inputs:
+              containerregistrytype: 'Azure Container Registry'
+              azureSubscription: 'S2s-Service'
+              azureContainerRegistry: '{"loginServer":"s2sstage.azurecr.io", "id" : "/subscriptions/734fc759-c3a2-4e22-a478-301dc5b10496/resourceGroups/Space2Study/providers/Microsoft.ContainerRegistry/registries/S2sStage"}'
+              action: 'Push an image'
+              imageName: 'back-stage:$(Build.BuildId)'
 
   - stage: Deploy
     displayName: Deploy image to app service
     jobs:
-     - job: Deploy
-       pool:
-         vmImage: $(agentOS)
-       steps:
-         - task: AzureRmWebAppDeployment@4
-           inputs:
-             ConnectionType: 'AzureRM'
-             azureSubscription: 'S2s-Service'
-             appType: 'webAppContainer'
-             WebAppName: 's2s-back-stage'
-             DockerNamespace: 's2sstage.azurecr.io'
-             DockerRepository: 'back-stage'
-             DockerImageTag: '$(Build.BuildId)'
+      - job: Deploy
+        pool:
+          vmImage: $(agentOS)
+        steps:
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: 'AzureRM'
+              azureSubscription: 'S2s-Service'
+              appType: 'webAppContainer'
+              WebAppName: 's2s-back-stage'
+              DockerNamespace: 's2sstage.azurecr.io'
+              DockerRepository: 'back-stage'
+              DockerImageTag: '$(Build.BuildId)'

@@ -8,28 +8,33 @@ jest.mock('~/utils/cooperations/sections/validateAttachment')
 jest.mock('~/utils/cooperations/sections/validateLesson')
 jest.mock('~/utils/cooperations/sections/validateQuiz')
 
-const quizMock = [
-  {
+const quizMock = {
+  resource: {
     title: 'Title',
     text: 'Text',
     availability: { status: 'open', date: null },
-    answers: [{ text: 'Answer 1', isCorrect: true }],
-    resourceType: QUIZZES
-  }
-]
+    answers: [{ text: 'Answer 1', isCorrect: true }]
+  },
+  resourceType: QUIZZES
+}
 
-const attachmentMock = [
-  {
+const attachmentMock = {
+  resource: {
     title: 'Title.png',
     link: '5534-Title.png',
-    availability: { status: 'open', date: null },
-    resourceType: ATTACHMENTS
-  }
-]
+    availability: { status: 'open', date: null }
+  },
+  resourceType: ATTACHMENTS
+}
 
-const lessonMock = [
-  { title: 'Title', availability: { status: 'open', date: null }, content: 'Content', resourceType: LESSONS }
-]
+const lessonMock = {
+  resource: {
+    title: 'Title',
+    availability: { status: 'open', date: null },
+    content: 'Content'
+  },
+  resourceType: LESSONS
+}
 
 const next = jest.fn()
 
@@ -37,9 +42,17 @@ const req = {
   body: {
     sections: [
       {
-        lessons: lessonMock,
-        attachments: attachmentMock,
-        quizzes: quizMock
+        activities: [
+          {
+            lessonMock
+          },
+          {
+            attachmentMock
+          },
+          {
+            quizMock
+          }
+        ]
       }
     ]
   }
@@ -65,9 +78,20 @@ describe('coopSectionsValidation', () => {
       body: {
         sections: [
           {
-            lessons: 'string',
-            attachments: 'string',
-            quizzes: 'string'
+            activities: [
+              {
+                resource: 'string',
+                resourceType: 'lessons'
+              },
+              {
+                resource: 'string',
+                resourceType: 'attachments'
+              },
+              {
+                resource: 'string',
+                resourceType: 'quizzes'
+              }
+            ]
           }
         ]
       }

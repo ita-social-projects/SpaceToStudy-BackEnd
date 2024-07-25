@@ -43,15 +43,9 @@ const req = {
     sections: [
       {
         activities: [
-          {
-            lessonMock
-          },
-          {
-            attachmentMock
-          },
-          {
-            quizMock
-          }
+          { resource: lessonMock.resource, resourceType: lessonMock.resourceType },
+          { resource: attachmentMock.resource, resourceType: attachmentMock.resourceType },
+          { resource: quizMock.resource, resourceType: quizMock.resourceType }
         ]
       }
     ]
@@ -79,18 +73,9 @@ describe('coopSectionsValidation', () => {
         sections: [
           {
             activities: [
-              {
-                resource: 'string',
-                resourceType: 'lessons'
-              },
-              {
-                resource: 'string',
-                resourceType: 'attachments'
-              },
-              {
-                resource: 'string',
-                resourceType: 'quizzes'
-              }
+              { resource: 'string', resourceType: 'lessons' },
+              { resource: 'string', resourceType: 'attachments' },
+              { resource: 'string', resourceType: 'quizzes' }
             ]
           }
         ]

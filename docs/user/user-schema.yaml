@@ -6,7 +6,7 @@ components:
         type: string
       name:
         type: string
-      appearance: 
+      appearance:
         type: object
         properties:
           color:
@@ -28,7 +28,7 @@ components:
       category:
         type: object
         $ref: '#/components/category'
-      subjects: 
+      subjects:
         type: array
         $ref: '#/components/subject'
 definitions:
@@ -49,7 +49,7 @@ definitions:
       category:
         type: object
         $ref: '#/components/category'
-      subjects: 
+      subjects:
         type: array
         $ref: '#/components/subject'
   users:
@@ -97,6 +97,17 @@ definitions:
               type: number
         nativeLanguage:
           type: string
+        notificationSettings:
+          type: object
+          properties:
+            isOfferStatusNotification:
+              type: boolean
+            isChatNotification:
+              type: boolean
+            isSimilarOffersNotification:
+              type: boolean
+            isEmailNotification:
+              type: boolean
         address:
           type: object
           properties:
@@ -210,6 +221,8 @@ definitions:
             type: number
       nativeLanguage:
         type: string
+      notificatoinSettings:
+
       address:
         type: object
         properties:
@@ -276,12 +289,12 @@ definitions:
                 answer:
                   type: string
       videoLink:
-          type: object
-          properties:
-            student:
-              type: string
-            tutor:
-              type: string
+        type: object
+        properties:
+          student:
+            type: string
+          tutor:
+            type: string
       createdAt:
         type: string
         format: date-time

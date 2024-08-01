@@ -92,7 +92,7 @@ const updatingSections = [
     _id: '65bc2bec67c9f1ec287a1514',
     title: 'Updated Section',
     description: 'This is the updated section description',
-    activities: []
+    resources: []
   }
 ]
 
@@ -101,7 +101,7 @@ const updatedSections = [
     _id: '65bc2bec67c9f1ec287a1514',
     title: 'Updated Section',
     description: 'This is the updated section description',
-    activities: []
+    resources: []
   }
 ]
 

@@ -35,29 +35,22 @@ definitions:
           items:
             type: object
             properties:
-              title:
-                type: string
-              description:
-                type: string
-              lessons:
-                type: array
-                items:
-                  type: string
-                  ref: '#/components/lesson'
-              quizzes:
-                type: array
-                items:
-                  type: string
-                  ref: '#/components/quiz'
-              attachments:
-                type: array
-                items:
-                  type: string
-                  ref: '#/components/attachments'
-              order:
-                type: array
-                items:
-                  type: string
+            title: string
+            description: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - Lesson
+                      - Quiz
+                      - Attachment
         createdAt:
           type: string
           format: date-time
@@ -98,29 +91,22 @@ definitions:
         items:
           type: object
           properties:
-            title:
-              type: string
-            description:
-              type: string
-            lessons:
+            title: string
+            description: string
+            resources:
               type: array
               items:
-                type: string
-                ref: '#/components/lesson'
-            quizzes:
-              type: array
-              items:
-                type: string
-                ref: '#/components/quiz'
-            attachments:
-              type: array
-              items:
-                type: string
-                ref: '#/components/attachments'
-            order:
-              type: array
-              items:
-                type: string
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - Lesson
+                      - Quiz
+                      - Attachment
       createdAt:
         type: string
         format: date-time
@@ -159,29 +145,22 @@ definitions:
         items:
           type: object
           properties:
-            title:
-              type: string
-            description:
-              type: string
-            lessons:
-              type: array
-              items:
-                type: string
-                ref: '#/components/lesson'
-            quizzes:
-              type: array
-              items:
-                type: string
-                ref: '#/components/quiz'
-            attachments:
-              type: array
-              items:
-                type: string
-                ref: '#/components/attachments'
-            order:
-              type: array
-              items:
-                type: string
+          title: string
+          description: string
+          resources:
+            type: array
+            items:
+              type: object
+              properties:
+                resource:
+                  type: object
+                  additionalProperties: true
+                resourceType:
+                  type: string
+                  enum:
+                    - Lesson
+                    - Quiz
+                    - Attachment
     required:
       - title
       - description

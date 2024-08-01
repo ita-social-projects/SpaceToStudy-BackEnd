@@ -1,5 +1,5 @@
 const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE, FIELD_CAN_BE_ONE_OF } = require('~/consts/errors')
-const { QUIZZES } = require('~/consts/models')
+const { QUIZ } = require('~/consts/models')
 const {
   enums: { RESOURCE_STATUS_ENUM, QUIZ_SETTINGS_ENUM }
 } = require('~/consts/validation')
@@ -9,7 +9,7 @@ const deleteNotAllowedFields = require('~/utils/cooperations/sections/deleteNotA
 const validateCommonFields = require('~/utils/cooperations/sections/validateCommonFields')
 
 const validateQuiz = (resource) => {
-  validateCommonFields(resource, QUIZZES)
+  validateCommonFields(resource, QUIZ)
 
   if (typeof resource.settings !== 'object' || Array.isArray(resource.settings)) {
     throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('quiz settings', 'object'))

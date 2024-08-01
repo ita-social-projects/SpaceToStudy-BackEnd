@@ -16,7 +16,7 @@ const questionEndpointUrl = '/questions/'
 const testQuizData = {
   title: 'Assembly',
   description: 'Description',
-  resourceType: RESOURCES_TYPES_ENUM[3],
+  resourceType: RESOURCES_TYPES_ENUM[1],
   availability: {
     status: 'open',
     date: null

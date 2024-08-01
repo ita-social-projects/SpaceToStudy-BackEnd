@@ -149,7 +149,7 @@ paths:
                   {
                     title: Section title,
                     description: Section description,
-                    activities:
+                    resources:
                       { resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: Attachment }
                   }
                 needAction: student

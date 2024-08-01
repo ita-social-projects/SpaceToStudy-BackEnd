@@ -9,9 +9,7 @@ const courseService = {
       .populate([
         { path: 'subject', select: '_id name' },
         { path: 'category', select: 'appearance' },
-        { path: 'sections.lessons', select: '-createdAt -updatedAt' },
-        { path: 'sections.quizzes', select: '-createdAt -updatedAt' },
-        { path: 'sections.attachments', select: '-createdAt -updatedAt' }
+        { path: 'sections.resources.resource' }
       ])
       .sort(sort)
       .skip(skip)
@@ -25,14 +23,7 @@ const courseService = {
   },
 
   getCourseById: async (id) => {
-    return await Course.findById(id)
-      .populate([
-        { path: 'sections.lessons', select: '_id title resourceType' },
-        { path: 'sections.attachments', select: '_id fileName resourceType' },
-        { path: 'sections.quizzes', select: '_id title resourceType' }
-      ])
-      .lean()
-      .exec()
+    return await Course.findById(id).populate('sections.resources.resource').lean().exec()
   },
 
   createCourse: async (author, data) => {
@@ -60,7 +51,14 @@ const courseService = {
       throw createForbiddenError()
     }
 
-    const updateData = { title, description, category, subject, proficiencyLevel, sections }
+    const updateData = {
+      title,
+      description,
+      category,
+      subject,
+      proficiencyLevel,
+      sections
+    }
 
     for (const key in updateData) {
       const value = updateData[key]

@@ -48,9 +48,7 @@ const testCourseData = {
     {
       title: 'Section First',
       description: 'description',
-      lessons: [],
-      quizzes: [],
-      attachments: []
+      resources: []
     }
   ]
 }
@@ -79,7 +77,7 @@ describe('Course controller', () => {
     testSubject
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

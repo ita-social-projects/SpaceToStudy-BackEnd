@@ -1,12 +1,23 @@
 const { createError } = require('~/utils/errorsHelper')
 const coopSectionsValidation = require('~/middlewares/coopSectionsValidation')
 
-const { QUIZZES, LESSONS, ATTACHMENTS } = require('~/consts/models')
 const { FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
+const {
+  enums: { RESOURCES_TYPES_ENUM }
+} = require('~/consts/validation')
 
 jest.mock('~/utils/cooperations/sections/validateAttachment')
 jest.mock('~/utils/cooperations/sections/validateLesson')
 jest.mock('~/utils/cooperations/sections/validateQuiz')
+
+const lessonMock = {
+  resource: {
+    title: 'Title',
+    availability: { status: 'open', date: null },
+    content: 'Content'
+  },
+  resourceType: RESOURCES_TYPES_ENUM[0]
+}
 
 const quizMock = {
   resource: {
@@ -15,7 +26,7 @@ const quizMock = {
     availability: { status: 'open', date: null },
     answers: [{ text: 'Answer 1', isCorrect: true }]
   },
-  resourceType: QUIZZES
+  resourceType: RESOURCES_TYPES_ENUM[1]
 }
 
 const attachmentMock = {
@@ -24,16 +35,7 @@ const attachmentMock = {
     link: '5534-Title.png',
     availability: { status: 'open', date: null }
   },
-  resourceType: ATTACHMENTS
-}
-
-const lessonMock = {
-  resource: {
-    title: 'Title',
-    availability: { status: 'open', date: null },
-    content: 'Content'
-  },
-  resourceType: LESSONS
+  resourceType: RESOURCES_TYPES_ENUM[2]
 }
 
 const next = jest.fn()
@@ -42,7 +44,7 @@ const req = {
   body: {
     sections: [
       {
-        activities: [
+        resources: [
           { resource: lessonMock.resource, resourceType: lessonMock.resourceType },
           { resource: attachmentMock.resource, resourceType: attachmentMock.resourceType },
           { resource: quizMock.resource, resourceType: quizMock.resourceType }
@@ -57,7 +59,7 @@ describe('coopSectionsValidation', () => {
     jest.clearAllMocks()
   })
 
-  it('should validate each activity resource and call next', () => {
+  it('should validate each resource and call next', () => {
     const middlewareFunc = () => coopSectionsValidation(req, {}, next)
 
     middlewareFunc()
@@ -67,15 +69,15 @@ describe('coopSectionsValidation', () => {
     expect(middlewareFunc).not.toThrow()
   })
 
-  it('should throw error if activity resource is not an object', () => {
+  it('should throw error if resource is not an object', () => {
     const errReq = {
       body: {
         sections: [
           {
-            activities: [
-              { resource: 'string', resourceType: 'lessons' },
-              { resource: 'string', resourceType: 'attachments' },
-              { resource: 'string', resourceType: 'quizzes' }
+            resources: [
+              { resource: 'string', resourceType: 'Lesson' },
+              { resource: 'string', resourceType: 'Quiz' },
+              { resource: 'string', resourceType: 'Attachment' }
             ]
           }
         ]
@@ -84,7 +86,7 @@ describe('coopSectionsValidation', () => {
 
     const middlewareFunc = () => coopSectionsValidation(errReq, {}, next)
 
-    expect(middlewareFunc).toThrow(createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('activity resource', 'object')))
+    expect(middlewareFunc).toThrow(createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('resource', 'object')))
   })
 
   it('should call validateLesson for LESSON resourceType', () => {

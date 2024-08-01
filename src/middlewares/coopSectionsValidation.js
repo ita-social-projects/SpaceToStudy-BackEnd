@@ -1,4 +1,4 @@
-const { QUIZZES, LESSONS, ATTACHMENTS } = require('~/consts/models')
+const { LESSON, QUIZ, ATTACHMENT } = require('~/consts/models')
 const { FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
 
 const { createError } = require('~/utils/errorsHelper')
@@ -7,15 +7,15 @@ const validateLesson = require('~/utils/cooperations/sections/validateLesson')
 const validateQuiz = require('~/utils/cooperations/sections/validateQuiz')
 const deleteNotAllowedFields = require('~/utils/cooperations/sections/deleteNotAllowedFields')
 
-const activityAllowedFields = ['resourceType', 'resource']
+const resourcesAllowedFields = ['resourceType', 'resource']
 
 const coopSectionsValidation = (req, _res, next) => {
   const { sections } = req.body
   if (sections) {
     for (const section of sections) {
-      if (section.activities && Array.isArray(section.activities)) {
-        for (const activity of section.activities) {
-          validateActivity(activity)
+      if (section.resources && Array.isArray(section.resources)) {
+        for (const resource of section.resources) {
+          validateResource(resource)
         }
       }
     }
@@ -24,21 +24,21 @@ const coopSectionsValidation = (req, _res, next) => {
   next()
 }
 
-const validateActivity = (activity) => {
-  if (typeof activity.resource !== 'object' || Array.isArray(activity.resource)) {
-    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('activity resource', 'object'))
+const validateResource = (item) => {
+  if (typeof item.resource !== 'object' || Array.isArray(item.resource)) {
+    throw createError(400, FIELD_IS_NOT_OF_PROPER_TYPE('resource', 'object'))
   }
-  deleteNotAllowedFields(activity, activityAllowedFields)
+  deleteNotAllowedFields(item, resourcesAllowedFields)
 
-  switch (activity.resourceType) {
-    case QUIZZES:
-      validateQuiz(activity.resource)
+  switch (item.resourceType) {
+    case LESSON:
+      validateLesson(item.resource)
       break
-    case LESSONS:
-      validateLesson(activity.resource)
+    case QUIZ:
+      validateQuiz(item.resource)
       break
-    case ATTACHMENTS:
-      validateAttachment(activity.resource)
+    case ATTACHMENT:
+      validateAttachment(item.resource)
       break
   }
 }

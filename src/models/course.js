@@ -13,6 +13,8 @@ const {
   enums: { PROFICIENCY_LEVEL_ENUM }
 } = require('~/consts/validation')
 
+const resources = [LESSON, QUIZ, ATTACHMENT]
+
 const courseSchema = new Schema(
   {
     title: {
@@ -60,24 +62,28 @@ const courseSchema = new Schema(
         },
         description: {
           type: String,
+          minLength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
           maxLength: [150, FIELD_CANNOT_BE_LONGER('description', 150)],
           trim: true
         },
-        lessons: {
-          type: [Schema.Types.ObjectId],
-          ref: LESSON
-        },
-        quizzes: {
-          type: [Schema.Types.ObjectId],
-          ref: QUIZ
-        },
-        attachments: {
-          type: [Schema.Types.ObjectId],
-          ref: ATTACHMENT
-        },
-        order: {
-          type: [String]
-        }
+        resources: [
+          {
+            _id: false,
+            resource: {
+              type: Schema.Types.ObjectId,
+              required: true,
+              refPath: 'sections.resources.resourceType'
+            },
+            resourceType: {
+              type: String,
+              required: true,
+              enum: {
+                values: resources,
+                message: ENUM_CAN_BE_ONE_OF('resource type', resources)
+              }
+            }
+          }
+        ]
       }
     ]
   },

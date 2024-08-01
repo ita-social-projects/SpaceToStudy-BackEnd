@@ -9,7 +9,7 @@ const courseService = {
       .populate([
         { path: 'subject', select: '_id name' },
         { path: 'category', select: 'appearance' },
-        { path: 'sections.resources.resource' }
+        { path: 'sections.resources.resource', select: '-createdAt -updatedAt' }
       ])
       .sort(sort)
       .skip(skip)

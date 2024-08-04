@@ -150,7 +150,7 @@ paths:
                     title: Section title,
                     description: Section description,
                     resources:
-                      { resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: Attachment }
+                      { resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: attachment }
                   }
                 needAction: student
                 createdAt: 2022-10-18T13:25:36.292+00:00

@@ -48,9 +48,9 @@ definitions:
                   resourceType:
                     type: string
                     enum:
-                      - Lesson
-                      - Quiz
-                      - Attachment
+                      - lesson
+                      - quiz
+                      - attachment
         createdAt:
           type: string
           format: date-time
@@ -104,9 +104,9 @@ definitions:
                   resourceType:
                     type: string
                     enum:
-                      - Lesson
-                      - Quiz
-                      - Attachment
+                      - lesson
+                      - quiz
+                      - attachment
       createdAt:
         type: string
         format: date-time
@@ -158,9 +158,9 @@ definitions:
                 resourceType:
                   type: string
                   enum:
-                    - Lesson
-                    - Quiz
-                    - Attachment
+                    - lesson
+                    - quiz
+                    - attachment
     required:
       - title
       - description

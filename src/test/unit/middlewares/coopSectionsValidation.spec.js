@@ -75,9 +75,9 @@ describe('coopSectionsValidation', () => {
         sections: [
           {
             resources: [
-              { resource: 'string', resourceType: 'Lesson' },
-              { resource: 'string', resourceType: 'Quiz' },
-              { resource: 'string', resourceType: 'Attachment' }
+              { resource: 'string', resourceType: 'lesson' },
+              { resource: 'string', resourceType: 'quiz' },
+              { resource: 'string', resourceType: 'attachment' }
             ]
           }
         ]

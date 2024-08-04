@@ -52,7 +52,7 @@ paths:
                                 category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
                                 _id: 63ed1cd25e9d781cdb6a6b17
                               },
-                            resourceType: Lesson
+                            resourceType: lesson
                           },
                           {
                             resource:
@@ -72,7 +72,7 @@ paths:
                                     correctAnswers: true
                                   }
                               },
-                            resourceType: Quiz
+                            resourceType: quiz
                           },
                           {
                             resource:
@@ -84,7 +84,7 @@ paths:
                                 size: 230,
                                 category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
                               },
-                            resourceType: Attachment
+                            resourceType: attachment
                           }
                         ]
                   createdAt: 2023-11-15T16:15:09.004Z
@@ -100,7 +100,7 @@ paths:
                     - title: Section Second
                       description: some description
                       resources:
-                        [{ resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: Attachment }]
+                        [{ resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: attachment }]
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -161,7 +161,7 @@ paths:
                             category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
                             _id: 63ed1cd25e9d781cdb6a6b17
                           },
-                        resourceType: Lesson
+                        resourceType: lesson
                       }
                     ]
       responses:
@@ -194,7 +194,7 @@ paths:
                               category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
                               _id: 63ed1cd25e9d781cdb6a6b17
                             },
-                          resourceType: Lesson
+                          resourceType: lesson
                         }
                       ]
                 _id: 63ec1cd51e9d781cdb6f4b14
@@ -327,7 +327,7 @@ paths:
                               category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
                               _id: 63ed1cd25e9d781cdb6a6b17
                             },
-                          resourceType: Lesson
+                          resourceType: lesson
                         }
                       ]
                 _id: 63ec1cd51e9d781cdb6f4b14

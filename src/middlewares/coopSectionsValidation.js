@@ -1,5 +1,7 @@
-const { LESSON, QUIZ, ATTACHMENT } = require('~/consts/models')
 const { FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
+const {
+  enums: { RESOURCES_TYPES_ENUM }
+} = require('~/consts/validation')
 
 const { createError } = require('~/utils/errorsHelper')
 const validateAttachment = require('~/utils/cooperations/sections/validateAttachment')
@@ -31,13 +33,13 @@ const validateResource = (item) => {
   deleteNotAllowedFields(item, resourcesAllowedFields)
 
   switch (item.resourceType) {
-    case LESSON:
+    case RESOURCES_TYPES_ENUM[0]:
       validateLesson(item.resource)
       break
-    case QUIZ:
+    case RESOURCES_TYPES_ENUM[1]:
       validateQuiz(item.resource)
       break
-    case ATTACHMENT:
+    case RESOURCES_TYPES_ENUM[2]:
       validateAttachment(item.resource)
       break
   }

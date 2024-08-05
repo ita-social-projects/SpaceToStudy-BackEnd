@@ -7,13 +7,11 @@ const {
   FIELD_CANNOT_BE_LONGER
 } = require('~/consts/errors')
 
-const { COURSE, USER, LESSON, ATTACHMENT, QUIZ, CATEGORY, SUBJECT } = require('~/consts/models')
+const { COURSE, USER, CATEGORY, SUBJECT } = require('~/consts/models')
 
 const {
-  enums: { PROFICIENCY_LEVEL_ENUM }
+  enums: { PROFICIENCY_LEVEL_ENUM, RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
-
-const resources = [LESSON, QUIZ, ATTACHMENT]
 
 const courseSchema = new Schema(
   {
@@ -78,8 +76,8 @@ const courseSchema = new Schema(
               type: String,
               required: true,
               enum: {
-                values: resources,
-                message: ENUM_CAN_BE_ONE_OF('resource type', resources)
+                values: RESOURCES_TYPES_ENUM,
+                message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
               }
             }
           }

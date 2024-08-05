@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose')
 
+const resourceTypeMapping = require('~/utils/resourceTypeMapping')
+
 const {
   ENUM_CAN_BE_ONE_OF,
   FIELD_CANNOT_BE_EMPTY,
@@ -70,7 +72,7 @@ const courseSchema = new Schema(
             resource: {
               type: Schema.Types.ObjectId,
               required: true,
-              refPath: 'sections.resources.resourceType'
+              ref: (doc) => resourceTypeMapping[doc.resourceType]
             },
             resourceType: {
               type: String,

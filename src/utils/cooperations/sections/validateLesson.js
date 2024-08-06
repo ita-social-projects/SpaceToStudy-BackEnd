@@ -1,13 +1,14 @@
-const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE, FIELD_CAN_BE_ONE_OF } = require('~/consts/errors')
-const { LESSON } = require('~/consts/models')
-const {
-  enums: { RESOURCE_STATUS_ENUM }
-} = require('~/consts/validation')
 const { createError } = require('~/utils/errorsHelper')
 const validateCommonFields = require('~/utils/cooperations/sections/validateCommonFields')
 const deleteNotAllowedFields = require('./deleteNotAllowedFields')
 
-const allowedFields = ['_id', 'title', 'description', 'availability', 'attachments', 'content', 'status']
+const { LESSON } = require('~/consts/models')
+const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE, FIELD_CAN_BE_ONE_OF } = require('~/consts/errors')
+const {
+  enums: { RESOURCE_STATUS_ENUM }
+} = require('~/consts/validation')
+
+const allowedFields = ['_id', 'title', 'description', 'content', 'attachments', 'resourceType', 'availability']
 
 const validateLesson = (resource) => {
   deleteNotAllowedFields(resource, allowedFields)

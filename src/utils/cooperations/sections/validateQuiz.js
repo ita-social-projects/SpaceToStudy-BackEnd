@@ -8,7 +8,7 @@ const {
   enums: { RESOURCE_STATUS_ENUM, QUIZ_SETTINGS_ENUM }
 } = require('~/consts/validation')
 
-const allowedFields = ['_id', 'title', 'description', 'items', 'resourceType', 'availability', 'settings']
+const allowedFields = ['_id', 'title', 'description', 'items', 'resourceType', 'availability', 'settings', 'status']
 
 const validateQuiz = (resource) => {
   deleteNotAllowedFields(resource, allowedFields)

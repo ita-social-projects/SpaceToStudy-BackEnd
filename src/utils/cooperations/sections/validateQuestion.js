@@ -1,8 +1,6 @@
 const { createError } = require('~/utils/errorsHelper')
-const validateCommonFields = require('~/utils/cooperations/sections/validateCommonFields')
 const deleteNotAllowedFields = require('~/utils/cooperations/sections/deleteNotAllowedFields')
 
-const { QUESTION } = require('~/consts/models')
 const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE, FIELD_CAN_BE_ONE_OF } = require('~/consts/errors')
 const {
   enums: { QUESTION_TYPE_ENUM }
@@ -15,7 +13,6 @@ const allowedFields = ['_id', 'title', 'text', 'answers', 'type', 'resourceType'
 
 const validateQuestion = (resource) => {
   deleteNotAllowedFields(resource, allowedFields)
-  validateCommonFields(resource, QUESTION)
 
   for (const field of textFields) {
     if (!resource[field]) {

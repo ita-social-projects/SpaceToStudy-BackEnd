@@ -1,12 +1,19 @@
-const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
-
 const { createError } = require('~/utils/errorsHelper')
 const deleteNotAllowedFields = require('~/utils/cooperations/sections/deleteNotAllowedFields')
+
+const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE, FIELD_CAN_BE_ONE_OF } = require('~/consts/errors')
+const {
+  enums: { QUESTION_TYPE_ENUM }
+} = require('~/consts/validation')
 
 const answersFields = ['text', 'isCorrect']
 const textFields = ['title', 'text']
 
+const allowedFields = ['_id', 'title', 'text', 'answers', 'type', 'resourceType']
+
 const validateQuestion = (resource) => {
+  deleteNotAllowedFields(resource, allowedFields)
+
   for (const field of textFields) {
     if (!resource[field]) {
       throw createError(400, FIELD_IS_NOT_DEFINED(`quiz item ${field}`))
@@ -19,6 +26,14 @@ const validateQuestion = (resource) => {
 
   if (!resource.answers) {
     throw createError(400, FIELD_IS_NOT_DEFINED('quiz item answers'))
+  }
+
+  if (!resource.type) {
+    throw createError(400, FIELD_IS_NOT_DEFINED('quiz item type'))
+  }
+
+  if (!QUESTION_TYPE_ENUM.includes(resource.type)) {
+    throw createError(400, FIELD_CAN_BE_ONE_OF('quiz type', QUESTION_TYPE_ENUM))
   }
 
   validateAnswersFields(resource.answers)

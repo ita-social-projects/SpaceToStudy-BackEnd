@@ -13,7 +13,8 @@ describe('validateQuestion', () => {
       answers: [
         { text: 'Answer 1', isCorrect: true },
         { text: 'Answer 2', isCorrect: false }
-      ]
+      ],
+      type: 'openAnswer'
     }
   })
 

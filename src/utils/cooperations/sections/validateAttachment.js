@@ -1,11 +1,11 @@
-const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
-const { ATTACHMENT } = require('~/consts/models')
-
 const { createError } = require('~/utils/errorsHelper')
 const validateCommonFields = require('~/utils/cooperations/sections/validateCommonFields')
 const deleteNotAllowedFields = require('./deleteNotAllowedFields')
 
-const allowedFields = ['_id', 'fileName', 'link', 'availability', 'size']
+const { ATTACHMENT } = require('~/consts/models')
+const { FIELD_IS_NOT_DEFINED, FIELD_IS_NOT_OF_PROPER_TYPE } = require('~/consts/errors')
+
+const allowedFields = ['_id', 'fileName', 'link', 'size', 'resourceType', 'availability']
 
 const validateAttachment = (resource) => {
   deleteNotAllowedFields(resource, allowedFields)

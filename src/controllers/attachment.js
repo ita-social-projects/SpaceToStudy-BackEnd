@@ -5,7 +5,7 @@ const getMatchOptions = require('~/utils/getMatchOptions')
 const getSortOptions = require('~/utils/getSortOptions')
 const getRegex = require('~/utils/getRegex')
 const getCategoriesOptions = require('~/utils/getCategoriesOption')
-const parseBoolean = require('../utils/parseBoolean')
+const parseBoolean = require('~/utils/parseBoolean')
 
 const getAttachments = async (req, res) => {
   const { id: author } = req.user

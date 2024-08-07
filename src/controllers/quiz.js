@@ -3,7 +3,7 @@ const getCategoriesOptions = require('~/utils/getCategoriesOption')
 const getMatchOptions = require('~/utils/getMatchOptions')
 const getRegex = require('~/utils/getRegex')
 const getSortOptions = require('~/utils/getSortOptions')
-const parseBoolean = require('../utils/parseBoolean')
+const parseBoolean = require('~/utils/parseBoolean')
 
 const getQuizzes = async (req, res) => {
   const { id: author } = req.user

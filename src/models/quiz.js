@@ -46,6 +46,9 @@ const quizSchema = new Schema(
       },
       default: RESOURCES_TYPES_ENUM[1]
     },
+    isDuplicate: {
+      type: Boolean
+    },
     availability: {
       status: {
         type: String,

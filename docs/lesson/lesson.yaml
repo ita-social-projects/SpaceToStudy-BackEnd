@@ -30,6 +30,12 @@ paths:
           schema:
             type: integer
           required: false
+        - in: query
+          name: includeDuplicates
+          schema:
+            type: boolean
+          required: false
+          description: If true will include in response lessons that have isDuplicate set to true. 
       responses:
         200:
           description: OK

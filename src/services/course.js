@@ -1,6 +1,7 @@
 const Course = require('~/models/course')
 
 const { createForbiddenError } = require('~/utils/errorsHelper')
+const resourceModelMapping = require('~/utils/resourceModelMapping')
 
 const courseService = {
   getCourses: async (match, skip, limit, sort) => {
@@ -29,6 +30,25 @@ const courseService = {
   createCourse: async (author, data) => {
     const { title, description, category, subject, proficiencyLevel, sections } = data
 
+    const updatedSections = await Promise.all(
+      sections.map(async (section) => ({
+        ...section,
+        resources: await Promise.all(
+          section.resources.map(async (resourceItem) => {
+            const { resource, resourceType } = resourceItem
+            let newResource = resource
+
+            if (resource.isDuplicate) {
+              delete resource._id
+              newResource = await resourceModelMapping[resourceType].create(resource)
+            }
+
+            return { ...resourceItem, resource: newResource }
+          })
+        )
+      }))
+    )
+
     return await Course.create({
       title,
       description,
@@ -36,7 +56,7 @@ const courseService = {
       category,
       subject,
       proficiencyLevel,
-      sections
+      sections: updatedSections
     })
   },
 
@@ -51,13 +71,37 @@ const courseService = {
       throw createForbiddenError()
     }
 
+    const updatedSections = await Promise.all(
+      sections.map(async (section) => ({
+        ...section,
+        resources: await Promise.all(
+          section.resources.map(async (resourceItem) => {
+            const { resource, resourceType } = resourceItem
+            let newResource = resource
+
+            if (resource.isDuplicate) {
+              const founded = await resourceModelMapping[resourceType].findOne({
+                _id: resource._id,
+                isDuplicate: true
+              })
+
+              delete resource._id
+              newResource = founded || (await resourceModelMapping[resourceType].create(resource))
+            }
+
+            return { ...resourceItem, resource: newResource }
+          })
+        )
+      }))
+    )
+
     const updateData = {
       title,
       description,
       category,
       subject,
       proficiencyLevel,
-      sections
+      sections: updatedSections
     }
 
     for (const key in updateData) {

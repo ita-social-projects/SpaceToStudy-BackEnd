@@ -54,6 +54,9 @@ const lessonSchema = new Schema(
       },
       default: RESOURCES_TYPES_ENUM[0]
     },
+    isDuplicate: {
+      type: Boolean
+    },
     availability: {
       status: {
         type: String,

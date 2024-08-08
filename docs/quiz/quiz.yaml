@@ -30,6 +30,12 @@ paths:
           schema:
             type: string
           required: false
+        - in: query
+          name: includeDuplicates
+          schema:
+            type: boolean
+          required: false
+          description: If true will include in response quizzes that have isDuplicate set to true. 
       responses:
         200:
           description: OK

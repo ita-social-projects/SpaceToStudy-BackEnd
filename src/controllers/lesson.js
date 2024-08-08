@@ -3,6 +3,7 @@ const getCategoriesOptions = require('~/utils/getCategoriesOption')
 const getMatchOptions = require('~/utils/getMatchOptions')
 const getRegex = require('~/utils/getRegex')
 const getSortOptions = require('~/utils/getSortOptions')
+const parseBoolean = require('~/utils/parseBoolean')
 
 const createLesson = async (req, res) => {
   const { id: author } = req.user
@@ -23,10 +24,15 @@ const getLessonById = async (req, res) => {
 
 const getLessons = async (req, res) => {
   const { id: author } = req.user
-  const { title, sort, skip, limit, categories } = req.query
+  const { title, sort, skip, limit, categories, includeDuplicates } = req.query
 
   const categoriesOptions = getCategoriesOptions(categories)
-  const match = getMatchOptions({ author, title: getRegex(title), category: categoriesOptions })
+  const match = getMatchOptions({
+    author,
+    title: getRegex(title),
+    category: categoriesOptions,
+    isDuplicate: parseBoolean(includeDuplicates) ? null : { $ne: true }
+  })
   const sortOptions = getSortOptions(sort)
 
   const lessons = await lessonService.getLessons(match, sortOptions, parseInt(skip), parseInt(limit))

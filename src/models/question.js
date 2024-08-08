@@ -64,6 +64,9 @@ const questionSchema = new Schema(
         message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
       },
       default: RESOURCES_TYPES_ENUM[3]
+    },
+    isDuplicate: {
+      type: Boolean
     }
   },
   { timestamps: true, versionKey: false }

@@ -51,6 +51,9 @@ const attachmentSchema = new Schema(
       },
       default: RESOURCES_TYPES_ENUM[2]
     },
+    isDuplicate: {
+      type: Boolean
+    },
     availability: {
       status: {
         type: String,

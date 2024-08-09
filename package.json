@@ -21,7 +21,7 @@
     "lint-staged": "^13.0.2",
     "nodemon": "^2.0.15",
     "prettier": "2.5.1",
-    "supertest": "^6.2.4"
+    "supertest": "^7.0.0"
   },
   "dependencies": {
     "azure-storage": "^2.10.7",

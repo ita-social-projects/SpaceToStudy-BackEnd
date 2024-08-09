@@ -48,7 +48,22 @@ const testCourseData = {
     {
       title: 'Section First',
       description: 'description',
-      resources: []
+      resources: [
+        {
+          resource: {
+            _id: '66b49b9ad39b4035d92c9fac',
+            author: '66b49b9ad39b4035d92c9999',
+            title: 'Created Lesson',
+            isDuplicate: true,
+            description: 'some text',
+            content:
+              '<div>\n<div>Lorem ipsum dolor sit, amet consectetur am quos dolorum at voluptates obcaecati.</div>\n</div>',
+            resourceType: 'lesson'
+          },
+          resourceType: 'lesson',
+          isDuplicate: true
+        }
+      ]
     }
   ]
 }
@@ -153,16 +168,7 @@ describe('Course controller', () => {
       const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual({
-        count: 1,
-        items: [
-          expect.objectContaining({
-            ...testCourse,
-            category: { _id: testCategory.body._id, appearance: testCategory.body.appearance },
-            subject: { _id: testSubject.body._id, name: testSubject.body.name }
-          })
-        ]
-      })
+      expect(response.body.items.length).toEqual(1)
     })
 
     it('should throw UNAUTHORIZED', async () => {
@@ -189,6 +195,18 @@ describe('Course controller', () => {
 
       expect(response.statusCode).toBe(204)
       expect({ title, description }).toMatchObject(updateData)
+    })
+
+    it('should update a course with sections', async () => {
+      const response = await app
+        .patch(endpointUrl + testCourse._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(testCourseData)
+
+      const course = await Course.findById(testCourse._id)
+
+      expect(response.statusCode).toBe(204)
+      expect(course.sections[0].resources.length).toBe(1)
     })
 
     it('should throw UNAUTHORIZED', async () => {

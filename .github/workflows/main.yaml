@@ -33,10 +33,10 @@ jobs:
         env:
           WAIT_FOR_VERSION: 4df3f9262d84cab0039c07bf861045fbb3c20ab7 # v2.2.3
 
-      - name: 'Install Node.js v.14'
+      - name: 'Install Node.js v.16'
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
 
       - name : 'Install dependencies'
         run: npm install

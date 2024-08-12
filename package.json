@@ -7,7 +7,7 @@
     "test": "jest --maxWorkers=1",
     "start": "nodemon src/app.js --legacy-watch",
     "lint": "eslint . --fix",
-    "prepare": "husky install",
+    "prepare": "husky",
     "pre-commit": "lint-staged"
   },
   "author": "SoftServe ITA",

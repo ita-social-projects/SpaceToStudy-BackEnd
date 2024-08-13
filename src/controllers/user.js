@@ -76,13 +76,13 @@ const activateUser = async (req, res) => {
   res.status(204).end()
 }
 
-// const toggleOfferBookmark = async (req, res) => {
-//   const { id: userId, offerId } = req.params
+const toggleOfferBookmark = async (req, res) => {
+  const { id: userId, offerId } = req.params
 
-//   const newBookmarks = await userService.toggleOfferBookmark(offerId, userId)
+  const newBookmarks = await userService.toggleOfferBookmark(offerId, userId)
 
-//   res.status(200).json(newBookmarks)
-// }
+  res.status(200).json(newBookmarks)
+}
 
 module.exports = {
   getUsers,
@@ -91,6 +91,6 @@ module.exports = {
   updateUser,
   updateStatus,
   deactivateUser,
-  activateUser
-  // toggleOfferBookmark
+  activateUser,
+  toggleOfferBookmark
 }

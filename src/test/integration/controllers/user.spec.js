@@ -1,6 +1,9 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const User = require('~/models/user')
-const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/consts/errors')
+const Offer = require('~/models/offer')
+const Category = require('~/models/category')
+const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED, INVALID_ID } = require('~/consts/errors')
+const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const { expectError } = require('~/test/helpers')
 const { USER } = require('~/consts/upload')
 const {
@@ -313,6 +316,123 @@ describe('User controller', () => {
           firstName: 'Vika',
           lastName: 'Douglas'
         })
+      })
+    })
+
+    describe(`PATCH ${endpointUrl}/:id/bookmarks/offers/:offerId`, () => {
+      const nonExistingOfferId = '6672f61ea0c8993fcd04d7ef'
+
+      const testOffer = {
+        price: 330,
+        proficiencyLevel: ['Beginner'],
+        title: 'Test Title',
+        author: '65afa47f3d67b51996a67b92',
+        authorRole: 'tutor',
+        FAQ: [{ question: 'question1', answer: 'answer1' }],
+        description: 'TEST 123',
+        languages: ['Ukrainian'],
+        enrolledUsers: ['6512e1ca5fd987b6ce926c2e', '652ba66bf6770c3a2d5d8549'],
+        subject: 'subject',
+        category: {
+          _id: '',
+          appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+        }
+      }
+
+      let user
+
+      beforeEach(async () => {
+        user = await User.create(testUser)
+
+        await checkCategoryExistence()
+
+        const categoryResponse = await Category.find()
+
+        const { _id, appearance } = categoryResponse[0]
+        const category = { _id: _id.toString(), appearance }
+
+        const subjectResponse = await app
+          .post('/subjects/')
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send({
+            name: 'testSubject',
+            category: category
+          })
+        const subject = subjectResponse.body._id
+
+        testOffer.category = category
+        testOffer.subject = subject
+        testOffer.author = user._id
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app
+          .patch(`${endpointUrl}/${nonExistingUserId}/bookmarks/offers/${nonExistingOfferId}`)
+          .send()
+
+        expectError(401, UNAUTHORIZED, response)
+      })
+
+      it('should throw 404 DOCUMENT_NOT_FOUND if a user is not found', async () => {
+        const response = await app
+          .patch(`${endpointUrl}/${nonExistingUserId}/bookmarks/offers/${nonExistingOfferId}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+      })
+
+      it('should throw 400 BAD_REQUEST if the offer id is not valid', async () => {
+        const invalidOfferId = 'invalidOfferId'
+
+        const response = await app
+          .patch(`${endpointUrl}/${user._id}/bookmarks/offers/${invalidOfferId}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expectError(400, INVALID_ID, response)
+      })
+
+      it('should throw 404 DOCUMENT_NOT_FOUND if an offer is not found', async () => {
+        const response = await app
+          .patch(`${endpointUrl}/${user._id}/bookmarks/offers/${nonExistingOfferId}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)
+      })
+
+      it('should add an offer id to bookmarks', async () => {
+        user = await User.create({ ...testUser, bookmarkedOffers: [] })
+        const offer = await Offer.create(testOffer)
+
+        const response = await app
+          .patch(`${endpointUrl}/${user._id.toString()}/bookmarks/offers/${offer._id.toString()}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        const updatedUser = await User.findById(user._id).select('+bookmarkedOffers')
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toEqual([offer._id.toString()])
+        expect(updatedUser.bookmarkedOffers).toEqual([offer._id])
+      })
+
+      it('should remove an offer id from bookmarks', async () => {
+        const offer1 = await Offer.create(testOffer)
+        const offer2 = await Offer.create(testOffer)
+        user = await User.create({ ...testUser, bookmarkedOffers: [offer1._id, offer2._id] })
+
+        const response = await app
+          .patch(`${endpointUrl}/${user._id.toString()}/bookmarks/offers/${offer2._id.toString()}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        const updatedUser = await User.findById(user._id).select('+bookmarkedOffers')
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toEqual([offer1._id.toString()])
+        expect(updatedUser.bookmarkedOffers).toEqual([offer1._id])
       })
     })
   })

@@ -6,7 +6,7 @@ components:
         type: string
       name:
         type: string
-      appearance: 
+      appearance:
         type: object
         properties:
           color:
@@ -28,7 +28,7 @@ components:
       category:
         type: object
         $ref: '#/components/category'
-      subjects: 
+      subjects:
         type: array
         $ref: '#/components/subject'
 definitions:
@@ -49,7 +49,7 @@ definitions:
       category:
         type: object
         $ref: '#/components/category'
-      subjects: 
+      subjects:
         type: array
         $ref: '#/components/subject'
   users:
@@ -276,15 +276,19 @@ definitions:
                 answer:
                   type: string
       videoLink:
-          type: object
-          properties:
-            student:
-              type: string
-            tutor:
-              type: string
+        type: object
+        properties:
+          student:
+            type: string
+          tutor:
+            type: string
       createdAt:
         type: string
         format: date-time
       updatedAt:
         type: string
         format: date-time
+  toggleBookmarkReponse:
+    type: array
+    items:
+      type: string

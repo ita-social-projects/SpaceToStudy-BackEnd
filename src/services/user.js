@@ -1,4 +1,6 @@
 const User = require('~/models/user')
+const Offer = require('~/models/offer')
+const { ObjectId } = require('mongodb')
 const uploadService = require('~/services/upload')
 const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
@@ -237,6 +239,32 @@ const userService = {
     const userCooperations = await cooperationService.getCooperations(aggregateOptions)
 
     return Boolean(userOffers || userCooperations)
+  },
+
+  toggleOfferBookmark: async (offerId, userId) => {
+    const offer = await Offer.findById(offerId)
+
+    if (!offer) throw createError(404, DOCUMENT_NOT_FOUND([Offer.modelName]))
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      [
+        {
+          $set: {
+            bookmarkedOffers: {
+              $cond: [
+                { $in: [ObjectId(offerId), '$bookmarkedOffers'] },
+                { $setDifference: ['$bookmarkedOffers', [ObjectId(offerId)]] },
+                { $concatArrays: ['$bookmarkedOffers', [ObjectId(offerId)]] }
+              ]
+            }
+          }
+        }
+      ],
+      { new: true }
+    ).select('+bookmarkedOffers')
+
+    return updatedUser.bookmarkedOffers
   }
 }
 

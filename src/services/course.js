@@ -1,6 +1,7 @@
 const Course = require('~/models/course')
 
 const { createForbiddenError } = require('~/utils/errorsHelper')
+const resourceModelMapping = require('~/utils/resourceModelMapping')
 
 const courseService = {
   getCourses: async (match, skip, limit, sort) => {
@@ -29,6 +30,25 @@ const courseService = {
   createCourse: async (author, data) => {
     const { title, description, category, subject, proficiencyLevel, sections } = data
 
+    const updatedSections = await Promise.all(
+      sections.map(async (section) => ({
+        ...section,
+        resources: await Promise.all(
+          section.resources.map(async (resourceItem) => {
+            const { resource, resourceType, isDuplicate } = resourceItem
+            let newResource = resource
+
+            if (isDuplicate) {
+              delete resource._id
+              newResource = await resourceModelMapping[resourceType].create({ ...resource, isDuplicate })
+            }
+
+            return { ...resourceItem, resource: newResource }
+          })
+        )
+      }))
+    )
+
     return await Course.create({
       title,
       description,
@@ -36,13 +56,12 @@ const courseService = {
       category,
       subject,
       proficiencyLevel,
-      sections
+      sections: updatedSections
     })
   },
 
   updateCourse: async (userId, data) => {
     const { id, title, description, category, subject, proficiencyLevel, sections } = data
-
     const course = await Course.findById(id).exec()
 
     const courseAuthor = course.author.toString()
@@ -51,13 +70,45 @@ const courseService = {
       throw createForbiddenError()
     }
 
+    if (sections) {
+      const updatedSections = await Promise.all(
+        sections.map(async (section) => ({
+          ...section,
+          resources: await Promise.all(
+            section.resources.map(async (resourceItem) => {
+              const { resource, resourceType, isDuplicate } = resourceItem
+              let newResource = resource
+
+              if (isDuplicate) {
+                const founded = await resourceModelMapping[resourceType].findOne({
+                  _id: resource._id,
+                  isDuplicate: true
+                })
+
+                delete resource._id
+                newResource = founded || (await resourceModelMapping[resourceType].create({ ...resource, isDuplicate }))
+              }
+
+              return { ...resourceItem, resource: newResource }
+            })
+          )
+        }))
+      )
+
+      course.sections = updatedSections
+
+      course.markModified('sections')
+
+      await course.validate()
+      await course.save()
+    }
+
     const updateData = {
       title,
       description,
       category,
       subject,
-      proficiencyLevel,
-      sections
+      proficiencyLevel
     }
 
     for (const key in updateData) {

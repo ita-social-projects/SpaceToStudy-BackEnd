@@ -45,7 +45,7 @@ describe('Quiz controller', () => {
   let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

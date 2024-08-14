@@ -40,7 +40,7 @@ describe('Note controller', () => {
   let app, server, accessToken, testUser, testCooperation, testNote
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

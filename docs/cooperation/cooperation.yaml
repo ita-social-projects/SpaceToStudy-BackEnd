@@ -137,7 +137,32 @@ paths:
                 $ref: '#/definitions/cooperationResponse'
               example:
                 _id: 8755bc080a00adr9243df106
-                offer: 63ebc6fbd2f34037d0aba791
+                offer:
+                  _id: '66afadad1f42489a4351be70'
+                  proficiencyLevel:
+                    - 'Professional'
+                  title: 'Title'
+                  description: 'description'
+                  languages:
+                    - 'English'
+                  author:
+                    totalReviews:
+                      student: 0
+                      tutor: 0
+                    _id: '666c26bd89ff51666ab119d2'
+                    firstName: 'Name'
+                    lastName: 'name'
+                    photo: '1722789909003-images (1).jpg'
+                    professionalSummary: ''
+                  subject:
+                    _id: '6566133a2bccdd3e18dbe943'
+                    name: 'Algebra'
+                  category:
+                    appearance:
+                      color: '#E3B21C'
+                      icon: 'TagRoundedIcon'
+                    _id: '64884f33fdc2d1a130c24ac2'
+                    name: 'Mathematics'
                 initiator: 6255bc080a75adf9223df212
                 initiatorRole: tutor
                 receiver: 6255bc080a75adf9223df100
@@ -150,7 +175,21 @@ paths:
                     title: Section title,
                     description: Section description,
                     resources:
-                      { resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: attachment }
+                      [
+                        {
+                          resource:
+                            {
+                              title: Colors in English,
+                              description: With this lesson you will learn all about colors in English.,
+                              content: <h1>Title</h1>,
+                              author: 63da8767c9ad4c9a0b0eacd3,
+                              attachments: [63ed1cd25e9d781cdb6a6b15],
+                              category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
+                              _id: 63ed1cd25e9d781cdb6a6b17
+                            },
+                          resourceType: lesson
+                        }
+                      ]
                   }
                 needAction: student
                 createdAt: 2022-10-18T13:25:36.292+00:00

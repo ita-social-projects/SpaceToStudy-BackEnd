@@ -7,14 +7,13 @@ const {
   FIELD_MUST_BE_SELECTED,
   VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION, FINISHED_QUIZ, LESSON, QUIZ, ATTACHMENT } = require('~/consts/models')
+const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/models')
 const {
   enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM, RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
 const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
 const notificationService = require('~/services/notification')
-
-const resource = [LESSON, QUIZ, ATTACHMENT]
+const resourceTypeMapping = require('~/utils/resourceTypeMapping')
 
 const cooperationSchema = new Schema(
   {
@@ -115,8 +114,9 @@ const cooperationSchema = new Schema(
           {
             _id: false,
             resource: {
-              type: Schema.Types.Mixed,
-              values: resource
+              type: Schema.Types.ObjectId,
+              required: true,
+              ref: (doc) => resourceTypeMapping[doc.resourceType]
             },
             resourceType: {
               type: String,

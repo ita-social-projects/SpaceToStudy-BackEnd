@@ -1,37 +1,40 @@
 const Cooperation = require('~/models/cooperation')
 const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
 const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
+const handleResources = require('~/utils/handleResources')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 
 const cooperationService = {
   getCooperations: async (pipeline) => {
     const [result] = await Cooperation.aggregate(pipeline).exec()
-
     return result
   },
 
   getCooperationById: async (id) => {
     return await (
       await Cooperation.findById(id)
-    ).populate({
-      path: 'offer',
-      populate: [
-        {
-          path: 'category',
-          select: ['name', 'appearance']
-        },
-        {
-          path: 'subject',
-          select: 'name'
-        },
-        {
-          path: 'author',
-          select: ['firstName', 'lastName', 'photo', 'professionalSummary', 'totalReviews', 'FAQ', 'averageRatingts']
-        }
-      ],
-      select: ['id', 'author', 'category', 'subject', 'title', 'languages', 'proficiencyLevel', 'description']
-    })
+    ).populate([
+      { path: 'sections.resources.resource', select: '-createdAt -updatedAt' },
+      {
+        path: 'offer',
+        populate: [
+          {
+            path: 'category',
+            select: ['name', 'appearance']
+          },
+          {
+            path: 'subject',
+            select: 'name'
+          },
+          {
+            path: 'author',
+            select: ['firstName', 'lastName', 'photo', 'professionalSummary', 'totalReviews', 'FAQ', 'averageRatingts']
+          }
+        ],
+        select: ['id', 'author', 'category', 'subject', 'title', 'languages', 'proficiencyLevel', 'description']
+      }
+    ])
   },
 
   createCooperation: async (initiator, initiatorRole, data) => {
@@ -84,7 +87,12 @@ const cooperationService = {
       await Cooperation.findByIdAndUpdate(id, { status }).exec()
     }
     if (sections) {
-      cooperation.sections = sections
+      cooperation.sections = await Promise.all(
+        sections.map(async (section) => ({
+          ...section,
+          resources: await handleResources(section.resources)
+        }))
+      )
 
       cooperation.markModified('sections')
 

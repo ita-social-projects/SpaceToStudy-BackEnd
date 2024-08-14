@@ -1,7 +1,7 @@
 const Course = require('~/models/course')
 
 const { createForbiddenError } = require('~/utils/errorsHelper')
-const resourceModelMapping = require('~/utils/resourceModelMapping')
+const handleResources = require('~/utils/handleResources')
 
 const courseService = {
   getCourses: async (match, skip, limit, sort) => {
@@ -33,19 +33,7 @@ const courseService = {
     const updatedSections = await Promise.all(
       sections.map(async (section) => ({
         ...section,
-        resources: await Promise.all(
-          section.resources.map(async (resourceItem) => {
-            const { resource, resourceType, isDuplicate } = resourceItem
-            let newResource = resource
-
-            if (isDuplicate) {
-              delete resource._id
-              newResource = await resourceModelMapping[resourceType].create({ ...resource, isDuplicate })
-            }
-
-            return { ...resourceItem, resource: newResource }
-          })
-        )
+        resources: await handleResources(section.resources)
       }))
     )
 
@@ -71,31 +59,12 @@ const courseService = {
     }
 
     if (sections) {
-      const updatedSections = await Promise.all(
+      course.sections = await Promise.all(
         sections.map(async (section) => ({
           ...section,
-          resources: await Promise.all(
-            section.resources.map(async (resourceItem) => {
-              const { resource, resourceType, isDuplicate } = resourceItem
-              let newResource = resource
-
-              if (isDuplicate) {
-                const founded = await resourceModelMapping[resourceType].findOne({
-                  _id: resource._id,
-                  isDuplicate: true
-                })
-
-                delete resource._id
-                newResource = founded || (await resourceModelMapping[resourceType].create({ ...resource, isDuplicate }))
-              }
-
-              return { ...resourceItem, resource: newResource }
-            })
-          )
+          resources: await handleResources(section.resources)
         }))
       )
-
-      course.sections = updatedSections
 
       course.markModified('sections')
 

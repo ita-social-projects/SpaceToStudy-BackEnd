@@ -51,7 +51,7 @@ const userService = {
     const user = await User.findOne({ _id: id, ...(role && { role }) })
       .populate(populateOptions('tutor'))
       .populate(populateOptions('student'))
-      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink')
+      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink +notificationSettings')
       .lean()
       .exec()
     if (isEdit) {
@@ -73,7 +73,7 @@ const userService = {
 
   getUserByEmail: async (email) => {
     const user = await User.findOne({ email })
-      .select('+password +lastLoginAs +isEmailConfirmed +isFirstLogin +appLanguage')
+      .select('+password +lastLoginAs +isEmailConfirmed +isFirstLogin +appLanguage +notificationSettings')
       .lean()
       .exec()
 
@@ -101,7 +101,13 @@ const userService = {
       lastLoginAs: role,
       password: hashedPassword,
       appLanguage,
-      isEmailConfirmed
+      isEmailConfirmed,
+      notificationSettings: {
+        isOfferStatusNotification: true,
+        isChatNotification: true,
+        isSimilarOffersNotification: true,
+        isEmailNotification: true
+      }
     })
   },
 

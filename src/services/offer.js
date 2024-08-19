@@ -1,4 +1,4 @@
-const { ObjectId } = require('mongodb')
+const ObjectId = require('mongodb').ObjectId
 const Offer = require('~/models/offer')
 
 const filterAllowedFields = require('~/utils/filterAllowedFields')
@@ -26,12 +26,12 @@ const offerService = {
 
     const [chatLookup] = await Offer.aggregate([
       {
-        $match: { _id: ObjectId(id) }
+        $match: { _id: new ObjectId(id) }
       },
       {
         $lookup: {
           from: 'chats',
-          let: { authorId: '$author', userId: ObjectId(userId) },
+          let: { authorId: '$author', userId: new ObjectId(userId) },
           pipeline: [
             {
               $match: {
@@ -112,7 +112,7 @@ const offerService = {
   },
 
   deleteOffer: async (id) => {
-    await Offer.findByIdAndRemove(id).exec()
+    await Offer.findByIdAndDelete(id).exec()
   }
 }
 

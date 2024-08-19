@@ -80,7 +80,7 @@ const courseService = {
       throw createForbiddenError()
     }
 
-    await Course.findByIdAndRemove(id).exec()
+    await Course.findByIdAndDelete(id).exec()
   }
 }
 

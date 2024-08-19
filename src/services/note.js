@@ -62,7 +62,7 @@ const noteService = {
 
     if (!note || note.author.toString() !== userId) throw createForbiddenError()
 
-    await Note.findByIdAndRemove(noteId).exec()
+    await Note.findByIdAndDelete(noteId).exec()
   }
 }
 

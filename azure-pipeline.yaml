@@ -20,7 +20,7 @@ stages:
         steps:
           - task: DownloadSecureFile@1
             name: envStage
-            condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+            condition: or(eq(variables['Build.SourceBranch'], 'refs/heads/develop'), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
             inputs:
               secureFile: 'env-back-stage'
           - task: Bash@3
@@ -66,7 +66,7 @@ stages:
               ConnectionType: 'AzureRM'
               azureSubscription: 'S2s-Service'
               appType: 'webAppContainer'
-              WebAppName: 's2s-back-stage'
+              WebAppName: '$(WEB_APP_NAME)'
               DockerNamespace: 's2sstage.azurecr.io'
-              DockerRepository: 'back-stage'
+              DockerRepository: '$(REPOSITORY_NAME)'
               DockerImageTag: '$(Build.BuildId)'

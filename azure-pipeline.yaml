@@ -16,7 +16,7 @@ stages:
     jobs:
       - job: Env
         pool:
-          vmImage: $(agentOS)
+          vmImage: $(agentOS) 
         steps:
           - task: DownloadSecureFile@1
             name: envStage

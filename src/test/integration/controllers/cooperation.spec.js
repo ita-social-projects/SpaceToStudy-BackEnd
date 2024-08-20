@@ -18,7 +18,7 @@ const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 const nonExistingOfferId = '648ae644aa322613ba08e69e'
 const validationErrorMessage = 'You can change only either the status or the price in one operation'
 
-const id = new mongoose.Types.ObjectId()
+const id = mongoose.Types.ObjectId.createFromBase64()
 const optionsStatus = coopsAggregateOptions({}, { status: 'testStatus' })
 const optionsSearch = coopsAggregateOptions({ id: id.toString(), role: 'testRole' }, { search: 'testSearch' })
 

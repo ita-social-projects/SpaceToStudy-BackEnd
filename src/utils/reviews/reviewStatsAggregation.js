@@ -5,7 +5,7 @@ const calculateReviewStats = async (targetUserId, targetUserRole) => {
   const [reviews] = await Review.aggregate([
     {
       $match: {
-        targetUserId: new mongoose.Types.ObjectId(targetUserId),
+        targetUserId: new mongoose.Types.ObjectId(`${targetUserId}`),
         targetUserRole
       }
     },

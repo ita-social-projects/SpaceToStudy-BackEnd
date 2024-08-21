@@ -42,7 +42,7 @@ stages:
               action: 'Build an image'
               dockerFile: '**/Dockerfile'
               buildArguments: 'MONGODB_URL=$(MONGODB_URL)'
-              imageName: 'back-stage:$(Build.BuildId)'
+              imageName: '$(ENV_TYPE)_back:$(Build.SourceVersion)'
 
           - task: Docker@0
             inputs: 
@@ -50,7 +50,7 @@ stages:
               azureSubscription: 'S2s-Service'
               azureContainerRegistry: '{"loginServer":"s2sstage.azurecr.io", "id" : "/subscriptions/734fc759-c3a2-4e22-a478-301dc5b10496/resourceGroups/Space2Study/providers/Microsoft.ContainerRegistry/registries/S2sStage"}'
               action: 'Push an image'
-              imageName: 'back-stage:$(Build.BuildId)'
+              imageName: '$(ENV_TYPE)_back:$(Build.SourceVersion)'
 
   - stage: Deploy
     displayName: Deploy image to app service
@@ -66,5 +66,5 @@ stages:
               appType: 'webAppContainer'
               WebAppName: '$(WEB_APP_NAME)'
               DockerNamespace: 's2sstage.azurecr.io'
-              DockerRepository: '$(REPOSITORY_NAME)'
-              DockerImageTag: '$(Build.BuildId)'
+              DockerRepository: '$(ENV_TYPE)_back'
+              DockerImageTag: '$(Build.SourceVersion)'

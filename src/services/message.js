@@ -43,18 +43,23 @@ const messageService = {
 
     if (!existingChat) throw createForbiddenError()
 
+    const messagesCount = await Message.countDocuments({
+      chat: chat,
+      'clearedFor.user': { $ne: mongoose.Types.ObjectId(user) }
+    }).exec()
+
     const messages = await Message.find({
       chat: chat,
       'clearedFor.user': { $ne: mongoose.Types.ObjectId(user) }
     })
       .populate({ path: 'author', select: '_id photo' })
       .select('+isRead')
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit)
       .exec()
 
-    return messages
+    return { items: messages, count: messagesCount }
   },
 
   deleteMessages: async (match) => {

@@ -1,80 +1,55 @@
 definitions:
   messages:
-    type: array
-    items:
-      type: object
-      properties:
-        _id:
-          type: string
-        author:
-          type: object
-          properties:
-            _id:
-              type: string
-              ref: '#/components/user'
-            photo:
-              type: string
-        authorRole:
-          type: string
-          enum:
-              - student
-              - tutor
-        text:
-          type: string
-        isRead:
-          type: boolean
-        isNotified:
-          type: boolean
-        chat:
-          type: string
-          ref: '#/components/chat'
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/message'
+      count:
+        type: integer
+        description: Total number of messages
   messageBody:
     type: object
     properties:
       author:
         type: string
-        ref: '#/components/user'      
+        ref: '#/components/user'
       text:
-        type: string     
+        type: string
       chat:
         type: string
         ref: '#/components/chat'
   message:
     type: object
     properties:
-       _id:
-          type: string
-       author:
-          type: object
-          properties:
-            _id:
-              type: string
-              ref: '#/components/user'
-            photo:
-              type: string
-       authorRole:
-          type: string
-          enum:
-              - student
-              - tutor
-       text:
-          type: string        
-       isRead:
-          type: boolean
-       isNotified:
-          type: boolean
-       chat:
-          type: string
-          ref: '#/components/chat'
-       createdAt:
-          type: string
-          format: date-time
-       updatedAt:
-          type: string
-          format: date-time
+      _id:
+        type: string
+      author:
+        type: object
+        properties:
+          _id:
+            type: string
+            ref: '#/components/user'
+          photo:
+            type: string
+      authorRole:
+        type: string
+        enum:
+          - student
+          - tutor
+      text:
+        type: string
+      isRead:
+        type: boolean
+      isNotified:
+        type: boolean
+      chat:
+        type: string
+        ref: '#/components/chat'
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

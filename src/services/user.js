@@ -14,6 +14,7 @@ const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
 const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
 const offerService = require('./offer')
 const cooperationService = require('./cooperation')
+const bookmarksAggregateOptions = require('~/utils/users/bookmarksAggregateOptions')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -229,6 +230,13 @@ const userService = {
 
   deleteUser: async (id) => {
     await User.findByIdAndRemove(id).exec()
+  },
+
+  getBookmarkedOffers: async (userId, queryParams) => {
+    const pipeline = bookmarksAggregateOptions(userId, queryParams)
+    const [response] = await User.aggregate(pipeline).exec()
+
+    return { items: response.offers.items, count: response.offers.count }
   },
 
   _calculateDeletionMainSubject: async (userId, categoryId) => {

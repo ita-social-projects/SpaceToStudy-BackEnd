@@ -1,6 +1,9 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const User = require('~/models/user')
+const Offer = require('~/models/offer')
+const Category = require('~/models/category')
 const { DOCUMENT_NOT_FOUND, FORBIDDEN, UNAUTHORIZED } = require('~/consts/errors')
+const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const { expectError } = require('~/test/helpers')
 const { USER } = require('~/consts/upload')
 const {
@@ -33,7 +36,10 @@ let testUser = {
   lastLogin: new Date().toJSON(),
   status: {
     student: STATUS_ENUM[0]
-  }
+  },
+  photo: 'userPhoto.jpeg',
+  professionalSummary: 'A professional',
+  nativeLanguage: 'English'
 }
 
 let adminUser = {
@@ -64,6 +70,23 @@ const createAggregateFields = {
   from: '2024-11-12',
   to: '2024-12-12',
   status: ['active', 'inactive']
+}
+
+const testOffer = {
+  price: 330,
+  proficiencyLevel: ['Beginner'],
+  title: 'Test Offer Title',
+  author: '65afa47f3d67b51996a67b92',
+  authorRole: 'tutor',
+  FAQ: [{ question: 'question1', answer: 'answer1' }],
+  description: 'Test offer description',
+  languages: ['Ukrainian'],
+  enrolledUsers: ['6512e1ca5fd987b6ce926c2e', '652ba66bf6770c3a2d5d8549'],
+  subject: 'subject',
+  category: {
+    _id: '',
+    appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+  }
 }
 
 describe('User controller', () => {
@@ -313,6 +336,69 @@ describe('User controller', () => {
           firstName: 'Vika',
           lastName: 'Douglas'
         })
+      })
+    })
+
+    describe(`GET ${endpointUrl}:id/offers/bookmarks`, () => {
+      it('should throw 404 DOCUMENT_NOT_FOUND if a user is not found', async () => {
+        await User.deleteMany({})
+        const response = await app
+          .get(`${endpointUrl}/${nonExistingUserId}/bookmarks/offers/`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+      })
+
+      it('should get bookmarked offers', async () => {
+        const userAuthor = await User.create(testUser)
+
+        await checkCategoryExistence()
+        const categoryResponse = await Category.find()
+        const { _id, appearance } = categoryResponse[0]
+        const category = { _id: _id.toString(), appearance }
+
+        const subjectName = 'Test Subject'
+        const subjectResponse = await app
+          .post('/subjects/')
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send({
+            name: subjectName,
+            category: category
+          })
+        const subjectId = subjectResponse.body._id
+
+        testOffer.category = category
+        testOffer.subject = subjectId
+        testOffer.author = userAuthor._id
+
+        const offer = await Offer.create(testOffer)
+        const user = await User.create({ ...testUser, bookmarkedOffers: [offer._id] })
+
+        const response = await app
+          .get(`${endpointUrl}${user._id.toString()}/bookmarks/offers`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        const expectedOffer = JSON.parse(JSON.stringify(offer))
+        const expectedAuthor = {
+          _id: userAuthor._id,
+          firstName: userAuthor.firstName,
+          lastName: userAuthor.lastName,
+          averageRating: userAuthor.averageRating,
+          totalReviews: userAuthor.totalReviews,
+          nativeLanguage: userAuthor.nativeLanguage,
+          photo: userAuthor.photo,
+          professionalSummary: userAuthor.professionalSummary,
+          status: userAuthor.status
+        }
+        expectedOffer.author = expectedAuthor
+        expectedOffer.subject = { name: subjectName, _id: subjectId }
+        expectedOffer.category = category
+        expectedOffer.chatId = null
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
       })
     })
   })

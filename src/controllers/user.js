@@ -76,6 +76,12 @@ const activateUser = async (req, res) => {
   res.status(204).end()
 }
 
+const getBookmarkedOffers = async (req, res) => {
+  const response = await userService.getBookmarkedOffers(req.params.id, req.query)
+
+  res.status(200).json(response)
+}
+
 module.exports = {
   getUsers,
   getUserById,
@@ -83,5 +89,6 @@ module.exports = {
   updateUser,
   updateStatus,
   deactivateUser,
-  activateUser
+  activateUser,
+  getBookmarkedOffers
 }

@@ -254,7 +254,7 @@ const userService = {
         $unwind: '$offers'
       }
     ]).exec()
-    console.log(response)
+
     return { items: response.offers.items, count: response.offers.count }
   },
 

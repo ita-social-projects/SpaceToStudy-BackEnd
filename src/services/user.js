@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb')
+
 const User = require('~/models/user')
 const uploadService = require('~/services/upload')
 const { USER } = require('~/consts/upload')
@@ -14,7 +16,7 @@ const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
 const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
 const offerService = require('./offer')
 const cooperationService = require('./cooperation')
-const bookmarksAggregateOptions = require('~/utils/users/bookmarksAggregateOptions')
+const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -233,9 +235,26 @@ const userService = {
   },
 
   getBookmarkedOffers: async (userId, queryParams) => {
-    const pipeline = bookmarksAggregateOptions(userId, queryParams)
-    const [response] = await User.aggregate(pipeline).exec()
+    let offersPipeline = offerAggregateOptions(queryParams, {}, { id: userId })
+    offersPipeline = offersPipeline.filter((stage) => !Object.keys(stage).includes('$match'))
 
+    const [response] = await User.aggregate([
+      { $match: { _id: ObjectId(userId) } },
+      {
+        $lookup: {
+          from: 'offers',
+          localField: 'bookmarkedOffers',
+          foreignField: '_id',
+          pipeline: offersPipeline,
+          as: 'offers'
+        }
+      },
+      { $project: { offers: 1, _id: 0 } },
+      {
+        $unwind: '$offers'
+      }
+    ]).exec()
+    console.log(response)
     return { items: response.offers.items, count: response.offers.count }
   },
 

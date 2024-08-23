@@ -909,7 +909,6 @@ paths:
                       nativeLanguage: English
                       totalReviews: { student: 0, tutor: 0 }
                       status: { student: 'active', tutor: 'active', admin: 'active' }
-                      FAQ: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
                       professionalSummary: My professional summary
                       photo: link-to-photo.png
                     subject:
@@ -942,10 +941,6 @@ paths:
                       nativeLanguage: English
                       totalReviews: { student: 0, tutor: 0 }
                       status: { student: 'active', tutor: 'active', admin: 'active' }
-                      FAQ:
-                        - question: tutor question
-                          _id: 63525e23bf163f5ea609ff2b
-                          answer: tutor answer
                       professionalSummary: My professional summary
                       photo: link-to-photo.png
                     subject:

@@ -13,6 +13,8 @@ const handleResources = async (resources) => {
         })
 
         delete resource._id
+        delete resource.createdAt
+        delete resource.updatedAt
         newResource =
           existingResource || (await resourceModelMapping[resourceType].create({ ...resource, isDuplicate }))
       }

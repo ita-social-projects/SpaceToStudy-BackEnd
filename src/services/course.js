@@ -2,6 +2,7 @@ const Course = require('~/models/course')
 
 const { createForbiddenError } = require('~/utils/errorsHelper')
 const handleResources = require('~/utils/handleResources')
+const deleteCourseTransaction = require('../utils/deleteCourseTransaction')
 
 const courseService = {
   getCourses: async (match, skip, limit, sort) => {
@@ -90,7 +91,9 @@ const courseService = {
   },
 
   deleteCourse: async (id, currentUser) => {
-    const course = await Course.findById(id).exec()
+    const course = await Course.findById(id)
+      .populate([{ path: 'sections.resources.resource', select: '_id isDuplicate resourceType' }])
+      .exec()
 
     const author = course.author.toString()
 
@@ -98,7 +101,7 @@ const courseService = {
       throw createForbiddenError()
     }
 
-    await Course.findByIdAndRemove(id).exec()
+    await deleteCourseTransaction(course)
   }
 }
 

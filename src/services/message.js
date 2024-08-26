@@ -43,21 +43,38 @@ const messageService = {
 
     if (!existingChat) throw createForbiddenError()
 
-    const messagesCount = await Message.countDocuments({
-      chat: chat,
-      'clearedFor.user': { $ne: mongoose.Types.ObjectId(user) }
-    }).exec()
+    const result = await Message.aggregate([
+      {
+        $match: {
+          chat: mongoose.Types.ObjectId(chat),
+          'clearedFor.user': { $ne: mongoose.Types.ObjectId(user) }
+        }
+      },
+      {
+        $sort: { createdAt: -1 }
+      },
+      {
+        $facet: {
+          messages: [
+            { $skip: skip || 0 },
+            { $limit: limit || 15 },
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'author',
+                foreignField: '_id',
+                as: 'author'
+              }
+            },
+            { $unwind: '$author' }
+          ],
+          count: [{ $count: 'total' }]
+        }
+      }
+    ]).exec()
 
-    const messages = await Message.find({
-      chat: chat,
-      'clearedFor.user': { $ne: mongoose.Types.ObjectId(user) }
-    })
-      .populate({ path: 'author', select: '_id photo' })
-      .select('+isRead')
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .exec()
+    const messages = result[0].messages
+    const messagesCount = result[0].count[0]?.total || 0
 
     return { items: messages, count: messagesCount }
   },

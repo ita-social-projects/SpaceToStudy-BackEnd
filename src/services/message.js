@@ -45,7 +45,7 @@ const messageService = {
 
     const messages = await Message.find({
       chat: chat,
-      'clearedFor.user': { $ne: new mongoose.Types.ObjectId(user).toString() }
+      'clearedFor.user': { $ne: new mongoose.Types.ObjectId(`${user}`).toString() }
     })
       .populate({ path: 'author', select: '_id photo' })
       .select('+isRead')

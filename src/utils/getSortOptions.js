@@ -2,7 +2,7 @@ const getSortOptions = (sort) => {
   try {
     const { order, orderBy } = sort
     return { [orderBy || 'updatedAt']: order || 'asc' }
-  } catch (error) {
+  } catch {
     return { updatedAt: 'asc' }
   }
 }

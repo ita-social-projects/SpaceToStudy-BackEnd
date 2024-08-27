@@ -209,7 +209,7 @@ const userService = {
           currentSubject._id = new mongoose.Types.ObjectId()
         }
 
-        newSubjects[role] = [currentSubject, ...newSubjects[role]]
+        newSubjects[role] = [...newSubjects[role], currentSubject]
       }
 
       processedCategoryIds.add(currentSubject.category._id.toString())
@@ -261,7 +261,7 @@ const userService = {
     const userOffers = await offerService.getOffers(aggregateOptions)
     const userCooperations = await cooperationService.getCooperations(aggregateOptions)
 
-    return Boolean(userOffers || userCooperations)
+    return Boolean(userOffers?.length || userCooperations?.length)
   }
 }
 

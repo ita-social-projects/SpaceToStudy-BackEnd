@@ -21,6 +21,7 @@ jobs:
         uses: supercharge/mongodb-github-action@1.8.0
         with:
           mongodb-version: latest
+          mongodb-replica-set: test-rs
           mongodb-port: 27017
           mongodb-username: ${{secrets.MONGODB_USER}}
           mongodb-password: ${{secrets.MONGODB_PASS}}

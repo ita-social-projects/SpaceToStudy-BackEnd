@@ -193,8 +193,8 @@ const userService = {
 
     const processedCategoryIds = new Set()
 
-    for (let i = 0; i < formattedSubjects.length; i++) {
-      const currentSubject = formattedSubjects[i]
+    for (const subject of formattedSubjects) {
+      const currentSubject = subject
 
       if (!currentSubject) {
         continue

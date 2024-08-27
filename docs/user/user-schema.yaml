@@ -301,3 +301,7 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  toggleBookmarkReponse:
+    type: array
+    items:
+      type: string

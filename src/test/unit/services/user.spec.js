@@ -160,7 +160,12 @@ describe('User service', () => {
 
       await userService.updateUser(id, role, updateData)
 
-      expect(userService._updateMainSubjects).toHaveBeenCalledWith(updateData.mainSubjects, userMock.mainSubjects, role)
+      expect(userService._updateMainSubjects).toHaveBeenCalledWith(
+        updateData.mainSubjects,
+        userMock.mainSubjects,
+        role,
+        id
+      )
     })
 
     it('should check for deletion block when isEdit is true', async () => {

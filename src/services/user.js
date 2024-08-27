@@ -4,7 +4,7 @@ const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError } = require('~/utils/errorsHelper')
 
-const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 const {
@@ -223,8 +223,7 @@ const userService = {
           const isDeletionBlocked = await userService._calculateDeletionMainSubject(userId, oldSubject.category)
 
           if (isDeletionBlocked) {
-            console.warn(`Deletion blocked for category with ID ${oldSubject.category.toString()}`)
-            return oldSubject
+            throw createError(403, FORBIDDEN)
           }
 
           return null
@@ -233,6 +232,7 @@ const userService = {
         return oldSubject
       })
     )
+
     newSubjects[role] = newSubjects[role].filter((subject) => subject !== null)
 
     return newSubjects

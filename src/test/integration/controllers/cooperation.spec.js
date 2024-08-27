@@ -19,7 +19,6 @@ const nonExistingOfferId = '648ae644aa322613ba08e69e'
 const validationErrorMessage = 'You can change only either the status or the price in one operation'
 
 const id = new mongoose.Types.ObjectId()
-const optionsStatus = coopsAggregateOptions({}, { status: 'testStatus' })
 const optionsSearch = coopsAggregateOptions({ id, role: 'testRole' }, { search: 'testSearch' })
 
 const tutorUserData = {
@@ -402,6 +401,7 @@ describe('Cooperation controller', () => {
 
   describe('coopsAggregateOptions', () => {
     it('should match status if status is provided', () => {
+      const optionsStatus = coopsAggregateOptions({ status: 'testStatus' })
       const matchOptionStatus = optionsStatus.find((option) => option.$match)
       expect(matchOptionStatus).toBeDefined()
       expect(matchOptionStatus.$match.status).toBeDefined()

@@ -45,7 +45,7 @@ const coopsAggregateOptions = (query, params = {}) => {
         from: 'users',
         let: {
           lookUpField: {
-            $cond: [{ $eq: ['$initiator', new mongoose.Types.ObjectId(id)] }, '$receiver', '$initiator']
+            $cond: [{ $eq: ['$initiator', new mongoose.Types.ObjectId(id).toString()] }, '$receiver', '$initiator']
           },
           role: {
             $cond: [{ $eq: ['$initiatorRole', role] }, '$receiverRole', '$initiatorRole']

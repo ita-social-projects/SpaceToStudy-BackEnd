@@ -53,7 +53,7 @@ const lessonService = {
       throw createForbiddenError()
     }
 
-    await Lesson.findByIdAndRemove(id).exec()
+    await Lesson.findByIdAndDelete(id).exec()
   },
 
   getLessonById: async (id) => {

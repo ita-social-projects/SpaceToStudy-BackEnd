@@ -19,8 +19,7 @@ const nonExistingOfferId = '648ae644aa322613ba08e69e'
 const validationErrorMessage = 'You can change only either the status or the price in one operation'
 
 const id = new mongoose.Types.ObjectId()
-const optionsStatus = coopsAggregateOptions({}, { status: 'testStatus' })
-const optionsSearch = coopsAggregateOptions({ id: id.toString(), role: 'testRole' }, { search: 'testSearch' })
+const optionsSearch = coopsAggregateOptions({ id, role: 'testRole' }, { search: 'testSearch' })
 
 const tutorUserData = {
   role: ['tutor'],
@@ -193,10 +192,10 @@ describe('Cooperation controller', () => {
       expect(response.body.items[0]).toMatchObject({
         _id: testCooperation._body._id,
         offer: {
-          _id: testOffer._id
+          _id: testOffer._id.toString()
         },
         initiator: testStudentUser.id,
-        receiver: testTutorUser._id,
+        receiver: testTutorUser._id.toString(),
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
@@ -225,11 +224,13 @@ describe('Cooperation controller', () => {
       expect(response.body).toMatchObject({
         _id: testCooperation._body._id,
         offer: {
-          _id: testOffer._id,
-          author: testOffer.author
+          _id: testOffer._id.toString(),
+          author: {
+            _id: testOffer.author.toString()
+          }
         },
         initiator: testStudentUser.id,
-        receiver: testTutorUser._id,
+        receiver: testTutorUser._id.toString(),
         receiverRole: tutorUserData.role[0],
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
@@ -262,9 +263,9 @@ describe('Cooperation controller', () => {
       expect(testCooperation.status).toBe(201)
       expect(testCooperation.body).toMatchObject({
         _id: testCooperation._body._id,
-        offer: testOffer._id,
+        offer: testOffer._id.toString(),
         initiator: testStudentUser.id,
-        receiver: testTutorUser._id,
+        receiver: testTutorUser._id.toString(),
         receiverRole: tutorUserData.role[0],
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
@@ -400,6 +401,7 @@ describe('Cooperation controller', () => {
 
   describe('coopsAggregateOptions', () => {
     it('should match status if status is provided', () => {
+      const optionsStatus = coopsAggregateOptions({ status: 'testStatus' })
       const matchOptionStatus = optionsStatus.find((option) => option.$match)
       expect(matchOptionStatus).toBeDefined()
       expect(matchOptionStatus.$match.status).toBeDefined()

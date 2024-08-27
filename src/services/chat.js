@@ -42,9 +42,9 @@ const chatService = {
     const { id: user, role: userRole } = currentUser
 
     return await Chat.find({
-      'members.user': mongoose.Types.ObjectId(user),
+      'members.user': new mongoose.Types.ObjectId(`${user}`).toString(),
       'members.role': userRole,
-      'deletedFor.user': { $ne: mongoose.Types.ObjectId(user) }
+      'deletedFor.user': { $ne: new mongoose.Types.ObjectId(`${user}`).toString() }
     }).populate([
       {
         path: 'latestMessage',
@@ -67,7 +67,7 @@ const chatService = {
       throw createForbiddenError()
     }
 
-    await Chat.findByIdAndRemove(id).exec()
+    await Chat.findByIdAndDelete(id).exec()
   },
   markAsDeletedForCurrentUser: async (id, currentUser) => {
     const chat = await Chat.findById(id).exec()

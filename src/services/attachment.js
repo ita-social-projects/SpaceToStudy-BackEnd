@@ -76,7 +76,7 @@ const attachmentService = {
       throw createForbiddenError()
     }
 
-    await Attachment.findByIdAndRemove(id).exec()
+    await Attachment.findByIdAndDelete(id).exec()
   }
 }
 

@@ -60,7 +60,7 @@ const offerAggregateOptions = (query, params, user) => {
   }
 
   if (authorId) {
-    match['author._id'] = mongoose.Types.ObjectId(authorId)
+    match['author._id'] = new mongoose.Types.ObjectId(`${authorId}`).toString()
   }
 
   if (authorRole) {
@@ -97,15 +97,15 @@ const offerAggregateOptions = (query, params, user) => {
   }
 
   if (categoryId) {
-    match['category._id'] = mongoose.Types.ObjectId(categoryId)
+    match['category._id'] = new mongoose.Types.ObjectId(`${categoryId}`).toString()
   }
 
   if (subjectId) {
-    match['subject._id'] = mongoose.Types.ObjectId(subjectId)
+    match['subject._id'] = new mongoose.Types.ObjectId(`${subjectId}`).toString()
   }
 
   if (excludedOfferId) {
-    match._id = { $ne: mongoose.Types.ObjectId(excludedOfferId) }
+    match._id = { $ne: new mongoose.Types.ObjectId(`${excludedOfferId}`).toString() }
   }
 
   let sortOption = {}
@@ -185,7 +185,10 @@ const offerAggregateOptions = (query, params, user) => {
     {
       $lookup: {
         from: 'chats',
-        let: { authorId: { $arrayElemAt: ['$author._id', 0] }, userId: mongoose.Types.ObjectId(userId) },
+        let: {
+          authorId: { $arrayElemAt: ['$author._id', 0] },
+          userId: new mongoose.Types.ObjectId(`${userId}`).toString()
+        },
         pipeline: [
           {
             $match: {

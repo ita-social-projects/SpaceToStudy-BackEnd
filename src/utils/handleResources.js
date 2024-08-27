@@ -14,8 +14,6 @@ const handleResources = async (resources) => {
         return cleanedResource
       }
 
-      let newResource = resource
-
       if (_id) {
         const existingResource = await resourceModelMapping[resourceType].findOne({
           _id,
@@ -25,13 +23,11 @@ const handleResources = async (resources) => {
         if (existingResource) {
           return { ...resourceItem, resource: existingResource }
         }
-
-        newResource = removeMetadataFields(resource)
-      } else {
-        newResource = removeMetadataFields(resource)
       }
 
+      const newResource = removeMetadataFields(resource)
       const createdResource = await resourceModelMapping[resourceType].create({ ...newResource, isDuplicate })
+
       return { ...resourceItem, resource: createdResource }
     })
   )

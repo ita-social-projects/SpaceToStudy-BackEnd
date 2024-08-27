@@ -40,7 +40,7 @@ describe('Note controller', () => {
   let app, server, accessToken, testUser, testCooperation, testNote
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -75,14 +75,14 @@ describe('Note controller', () => {
       expect(response.body.length).toBe(1)
       expect(Array.isArray(response.body)).toBe(true)
       expect(response.body[0]).toMatchObject({
-        _id: testNote._body._id,
+        _id: testNote._body._id.toString(),
         text: expect.any(String),
         author: {
           _id: testUser.id,
           firstName: expect.any(String),
           lastName: expect.any(String)
         },
-        cooperation: testCooperation._id,
+        cooperation: testCooperation._id.toString(),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })
@@ -118,10 +118,10 @@ describe('Note controller', () => {
     it('should create new note', () => {
       expect(testNote.statusCode).toBe(201)
       expect(testNote._body).toMatchObject({
-        _id: testNote._body._id,
+        _id: testNote._body._id.toString(),
         text: expect.any(String),
         author: testUser.id,
-        cooperation: testCooperation._id,
+        cooperation: testCooperation._id.toString(),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })

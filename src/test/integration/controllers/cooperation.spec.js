@@ -20,6 +20,7 @@ const validationErrorMessage = 'You can change only either the status or the pri
 
 const id = new mongoose.Types.ObjectId()
 const optionsSearch = coopsAggregateOptions({ id, role: 'testRole' }, { search: 'testSearch' })
+const optionsStatus = coopsAggregateOptions({}, { status: 'testStatus' })
 
 const tutorUserData = {
   role: ['tutor'],
@@ -401,7 +402,6 @@ describe('Cooperation controller', () => {
 
   describe('coopsAggregateOptions', () => {
     it('should match status if status is provided', () => {
-      const optionsStatus = coopsAggregateOptions({ status: 'testStatus' })
       const matchOptionStatus = optionsStatus.find((option) => option.$match)
       expect(matchOptionStatus).toBeDefined()
       expect(matchOptionStatus.$match.status).toBeDefined()

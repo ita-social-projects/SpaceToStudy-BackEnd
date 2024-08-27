@@ -4,11 +4,11 @@ const condition = (data) => {
   const condition = {}
 
   if (data.categoryId) {
-    condition.category = new mongoose.Types.ObjectId(`${data.categoryId}`).toString()
+    condition.category = new mongoose.Types.ObjectId(data.categoryId)
   }
 
   if (data.subjectId) {
-    condition.subject = new mongoose.Types.ObjectId(`${data.subjectId}`).toString()
+    condition.subject = new mongoose.Types.ObjectId(data.subjectId)
   }
 
   if (data.authorRole) {

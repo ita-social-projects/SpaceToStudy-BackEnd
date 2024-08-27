@@ -42,9 +42,9 @@ const chatService = {
     const { id: user, role: userRole } = currentUser
 
     return await Chat.find({
-      'members.user': new mongoose.Types.ObjectId(`${user}`).toString(),
+      'members.user': new mongoose.Types.ObjectId(user),
       'members.role': userRole,
-      'deletedFor.user': { $ne: new mongoose.Types.ObjectId(`${user}`).toString() }
+      'deletedFor.user': { $ne: new mongoose.Types.ObjectId(user) }
     }).populate([
       {
         path: 'latestMessage',

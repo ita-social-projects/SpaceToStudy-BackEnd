@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
 
-const coopsAggregateOptions = (query, params = {}) => {
+const coopsAggregateOptions = (params = {}, query) => {
   const { id, role } = params
   const { skip = 0, limit = 5, status = '', sort = '{ "order": "asc", "orderBy":"updatedAt"}', search } = query
   const match = {}
@@ -20,8 +20,8 @@ const coopsAggregateOptions = (query, params = {}) => {
     match.$and = [
       {
         $or: [
-          { initiator: new mongoose.Types.ObjectId(`${id}`), initiatorRole: role },
-          { receiver: new mongoose.Types.ObjectId(`${id}`), receiverRole: role }
+          { initiator: new mongoose.Types.ObjectId(id), initiatorRole: role },
+          { receiver: new mongoose.Types.ObjectId(id), receiverRole: role }
         ]
       }
     ]
@@ -44,9 +44,7 @@ const coopsAggregateOptions = (query, params = {}) => {
       $lookup: {
         from: 'users',
         let: {
-          lookUpField: {
-            $cond: [{ $eq: ['$initiator', new mongoose.Types.ObjectId(id).toString()] }, '$receiver', '$initiator']
-          },
+          lookUpField: { $cond: [{ $eq: ['$initiator', new mongoose.Types.ObjectId(id)] }, '$receiver', '$initiator'] },
           role: {
             $cond: [{ $eq: ['$initiatorRole', role] }, '$receiverRole', '$initiatorRole']
           }

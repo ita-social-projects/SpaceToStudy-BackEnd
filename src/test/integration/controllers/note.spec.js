@@ -82,7 +82,7 @@ describe('Note controller', () => {
           firstName: expect.any(String),
           lastName: expect.any(String)
         },
-        cooperation: testCooperation._id,
+        cooperation: testCooperation._id.toString(),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })
@@ -121,7 +121,7 @@ describe('Note controller', () => {
         _id: testNote._body._id,
         text: expect.any(String),
         author: testUser.id,
-        cooperation: testCooperation._id,
+        cooperation: testCooperation._id.toString(),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })

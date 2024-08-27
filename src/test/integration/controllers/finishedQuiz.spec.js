@@ -79,7 +79,7 @@ describe('Quiz controller', () => {
         _id: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        quiz: testQuiz._id,
+        quiz: testQuiz._id.toString(),
         ...testFinishedQuizData
       })
     })

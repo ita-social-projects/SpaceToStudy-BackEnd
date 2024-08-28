@@ -845,6 +845,18 @@ paths:
           schema:
             type: integer
           required: false
+        - in: query
+          name: title
+          description: The title of the offer to be found
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: sortBy
+          description: 'createdAt | priceAsc | priceDesc | rating'
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: OK

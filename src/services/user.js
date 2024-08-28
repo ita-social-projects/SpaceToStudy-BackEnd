@@ -236,7 +236,12 @@ const userService = {
 
   getBookmarkedOffers: async (userId, queryParams) => {
     let offersPipeline = offerAggregateOptions(queryParams, {}, { id: userId })
-    offersPipeline = offersPipeline.filter((stage) => !Object.keys(stage).includes('$match'))
+    if (queryParams.title) {
+      const match = { $match: { title: { $regex: queryParams.title, $options: 'i' } } }
+      offersPipeline = offersPipeline.map((stage) => (Object.keys(stage).includes('$match') ? match : stage))
+    } else {
+      offersPipeline = offersPipeline.filter((stage) => !Object.keys(stage).includes('$match'))
+    }
 
     const [response] = await User.aggregate([
       { $match: { _id: ObjectId(userId) } },

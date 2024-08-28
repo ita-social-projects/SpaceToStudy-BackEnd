@@ -340,6 +340,33 @@ describe('User controller', () => {
     })
 
     describe(`GET ${endpointUrl}:id/offers/bookmarks`, () => {
+      let userAuthor
+      const subjectName = 'Test Subject Name'
+      let subjectId
+      let category
+
+      beforeEach(async () => {
+        userAuthor = await User.create(testUser)
+
+        await checkCategoryExistence()
+        const categoryResponse = await Category.find()
+        const { _id, appearance } = categoryResponse[0]
+        category = { _id: _id.toString(), appearance }
+
+        const subjectResponse = await app
+          .post('/subjects/')
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send({
+            name: subjectName,
+            category: category
+          })
+        subjectId = subjectResponse.body._id
+
+        testOffer.category = category
+        testOffer.subject = subjectId
+        testOffer.author = userAuthor._id
+      })
+
       it('should throw 404 DOCUMENT_NOT_FOUND if a user is not found', async () => {
         await User.deleteMany({})
         const response = await app
@@ -351,27 +378,6 @@ describe('User controller', () => {
       })
 
       it('should get bookmarked offers', async () => {
-        const userAuthor = await User.create(testUser)
-
-        await checkCategoryExistence()
-        const categoryResponse = await Category.find()
-        const { _id, appearance } = categoryResponse[0]
-        const category = { _id: _id.toString(), appearance }
-
-        const subjectName = 'Test Subject'
-        const subjectResponse = await app
-          .post('/subjects/')
-          .set('Cookie', [`accessToken=${accessToken}`])
-          .send({
-            name: subjectName,
-            category: category
-          })
-        const subjectId = subjectResponse.body._id
-
-        testOffer.category = category
-        testOffer.subject = subjectId
-        testOffer.author = userAuthor._id
-
         const offer = await Offer.create(testOffer)
         const user = await User.create({ ...testUser, bookmarkedOffers: [offer._id] })
 
@@ -381,6 +387,44 @@ describe('User controller', () => {
           .send()
 
         const expectedOffer = JSON.parse(JSON.stringify(offer))
+        const expectedAuthor = {
+          _id: userAuthor._id,
+          firstName: userAuthor.firstName,
+          lastName: userAuthor.lastName,
+          averageRating: userAuthor.averageRating,
+          totalReviews: userAuthor.totalReviews,
+          nativeLanguage: userAuthor.nativeLanguage,
+          photo: userAuthor.photo,
+          professionalSummary: userAuthor.professionalSummary,
+          status: userAuthor.status
+        }
+        expectedOffer.author = expectedAuthor
+        expectedOffer.subject = { name: subjectName, _id: subjectId }
+        expectedOffer.category = category
+        expectedOffer.chatId = null
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
+      })
+
+      it('should find a bookmarked offer with a specified title', async () => {
+        const offer1Title = 'Offer1'
+        const offer2Title = 'Offer2'
+
+        testOffer.title = offer1Title
+        const offer1 = await Offer.create(testOffer)
+
+        testOffer.title = offer2Title
+        const offer2 = await Offer.create(testOffer)
+
+        const user = await User.create({ ...testUser, bookmarkedOffers: [offer1._id, offer2._id] })
+
+        const response = await app
+          .get(`${endpointUrl}${user._id.toString()}/bookmarks/offers?title=${offer1Title}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        const expectedOffer = JSON.parse(JSON.stringify(offer1))
         const expectedAuthor = {
           _id: userAuthor._id,
           firstName: userAuthor.firstName,

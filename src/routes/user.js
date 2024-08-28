@@ -27,6 +27,7 @@ router.use('/:id/offers', isEntityValid({ params }), offerRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(userController.getUserById))
+router.get('/:id/bookmarks/offers', isEntityValid({ params }), asyncWrapper(userController.getBookmarkedOffers))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
 router.patch('/deactivate/:id', isEntityValid({ params }), asyncWrapper(userController.deactivateUser))
 router.patch('/activate/:id', isEntityValid({ params }), asyncWrapper(userController.activateUser))

@@ -305,3 +305,13 @@ definitions:
     type: array
     items:
       type: string
+  bookmarkedOffers:
+    type: object
+    properties:
+      count:
+        type: number
+      items:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/offers'

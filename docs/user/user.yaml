@@ -824,6 +824,141 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: User with the specified id was not found.
+  /users/{id}/offers/bookmarks:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Users
+      summary: Find bookmarked offers
+      description: Finds and returns bookmarked offers for the current user.
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: skip
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: title
+          description: The title of the offer to be found
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: sortBy
+          description: 'createdAt | priceAsc | priceDesc | rating'
+          schema:
+            type: string
+          required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/bookmarkedOffers'
+              example:
+                count: 2
+                items:
+                  - _id: 63ebc6fbd2f34037d0aba791
+                    price: 111
+                    proficiencyLevel: [Beginner]
+                    title: This is a new title for test purposes
+                    description: This is a new description for test purposes
+                    languages: [English]
+                    enrolledUsers: [6512e1ca5fd987b6ce926c2e]
+                    authorRole: tutor
+                    author:
+                      _id: 63e63bb04d1bf3bea00e3d88
+                      averageRating: { student: 0, tutor: 0 }
+                      firstName: Amanda
+                      lastName: Smith
+                      nativeLanguage: English
+                      totalReviews: { student: 0, tutor: 0 }
+                      status: { student: 'active', tutor: 'active', admin: 'active' }
+                      professionalSummary: My professional summary
+                      photo: link-to-photo.png
+                    subject:
+                      _id: 63da8767c9ad4c9a0b0eacd3
+                      name: English
+                    category:
+                      {
+                        _id: 63525e23bf163f5ea609ff2b,
+                        name: Languages,
+                        appearance: { color: '#6DC050', icon: LanguageIcon }
+                      }
+                    chatId: '64be59667f4136e211435a55'
+                    FAQ: [{ question: offer question, _id: 63525e23bf163f5ea609ff2b, answer: offer answer }]
+                    status: 'active'
+                    createdAt: '2024-08-05T11:01:36.434Z'
+                    updatedAt: '2024-08-05T11:02:34.791Z'
+                  - _id: 63ebc6fbd2f34037d0aba791
+                    price: 300
+                    proficiencyLevel: [Intermediate, Advanced]
+                    title: this is a new title for test purposes
+                    description: Lorem ipsum dolor sit amet consectetur
+                    languages: [English, Ukrainian]
+                    enrolledUsers: [6512e1ca5fd987b6ce926c2e]
+                    authorRole: tutor
+                    author:
+                      _id: 63e63bb04d1bf3bea00e3d88
+                      averageRating: { student: 0, tutor: 0 }
+                      firstName: John
+                      lastName: Smith
+                      nativeLanguage: English
+                      totalReviews: { student: 0, tutor: 0 }
+                      status: { student: 'active', tutor: 'active', admin: 'active' }
+                      professionalSummary: My professional summary
+                      photo: link-to-photo.png
+                    subject:
+                      _id: 63da8767c9ad4c9a0b0eacd3
+                      name: bass
+                    category: 63525e23bf163f5ea609ff2b
+                    chatId: null
+                    FAQ:
+                      - question: offer question
+                        _id: 63525e23bf163f5ea609ff2b
+                        answer: offer answer
+                    status: 'active'
+                    createdAt: '2024-08-05T11:01:36.434Z'
+                    updatedAt: '2024-08-05T11:02:34.791Z'
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: User with the specified id was not found.
   /users/{id}/bookmarks/offers/{offerId}:
     patch:
       security:

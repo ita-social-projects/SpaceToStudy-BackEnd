@@ -36,7 +36,10 @@ let testUser = {
   lastLogin: new Date().toJSON(),
   status: {
     student: STATUS_ENUM[0]
-  }
+  },
+  photo: 'userPhoto.jpeg',
+  professionalSummary: 'A professional',
+  nativeLanguage: 'English'
 }
 
 let adminUser = {
@@ -67,6 +70,23 @@ const createAggregateFields = {
   from: '2024-11-12',
   to: '2024-12-12',
   status: ['active', 'inactive']
+}
+
+const testOffer = {
+  price: 330,
+  proficiencyLevel: ['Beginner'],
+  title: 'Offer Title',
+  author: '65afa47f3d67b51996a67b92',
+  authorRole: 'tutor',
+  FAQ: [{ question: 'question1', answer: 'answer1' }],
+  description: 'Test offer description',
+  languages: ['Ukrainian'],
+  enrolledUsers: ['6512e1ca5fd987b6ce926c2e', '652ba66bf6770c3a2d5d8549'],
+  subject: 'subject',
+  category: {
+    _id: '',
+    appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+  }
 }
 
 describe('User controller', () => {
@@ -322,23 +342,6 @@ describe('User controller', () => {
     describe(`PATCH ${endpointUrl}/:id/bookmarks/offers/:offerId`, () => {
       const nonExistingOfferId = '6672f61ea0c8993fcd04d7ef'
 
-      const testOffer = {
-        price: 330,
-        proficiencyLevel: ['Beginner'],
-        title: 'Test Title',
-        author: '65afa47f3d67b51996a67b92',
-        authorRole: 'tutor',
-        FAQ: [{ question: 'question1', answer: 'answer1' }],
-        description: 'TEST 123',
-        languages: ['Ukrainian'],
-        enrolledUsers: ['6512e1ca5fd987b6ce926c2e', '652ba66bf6770c3a2d5d8549'],
-        subject: 'subject',
-        category: {
-          _id: '',
-          appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
-        }
-      }
-
       let user
 
       beforeEach(async () => {
@@ -433,6 +436,113 @@ describe('User controller', () => {
         expect(response.statusCode).toBe(200)
         expect(response.body).toEqual([offer1._id.toString()])
         expect(updatedUser.bookmarkedOffers).toEqual([offer1._id])
+      })
+    })
+
+    describe(`GET ${endpointUrl}:id/offers/bookmarks`, () => {
+      let userAuthor
+      const subjectName = 'Test Subject Name'
+      let subjectId
+      let category
+
+      beforeEach(async () => {
+        userAuthor = await User.create(testUser)
+
+        await checkCategoryExistence()
+        const categoryResponse = await Category.find()
+        const { _id, appearance } = categoryResponse[0]
+        category = { _id: _id.toString(), appearance }
+
+        const subjectResponse = await app
+          .post('/subjects/')
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send({
+            name: subjectName,
+            category: category
+          })
+        subjectId = subjectResponse.body._id
+
+        testOffer.category = category
+        testOffer.subject = subjectId
+        testOffer.author = userAuthor._id
+      })
+
+      it('should throw 404 DOCUMENT_NOT_FOUND if a user is not found', async () => {
+        await User.deleteMany({})
+        const response = await app
+          .get(`${endpointUrl}/${nonExistingUserId}/bookmarks/offers/`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expectError(404, DOCUMENT_NOT_FOUND([User.modelName]), response)
+      })
+
+      it('should get bookmarked offers', async () => {
+        const offer = await Offer.create(testOffer)
+        const user = await User.create({ ...testUser, bookmarkedOffers: [offer._id] })
+
+        const response = await app
+          .get(`${endpointUrl}${user._id.toString()}/bookmarks/offers`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        const expectedOffer = JSON.parse(JSON.stringify(offer))
+        const expectedAuthor = {
+          _id: userAuthor._id,
+          firstName: userAuthor.firstName,
+          lastName: userAuthor.lastName,
+          averageRating: userAuthor.averageRating,
+          totalReviews: userAuthor.totalReviews,
+          nativeLanguage: userAuthor.nativeLanguage,
+          photo: userAuthor.photo,
+          professionalSummary: userAuthor.professionalSummary,
+          status: userAuthor.status
+        }
+        expectedOffer.author = expectedAuthor
+        expectedOffer.subject = { name: subjectName, _id: subjectId }
+        expectedOffer.category = category
+        expectedOffer.chatId = null
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
+      })
+
+      it('should find a bookmarked offer with a specified title', async () => {
+        const offer1Title = 'Offer1'
+        const offer2Title = 'Offer2'
+
+        testOffer.title = offer1Title
+        const offer1 = await Offer.create(testOffer)
+
+        testOffer.title = offer2Title
+        const offer2 = await Offer.create(testOffer)
+
+        const user = await User.create({ ...testUser, bookmarkedOffers: [offer1._id, offer2._id] })
+
+        const response = await app
+          .get(`${endpointUrl}${user._id.toString()}/bookmarks/offers?title=${offer1Title}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        const expectedOffer = JSON.parse(JSON.stringify(offer1))
+        const expectedAuthor = {
+          _id: userAuthor._id,
+          firstName: userAuthor.firstName,
+          lastName: userAuthor.lastName,
+          averageRating: userAuthor.averageRating,
+          totalReviews: userAuthor.totalReviews,
+          nativeLanguage: userAuthor.nativeLanguage,
+          photo: userAuthor.photo,
+          professionalSummary: userAuthor.professionalSummary,
+          status: userAuthor.status
+        }
+        expectedOffer.author = expectedAuthor
+        expectedOffer.subject = { name: subjectName, _id: subjectId }
+        expectedOffer.category = category
+        expectedOffer.chatId = null
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
       })
     })
   })

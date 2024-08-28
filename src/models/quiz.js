@@ -44,7 +44,10 @@ const quizSchema = new Schema(
         values: RESOURCES_TYPES_ENUM,
         message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
       },
-      default: RESOURCES_TYPES_ENUM[3]
+      default: RESOURCES_TYPES_ENUM[1]
+    },
+    isDuplicate: {
+      type: Boolean
     },
     availability: {
       status: {

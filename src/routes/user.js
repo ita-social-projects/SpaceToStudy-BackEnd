@@ -19,6 +19,7 @@ const params = [{ model: User, idName: 'id' }]
 router.use(authMiddleware)
 
 router.param('id', idValidation)
+router.param('offerId', idValidation)
 
 router.use('/:id/reviews', isEntityValid({ params }), reviewRouter)
 router.use('/:id/cooperations', isEntityValid({ params }), cooperationRouter)
@@ -30,6 +31,11 @@ router.get('/:id/bookmarks/offers', isEntityValid({ params }), asyncWrapper(user
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
 router.patch('/deactivate/:id', isEntityValid({ params }), asyncWrapper(userController.deactivateUser))
 router.patch('/activate/:id', isEntityValid({ params }), asyncWrapper(userController.activateUser))
+router.patch(
+  '/:id/bookmarks/offers/:offerId',
+  isEntityValid({ params }),
+  asyncWrapper(userController.toggleOfferBookmark)
+)
 
 router.use(restrictTo(ADMIN))
 router.patch('/:id/change-status', isEntityValid({ params }), asyncWrapper(userController.updateStatus))

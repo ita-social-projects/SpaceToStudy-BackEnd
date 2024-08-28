@@ -1,6 +1,8 @@
+const mongoose = require('mongoose')
 const { ObjectId } = require('mongodb')
 
 const User = require('~/models/user')
+const Offer = require('~/models/offer')
 const uploadService = require('~/services/upload')
 const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
@@ -54,7 +56,7 @@ const userService = {
     const user = await User.findOne({ _id: id, ...(role && { role }) })
       .populate(populateOptions('tutor'))
       .populate(populateOptions('student'))
-      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink')
+      .select('+lastLoginAs +isEmailConfirmed +isFirstLogin +bookmarkedOffers +videoLink +notificationSettings')
       .lean()
       .exec()
     if (isEdit) {
@@ -76,7 +78,7 @@ const userService = {
 
   getUserByEmail: async (email) => {
     const user = await User.findOne({ email })
-      .select('+password +lastLoginAs +isEmailConfirmed +isFirstLogin +appLanguage')
+      .select('+password +lastLoginAs +isEmailConfirmed +isFirstLogin +appLanguage +notificationSettings')
       .lean()
       .exec()
 
@@ -104,7 +106,13 @@ const userService = {
       lastLoginAs: role,
       password: hashedPassword,
       appLanguage,
-      isEmailConfirmed
+      isEmailConfirmed,
+      notificationSettings: {
+        isOfferStatusNotification: true,
+        isChatNotification: true,
+        isSimilarOffersNotification: true,
+        isEmailNotification: true
+      }
     })
   },
 
@@ -146,7 +154,8 @@ const userService = {
       filteredUpdateData.mainSubjects = await userService._updateMainSubjects(
         updateData.mainSubjects,
         user.mainSubjects,
-        role
+        role,
+        id
       )
     }
 
@@ -163,55 +172,72 @@ const userService = {
   _updateMainSubjects: async (mainSubjects, userSubjects, role, userId) => {
     const oldSubjects = userSubjects[role]
     let newSubjects = { ...userSubjects }
-    let formattedSubjects = Array.isArray(mainSubjects) ? mainSubjects : [mainSubjects]
+    let formattedSubjects = mainSubjects[role]
+    formattedSubjects = Array.isArray(formattedSubjects) ? formattedSubjects : [formattedSubjects]
 
     const verifyUpdateSubject = (dbSubject, subject) => {
-      return dbSubject._id.toString() === subject._id
-    }
-
-    const verifyDeletionSubject = (dbSubject, subject) => {
-      return !subject.subjects.some((currentSubject) => dbSubject._id.toString() === currentSubject._id)
-    }
-
-    if (formattedSubjects.every((subject) => !subject.subjects)) {
-      const categories = {}
-      formattedSubjects.forEach((subject) => {
-        if (!categories[subject.category._id]) {
-          categories[subject.category._id] = [{ ...subject }]
-        } else {
-          categories[subject.category._id].push({ ...subject })
-        }
-      })
-
-      const transformedSubjects = []
-      for (const key in categories) {
-        transformedSubjects.push({
-          category: { _id: key, name: categories[key][0].category.name },
-          subjects: categories[key].map(({ _id, name }) => ({ _id, name }))
-        })
+      if (!dbSubject?._id || !subject?._id) {
+        return false
       }
-      formattedSubjects = transformedSubjects
+
+      const dbSubjectId = dbSubject._id.toString()
+      const subjectId = subject._id.toString()
+
+      return dbSubjectId === subjectId
     }
 
-    for (const currentSubject of formattedSubjects) {
-      const isUpdate = oldSubjects?.some((subj) => verifyUpdateSubject(subj, currentSubject))
-      const isDelete = !currentSubject.category.name
+    const updateSingleCategory = (oldCategory, newCategory) => {
+      const oldSubjectIds = new Set(oldCategory.subjects.map((subject) => subject._id.toString()))
+      const newSubjectIds = new Set(newCategory.subjects.map((subject) => subject._id.toString()))
+      const isEqual =
+        oldSubjectIds.size === newSubjectIds.size && [...oldSubjectIds].every((id) => newSubjectIds.has(id))
 
-      if (isDelete) {
-        const isDeletionBlocked = await userService._calculateDeletionMainSubject(userId, currentSubject.category._id)
+      return isEqual ? oldCategory : newCategory
+    }
 
-        if (isDeletionBlocked) {
-          throw createError(403, FORBIDDEN)
-        }
-        newSubjects[role] = oldSubjects.filter((subject) => verifyDeletionSubject(subject, currentSubject))
-      } else if (isUpdate) {
-        newSubjects[role] = oldSubjects.map((subject) =>
-          verifyUpdateSubject(subject, currentSubject) ? currentSubject : subject
-        )
+    const processedCategoryIds = new Set()
+
+    for (const subject of formattedSubjects) {
+      const currentSubject = subject
+
+      if (!currentSubject) {
+        continue
+      }
+
+      const updateIndex = oldSubjects.findIndex((item) => verifyUpdateSubject(item, currentSubject))
+
+      if (updateIndex >= 0) {
+        newSubjects[role][updateIndex] = updateSingleCategory(newSubjects[role][updateIndex], currentSubject)
       } else {
-        newSubjects[role] = [currentSubject, ...newSubjects[role]]
+        if (!currentSubject._id || !mongoose.isValidObjectId(currentSubject._id)) {
+          currentSubject._id = new mongoose.Types.ObjectId()
+        }
+
+        newSubjects[role] = [...newSubjects[role], currentSubject]
       }
+
+      processedCategoryIds.add(currentSubject.category._id.toString())
     }
+
+    newSubjects[role] = await Promise.all(
+      newSubjects[role].map(async (oldSubject) => {
+        const shouldKeep = processedCategoryIds.has(oldSubject.category?._id?.toString())
+
+        if (!shouldKeep) {
+          const isDeletionBlocked = await userService._calculateDeletionMainSubject(userId, oldSubject.category)
+
+          if (isDeletionBlocked) {
+            throw createError(403, FORBIDDEN)
+          }
+
+          return null
+        }
+
+        return oldSubject
+      })
+    )
+
+    newSubjects[role] = newSubjects[role].filter((subject) => subject !== null)
 
     return newSubjects
   },
@@ -232,6 +258,32 @@ const userService = {
 
   deleteUser: async (id) => {
     await User.findByIdAndRemove(id).exec()
+  },
+
+  toggleOfferBookmark: async (offerId, userId) => {
+    const offer = await Offer.findById(offerId)
+
+    if (!offer) throw createError(404, DOCUMENT_NOT_FOUND([Offer.modelName]))
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      [
+        {
+          $set: {
+            bookmarkedOffers: {
+              $cond: [
+                { $in: [ObjectId(offerId), '$bookmarkedOffers'] },
+                { $setDifference: ['$bookmarkedOffers', [ObjectId(offerId)]] },
+                { $concatArrays: ['$bookmarkedOffers', [ObjectId(offerId)]] }
+              ]
+            }
+          }
+        }
+      ],
+      { new: true }
+    ).select('+bookmarkedOffers')
+
+    return updatedUser.bookmarkedOffers
   },
 
   getBookmarkedOffers: async (userId, queryParams) => {
@@ -268,7 +320,7 @@ const userService = {
     const userOffers = await offerService.getOffers(aggregateOptions)
     const userCooperations = await cooperationService.getCooperations(aggregateOptions)
 
-    return Boolean(userOffers || userCooperations)
+    return Boolean(userOffers?.length || userCooperations?.length)
   }
 }
 

@@ -2,37 +2,80 @@ const userService = require('~/services/user')
 const offerService = require('~/services/offer')
 const cooperationService = require('~/services/cooperation')
 const User = require('~/models/user')
+const Offer = require('~/models/offer')
 const { FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const {
   enums: { OFFER_STATUS_ENUM }
 } = require('~/consts/validation')
 
+jest.mock('~/models/offer')
+jest.mock('~/services/offer')
+jest.mock('~/services/cooperation')
+
 describe('User service', () => {
   afterEach(() => {
     jest.restoreAllMocks()
   })
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+
+    User.findById = jest.fn().mockReturnValue({
+      lean: jest.fn().mockReturnThis(),
+      exec: jest.fn().mockResolvedValue({ _id: '1', mainSubjects: { tutor: [] } })
+    })
+
+    User.findByIdAndUpdate = jest.fn().mockReturnValue({
+      lean: jest.fn().mockReturnThis(),
+      exec: jest.fn().mockResolvedValue({})
+    })
+
+    Offer.aggregate = jest.fn().mockResolvedValue([])
+
+    Offer.countDocuments = jest.fn().mockResolvedValue(10)
+    Offer.findByIdAndUpdate = jest.fn().mockReturnValue({
+      lean: jest.fn().mockReturnThis(),
+      exec: jest.fn().mockResolvedValue({})
+    })
+
+    Offer.calcTotalOffers = jest.fn().mockResolvedValue()
+
+    offerService.getOffers = jest.fn().mockResolvedValue([])
+
+    cooperationService.getCooperations = jest.fn().mockResolvedValue([])
+  })
+
   describe('_updateMainSubjects', () => {
     it('should update main subjects correctly', async () => {
-      const mainSubject = [{ _id: '1', category: { _id: '1', name: 'Math' } }]
+      const mainSubject = { tutor: [{ _id: '1', category: { _id: '1', name: 'Math' } }] }
       const userSubjects = { tutor: [{ _id: '2', category: { name: 'Physics' } }] }
       const role = 'tutor'
       const userId = '123'
 
       const result = await userService._updateMainSubjects(mainSubject, userSubjects, role, userId)
 
-      const expected = [
-        { category: { _id: '1', name: 'Math' }, subjects: [{ _id: '1', name: undefined }] },
-        { _id: '2', category: { name: 'Physics' } }
-      ]
-      expect(result.tutor).toEqual(expect.arrayContaining(expected))
+      const expected = [{ category: { _id: '1', name: 'Math' } }]
+
+      delete result[role]?.[0]?._id
+
+      expect(result[role]).toEqual(expect.arrayContaining(expected))
     })
 
     it('should group subjects by category', async () => {
-      const mainSubjects = [
-        { _id: '1', category: { _id: '1', name: 'Math' } },
-        { _id: '2', category: { _id: '1', name: 'Math' } }
-      ]
-      const userSubjects = { tutor: [{ _id: '3', category: { name: 'Physics' } }] }
+      const mainSubjects = {
+        tutor: [
+          {
+            _id: '66cded8558c020b5a598318a',
+            category: { _id: '1', name: 'Math' },
+            subjects: [
+              { _id: '1', name: 'First' },
+              { _id: '2', name: 'Second' }
+            ]
+          },
+          { _id: '3', category: { _id: '42', name: 'Physics' }, subjects: [] }
+        ]
+      }
+      const userSubjects = { tutor: [{ _id: '3', category: { _id: '42', name: 'Physics' }, subjects: [] }] }
       const role = 'tutor'
       const userId = '123'
 
@@ -40,19 +83,26 @@ describe('User service', () => {
 
       const expected = [
         {
+          _id: '66cded8558c020b5a598318a',
           category: { _id: '1', name: 'Math' },
           subjects: [
-            { _id: '1', name: undefined },
-            { _id: '2', name: undefined }
+            { _id: '1', name: 'First' },
+            { _id: '2', name: 'Second' }
           ]
         },
-        { _id: '3', category: { name: 'Physics' } }
+        { _id: '3', category: { _id: '42', name: 'Physics' }, subjects: [] }
       ]
       expect(result.tutor).toEqual(expect.arrayContaining(expected))
     })
 
     it('should convert mainSubjects to array if not already an array', async () => {
-      const mainSubject = { _id: '1', category: { _id: '1', name: 'Math' } }
+      const mainSubject = {
+        tutor: {
+          _id: '66cdf3e053f8bf9483c93fbc',
+          category: { _id: '1', name: 'Math' },
+          subjects: [{ _id: '1', name: 'Some' }]
+        }
+      }
       const userSubjects = { tutor: [{ _id: '2', category: { name: 'Physics' } }] }
       const role = 'tutor'
       const userId = '123'
@@ -60,8 +110,11 @@ describe('User service', () => {
       const result = await userService._updateMainSubjects(mainSubject, userSubjects, role, userId)
 
       const expected = [
-        { category: { _id: '1', name: 'Math' }, subjects: [{ _id: '1', name: undefined }] },
-        { _id: '2', category: { name: 'Physics' } }
+        {
+          _id: '66cdf3e053f8bf9483c93fbc',
+          category: { _id: '1', name: 'Math' },
+          subjects: [{ _id: '1', name: 'Some' }]
+        }
       ]
       expect(result.tutor).toEqual(expect.arrayContaining(expected))
     })
@@ -105,9 +158,9 @@ describe('User service', () => {
     })
 
     it('should update main subject if it already exists', async () => {
-      const mainSubject = [
-        { _id: '1', category: { _id: '1', name: 'Math' }, subjects: [{ _id: '2', name: 'Algebra' }] }
-      ]
+      const mainSubject = {
+        tutor: [{ _id: '1', category: { _id: '1', name: 'Math' }, subjects: [{ _id: '2', name: 'Algebra' }] }]
+      }
       const userSubjects = {
         tutor: [{ _id: '1', category: { _id: '1', name: 'Math' }, subjects: [{ _id: '2', name: 'Algebra' }] }]
       }
@@ -160,7 +213,12 @@ describe('User service', () => {
 
       await userService.updateUser(id, role, updateData)
 
-      expect(userService._updateMainSubjects).toHaveBeenCalledWith(updateData.mainSubjects, userMock.mainSubjects, role)
+      expect(userService._updateMainSubjects).toHaveBeenCalledWith(
+        updateData.mainSubjects,
+        userMock.mainSubjects,
+        role,
+        id
+      )
     })
 
     it('should check for deletion block when isEdit is true', async () => {

@@ -92,7 +92,7 @@ const updatingSections = [
     _id: '65bc2bec67c9f1ec287a1514',
     title: 'Updated Section',
     description: 'This is the updated section description',
-    activities: []
+    resources: []
   }
 ]
 
@@ -101,9 +101,44 @@ const updatedSections = [
     _id: '65bc2bec67c9f1ec287a1514',
     title: 'Updated Section',
     description: 'This is the updated section description',
-    activities: []
+    resources: []
   }
 ]
+
+const testInitiator = {
+  _id: '66b346570182fc9e49b09647',
+  averageRating: {
+    student: 0,
+    tutor: 0
+  },
+  createdAt: '2024-08-07T10:03:03.488Z',
+  email: 'potter@gmail.com',
+  firstName: 'harry',
+  lastLogin: '2024-08-07T10:03:03.587Z',
+  lastName: 'potter',
+  mainSubjects: {
+    student: [],
+    tutor: []
+  },
+  nativeLanguage: null,
+  professionalBlock: {
+    awards: '',
+    education: '',
+    scientificActivities: '',
+    workExperience: ''
+  },
+  role: ['student'],
+  status: {
+    admin: 'active',
+    student: 'active',
+    tutor: 'active'
+  },
+  totalReviews: {
+    student: 0,
+    tutor: 0
+  },
+  updatedAt: '2024-08-07T10:03:03.587Z'
+}
 
 describe('Cooperation controller', () => {
   let app,
@@ -228,7 +263,13 @@ describe('Cooperation controller', () => {
           _id: testOffer._id,
           author: testOffer.author
         },
-        initiator: testStudentUser.id,
+        initiator: {
+          ...testInitiator,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          lastLogin: expect.any(String),
+          _id: expect.any(String)
+        },
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
         additionalInfo: testCooperationData.additionalInfo,

@@ -7,14 +7,13 @@ const {
   FIELD_MUST_BE_SELECTED,
   VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ, ATTACHMENTS, LESSONS, QUIZZES } = require('~/consts/models')
+const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM }
+  enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM, RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
 const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
 const notificationService = require('~/services/notification')
-
-const resources = [LESSONS, QUIZZES, ATTACHMENTS]
+const resourceTypeMapping = require('~/utils/resourceTypeMapping')
 
 const cooperationSchema = new Schema(
   {
@@ -111,18 +110,19 @@ const cooperationSchema = new Schema(
           minLength: [1, FIELD_CANNOT_BE_SHORTER('section description', 1)],
           maxLength: [1000, FIELD_CANNOT_BE_LONGER('section description', 1000)]
         },
-        activities: [
+        resources: [
           {
             _id: false,
             resource: {
-              type: Schema.Types.Mixed,
-              values: resources
+              type: Schema.Types.ObjectId,
+              required: true,
+              ref: (doc) => resourceTypeMapping[doc.resourceType]
             },
             resourceType: {
               type: String,
               enum: {
-                values: resources,
-                message: ENUM_CAN_BE_ONE_OF('activity resource type', resources)
+                values: RESOURCES_TYPES_ENUM,
+                message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
               }
             }
           }

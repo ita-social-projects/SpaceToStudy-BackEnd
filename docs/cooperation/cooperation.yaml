@@ -138,10 +138,97 @@ paths:
               example:
                 _id: 8755bc080a00adr9243df106
                 offer: 63ebc6fbd2f34037d0aba791
-                initiator: 6255bc080a75adf9223df212
-                initiatorRole: tutor
-                receiver: 6255bc080a75adf9223df100
-                receiverRole: student
+                initiator:
+                  - _id: 6255bc080a75adf9223df100
+                    role: [student, tutor]
+                    firstName: John
+                    lastName: Doe
+                    email: johndoe@gmail.com
+                    mainSubjects:
+                      {
+                        student:
+                          [
+                            {
+                              _id: 64593435163b62124ce4c3ab,
+
+                              category: { _id: '6421ed8ed991d46a84721df2', name: Cybersecurity },
+                              subjects: [{ _id: '6421ed8ed991d46a84721df2', name: 'XSS Attack' }],
+                              isDeletionBlocked: false
+                            },
+                            {
+                              _id: 64593435263b62124ce4c3ck,
+                              category: { _id: '6421ed8ed991d46a84721dfa', name: music },
+                              subjects: [{ _id: '6422d995d898aa732d038e8f', name: 'Guitar' }],
+                              isDeletionBlocked: true
+                            }
+                          ],
+                        tutor:
+                          [
+                            {
+                              _id: 64593435163b62124ce4c3ab,
+
+                              category: { _id: '6421ed8ed991d46a84721df2', name: Cybersecurity },
+                              subjects: [{ _id: '6421ed8ed991d46a84721df2', name: 'XSS Attack' }],
+                              isDeletionBlocked: false
+                            }
+                          ]
+                      }
+                    totalReviews: { student: 10, tutor: 8 }
+                    averageRating: { student: 4.5, tutor: 4.9 }
+                    nativeLanguage: english
+                    address: { country: The USA, city: California }
+                    professionalSummary: KNPU H.S. Skovoroda
+                    photo: john-doe-photo.jpg
+                    status: { student: active, tutor: active, admin: active }
+                    lastLogin: null
+                    FAQ:
+                      {
+                        student: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }],
+                        tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
+                      }
+                    videoLink:
+                      { student: www.youtube.com/watch?v=ebTnuLRnIOY, tutor: www.youtube.com/watch?v=ebTnuLRnIOY }
+                    createdAt: 2021-04-09T11:34:53.243+00:00
+                    updatedAt: 2022-09-02T11:59:53.243+00:00
+                initiatorRole: student
+                receiver:
+                  - _id: 8755bc080a00adr9243df104
+                    role: [tutor]
+                    firstName: Joe
+                    lastName: Doe
+                    email: joedoe@outlook.com
+                    mainSubjects:
+                      {
+                        tutor:
+                          [
+                            {
+                              _id: 64593435163b62124ce4c3ab,
+
+                              category: { _id: '6421ed8ed991d46a84721df2', name: Cybersecurity },
+                              subjects: [{ _id: '6421ed8ed991d46a84721df2', name: 'XSS Attack' }],
+                              isDeletionBlocked: false
+                            }
+                          ],
+                        student: []
+                      }
+                    totalReviews: { student: 0, tutor: 530 }
+                    averageRating: { student: 0, tutor: 5 }
+                    nativeLanguage: ukrainian
+                    address: { country: Ukraine, city: Kharkiv }
+                    professionalSummary: KNPU H.S. Skovoroda
+                    photo: joe-doe-photo.jpg
+                    status: { student: active, tutor: active, admin: active }
+                    FAQ:
+                      {
+                        student:
+                          [{ question: student question, _id: 63525e23bf163f5ea609ff2b, answer: student answer }],
+                        tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
+                      }
+                    videoLink: { tutor: www.youtube.com/watch?v=ebTnuLRnIOY }
+                    lastLogin: 2022-09-02T11:59:53.243+00:00
+                    createdAt: 2021-04-09T11:34:53.243+00:00
+                    updatedAt: 2022-09-02T11:59:53.243+00:00
+                receiverRole: tutor
                 price: 150
                 title: 'Violin lessons'
                 status: pending
@@ -149,8 +236,22 @@ paths:
                   {
                     title: Section title,
                     description: Section description,
-                    activities:
-                      { resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: Attachment }
+                    resources:
+                      [
+                        {
+                          resource:
+                            {
+                              title: Colors in English,
+                              description: With this lesson you will learn all about colors in English.,
+                              content: <h1>Title</h1>,
+                              author: 63da8767c9ad4c9a0b0eacd3,
+                              attachments: [63ed1cd25e9d781cdb6a6b15],
+                              category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
+                              _id: 63ed1cd25e9d781cdb6a6b17
+                            },
+                          resourceType: lesson
+                        }
+                      ]
                   }
                 needAction: student
                 createdAt: 2022-10-18T13:25:36.292+00:00

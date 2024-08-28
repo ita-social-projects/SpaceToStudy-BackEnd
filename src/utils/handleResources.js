@@ -3,21 +3,32 @@ const resourceModelMapping = require('~/utils/resourceModelMapping')
 const handleResources = async (resources) => {
   return await Promise.all(
     resources.map(async (resourceItem) => {
-      const { resource, resourceType, isDuplicate } = resourceItem
-      let newResource = resource
+      const { resource, resourceType } = resourceItem
+      const { _id, isDuplicate } = resource
 
-      if (isDuplicate) {
+      if (!isDuplicate) return resourceItem
+
+      const removeMetadataFields = (resource) => {
+        // eslint-disable-next-line no-unused-vars
+        const { _id, createdAt, updatedAt, ...cleanedResource } = resource
+        return cleanedResource
+      }
+
+      if (_id) {
         const existingResource = await resourceModelMapping[resourceType].findOne({
-          _id: resource._id,
+          _id,
           isDuplicate: true
         })
 
-        delete resource._id
-        newResource =
-          existingResource || (await resourceModelMapping[resourceType].create({ ...resource, isDuplicate }))
+        if (existingResource) {
+          return { ...resourceItem, resource: existingResource }
+        }
       }
 
-      return { ...resourceItem, resource: newResource }
+      const newResource = removeMetadataFields(resource)
+      const createdResource = await resourceModelMapping[resourceType].create({ ...newResource, isDuplicate })
+
+      return { ...resourceItem, resource: createdResource }
     })
   )
 }

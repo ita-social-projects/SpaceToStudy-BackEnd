@@ -6,6 +6,10 @@ const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
 const uploadService = require('~/services/upload')
 
+const {
+  enums: { RESOURCES_TYPES_ENUM }
+} = require('~/consts/validation')
+
 jest.mock('azure-storage', () => {
   const fn = (containerName, blobName, cb) => {
     cb(null, blobName)
@@ -142,7 +146,7 @@ describe('Attachments controller', () => {
               status: 'open',
               date: null
             },
-            resourceType: 'attachments',
+            resourceType: RESOURCES_TYPES_ENUM[2],
             createdAt: expect.any(String),
             updatedAt: expect.any(String)
           }
@@ -185,7 +189,7 @@ describe('Attachments controller', () => {
             link: expect.any(String),
             size: 1524,
             category: null,
-            resourceType: 'attachments',
+            resourceType: RESOURCES_TYPES_ENUM[2],
             createdAt: expect.any(String),
             updatedAt: expect.any(String)
           }
@@ -218,7 +222,7 @@ describe('Attachments controller', () => {
             description: 'Here is everything you need to study this subject.',
             fileName: `${newFileName}.pdf`,
             link: newLink,
-            resourceType: 'attachments',
+            resourceType: RESOURCES_TYPES_ENUM[2],
             size: 1524,
             updatedAt: expect.any(String)
           }
@@ -249,7 +253,7 @@ describe('Attachments controller', () => {
             link: expect.any(String),
             size: 1524,
             category: null,
-            resourceType: 'attachments',
+            resourceType: RESOURCES_TYPES_ENUM[2],
             createdAt: expect.any(String),
             updatedAt: expect.any(String)
           }

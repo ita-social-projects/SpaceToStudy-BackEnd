@@ -236,8 +236,22 @@ paths:
                   {
                     title: Section title,
                     description: Section description,
-                    activities:
-                      { resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: Attachment }
+                    resources:
+                      [
+                        {
+                          resource:
+                            {
+                              title: Colors in English,
+                              description: With this lesson you will learn all about colors in English.,
+                              content: <h1>Title</h1>,
+                              author: 63da8767c9ad4c9a0b0eacd3,
+                              attachments: [63ed1cd25e9d781cdb6a6b15],
+                              category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
+                              _id: 63ed1cd25e9d781cdb6a6b17
+                            },
+                          resourceType: lesson
+                        }
+                      ]
                   }
                 needAction: student
                 createdAt: 2022-10-18T13:25:36.292+00:00

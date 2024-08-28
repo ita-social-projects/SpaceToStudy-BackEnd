@@ -1,5 +1,7 @@
 const { Schema, model } = require('mongoose')
 
+const resourceTypeMapping = require('~/utils/resourceTypeMapping')
+
 const {
   ENUM_CAN_BE_ONE_OF,
   FIELD_CANNOT_BE_EMPTY,
@@ -7,10 +9,10 @@ const {
   FIELD_CANNOT_BE_LONGER
 } = require('~/consts/errors')
 
-const { COURSE, USER, LESSON, ATTACHMENT, QUIZ, CATEGORY, SUBJECT } = require('~/consts/models')
+const { COURSE, USER, CATEGORY, SUBJECT } = require('~/consts/models')
 
 const {
-  enums: { PROFICIENCY_LEVEL_ENUM }
+  enums: { PROFICIENCY_LEVEL_ENUM, RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
 
 const courseSchema = new Schema(
@@ -60,24 +62,28 @@ const courseSchema = new Schema(
         },
         description: {
           type: String,
+          minLength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
           maxLength: [150, FIELD_CANNOT_BE_LONGER('description', 150)],
           trim: true
         },
-        lessons: {
-          type: [Schema.Types.ObjectId],
-          ref: LESSON
-        },
-        quizzes: {
-          type: [Schema.Types.ObjectId],
-          ref: QUIZ
-        },
-        attachments: {
-          type: [Schema.Types.ObjectId],
-          ref: ATTACHMENT
-        },
-        order: {
-          type: [String]
-        }
+        resources: [
+          {
+            _id: false,
+            resource: {
+              type: Schema.Types.ObjectId,
+              required: true,
+              ref: (doc) => resourceTypeMapping[doc.resourceType]
+            },
+            resourceType: {
+              type: String,
+              required: true,
+              enum: {
+                values: RESOURCES_TYPES_ENUM,
+                message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
+              }
+            }
+          }
+        ]
       }
     ]
   },

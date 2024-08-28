@@ -68,7 +68,7 @@ definitions:
           properties:
           title: string
           description: string
-          activities:
+          resources:
             type: array
             items:
               type: object
@@ -79,9 +79,9 @@ definitions:
                 resourceType:
                   type: string
                   enum:
-                    - Lesson
-                    - Attachment
-                    - Quiz
+                    - lesson
+                    - quiz
+                    - attachment
   cooperation:
     type: object
     properties:
@@ -118,7 +118,7 @@ definitions:
           properties:
           title: string
           description: string
-          activities:
+          resources:
             type: array
             items:
               type: object
@@ -129,9 +129,9 @@ definitions:
                 resourceType:
                   type: string
                   enum:
-                    - Lesson
-                    - Attachment
-                    - Quiz
+                    - lesson
+                    - quiz
+                    - attachment
       needAction:
         type: string
         enum:

@@ -5,16 +5,18 @@ const getMatchOptions = require('~/utils/getMatchOptions')
 const getSortOptions = require('~/utils/getSortOptions')
 const getRegex = require('~/utils/getRegex')
 const getCategoriesOptions = require('~/utils/getCategoriesOption')
+const parseBoolean = require('~/utils/parseBoolean')
 
 const getAttachments = async (req, res) => {
   const { id: author } = req.user
-  const { fileName, sort, skip, limit, categories } = req.query
+  const { fileName, sort, skip, limit, categories, includeDuplicates } = req.query
   const categoriesOptions = getCategoriesOptions(categories)
 
   const match = getMatchOptions({
     author,
     fileName: getRegex(fileName),
-    category: categoriesOptions
+    category: categoriesOptions,
+    isDuplicate: parseBoolean(includeDuplicates) ? null : { $ne: true }
   })
   const sortOptions = getSortOptions(sort)
 

@@ -4,7 +4,6 @@ const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
-const coopSectionsValidation = require('~/middlewares/coopSectionsValidation')
 
 const noteRouter = require('~/routes/note')
 
@@ -24,11 +23,6 @@ router.use('/:id/notes', noteRouter)
 router.get('/', asyncWrapper(cooperationController.getCooperations))
 router.post('/', isEntityValid({ body }), asyncWrapper(cooperationController.createCooperation))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(cooperationController.getCooperationById))
-router.patch(
-  '/:id',
-  isEntityValid({ params }),
-  coopSectionsValidation,
-  asyncWrapper(cooperationController.updateCooperation)
-)
+router.patch('/:id', isEntityValid({ params }), asyncWrapper(cooperationController.updateCooperation))
 
 module.exports = router

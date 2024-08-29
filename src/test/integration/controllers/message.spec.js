@@ -60,7 +60,7 @@ describe('Message controller', () => {
   let app, server, chatResponse, accessToken
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -114,7 +114,7 @@ describe('Message controller', () => {
       const response = await app.get(endpointUrl(messageBody.chat)).set('Cookie', [`accessToken=${accessToken}`])
 
       expect(response.statusCode).toBe(200)
-      expect(response.body[0]).toEqual(expect.objectContaining(messageData))
+      expect(response.body.items[0]).toEqual(expect.objectContaining(messageData))
     })
 
     it('should get messages matching the text query', async () => {
@@ -124,7 +124,7 @@ describe('Message controller', () => {
         .query({ message: searchText })
 
       expect(response.statusCode).toBe(200)
-      expect(response.body[0]).toEqual(expect.objectContaining(messageData))
+      expect(response.body.items[0]).toEqual(expect.objectContaining(messageData))
     })
 
     it('should throw UNAUTHORIZED', async () => {

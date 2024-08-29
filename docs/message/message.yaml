@@ -76,7 +76,7 @@ paths:
           name: message
           schema:
             type: string
-          required: false  
+          required: false
       responses:
         200:
           description: OK
@@ -85,15 +85,17 @@ paths:
               schema:
                 $ref: '#/definitions/messages'
               example:
-                - _id: 64a28e8c5d56f749c7d915d0
-                  author: { _id: 6421d9833cdf38b706756dff, photo: 1687425744398-ITA wallpapers-19.png }
-                  authorRole: 'student'
-                  text: 'Some text'
-                  isRead: false
-                  isNotified: false
-                  chat: 6421d9833cdf38b706756dfd
-                  createdAt: 2023-20-01T13:25:36.292Z
-                  updatedAt: 2023-20-01T13:25:36.292Z
+                items:
+                  - _id: 64a28e8c5d56f749c7d915d0
+                    author: { _id: 6421d9833cdf38b706756dff, photo: 1687425744398-ITA wallpapers-19.png }
+                    authorRole: 'student'
+                    text: 'Some text'
+                    isRead: false
+                    isNotified: false
+                    chat: 6421d9833cdf38b706756dfd
+                    createdAt: 2023-20-01T13:25:36.292Z
+                    updatedAt: 2023-20-01T13:25:36.292Z
+                count: 1
         401:
           description: Unauthorized
           content:

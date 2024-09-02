@@ -824,7 +824,7 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: User with the specified id was not found.
-  /users/{id}/offers/bookmarks:
+  /users/{id}/bookmarks/offers:
     get:
       security:
         - cookieAuth: []

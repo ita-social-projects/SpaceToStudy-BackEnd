@@ -1,10 +1,12 @@
 const userService = require('~/services/user')
+const tokenService = require('~/services/token')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
 const parseBoolean = require('../utils/parseBoolean')
+const ValidationError = require('~/consts/errors')
 
 const getUsers = async (req, res) => {
   const { skip, limit, sort, match } = createAggregateOptions(req.query)
@@ -78,6 +80,20 @@ const activateUser = async (req, res) => {
 
 const toggleOfferBookmark = async (req, res) => {
   const { id: userId, offerId } = req.params
+
+  const accessToken = req.cookies.accessToken
+
+  if (!accessToken) res.status(401).end()
+
+  const decodedToken = tokenService.validateAccessToken(accessToken)
+
+  if (!decodedToken) {
+    return res.status(401).end()
+  }
+
+  if (decodedToken.id !== userId) {
+    return ValidationError
+  }
 
   const newBookmarks = await userService.toggleOfferBookmark(offerId, userId)
 

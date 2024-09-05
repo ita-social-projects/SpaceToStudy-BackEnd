@@ -1,7 +1,7 @@
 extends index
 block title
-    h1 Thank you for joining us
+    h1 Thank you for <br/> joining us
 block description
-    p #{firstName}, please take a second to make sure we have got your email right:
+    p #{firstName}, please take a second to make sure we have <br/> got your email right:
     a(href=`${process.env.CLIENT_URL}/?confirmToken=${confirmToken}`) Confirm your email
     p Please note that this link is only available for 24 hours. <br/> If you had not entered SpaceToStudy, please ignore this email.

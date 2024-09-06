@@ -142,10 +142,6 @@ describe('Attachments controller', () => {
             link: expect.any(String),
             size: 1524,
             category: null,
-            availability: {
-              status: 'open',
-              date: null
-            },
             resourceType: RESOURCES_TYPES_ENUM[2],
             createdAt: expect.any(String),
             updatedAt: expect.any(String)

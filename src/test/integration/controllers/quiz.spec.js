@@ -17,10 +17,6 @@ const testQuizData = {
   title: 'Assembly',
   description: 'Description',
   resourceType: RESOURCES_TYPES_ENUM[1],
-  availability: {
-    status: 'open',
-    date: null
-  },
   settings: {
     correctAnswers: false,
     pointValues: false,

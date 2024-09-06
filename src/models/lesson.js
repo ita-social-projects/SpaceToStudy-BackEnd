@@ -7,7 +7,7 @@ const {
 } = require('~/consts/errors')
 const { USER, LESSON, ATTACHMENT, RESOURCES_CATEGORY } = require('~/consts/models')
 const {
-  enums: { RESOURCES_TYPES_ENUM, RESOURCE_AVAILABILITY_STATUS_ENUM }
+  enums: { RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
 
 const lessonSchema = new Schema(
@@ -56,20 +56,6 @@ const lessonSchema = new Schema(
     },
     isDuplicate: {
       type: Boolean
-    },
-    availability: {
-      status: {
-        type: String,
-        enum: {
-          values: RESOURCE_AVAILABILITY_STATUS_ENUM,
-          message: ENUM_CAN_BE_ONE_OF('resource availability status', RESOURCE_AVAILABILITY_STATUS_ENUM)
-        },
-        default: RESOURCE_AVAILABILITY_STATUS_ENUM[0]
-      },
-      date: {
-        type: Date,
-        default: null
-      }
     }
   },
   {

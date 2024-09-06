@@ -2,7 +2,7 @@ const cooperationService = require('~/services/cooperation')
 const coopsAggregateOptions = require('~/utils/cooperations/coopsAggregateOptions')
 
 const getCooperations = async (req, res) => {
-  const pipeline = coopsAggregateOptions(req.user, req.query)
+  const pipeline = coopsAggregateOptions(req.query, req.user)
 
   const cooperations = await cooperationService.getCooperations(pipeline)
 

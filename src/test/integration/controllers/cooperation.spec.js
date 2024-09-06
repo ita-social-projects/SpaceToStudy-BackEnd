@@ -19,8 +19,8 @@ const nonExistingOfferId = '648ae644aa322613ba08e69e'
 const validationErrorMessage = 'You can change only either the status or the price in one operation'
 
 const id = new mongoose.Types.ObjectId()
-const optionsStatus = coopsAggregateOptions({}, { status: 'testStatus' })
-const optionsSearch = coopsAggregateOptions({ id: id.toString(), role: 'testRole' }, { search: 'testSearch' })
+const optionsStatus = coopsAggregateOptions({ status: 'testStatus' }, {})
+const optionsSearch = coopsAggregateOptions({ search: 'testSearch' }, { id: id.toString(), role: 'testRole' })
 
 const tutorUserData = {
   role: ['tutor'],

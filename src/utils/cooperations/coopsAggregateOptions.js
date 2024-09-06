@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
 
-const coopsAggregateOptions = (params = {}, query) => {
+const coopsAggregateOptions = (query, params = {}) => {
   const { id, role } = params
   const { skip = 0, limit = 5, status = '', sort = '{ "order": "asc", "orderBy":"updatedAt"}', search } = query
   const match = {}

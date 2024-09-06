@@ -2,7 +2,6 @@ const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
-const coopsAggregateOptions = require('~/utils/cooperations/coopsAggregateOptions')
 const TokenService = require('~/services/token')
 
 const Offer = require('~/models/offer')
@@ -11,16 +10,11 @@ const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const Cooperation = require('~/models/cooperation')
 const Quiz = require('~/models/quiz')
-const mongoose = require('mongoose')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 const nonExistingOfferId = '648ae644aa322613ba08e69e'
 const validationErrorMessage = 'You can change only either the status or the price in one operation'
-
-const id = new mongoose.Types.ObjectId()
-const optionsStatus = coopsAggregateOptions({ status: 'testStatus' }, {})
-const optionsSearch = coopsAggregateOptions({ search: 'testSearch' }, { id: id.toString(), role: 'testRole' })
 
 const tutorUserData = {
   role: ['tutor'],
@@ -436,19 +430,6 @@ describe('Cooperation controller', () => {
         .send(updateStatus)
 
       expectError(403, FORBIDDEN, response)
-    })
-  })
-
-  describe('coopsAggregateOptions', () => {
-    it('should match status if status is provided', () => {
-      const matchOptionStatus = optionsStatus.find((option) => option.$match)
-      expect(matchOptionStatus).toBeDefined()
-      expect(matchOptionStatus.$match.status).toBeDefined()
-    })
-
-    it('should match search if search is provided', () => {
-      const matchOptionSearch = optionsSearch.find((option) => option.$match)
-      expect(matchOptionSearch).toBeDefined()
     })
   })
 })

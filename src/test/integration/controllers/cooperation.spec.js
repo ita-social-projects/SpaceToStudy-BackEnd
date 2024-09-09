@@ -1,3 +1,5 @@
+const mongoose = require('mongoose')
+
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
@@ -11,7 +13,6 @@ const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const Cooperation = require('~/models/cooperation')
 const Quiz = require('~/models/quiz')
-const mongoose = require('mongoose')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
@@ -60,8 +61,27 @@ const testCooperationData = {
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   title: 'First-class teacher. Director of the Hogwarts school of magic',
-  additionalInfo:
-    'I don`t like both Dark Arts and Voldemort that`s why i want to learn your subject and became your student'
+  sections: [
+    {
+      title: 'Solving Quadratic Equations Using the Quadratic Formula',
+      description: 'Solving Quadratic Equations Using the Quadratic Formula',
+      resources: [
+        {
+          resource: {
+            _id: '6684179479e5232bce4579fa',
+            author: '6658f73f93885febb491e08b',
+            content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+            description: 'The quadratic formula',
+            title: 'Solving Quadratic Equations Using the Quadratic Formula',
+            category: '6684175179e5232bce4579ed',
+            resourceType: 'lesson'
+          },
+          resourceType: 'lesson',
+          availability: { status: 'open', date: null }
+        }
+      ]
+    }
+  ]
 }
 
 const testOfferData = {
@@ -232,12 +252,12 @@ describe('Cooperation controller', () => {
         },
         initiator: testStudentUser.id,
         receiver: testTutorUser._id,
-        additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
+        sections: testCooperationData.sections,
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -272,12 +292,12 @@ describe('Cooperation controller', () => {
         },
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
-        additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
+        sections: testCooperationData.sections,
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -307,12 +327,12 @@ describe('Cooperation controller', () => {
         initiator: testStudentUser.id,
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
-        additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
+        sections: testCooperationData.sections,
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })

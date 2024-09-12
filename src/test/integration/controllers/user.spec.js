@@ -519,6 +519,8 @@ describe('User controller', () => {
 
         const user = await User.create({ ...testUser, bookmarkedOffers: [offer1._id, offer2._id] })
 
+        accessToken = await testUserAuthentication(app, user)
+
         const response = await app
           .get(`${endpointUrl}${user._id.toString()}/bookmarks/offers?title=${offer1Title}`)
           .set('Cookie', [`accessToken=${accessToken}`])

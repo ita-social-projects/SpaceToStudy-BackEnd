@@ -519,8 +519,7 @@ describe('User controller', () => {
 
         const user = await User.create({
           ...testUser,
-          bookmarkedOffers: [offer1._id, offer2._id],
-          lastLoginAs: testUser.role[0]
+          bookmarkedOffers: [offer1._id, offer2._id]
         })
 
         accessToken = await testUserAuthentication(app, user)

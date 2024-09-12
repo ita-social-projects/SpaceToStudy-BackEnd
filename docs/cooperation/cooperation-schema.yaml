@@ -41,6 +41,83 @@ definitions:
         updatedAt:
           type: string
           format: date-time
+  cooperation:
+    type: object
+    properties:
+      _id:
+        type: string
+      offer:
+        type: string
+        ref: '#components/offer'
+      initiator:
+        type: string
+        ref: '#/components/user'
+      initiatorRole:
+        type: string
+      receiver:
+        type: string
+        ref: '#components/user'
+      receiverRole:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+      status:
+        type: string
+        enum:
+          - pending
+          - active
+          - declined
+          - closed
+      sections:
+        type: array
+        items:
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - lesson
+                      - quiz
+                      - attachment
+                  availability:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - open
+                          - closed
+                          - openFrom
+                        default: open
+                      date:
+                        type: string
+                        format: date-time
+                        default: null
+      needAction:
+        type: string
+        enum:
+          - student
+          - tutor
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
   cooperationBody:
     type: object
     properties:
@@ -66,80 +143,365 @@ definitions:
         items:
           type: object
           properties:
-          title: string
-          description: string
-          resources:
-            type: array
-            items:
-              type: object
-              properties:
-                resource:
-                  type: object
-                  additionalProperties: true
-                resourceType:
-                  type: string
-                  enum:
-                    - lesson
-                    - quiz
-                    - attachment
-  cooperation:
+            title:
+              type: string
+            description:
+              type: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - lesson
+                      - quiz
+                      - attachment
+                  availability:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - open
+                          - closed
+                          - openFrom
+                        default: open
+                      date:
+                        type: string
+                        format: date-time
+                        default: null
+  cooperationResponse:
     type: object
     properties:
       _id:
         type: string
       offer:
-        type: string
-        ref: '#components/offer'
+        type: object
+        properties:
+          _id:
+            type: string
+          proficiencyLevel:
+            type: array
+            items:
+              type: string
+          title:
+            type: string
+          description:
+            type: string
+          languages:
+            type: array
+            items:
+              type: string
+          author:
+            type: object
+            properties:
+              totalReviews:
+                type: object
+                properties:
+                  student:
+                    type: integer
+                  tutor:
+                    type: integer
+              averageRating:
+                type: object
+                properties:
+                  student:
+                    type: number
+                  tutor:
+                    type: number
+              _id:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              photo:
+                type: string
+              professionalSummary:
+                type: string
+          subject:
+            type: object
+            properties:
+              _id:
+                type: string
+              name:
+                type: string
+          category:
+            type: object
+            properties:
+              appearance:
+                type: object
+                properties:
+                  color:
+                    type: string
+                  icon:
+                    type: string
+              _id:
+                type: string
+              name:
+                type: string
       initiator:
-        type: string
-        ref: '#/components/user'
+        type: object
+        properties:
+          address:
+            type: object
+            properties:
+              country:
+                type: string
+              city:
+                type: string
+          mainSubjects:
+            type: object
+            properties:
+              student:
+                type: array
+                items:
+                  type: string
+              tutor:
+                type: array
+                items:
+                  type: string
+          totalReviews:
+            type: object
+            properties:
+              student:
+                type: integer
+              tutor:
+                type: integer
+          averageRating:
+            type: object
+            properties:
+              student:
+                type: number
+              tutor:
+                type: number
+          status:
+            type: object
+            properties:
+              student:
+                type: string
+              tutor:
+                type: string
+              admin:
+                type: string
+          videoLink:
+            type: object
+            properties:
+              student:
+                type: string
+          professionalBlock:
+            type: object
+            properties:
+              awards:
+                type: string
+              scientificActivities:
+                type: string
+              workExperience:
+                type: string
+              education:
+                type: string
+          notificationSettings:
+            type: object
+            properties:
+              isOfferStatusNotification:
+                type: boolean
+              isChatNotification:
+                type: boolean
+              isSimilarOffersNotification:
+                type: boolean
+              isEmailNotification:
+                type: boolean
+          _id:
+            type: string
+          role:
+            type: array
+            items:
+              type: string
+          firstName:
+            type: string
+          lastName:
+            type: string
+          email:
+            type: string
+          nativeLanguage:
+            type: string
+          lastLogin:
+            type: string
+          createdAt:
+            type: string
+          updatedAt:
+            type: string
+          professionalSummary:
+            type: string
       initiatorRole:
         type: string
       receiver:
-        type: string
-        ref: '#components/user'
+        type: object
+        properties:
+          address:
+            type: object
+            properties:
+              country:
+                type: string
+              city:
+                type: string
+          mainSubjects:
+            type: object
+            properties:
+              student:
+                type: array
+                items:
+                  type: string
+              tutor:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    category:
+                      type: string
+                    subjects:
+                      type: array
+                      items:
+                        type: string
+                    _id:
+                      type: string
+          totalReviews:
+            type: object
+            properties:
+              student:
+                type: integer
+              tutor:
+                type: integer
+          averageRating:
+            type: object
+            properties:
+              student:
+                type: number
+              tutor:
+                type: number
+          status:
+            type: object
+            properties:
+              student:
+                type: string
+              tutor:
+                type: string
+              admin:
+                type: string
+          videoLink:
+            type: object
+            properties:
+              tutor:
+                type: string
+          professionalBlock:
+            type: object
+            properties:
+              awards:
+                type: string
+              scientificActivities:
+                type: string
+              workExperience:
+                type: string
+              education:
+                type: string
+          notificationSettings:
+            type: object
+            properties:
+              isOfferStatusNotification:
+                type: boolean
+              isChatNotification:
+                type: boolean
+              isSimilarOffersNotification:
+                type: boolean
+              isEmailNotification:
+                type: boolean
+          _id:
+            type: string
+          role:
+            type: array
+            items:
+              type: string
+          firstName:
+            type: string
+          lastName:
+            type: string
+          email:
+            type: string
+          nativeLanguage:
+            type: string
+          lastLogin:
+            type: string
+          createdAt:
+            type: string
+          updatedAt:
+            type: string
+          photo:
+            type: string
+          professionalSummary:
+            type: string
       receiverRole:
         type: string
-      price:
-        type: number
-      title: 
+      title:
         type: string
+      proficiencyLevel:
+        type: string
+      price:
+        type: integer
       status:
         type: string
-        enum:
-          - pending
-          - active
-          - declined
-          - closed
+      needAction:
+        type: string
+      availableQuizzes:
+        type: array
+        items:
+          type: string
+      finishedQuizzes:
+        type: array
+        items:
+          type: string
       sections:
         type: array
         items:
           type: object
           properties:
-          title: string
-          description: string
-          resources:
-            type: array
-            items:
-              type: object
-              properties:
-                resource:
-                  type: object
-                  additionalProperties: true
-                resourceType:
-                  type: string
-                  enum:
-                    - lesson
-                    - quiz
-                    - attachment
-      needAction:
-        type: string
-        enum:
-          - student
-          - tutor
+            title:
+              type: string
+            description:
+              type: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - lesson
+                      - quiz
+                      - attachment
+                  availability:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - open
+                          - closed
+                          - openFrom
+                        default: open
+                      date:
+                        type: string
+                        format: date-time
+                        default: null
       createdAt:
         type: string
-        format: date-time
       updatedAt:
         type: string
-        format: date-time

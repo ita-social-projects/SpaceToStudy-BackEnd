@@ -1,18 +1,21 @@
+const Course = require('~/models/course')
+
+const uploadService = require('~/services/upload')
+const { expectError } = require('~/test/helpers')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const testUserAuthentication = require('~/utils/testUserAuth')
-const Course = require('~/models/course')
-const { expectError } = require('~/test/helpers')
+
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
-const uploadService = require('~/services/upload')
 const {
   roles: { STUDENT, TUTOR }
 } = require('~/consts/auth')
+const {
+  enums: { RESOURCES_TYPES_ENUM }
+} = require('~/consts/validation')
 
 const endpointUrl = '/courses/'
-
 const mockUploadFile = jest.fn().mockResolvedValue('mocked-file-url')
-
 const nonExistingCourseId = '64a51e41de4debbccf0b39b0'
 
 const tutorUser = {
@@ -58,9 +61,9 @@ const testCourseData = {
             description: 'some text',
             content:
               '<div>\n<div>Lorem ipsum dolor sit, amet consectetur am quos dolorum at voluptates obcaecati.</div>\n</div>',
-            resourceType: 'lesson'
+            resourceType: RESOURCES_TYPES_ENUM[0]
           },
-          resourceType: 'lesson',
+          resourceType: RESOURCES_TYPES_ENUM[0],
           isDuplicate: true
         }
       ]

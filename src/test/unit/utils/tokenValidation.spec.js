@@ -1,6 +1,6 @@
 const tokenService = require('~/services/token')
 const validateUserToken = require('~/utils/users/tokenValidation')
-const ValidationError = require('~/consts/errors')
+const { UNAUTHORIZED, FORBIDDEN } = require('~/consts/errors')
 
 describe('validateUserToken', () => {
   let req
@@ -14,7 +14,7 @@ describe('validateUserToken', () => {
 
     res = {
       status: jest.fn().mockReturnThis(),
-      end: jest.fn()
+      json: jest.fn()
     }
 
     tokenService.validateAccessToken = jest.fn()
@@ -26,7 +26,7 @@ describe('validateUserToken', () => {
     validateUserToken(req, res)
 
     expect(res.status).toHaveBeenCalledWith(401)
-    expect(res.end).toHaveBeenCalled()
+    expect(res.json).toHaveBeenCalledWith(UNAUTHORIZED)
   })
 
   it('should return 401 if token is invalid', () => {
@@ -37,29 +37,30 @@ describe('validateUserToken', () => {
 
     expect(tokenService.validateAccessToken).toHaveBeenCalledWith('invalidToken')
     expect(res.status).toHaveBeenCalledWith(401)
-    expect(res.end).toHaveBeenCalled()
+    expect(res.json).toHaveBeenCalledWith(UNAUTHORIZED)
   })
 
-  it('should return ValidationError if userId does not match', () => {
+  it('should return 403 if userId does not match', () => {
     req.cookies.accessToken = 'validToken'
     req.params.userId = '123'
     tokenService.validateAccessToken.mockReturnValue({ id: '456' })
 
-    const result = validateUserToken(req, res)
+    validateUserToken(req, res)
 
     expect(tokenService.validateAccessToken).toHaveBeenCalledWith('validToken')
-    expect(result).toBe(ValidationError)
+    expect(res.status).toHaveBeenCalledWith(403)
+    expect(res.json).toHaveBeenCalledWith(FORBIDDEN)
   })
 
-  it('should return decoded token if valid and userId matches', () => {
+  it('should return true if accessToken is valid', () => {
     req.cookies.accessToken = 'validToken'
-    req.params.userId = '123'
+    req.params.id = '123'
     const decodedToken = { id: '123' }
     tokenService.validateAccessToken.mockReturnValue(decodedToken)
 
     const result = validateUserToken(req, res)
 
     expect(tokenService.validateAccessToken).toHaveBeenCalledWith('validToken')
-    expect(result).toBe(decodedToken)
+    expect(result).toBe(true)
   })
 })

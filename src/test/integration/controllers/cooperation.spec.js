@@ -1,15 +1,20 @@
-const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
-const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
-const testUserAuthentication = require('~/utils/testUserAuth')
-const TokenService = require('~/services/token')
-
 const Offer = require('~/models/offer')
 const User = require('~/models/user')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const Cooperation = require('~/models/cooperation')
 const Quiz = require('~/models/quiz')
+const Lesson = require('~/models/lesson')
+
+const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
+const { expectError } = require('~/test/helpers')
+const testUserAuthentication = require('~/utils/testUserAuth')
+const TokenService = require('~/services/token')
+
+const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
+const {
+  enums: { RESOURCES_TYPES_ENUM }
+} = require('~/consts/validation')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
@@ -54,8 +59,27 @@ const testCooperationData = {
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
   title: 'First-class teacher. Director of the Hogwarts school of magic',
-  additionalInfo:
-    'I don`t like both Dark Arts and Voldemort that`s why i want to learn your subject and became your student'
+  sections: [
+    {
+      title: 'Solving Quadratic Equations Using the Quadratic Formula',
+      description: 'Solving Quadratic Equations Using the Quadratic Formula',
+      resources: [
+        {
+          resource: {
+            _id: '6684179479e5232bce4579fa',
+            author: '6658f73f93885febb491e08b',
+            content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+            description: 'The quadratic formula',
+            title: 'Solving Quadratic Equations Using the Quadratic Formula',
+            category: '6684175179e5232bce4579ed',
+            resourceType: RESOURCES_TYPES_ENUM[0]
+          },
+          resourceType: RESOURCES_TYPES_ENUM[0],
+          availability: { status: 'open', date: null }
+        }
+      ]
+    }
+  ]
 }
 
 const testOfferData = {
@@ -151,11 +175,8 @@ describe('Cooperation controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, studentUserData)
-
     anotherUserAccessToken = await testUserAuthentication(app, anotherUserData)
-
     testStudentUser = TokenService.validateAccessToken(accessToken)
-
     testTutorUser = await User.create(tutorUserData)
 
     const category = await Category.create({
@@ -184,6 +205,31 @@ describe('Cooperation controller', () => {
       ...testActiveQuizData
     })
 
+    const testLessonResource = await Lesson.create({
+      author: testTutorUser._id,
+      content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+      description: 'The quadratic formula',
+      title: 'Solving Quadratic Equations Using the Quadratic Formula',
+      category: category._id,
+      resourceType: RESOURCES_TYPES_ENUM[0]
+    })
+
+    const updatedTestCooperationData = {
+      ...testCooperationData,
+      sections: [
+        {
+          ...testCooperationData.sections[0],
+          resources: [
+            {
+              resource: testLessonResource._id,
+              resourceType: RESOURCES_TYPES_ENUM[0],
+              availability: { status: 'open', date: null }
+            }
+          ]
+        }
+      ]
+    }
+
     testCooperation = await app
       .post(endpointUrl)
       .set('Cookie', [`accessToken=${accessToken}`])
@@ -191,7 +237,8 @@ describe('Cooperation controller', () => {
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
         offer: testOffer._id,
-        ...testCooperationData
+        sections: updatedTestCooperationData.sections,
+        ...updatedTestCooperationData
       })
   })
 
@@ -226,7 +273,6 @@ describe('Cooperation controller', () => {
         },
         initiator: testStudentUser.id,
         receiver: testTutorUser._id,
-        additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
@@ -266,12 +312,36 @@ describe('Cooperation controller', () => {
         },
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
-        additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
+        sections: [
+          {
+            _id: expect.any(String),
+            title: testCooperationData.sections[0].title,
+            description: testCooperationData.sections[0].description,
+            resources: [
+              {
+                resource: expect.objectContaining({
+                  _id: expect.any(String),
+                  author: expect.any(String),
+                  content: expect.any(String),
+                  description: expect.any(String),
+                  title: expect.any(String),
+                  category: expect.any(String),
+                  resourceType: expect.any(String)
+                }),
+                resourceType: testCooperationData.sections[0].resources[0].resourceType,
+                availability: {
+                  status: testCooperationData.sections[0].resources[0].availability.status,
+                  date: testCooperationData.sections[0].resources[0].availability.date
+                }
+              }
+            ]
+          }
+        ],
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -301,12 +371,21 @@ describe('Cooperation controller', () => {
         initiator: testStudentUser.id,
         receiver: testTutorUser._id,
         receiverRole: tutorUserData.role[0],
-        additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
         needAction: tutorUserData.role[0],
+        sections: testCooperationData.sections.map((section) => ({
+          _id: expect.any(String),
+          title: section.title,
+          description: section.description,
+          resources: section.resources.map((resource) => ({
+            resource: expect.any(String),
+            resourceType: resource.resourceType,
+            availability: resource.availability
+          }))
+        })),
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })

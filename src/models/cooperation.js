@@ -9,7 +9,13 @@ const {
 } = require('~/consts/errors')
 const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/models')
 const {
-  enums: { COOPERATION_STATUS_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM, RESOURCES_TYPES_ENUM }
+  enums: {
+    COOPERATION_STATUS_ENUM,
+    PROFICIENCY_LEVEL_ENUM,
+    MAIN_ROLE_ENUM,
+    RESOURCES_TYPES_ENUM,
+    RESOURCE_AVAILABILITY_STATUS_ENUM
+  }
 } = require('~/consts/validation')
 const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
 const notificationService = require('~/services/notification')
@@ -123,6 +129,20 @@ const cooperationSchema = new Schema(
               enum: {
                 values: RESOURCES_TYPES_ENUM,
                 message: ENUM_CAN_BE_ONE_OF('resource type', RESOURCES_TYPES_ENUM)
+              }
+            },
+            availability: {
+              status: {
+                type: String,
+                enum: {
+                  values: RESOURCE_AVAILABILITY_STATUS_ENUM,
+                  message: ENUM_CAN_BE_ONE_OF('resource availability status', RESOURCE_AVAILABILITY_STATUS_ENUM)
+                },
+                default: RESOURCE_AVAILABILITY_STATUS_ENUM[0]
+              },
+              date: {
+                type: Date,
+                default: null
               }
             }
           }

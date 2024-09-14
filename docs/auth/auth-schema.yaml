@@ -42,3 +42,10 @@ definitions:
     properties:
       password:
         type: string
+  change-password:
+    type: object
+    properties:
+      currentPassword:
+        type: string
+      password:
+        type: string

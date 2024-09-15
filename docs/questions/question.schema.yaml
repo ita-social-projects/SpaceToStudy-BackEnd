@@ -31,7 +31,7 @@ definitions:
         updatedAt:
           type: string
           format: date-time
-  questionsBody:
+  questionBody:
     type: object
     properties:
       title:
@@ -47,6 +47,8 @@ definitions:
               type: string
             isCorrect:
               type: boolean
+      type:
+        type: string
       category:
         type: string
         ref: '#/definitions/resourcesCategory'

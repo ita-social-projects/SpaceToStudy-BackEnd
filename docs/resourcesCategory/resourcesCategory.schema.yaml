@@ -2,7 +2,8 @@ definitions:
   resourceCategoryBody:
     type: object
     properties:
-      name: string
+      name:
+        type: string
   resourcesCategory:
     type: object
     properties:
@@ -12,7 +13,6 @@ definitions:
         type: string
       author:
         type: string
-        ref: '#/components/user'
       createdAt:
         type: string
         format: date-time

@@ -79,7 +79,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/resourcesCategoryBody'
+              $ref: '#/definitions/resourceCategoryBody'
             example:
               name: Chemical Category
       responses:
@@ -88,7 +88,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/resources-categories'
+                $ref: '#/definitions/resourcesCategory'
               example:
                 _id: 650b14441e8d4a4484e2e2f5
                 name: Chemical Category
@@ -216,7 +216,7 @@ paths:
       security:
         - cookieAuth: []
       tags:
-        - ResourcesCategories
+        - Resources Categories
       summary: Delete ResourcesCategory by ID
       description: Finds and deletes an ResourcesCategory with the specified ID.
       produces:

@@ -18,7 +18,7 @@ const authMiddleware = (req, _res, next) => {
 }
 
 const authSocketMiddleware = (socket, next) => {
-  const accessToken = socket.handshake.auth && socket.handshake.auth.token
+  const accessToken = socket.handshake.auth?.token
 
   if (!accessToken) {
     next(createUnauthorizedError())

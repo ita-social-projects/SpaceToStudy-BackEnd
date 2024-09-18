@@ -17,6 +17,22 @@ const authMiddleware = (req, _res, next) => {
   next()
 }
 
+const authSocketMiddleware = (socket, next) => {
+  const accessToken = socket.handshake.auth && socket.handshake.auth.token
+
+  if (!accessToken) {
+    next(createUnauthorizedError())
+  }
+
+  const userData = tokenService.validateAccessToken(accessToken)
+  if (!userData) {
+    next(createUnauthorizedError())
+  }
+
+  socket.user = userData
+  next()
+}
+
 const restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
@@ -26,4 +42,4 @@ const restrictTo = (...roles) => {
   }
 }
 
-module.exports = { authMiddleware, restrictTo }
+module.exports = { authMiddleware, authSocketMiddleware, restrictTo }

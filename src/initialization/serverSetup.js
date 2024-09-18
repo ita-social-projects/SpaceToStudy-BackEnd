@@ -1,4 +1,5 @@
 const databaseInitialization = require('~/initialization/database')
+const socketServerSetup = require('~/initialization/socketServerSetup')
 const checkUserExistence = require('~/seed/checkUserExistence')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const initialization = require('~/initialization/initialization')
@@ -13,7 +14,8 @@ const serverSetup = async (app) => {
   await checkUserExistence()
   await checkCategoryExistence()
   initialization(app)
-  return app.listen(SERVER_PORT, () => {
+  const server = socketServerSetup(app)
+  return server.listen(SERVER_PORT, () => {
     logger.info(`Server is running on port ${SERVER_PORT}`)
     if (process.env.NODE_ENV !== 'test') {
       scheduledCronJobs()

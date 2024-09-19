@@ -12,13 +12,13 @@ definitions:
           type: string
         items:
           type: array
-          ref: '#/components/question'
+          $ref: '#/components/question'
         author:
           type: string
-          ref: '#/components/user'
+          $ref: '#/components/user'
         category:
           type: string
-          ref: '#/definitions/resourcesCategory'
+          $ref: '#/definitions/resourcesCategory'
         settings: 
           type: object
           properties: 
@@ -50,10 +50,10 @@ definitions:
         type: string
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
       items:
         type: array
-        ref: '#/components/question'
+        $ref: '#/components/question'
       settings: 
           type: object
           properties: 
@@ -81,13 +81,13 @@ definitions:
         type: string
       items:
         type: array
-        ref: '#/components/question'
+        $ref: '#/components/question'
       author:
         type: string
-        ref: '#/components/user'
+        $ref: '#/components/user'
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
       settings: 
           type: object
           properties: 

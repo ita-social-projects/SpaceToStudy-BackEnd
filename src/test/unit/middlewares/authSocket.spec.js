@@ -7,6 +7,10 @@ describe('Auth socket midleware', () => {
   const error = createUnauthorizedError()
   const mockNextFunc = jest.fn()
 
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('Should call the next function with UNAUTHORIZED error when cookies are not given', () => {
     const mockSocket = { request: { headers: {} } }
 
@@ -17,6 +21,22 @@ describe('Auth socket midleware', () => {
 
   it('Should call the next function with UNAUTHORIZED error when access token is not given', () => {
     const mockSocket = { request: { headers: { cookie: '' } } }
+
+    authSocketMiddleware(mockSocket, mockNextFunc)
+
+    expect(mockNextFunc).toHaveBeenCalledWith(error)
+  })
+
+  it('Should call the next function with UNAUTHORIZED error when access token is empty', () => {
+    const mockSocket = { request: { headers: { cookie: 'accessToken=;' } } }
+
+    authSocketMiddleware(mockSocket, mockNextFunc)
+
+    expect(mockNextFunc).toHaveBeenCalledWith(error)
+  })
+
+  it('Should call the nest function with UNAUTHORIZED error when access token is invalid', () => {
+    const mockSocket = { request: { headers: { cookie: 'accessToken=invalid_token;' } } }
 
     authSocketMiddleware(mockSocket, mockNextFunc)
 

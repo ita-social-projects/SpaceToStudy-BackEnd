@@ -397,8 +397,10 @@ describe('User controller', () => {
       })
 
       it('should throw 404 DOCUMENT_NOT_FOUND if an offer is not found', async () => {
+        const decodedToken = TokenService.validateAccessToken(accessToken)
+
         const response = await app
-          .patch(`${endpointUrl}/${user._id}/bookmarks/offers/${nonExistingOfferId}`)
+          .patch(`${endpointUrl}/${decodedToken.id}/bookmarks/offers/${nonExistingOfferId}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 
@@ -410,7 +412,7 @@ describe('User controller', () => {
 
         const decodedToken = TokenService.validateAccessToken(accessToken)
 
-        await User.updateOne({ _id: decodedToken.id }, { $set: { bookmarkedOffers: [offer._id] } })
+        await User.updateOne({ _id: decodedToken.id }, { $set: { bookmarkedOffers: [] } })
 
         const response = await app
           .patch(`${endpointUrl}/${decodedToken.id.toString()}/bookmarks/offers/${offer._id.toString()}`)
@@ -433,7 +435,7 @@ describe('User controller', () => {
         await User.updateOne({ _id: decodedToken.id }, { $set: { bookmarkedOffers: [offer1._id, offer2._id] } })
 
         const response = await app
-          .patch(`${endpointUrl}/${user._id.toString()}/bookmarks/offers/${offer2._id.toString()}`)
+          .patch(`${endpointUrl}/${decodedToken.id.toString()}/bookmarks/offers/${offer2._id.toString()}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 

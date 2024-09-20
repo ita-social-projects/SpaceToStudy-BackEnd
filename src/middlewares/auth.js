@@ -23,7 +23,7 @@ const authSocketMiddleware = (socket, next) => {
     return next(createUnauthorizedError())
   }
 
-  const { accessToken } = cookie.parse(socket.request.headers?.cookie)
+  const { accessToken } = cookie.parse(socket.request.headers.cookie)
 
   if (!accessToken) {
     return next(createUnauthorizedError())

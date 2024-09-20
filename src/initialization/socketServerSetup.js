@@ -16,7 +16,8 @@ const socketServerSetup = (app) => {
       credentials: true,
       methods: 'GET, POST, PATCH, DELETE',
       allowedHeaders: 'Content-Type, Authorization'
-    }
+    },
+    cookie: true
   })
 
   io.use(authSocketMiddleware)

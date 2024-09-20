@@ -785,6 +785,12 @@ describe('User controller', () => {
       })
     })
 
+    it('should throw a 400 error if a user has admin role', async () => {
+      await expect(
+        userService.createUser('admin', 'Vika', 'Anderson', 'Vika.Anderson.email@example.com', 'password123', 'en')
+      ).rejects.toThrowError(new Error('The request could not be processed due to invalid or missing parameters.'))
+    })
+
     it('should throw a 404 error if no user is found with the given ID', async () => {
       await expect(userService.updateUser(nonExistingUserId, 'student', {})).rejects.toThrowError(
         'User with the specified ID was not found.'

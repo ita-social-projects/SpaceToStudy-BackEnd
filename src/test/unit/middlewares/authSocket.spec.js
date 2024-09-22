@@ -35,7 +35,7 @@ describe('Auth socket midleware', () => {
     expect(mockNextFunc).toHaveBeenCalledWith(error)
   })
 
-  it('Should call the nest function with UNAUTHORIZED error when access token is invalid', () => {
+  it('Should call the next function with UNAUTHORIZED error when access token is invalid', () => {
     const mockSocket = { request: { headers: { cookie: 'accessToken=invalid_token;' } } }
 
     authSocketMiddleware(mockSocket, mockNextFunc)

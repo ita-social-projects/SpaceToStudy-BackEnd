@@ -42,7 +42,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#definitions/lessons'
+                $ref: '#definitions/lesson'
               example:
                 title: Colors in English
                 description: With this lesson you will learn all about colors in English.

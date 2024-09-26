@@ -126,8 +126,8 @@ describe('User controller', () => {
 
   afterEach(async () => {
     await serverCleanup()
-    // testCourse.sections[0].resources = []
-    // testCooperation.sections[0].resources = []
+    testCourse.sections[0].resources = []
+    testCooperation.sections[0].resources = []
   })
 
   afterAll(async () => {

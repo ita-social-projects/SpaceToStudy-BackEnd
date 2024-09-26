@@ -9,6 +9,7 @@ const {
 const { oneDayInMs } = require('~/consts/auth')
 const { authSocketMiddleware } = require('~/middlewares/auth')
 const registerActivityHandlers = require('~/event-handlers/activityHandler')
+const registerMessageHandlers = require('~/event-handlers/messageHandler')
 
 let usersOnline = new Set()
 
@@ -39,6 +40,7 @@ const socketServerSetup = (app) => {
 
 const onConnection = (socket, io) => {
   registerActivityHandlers(io, socket, usersOnline)
+  registerMessageHandlers(io, socket, usersOnline)
 }
 
 module.exports = socketServerSetup

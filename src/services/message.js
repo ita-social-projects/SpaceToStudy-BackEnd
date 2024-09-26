@@ -34,6 +34,10 @@ const messageService = {
     })
   },
 
+  readMessage: async (id) => {
+    return await Message.findByIdAndUpdate(id, { isRead: true })
+  },
+
   getMessages: async (match, skip, limit) => {
     const { user, chat } = match
 

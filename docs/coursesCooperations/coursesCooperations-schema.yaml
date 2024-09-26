@@ -1,0 +1,192 @@
+definitions:
+  coursesCooperations:
+    type: object
+    properties:
+      cooperations:
+        type: array
+        items:
+          type: object
+          properties:
+            _id:
+              type: string
+            availableQuizzes:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  items:
+                    type: array
+                    items:
+                      type: string
+                  author:
+                    type: string
+                  category:
+                    type: string
+                  resourceType:
+                    type: string
+                  settings:
+                    type: object
+                    properties:
+                      view:
+                        type: string
+                      shuffle:
+                        type: boolean
+                      pointValues:
+                        type: boolean
+                      scoredResponses:
+                        type: boolean
+                      correctAnswers:
+                        type: boolean
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+            finishedQuizzes:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  items:
+                    type: array
+                    items:
+                      type: string
+                  author:
+                    type: string
+                  category:
+                    type: string
+                  resourceType:
+                    type: string
+                  settings:
+                    type: object
+                    properties:
+                      view:
+                        type: string
+                      shuffle:
+                        type: boolean
+                      pointValues:
+                        type: boolean
+                      scoredResponses:
+                        type: boolean
+                      correctAnswers:
+                        type: boolean
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+            initiator:
+              type: string
+            initiatorRole:
+              type: string
+            needAction:
+              type: string
+            offer:
+              type: string
+            price:
+              type: number
+            proficiencyLevel:
+              type: string
+            receiver:
+              type: string
+            receiverRole:
+              type: string
+            status:
+              type: string
+            title:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            sections:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        availability:
+                          type: object
+                          properties:
+                            status:
+                              type: string
+                            date:
+                              type: 'null | string'
+                              format: date-time
+                        resource:
+                          type: string
+                        resourceType:
+                          type: string
+      courses:
+        type: array
+        items:
+          type: object
+          properties:
+            _id:
+              type: string
+            author:
+              type: string
+            category:
+              type: string
+            description:
+              type: string
+            proficiencyLevel:
+              type: array
+              items:
+                type: string
+            subject:
+              type: string
+            title:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            sections:
+              type: array
+              items:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  resources:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        resource:
+                          type: string
+                        resourceType:
+                          type: string

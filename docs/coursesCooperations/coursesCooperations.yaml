@@ -1,0 +1,108 @@
+paths:
+  /courses-cooperations/resource/{resourceId}:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Courses and cooperations
+      summary: Get courses and cooperations by resource ID
+      description: Returns courses and cooperations that contain the resource with the specified resource ID.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/coursesCooperations'
+              example:
+                cooperations:
+                  [
+                    {
+                      _id: '66ec542c0d9d9983a9525473',
+                      availableQuizzes: [],
+                      finishedQuizzes: [],
+                      initiator: '66b0aecdadd1fe775238c7d5',
+                      initiatorRole: 'student',
+                      needAction: 'tutor',
+                      offer: '66ec53d40d9d9983a9525421',
+                      price: 500,
+                      proficiencyLevel: 'Beginner',
+                      receiver: '66a7abbab3168fa64a8f5af1',
+                      receiverRole: 'tutor',
+                      sections:
+                        [
+                          {
+                            _id: '66ec54b80d9d9983a95254ca',
+                            title: 'Module 1',
+                            description: 'Description',
+                            resources:
+                              [
+                                {
+                                  availability: { status: 'open', date: null },
+                                  resource: '66ec52490d9d9983a9525327',
+                                  resourceType: 'lesson'
+                                }
+                              ]
+                          }
+                        ],
+                      status: 'active',
+                      title: 'Healthy diet',
+                      createdAt: '2024-09-19T16:41:16.534Z',
+                      updatedAt: '2024-09-24T12:04:56.590Z'
+                    }
+                  ]
+                courses:
+                  [
+                    {
+                      _id: '66f2aba8cb16942b59195efc',
+                      author: '66a7abbab3168fa64a8f5af1',
+                      category: '6566040f8bebd72f0be55a28',
+                      description: 'Meat dishes',
+                      proficiencyLevel: ['Beginner', 'Intermediate', 'Advanced'],
+                      sections:
+                        [
+                          {
+                            _id: '66ec54b80d9d9983a95254ca',
+                            title: 'Module 1',
+                            description: 'Description',
+                            resources: [{ resource: '66ec52490d9d9983a9525327', resourceType: 'lesson' }]
+                          }
+                        ],
+                      subject: '656605be8bebd72f0be55a3d',
+                      title: 'Meat dishes course',
+                      createdAt: '2024-09-24T12:08:08.221Z',
+                      updatedAt: '2024-09-25T14:25:04.114Z'
+                    }
+                  ]
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: 'INVALID_ID'
+                message: 'ID is invalid.'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: 'UNAUTHORIZED'
+                message: 'The requested URL requires user authorization.'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.

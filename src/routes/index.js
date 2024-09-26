@@ -21,6 +21,7 @@ const attachment = require('~/routes/attachment')
 const finishedQuiz = require('~/routes/finishedQuiz')
 const question = require('~/routes/question')
 const resourcesCategory = require('~/routes/resourcesCategory')
+const coursesCooperations = require('~/routes/coursesCooperations')
 
 router.use('/auth', auth)
 router.use('/users', user)
@@ -43,5 +44,6 @@ router.use('/attachments', attachment)
 router.use('/finished-quizzes', finishedQuiz)
 router.use('/questions', question)
 router.use('/resources-categories', resourcesCategory)
+router.use('/courses-cooperations', coursesCooperations)
 
 module.exports = router

@@ -25,7 +25,7 @@ definitions:
         $ref: '#/components/attachments'
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
     required:
       - title
       - description
@@ -36,7 +36,7 @@ definitions:
         type: string
       author:
         type: string
-        ref: '#components/user'
+        $ref: '#components/user'
       title:
         type: string
       description:
@@ -48,4 +48,4 @@ definitions:
         $ref: '#/components/attachments'
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'

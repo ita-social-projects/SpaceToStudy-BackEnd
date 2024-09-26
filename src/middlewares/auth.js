@@ -1,3 +1,4 @@
+const cookie = require('cookie')
 const { createUnauthorizedError, createForbiddenError } = require('~/utils/errorsHelper')
 const tokenService = require('~/services/token')
 
@@ -18,15 +19,19 @@ const authMiddleware = (req, _res, next) => {
 }
 
 const authSocketMiddleware = (socket, next) => {
-  const accessToken = socket.handshake.auth?.token
+  if (!socket.request.headers.cookie) {
+    return next(createUnauthorizedError())
+  }
+
+  const { accessToken } = cookie.parse(socket.request.headers.cookie)
 
   if (!accessToken) {
-    next(createUnauthorizedError())
+    return next(createUnauthorizedError())
   }
 
   const userData = tokenService.validateAccessToken(accessToken)
   if (!userData) {
-    next(createUnauthorizedError())
+    return next(createUnauthorizedError())
   }
 
   socket.user = userData

@@ -1,10 +1,14 @@
 const { createServer } = require('http')
 const { Server } = require('socket.io')
-const { authSocketMiddleware } = require('~/middlewares/auth')
-const registerActivityHandlers = require('~/event-handlers/activityHandler')
 const {
   config: { CLIENT_URL }
 } = require('~/configs/config')
+const {
+  config: { COOKIE_DOMAIN }
+} = require('~/configs/config')
+const { oneDayInMs } = require('~/consts/auth')
+const { authSocketMiddleware } = require('~/middlewares/auth')
+const registerActivityHandlers = require('~/event-handlers/activityHandler')
 
 let usersOnline = new Set()
 
@@ -16,6 +20,13 @@ const socketServerSetup = (app) => {
       credentials: true,
       methods: 'GET, POST, PATCH, DELETE',
       allowedHeaders: 'Content-Type, Authorization'
+    },
+    cookie: {
+      maxAge: oneDayInMs,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      domain: COOKIE_DOMAIN
     }
   })
 

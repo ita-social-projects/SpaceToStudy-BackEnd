@@ -7,16 +7,36 @@ describe('Auth socket midleware', () => {
   const error = createUnauthorizedError()
   const mockNextFunc = jest.fn()
 
-  it('Should call next function with UNAUTHORIZED error when access token is not given', () => {
-    const mockSocket = { handshake: { auth: {} } }
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('Should call the next function with UNAUTHORIZED error when cookies are not given', () => {
+    const mockSocket = { request: { headers: {} } }
 
     authSocketMiddleware(mockSocket, mockNextFunc)
 
     expect(mockNextFunc).toHaveBeenCalledWith(error)
   })
 
-  it('Should call next function with UNAUTHORIZED error when access token is not given', () => {
-    const mockSocket = { handshake: { auth: { token: 'invalid_token' } } }
+  it('Should call the next function with UNAUTHORIZED error when access token is not given', () => {
+    const mockSocket = { request: { headers: { cookie: '' } } }
+
+    authSocketMiddleware(mockSocket, mockNextFunc)
+
+    expect(mockNextFunc).toHaveBeenCalledWith(error)
+  })
+
+  it('Should call the next function with UNAUTHORIZED error when access token is empty', () => {
+    const mockSocket = { request: { headers: { cookie: 'accessToken=;' } } }
+
+    authSocketMiddleware(mockSocket, mockNextFunc)
+
+    expect(mockNextFunc).toHaveBeenCalledWith(error)
+  })
+
+  it('Should call the next function with UNAUTHORIZED error when access token is invalid', () => {
+    const mockSocket = { request: { headers: { cookie: 'accessToken=invalid_token;' } } }
 
     authSocketMiddleware(mockSocket, mockNextFunc)
 
@@ -26,7 +46,7 @@ describe('Auth socket midleware', () => {
   it('Should save userData from accessToken to a socket object', () => {
     const payload = { userId: 'testId' }
     const { accessToken } = tokenService.generateTokens(payload)
-    const mockSocket = { handshake: { auth: { token: accessToken } } }
+    const mockSocket = { request: { headers: { cookie: `accessToken=${accessToken};` } } }
 
     authSocketMiddleware(mockSocket, mockNextFunc)
 

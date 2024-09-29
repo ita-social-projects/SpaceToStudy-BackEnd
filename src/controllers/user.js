@@ -4,7 +4,8 @@ const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
-const parseBoolean = require('../utils/parseBoolean')
+const parseBoolean = require('~/utils/parseBoolean')
+const validateUserToken = require('~/utils/users/tokenValidation')
 
 const getUsers = async (req, res) => {
   const { skip, limit, sort, match } = createAggregateOptions(req.query)
@@ -79,12 +80,16 @@ const activateUser = async (req, res) => {
 const toggleOfferBookmark = async (req, res) => {
   const { id: userId, offerId } = req.params
 
+  if (!validateUserToken(req, res)) return
+
   const newBookmarks = await userService.toggleOfferBookmark(offerId, userId)
 
   res.status(200).json(newBookmarks)
 }
 
 const getBookmarkedOffers = async (req, res) => {
+  if (!validateUserToken(req, res)) return
+
   const response = await userService.getBookmarkedOffers(req.params.id, req.query)
 
   res.status(200).json(response)

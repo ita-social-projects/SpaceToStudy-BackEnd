@@ -397,8 +397,10 @@ describe('User controller', () => {
       })
 
       it('should throw 404 DOCUMENT_NOT_FOUND if an offer is not found', async () => {
+        const decodedToken = TokenService.validateAccessToken(accessToken)
+
         const response = await app
-          .patch(`${endpointUrl}/${user._id}/bookmarks/offers/${nonExistingOfferId}`)
+          .patch(`${endpointUrl}/${decodedToken.id}/bookmarks/offers/${nonExistingOfferId}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 
@@ -406,15 +408,18 @@ describe('User controller', () => {
       })
 
       it('should add an offer id to bookmarks', async () => {
-        user = await User.create({ ...testUser, bookmarkedOffers: [] })
         const offer = await Offer.create(testOffer)
 
+        const decodedToken = TokenService.validateAccessToken(accessToken)
+
+        await User.updateOne({ _id: decodedToken.id }, { $set: { bookmarkedOffers: [] } })
+
         const response = await app
-          .patch(`${endpointUrl}/${user._id.toString()}/bookmarks/offers/${offer._id.toString()}`)
+          .patch(`${endpointUrl}/${decodedToken.id.toString()}/bookmarks/offers/${offer._id.toString()}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 
-        const updatedUser = await User.findById(user._id).select('+bookmarkedOffers')
+        const updatedUser = await User.findById(decodedToken.id).select('+bookmarkedOffers')
 
         expect(response.statusCode).toBe(200)
         expect(response.body).toEqual([offer._id.toString()])
@@ -424,14 +429,17 @@ describe('User controller', () => {
       it('should remove an offer id from bookmarks', async () => {
         const offer1 = await Offer.create(testOffer)
         const offer2 = await Offer.create(testOffer)
-        user = await User.create({ ...testUser, bookmarkedOffers: [offer1._id, offer2._id] })
+
+        const decodedToken = TokenService.validateAccessToken(accessToken)
+
+        await User.updateOne({ _id: decodedToken.id }, { $set: { bookmarkedOffers: [offer1._id, offer2._id] } })
 
         const response = await app
-          .patch(`${endpointUrl}/${user._id.toString()}/bookmarks/offers/${offer2._id.toString()}`)
+          .patch(`${endpointUrl}/${decodedToken.id.toString()}/bookmarks/offers/${offer2._id.toString()}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 
-        const updatedUser = await User.findById(user._id).select('+bookmarkedOffers')
+        const updatedUser = await User.findById(decodedToken.id).select('+bookmarkedOffers')
 
         expect(response.statusCode).toBe(200)
         expect(response.body).toEqual([offer1._id.toString()])
@@ -479,10 +487,13 @@ describe('User controller', () => {
 
       it('should get bookmarked offers', async () => {
         const offer = await Offer.create(testOffer)
-        const user = await User.create({ ...testUser, bookmarkedOffers: [offer._id] })
+
+        const decodedToken = TokenService.validateAccessToken(accessToken)
+
+        await User.updateOne({ _id: decodedToken.id }, { $set: { bookmarkedOffers: [offer._id] } })
 
         const response = await app
-          .get(`${endpointUrl}${user._id.toString()}/bookmarks/offers`)
+          .get(`${endpointUrl}${decodedToken.id.toString()}/bookmarks/offers`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 
@@ -517,10 +528,12 @@ describe('User controller', () => {
         testOffer.title = offer2Title
         const offer2 = await Offer.create(testOffer)
 
-        const user = await User.create({ ...testUser, bookmarkedOffers: [offer1._id, offer2._id] })
+        const decodedToken = TokenService.validateAccessToken(accessToken)
+
+        await User.updateOne({ _id: decodedToken.id }, { $set: { bookmarkedOffers: [offer1._id, offer2._id] } })
 
         const response = await app
-          .get(`${endpointUrl}${user._id.toString()}/bookmarks/offers?title=${offer1Title}`)
+          .get(`${endpointUrl}${decodedToken.id.toString()}/bookmarks/offers?title=${offer1Title}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 

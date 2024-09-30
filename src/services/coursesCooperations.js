@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 
 const Course = require('~/models/course')
 const Cooperation = require('~/models/cooperation')
+const {
+  roles: { TUTOR }
+} = require('~/consts/auth')
 
 const { ObjectId } = mongoose.Types
 
@@ -13,7 +16,12 @@ const coursesAndCooperationsService = {
 
     const cooperations = await Cooperation.find({
       $and: [
-        { receiver: new ObjectId(userId) },
+        {
+          $or: [
+            { receiverRole: TUTOR, receiver: new ObjectId(userId) },
+            { initiatorRole: TUTOR, initiator: new ObjectId(userId) }
+          ]
+        },
         { 'sections.resources.resource': new ObjectId(resourceId) },
         { status: 'active' }
       ]

@@ -79,15 +79,20 @@ jobs:
   Test_Docker:
     runs-on: ubuntu-latest
     steps:
-
       #Checkout Repository
-      - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+
+      # Setting up Docker
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
       
       # Docker Build
-      - uses: docker/build-push-action@v6
-        with:
-          push: false
-          file: ./Dockerfile
-          tags: back-stage:test
-          cache-from: type=gha
-          cache-to: type=gha, mode=max
+    - name: Build
+      uses: docker/build-push-action@v6
+      with:
+        push: false
+        file: ./Dockerfile
+        tags: back-stage:test
+        cache-from: type=gha
+        cache-to: type=gha, mode=max

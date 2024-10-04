@@ -37,6 +37,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 14
+          cache: 'npm'
 
       - name : 'Install dependencies'
         run: npm install
@@ -88,3 +89,5 @@ jobs:
           push: false
           file: ./Dockerfile
           tags: back-stage:test
+          cache-from: type=gha
+          cache-to: type=gha, mode=max

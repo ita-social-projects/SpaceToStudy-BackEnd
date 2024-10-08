@@ -36,7 +36,7 @@ jobs:
       - name: 'Install Node.js v.14'
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 20.15.1
           cache: 'npm'
 
       - name : 'Install dependencies'

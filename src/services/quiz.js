@@ -21,7 +21,7 @@ const quizService = {
   },
 
   createQuiz: async (author, data) => {
-    const { title, category, items, description, settings } = data
+    const { title, category, items, description, settings, isDuplicate } = data
 
     return await Quiz.create({
       title,
@@ -29,7 +29,8 @@ const quizService = {
       category,
       settings,
       items,
-      description
+      description,
+      isDuplicate
     })
   },
 

@@ -4,9 +4,9 @@ const { createForbiddenError } = require('~/utils/errorsHelper')
 
 const lessonService = {
   createLesson: async (author, data) => {
-    const { title, description, attachments, content, category } = data
+    const { title, description, attachments, content, category, isDuplicate } = data
 
-    return await Lesson.create({ author, title, description, attachments, content, category })
+    return await Lesson.create({ author, title, description, attachments, content, category, isDuplicate })
   },
 
   getLessons: async (match, sort, skip, limit) => {

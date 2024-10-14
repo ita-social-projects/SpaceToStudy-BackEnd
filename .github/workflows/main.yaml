@@ -36,7 +36,8 @@ jobs:
       - name: 'Install Node.js v.14'
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 20.15.1
+          cache: 'npm'
 
       - name : 'Install dependencies'
         run: npm install
@@ -78,13 +79,20 @@ jobs:
   Test_Docker:
     runs-on: ubuntu-latest
     steps:
-
       #Checkout Repository
-      - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
+
+      # Setting up Docker
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
       
       # Docker Build
-      - uses: docker/build-push-action@v3
-        with:
-          push: false
-          file: ./Dockerfile
-          tags: back-stage:test
+    - name: Build
+      uses: docker/build-push-action@v6
+      with:
+        push: false
+        file: ./Dockerfile
+        tags: back-stage:test
+        cache-from: type=gha
+        cache-to: type=gha, mode=max

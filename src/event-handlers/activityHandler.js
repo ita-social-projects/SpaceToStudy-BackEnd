@@ -6,7 +6,7 @@ module.exports = (io, socket, usersOnline) => {
   }
 
   const disconnect = () => {
-    if (socket.user) {
+    if (socket.user && !io.sockets.adapter.rooms.has(socket.user.id)) {
       usersOnline.delete(socket.user.id)
       io.emit('usersOnline', Array.from(usersOnline))
     }

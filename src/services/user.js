@@ -6,7 +6,7 @@ const Offer = require('~/models/offer')
 const uploadService = require('~/services/upload')
 const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
-const { createError } = require('~/utils/errorsHelper')
+const { createError, createBadRequestError } = require('~/utils/errorsHelper')
 
 const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
@@ -14,6 +14,9 @@ const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 const {
   enums: { MAIN_ROLE_ENUM, OFFER_STATUS_ENUM }
 } = require('~/consts/validation')
+const {
+  roles: { ADMIN }
+} = require('~/consts/auth')
 const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
 const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
 const offerService = require('./offer')
@@ -94,6 +97,10 @@ const userService = {
 
     if (duplicateUser) {
       throw createError(409, ALREADY_REGISTERED)
+    }
+
+    if (role === ADMIN) {
+      throw createBadRequestError()
     }
 
     const hashedPassword = await hashPassword(password)

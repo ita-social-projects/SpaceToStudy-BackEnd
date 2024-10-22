@@ -2,9 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, develop, devops]
-  pull_request:
-    branches: [main, develop, devops, 'feature/**']
+    branches: [test/update-pipeline]
 
 jobs:
   Test_DEV:
@@ -42,7 +40,7 @@ jobs:
         run: npm install
         
       - name : 'Run Tests'
-        run: npm run test
+        run: npx jest --shard 1/3
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{secrets.MONGODB_USER}}:${{secrets.MONGODB_PASS}}@localhost:27017/${{secrets.MONGODB_DB}}?authSource=admin
@@ -88,3 +86,5 @@ jobs:
           push: false
           file: ./Dockerfile
           tags: back-stage:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

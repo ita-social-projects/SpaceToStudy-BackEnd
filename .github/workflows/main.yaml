@@ -76,7 +76,7 @@ jobs:
       - run: mkdir -p coverage/xml
 
       - name: Move coverage report
-        run: mv ./tests/coverage/lcov.info coverage/lcov/${{matrix.shardIndex}}.info
+        run: mv ./src/tests/coverage/lcov.info coverage/lcov/${{matrix.shardIndex}}.info
         
       - name: Move coverage report
         run: mv ./test-report.xml coverage/xml/${{matrix.shardIndex}}.xml

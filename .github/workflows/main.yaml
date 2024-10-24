@@ -79,7 +79,9 @@ jobs:
         run: mv ./src/test/coverage/lcov.info coverage/lcov/${{matrix.shardIndex}}.info
         
       - name: Move coverage report
-        run: mv ./test-report.xml coverage/xml/${{matrix.shardIndex}}.xml
+        run: |
+              mv ./test-report.xml coverage/xml/${{matrix.shardIndex}}.xml
+              cat coverage/xml/${{matrix.shardIndex}}.xml
 
       - name: Upload artifact
         if: ${{ !cancelled() }}

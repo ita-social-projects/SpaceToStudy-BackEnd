@@ -106,8 +106,13 @@ jobs:
   
     - name: Run script to merge all the xml files
       run: | 
-        echo '<testExecutions version="1">' > test-report.xml
-        grep -vh testExecutions coverage/xml/*.xml >> test-report.xml
+        echo '<?xml version="1.0" encoding="UTF-8"?>' > test-report.xml
+        echo '<testExecutions version="1">' >> test-report.xml
+        
+        for file in coverage/xml/*.xml; do
+          tail -n +2 "$file" | grep -vh '</testExecutions>' >> test-report.xml
+        done
+        
         echo '</testExecutions>' >> test-report.xml
         cat test-report.xml
         

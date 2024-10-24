@@ -110,8 +110,8 @@ jobs:
         
     - name: Run script to merge all the lcov files
       run: |
-          mkdir ./tests/coverage
-          cat coverage/lcov/*.info > ./tests/coverage/lcov.info
+          mkdir ./src/test/coverage
+          cat coverage/lcov/*.info > ./src/test/coverage/lcov.info
     
     - name: SonarCloud Scan
       uses: SonarSource/sonarcloud-github-action@master

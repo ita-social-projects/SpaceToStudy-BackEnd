@@ -101,9 +101,7 @@ const courseService = {
       throw createForbiddenError()
     }
 
-    await deleteDuplicateResources(course)
-
-    await Course.findByIdAndRemove(id).exec()
+    await Course.findByIdAndDelete(id).exec()
   }
 }
 

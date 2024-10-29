@@ -21,11 +21,6 @@ const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 const nonExistingOfferId = '648ae644aa322613ba08e69e'
 const validationErrorMessage = 'You can change only either the status or the price in one operation'
 
-
-const id = new mongoose.Types.ObjectId()
-const optionsSearch = coopsAggregateOptions({ id, role: 'testRole' }, { search: 'testSearch' })
-const optionsStatus = coopsAggregateOptions({}, { status: 'testStatus' })
-
 const tutorUserData = {
   role: ['tutor'],
   firstName: 'albus',
@@ -278,7 +273,6 @@ describe('Cooperation controller', () => {
         },
         initiator: testStudentUser.id.toString(),
         receiver: testTutorUser._id.toString(),
-        additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
@@ -316,7 +310,7 @@ describe('Cooperation controller', () => {
           lastLogin: expect.any(String),
           _id: expect.any(String)
         },
-        receiver: testTutorUser._id.toString(),
+        receiver: { _id: testTutorUser._id.toString() },
         receiverRole: tutorUserData.role[0],
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,

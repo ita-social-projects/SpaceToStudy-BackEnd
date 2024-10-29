@@ -42,7 +42,7 @@ const subjectService = {
   },
 
   deleteSubject: async (id) => {
-    await Subject.findByIdAndRemove(id).exec()
+    await Subject.findByIdAndDelete(id).exec()
   }
 }
 

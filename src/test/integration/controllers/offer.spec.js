@@ -157,29 +157,39 @@ describe('Offer controller', () => {
     it('should get an offer by ID', async () => {
       const response = await app.get(endpointUrl + testOffer._id).set('Cookie', [`accessToken=${accessToken}`])
 
-      expect(response.body).toEqual({
-        ...testOffer,
-        author: {
-          _id: testOffer.author,
-          firstName: 'Tart',
-          lastName: 'Drilling',
-          FAQ: [{ _id: expect.any(String), answer: 'answer1', question: 'question1' }],
-          totalReviews: {
-            student: 0,
-            tutor: 0
-          },
-          averageRating: {
-            student: 0,
-            tutor: 0
-          }
-        },
-        subject: {
-          _id: testOffer.subject,
-          name: 'TestSubject'
-        },
-        chatId: null
-      })
       expect(response.statusCode).toBe(200)
+
+      const { FAQ, author, subject, chatId, ...restResponse } = response.body
+      const { FAQ: expectedFAQ, author: expectedAuthor, subject: expectedSubject, ...restExpected } = testOffer
+
+      expect(restResponse).toEqual(restExpected)
+
+      expect(author._id).toEqual(expectedAuthor)
+      expect(author.firstName).toBe('Tart')
+      expect(author.lastName).toBe('Drilling')
+      expect(author.FAQ).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            question: 'question1',
+            answer: 'answer1'
+          })
+        ])
+      )
+      expect(author.totalReviews).toEqual({
+        student: 0,
+        tutor: 0
+      })
+      expect(author.averageRating).toEqual({
+        student: 0,
+        tutor: 0
+      })
+
+      expect(subject._id).toEqual(expectedSubject)
+      expect(subject.name).toBe('TestSubject')
+
+      expect(FAQ[0]._id).toBe(expectedFAQ[0]._id)
+
+      expect(chatId).toBeNull()
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {

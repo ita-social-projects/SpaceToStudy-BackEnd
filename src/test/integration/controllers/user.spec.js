@@ -496,7 +496,7 @@ describe('User controller', () => {
           password: 'password',
           appLanguage: 'en',
           mainSubjects: {
-            student: [{ category: { _id: new mongoose.Types.ObjectId(), name: 'Cooking' }, subjects: [] }],
+            student: [{ category: { _id: new mongoose.Types.ObjectId().toString(), name: 'Cooking' }, subjects: [] }],
             tutor: []
           }
         })

@@ -103,7 +103,9 @@ const courseService = {
 
     await deleteDuplicateResources(course)
 
-    await Course.findByIdAndRemove(id).exec()
+    await deleteDuplicateResources(course)
+
+    await Course.findByIdAndDelete(id).exec()
   }
 }
 

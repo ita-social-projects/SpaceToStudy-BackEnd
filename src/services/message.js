@@ -51,7 +51,7 @@ const messageService = {
       {
         $match: {
           chat: mongoose.Types.ObjectId(chat),
-          'clearedFor.user': { $ne: mongoose.Types.ObjectId(user) }
+          'clearedFor.user': { $ne: new mongoose.Types.ObjectId(user) }
         }
       },
       {

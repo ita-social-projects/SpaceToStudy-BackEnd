@@ -60,7 +60,7 @@ describe('Quiz controller', () => {
 
     testFinishedQuiz = await app
       .post(endpointUrl)
-      .send({ quiz: testQuiz._id, ...testFinishedQuizData })
+      .send({ quiz: testQuiz._id.toString(), ...testFinishedQuizData })
       .set('Cookie', [`accessToken=${accessToken}`])
   })
 

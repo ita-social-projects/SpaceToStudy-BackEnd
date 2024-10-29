@@ -50,7 +50,7 @@ const resourcesCategoryService = {
       throw createForbiddenError()
     }
 
-    await ResourcesCategory.findByIdAndRemove(id).exec()
+    await ResourcesCategory.findByIdAndDelete(id).exec()
   }
 }
 

@@ -264,7 +264,7 @@ const userService = {
   },
 
   deleteUser: async (id) => {
-    await User.findByIdAndRemove(id).exec()
+    await User.findByIdAndDelete(id).exec()
   },
 
   toggleOfferBookmark: async (offerId, userId) => {

@@ -21,6 +21,11 @@ const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 const nonExistingOfferId = '648ae644aa322613ba08e69e'
 const validationErrorMessage = 'You can change only either the status or the price in one operation'
 
+
+const id = new mongoose.Types.ObjectId()
+const optionsSearch = coopsAggregateOptions({ id, role: 'testRole' }, { search: 'testSearch' })
+const optionsStatus = coopsAggregateOptions({}, { status: 'testStatus' })
+
 const tutorUserData = {
   role: ['tutor'],
   firstName: 'albus',
@@ -311,46 +316,7 @@ describe('Cooperation controller', () => {
           lastLogin: expect.any(String),
           _id: expect.any(String)
         },
-        receiver: {
-          _id: expect.any(String),
-          averageRating: {
-            student: 0,
-            tutor: 0
-          },
-          createdAt: expect.any(String),
-          email: 'lovemagic@gmail.com',
-          firstName: 'albus',
-          lastLogin: expect.any(String),
-          lastName: 'dumbledore',
-          mainSubjects: {
-            student: [],
-            tutor: []
-          },
-          nativeLanguage: null,
-          notificationSettings: {
-            isChatNotification: true,
-            isEmailNotification: true,
-            isOfferStatusNotification: true,
-            isSimilarOffersNotification: true
-          },
-          professionalBlock: {
-            awards: '',
-            education: '',
-            scientificActivities: '',
-            workExperience: ''
-          },
-          role: ['tutor'],
-          status: {
-            admin: 'active',
-            student: 'active',
-            tutor: 'active'
-          },
-          totalReviews: {
-            student: 0,
-            tutor: 0
-          },
-          updatedAt: expect.any(String)
-        },
+        receiver: testTutorUser._id.toString(),
         receiverRole: tutorUserData.role[0],
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,

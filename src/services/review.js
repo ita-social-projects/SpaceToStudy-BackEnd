@@ -79,7 +79,7 @@ const reviewService = {
   },
 
   deleteReview: async (id) => {
-    await Review.findByIdAndRemove(id).exec()
+    await Review.findByIdAndDelete(id).exec()
   }
 }
 

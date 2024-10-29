@@ -11,7 +11,13 @@ const allowedUserFieldsForUpdate = {
   nativeLanguage: true,
   appLanguage: true,
   FAQ: true,
-  videoLink: true
+  videoLink: true,
+  notificationSettings: {
+    isOfferStatusNotification: true,
+    isChatNotification: true,
+    isSimilarOffersNotification: true,
+    isEmailNotification: true
+  }
 }
 
 const allowedTutorFieldsForUpdate = {

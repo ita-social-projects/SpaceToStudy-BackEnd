@@ -219,8 +219,15 @@ const userSchema = new Schema(
       },
       workExperience: { type: String, default: '', maxLength: [1000, FIELD_CANNOT_BE_LONGER('work experience', 1000)] },
       education: { type: String, default: '', maxLength: [1000, FIELD_CANNOT_BE_LONGER('education', 1000)] }
+    },
+    notificationSettings: {
+      isOfferStatusNotification: { type: Boolean, default: true },
+      isChatNotification: { type: Boolean, default: true },
+      isSimilarOffersNotification: { type: Boolean, default: true },
+      isEmailNotification: { type: Boolean, default: true }
     }
   },
+
   {
     timestamps: true,
     toJSON: { virtuals: true },

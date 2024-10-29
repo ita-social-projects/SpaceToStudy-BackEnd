@@ -105,6 +105,41 @@ const updatedSections = [
   }
 ]
 
+const testInitiator = {
+  _id: '66b346570182fc9e49b09647',
+  averageRating: {
+    student: 0,
+    tutor: 0
+  },
+  createdAt: '2024-08-07T10:03:03.488Z',
+  email: 'potter@gmail.com',
+  firstName: 'harry',
+  lastLogin: '2024-08-07T10:03:03.587Z',
+  lastName: 'potter',
+  mainSubjects: {
+    student: [],
+    tutor: []
+  },
+  nativeLanguage: null,
+  professionalBlock: {
+    awards: '',
+    education: '',
+    scientificActivities: '',
+    workExperience: ''
+  },
+  role: ['student'],
+  status: {
+    admin: 'active',
+    student: 'active',
+    tutor: 'active'
+  },
+  totalReviews: {
+    student: 0,
+    tutor: 0
+  },
+  updatedAt: '2024-08-07T10:03:03.587Z'
+}
+
 describe('Cooperation controller', () => {
   let app,
     server,
@@ -191,11 +226,11 @@ describe('Cooperation controller', () => {
       expect(response.body.count).toBe(1)
       expect(Array.isArray(response.body.items)).toBe(true)
       expect(response.body.items[0]).toMatchObject({
-        _id: testCooperation._body._id,
+        _id: testCooperation._body._id.toString(),
         offer: {
           _id: testOffer._id.toString()
         },
-        initiator: testStudentUser.id,
+        initiator: testStudentUser.id.toString(),
         receiver: testTutorUser._id.toString(),
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
@@ -223,15 +258,58 @@ describe('Cooperation controller', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
-        _id: testCooperation._body._id,
+        _id: testCooperation._body._id.toString(),
         offer: {
           _id: testOffer._id.toString(),
-          author: {
-            _id: testOffer.author.toString()
-          }
+          author: { _id: testOffer.author.toString() }
         },
-        initiator: testStudentUser.id,
-        receiver: testTutorUser._id.toString(),
+        initiator: {
+          ...testInitiator,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          lastLogin: expect.any(String),
+          _id: expect.any(String)
+        },
+        receiver: {
+          _id: expect.any(String),
+          averageRating: {
+            student: 0,
+            tutor: 0
+          },
+          createdAt: expect.any(String),
+          email: 'lovemagic@gmail.com',
+          firstName: 'albus',
+          lastLogin: expect.any(String),
+          lastName: 'dumbledore',
+          mainSubjects: {
+            student: [],
+            tutor: []
+          },
+          nativeLanguage: null,
+          notificationSettings: {
+            isChatNotification: true,
+            isEmailNotification: true,
+            isOfferStatusNotification: true,
+            isSimilarOffersNotification: true
+          },
+          professionalBlock: {
+            awards: '',
+            education: '',
+            scientificActivities: '',
+            workExperience: ''
+          },
+          role: ['tutor'],
+          status: {
+            admin: 'active',
+            student: 'active',
+            tutor: 'active'
+          },
+          totalReviews: {
+            student: 0,
+            tutor: 0
+          },
+          updatedAt: expect.any(String)
+        },
         receiverRole: tutorUserData.role[0],
         additionalInfo: testCooperationData.additionalInfo,
         proficiencyLevel: testCooperationData.proficiencyLevel,
@@ -263,7 +341,7 @@ describe('Cooperation controller', () => {
     it('should create new cooperation', () => {
       expect(testCooperation.status).toBe(201)
       expect(testCooperation.body).toMatchObject({
-        _id: testCooperation._body._id,
+        _id: testCooperation._body._id.toString(),
         offer: testOffer._id.toString(),
         initiator: testStudentUser.id,
         receiver: testTutorUser._id.toString(),

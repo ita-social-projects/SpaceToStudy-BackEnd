@@ -14,24 +14,32 @@ const cooperationService = {
   getCooperationById: async (id) => {
     return await (
       await Cooperation.findById(id)
-    ).populate({
-      path: 'offer',
-      populate: [
-        {
-          path: 'category',
-          select: ['name', 'appearance']
-        },
-        {
-          path: 'subject',
-          select: 'name'
-        },
-        {
-          path: 'author',
-          select: ['firstName', 'lastName', 'photo', 'professionalSummary', 'totalReviews', 'FAQ', 'averageRatingts']
-        }
-      ],
-      select: ['id', 'author', 'category', 'subject', 'title', 'languages', 'proficiencyLevel', 'description']
-    })
+    ).populate([
+      {
+        path: 'offer',
+        populate: [
+          {
+            path: 'category',
+            select: ['name', 'appearance']
+          },
+          {
+            path: 'subject',
+            select: 'name'
+          },
+          {
+            path: 'author',
+            select: ['firstName', 'lastName', 'photo', 'professionalSummary', 'totalReviews', 'FAQ', 'averageRating']
+          }
+        ],
+        select: ['id', 'author', 'category', 'subject', 'title', 'languages', 'proficiencyLevel', 'description']
+      },
+      {
+        path: 'initiator'
+      },
+      {
+        path: 'receiver'
+      }
+    ])
   },
 
   createCooperation: async (initiator, initiatorRole, data) => {

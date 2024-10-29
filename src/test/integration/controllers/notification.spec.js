@@ -21,7 +21,7 @@ describe('Notification controller', () => {
   let app, server, accessToken, currentUser, testNotification
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -52,7 +52,7 @@ describe('Notification controller', () => {
       expect(response.statusCode).toBe(200)
       expect(response.body.count).toBe(1)
       expect(response.body.items[0]).toMatchObject({
-        _id: testNotification._id,
+        _id: testNotification._id.toString(),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         ...testNotificationData

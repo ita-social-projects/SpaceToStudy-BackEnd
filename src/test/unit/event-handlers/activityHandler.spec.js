@@ -1,5 +1,5 @@
 const activityHandler = require('~/event-handlers/activityHandler')
-const User = require('~/models/User')
+const userSchema = require('~/models/user')
 
 const mockFindById = (socketUserId) => (id) => {
   const isUserIdMatch = id.toString() === socketUserId.toString()
@@ -28,8 +28,8 @@ describe('activityHandler', () => {
     }
     usersOnline = new Set()
 
-    jest.spyOn(User, 'findById').mockImplementation(mockFindById(socket.user.id))
-    jest.spyOn(User, 'findByIdAndUpdate').mockImplementation(mockFindByIdAndUpdate())
+    jest.spyOn(userSchema, 'findById').mockImplementation(mockFindById(socket.user.id))
+    jest.spyOn(userSchema, 'findByIdAndUpdate').mockImplementation(mockFindByIdAndUpdate())
 
     activityHandler(io, socket, usersOnline)
   })

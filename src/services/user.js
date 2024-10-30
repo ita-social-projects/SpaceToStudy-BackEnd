@@ -279,9 +279,9 @@ const userService = {
           $set: {
             bookmarkedOffers: {
               $cond: [
-                { $in: [new ObjectId(offerId), '$bookmarkedOffers'] },
-                { $setDifference: ['$bookmarkedOffers', [new ObjectId(offerId)]] },
-                { $concatArrays: ['$bookmarkedOffers', [new ObjectId(offerId)]] }
+                { $in: [ObjectId.createFromHexString(offerId), '$bookmarkedOffers'] },
+                { $setDifference: ['$bookmarkedOffers', [ObjectId.createFromHexString(offerId)]] },
+                { $concatArrays: ['$bookmarkedOffers', [ObjectId.createFromHexString(offerId)]] }
               ]
             }
           }
@@ -303,7 +303,7 @@ const userService = {
     }
 
     const [response] = await User.aggregate([
-      { $match: { _id: new ObjectId(userId) } },
+      { $match: { _id: ObjectId.createFromHexString(userId) } },
       {
         $lookup: {
           from: 'offers',

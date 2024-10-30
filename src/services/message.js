@@ -50,8 +50,8 @@ const messageService = {
     const result = await Message.aggregate([
       {
         $match: {
-          chat: new mongoose.Types.ObjectId(chat),
-          'clearedFor.user': { $ne: new mongoose.Types.ObjectId(user) }
+          chat: mongoose.Types.ObjectId.createFromHexString(chat),
+          'clearedFor.user': { $ne: mongoose.Types.ObjectId.createFromHexString(user) }
         }
       },
       {

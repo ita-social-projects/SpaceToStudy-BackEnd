@@ -20,8 +20,8 @@ const coopsAggregateOptions = (query, params = {}) => {
     match.$and = [
       {
         $or: [
-          { initiator: new mongoose.Types.ObjectId(id), initiatorRole: role },
-          { receiver: new mongoose.Types.ObjectId(id), receiverRole: role }
+          { initiator: mongoose.Types.ObjectId.createFromHexString(id), initiatorRole: role },
+          { receiver: mongoose.Types.ObjectId.createFromHexString(id), receiverRole: role }
         ]
       }
     ]

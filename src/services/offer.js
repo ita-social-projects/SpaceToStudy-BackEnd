@@ -26,12 +26,12 @@ const offerService = {
 
     const [chatLookup] = await Offer.aggregate([
       {
-        $match: { _id: new mongoose.Types.ObjectId(id) }
+        $match: { _id: mongoose.Types.ObjectId.createFromHexString(id) }
       },
       {
         $lookup: {
           from: 'chats',
-          let: { authorId: '$author', userId: new mongoose.Types.ObjectId(userId) },
+          let: { authorId: '$author', userId: mongoose.Types.ObjectId.createFromHexString(userId) },
           pipeline: [
             {
               $match: {

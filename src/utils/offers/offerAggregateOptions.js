@@ -60,7 +60,7 @@ const offerAggregateOptions = (query, params, user) => {
   }
 
   if (authorId) {
-    match['author._id'] = new mongoose.Types.ObjectId(authorId)
+    match['author._id'] = mongoose.Types.ObjectId.createFromHexString(authorId.toString())
   }
 
   if (authorRole) {
@@ -97,15 +97,15 @@ const offerAggregateOptions = (query, params, user) => {
   }
 
   if (categoryId) {
-    match['category._id'] = new mongoose.Types.ObjectId(categoryId)
+    match['category._id'] = mongoose.Types.ObjectId.createFromHexString(categoryId.toString())
   }
 
   if (subjectId) {
-    match['subject._id'] = new mongoose.Types.ObjectId(subjectId)
+    match['subject._id'] = mongoose.Types.ObjectId.createFromHexString(subjectId.toString())
   }
 
   if (excludedOfferId) {
-    match._id = { $ne: new mongoose.Types.ObjectId(excludedOfferId) }
+    match._id = { $ne: mongoose.Types.ObjectId.createFromHexString(excludedOfferId.toString()) }
   }
 
   let sortOption = {}

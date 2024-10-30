@@ -102,6 +102,10 @@ const userSchema = new Schema(
       type: Date,
       default: null
     },
+    lastSeen: {
+      type: Date,
+      default: null
+    },
     appLanguage: {
       type: String,
       enum: {

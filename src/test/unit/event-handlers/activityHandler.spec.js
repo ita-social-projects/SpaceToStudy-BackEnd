@@ -1,4 +1,20 @@
 const activityHandler = require('~/event-handlers/activityHandler')
+const User = require('~/models/User')
+
+const mockFindById = (socketUserId) => (id) => {
+  const isUserIdMatch = id.toString() === socketUserId.toString()
+  return {
+    lean: () => ({
+      exec: () => Promise.resolve(isUserIdMatch ? { _id: id } : null)
+    })
+  }
+}
+
+const mockFindByIdAndUpdate = () => (id, update) => ({
+  lean: () => ({
+    exec: () => Promise.resolve({ _id: id, ...update.$set })
+  })
+})
 
 describe('activityHandler', () => {
   let io, socket, usersOnline
@@ -11,6 +27,9 @@ describe('activityHandler', () => {
       user: { id: 'user1' }
     }
     usersOnline = new Set()
+
+    jest.spyOn(User, 'findById').mockImplementation(mockFindById(socket.user.id))
+    jest.spyOn(User, 'findByIdAndUpdate').mockImplementation(mockFindByIdAndUpdate())
 
     activityHandler(io, socket, usersOnline)
   })
@@ -25,35 +44,35 @@ describe('activityHandler', () => {
     expect(io.emit).toHaveBeenCalledWith('usersOnline', Array.from(usersOnline))
   })
 
-  test('should call disconnect and remove user from usersOnline set and emit usersOnline event', () => {
+  test('should call disconnect and remove user from usersOnline set and emit usersOnline event', async () => {
     usersOnline.add('user1')
 
     const disconnectCallback = socket.on.mock.calls.find(([event]) => event === 'disconnect')[1]
 
-    disconnectCallback()
+    await disconnectCallback()
 
     expect(usersOnline.has('user1')).toBe(false)
     expect(io.emit).toHaveBeenCalledWith('usersOnline', Array.from(usersOnline))
   })
 
-  test('should not delete the user from usersOnline when the user has at least one active session', () => {
+  test('should not delete the user from usersOnline when the user has at least one active session', async () => {
     usersOnline.add('user1')
     io.sockets.adapter.rooms.set('user1', 'socketId')
 
     const disconnectCallback = socket.on.mock.calls.find(([event]) => event === 'disconnect')[1]
 
-    disconnectCallback()
+    await disconnectCallback()
 
     expect(usersOnline.has('user1')).toBe(true)
     expect(io.emit).not.toHaveBeenCalled()
   })
 
-  test('should call disconnect and do nothing if socket.user is undefined', () => {
+  test('should call disconnect and do nothing if socket.user is undefined', async () => {
     socket.user = undefined
 
     const disconnectCallback = socket.on.mock.calls.find(([event]) => event === 'disconnect')[1]
 
-    disconnectCallback()
+    await disconnectCallback()
 
     expect(io.emit).not.toHaveBeenCalled()
   })

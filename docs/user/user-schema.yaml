@@ -122,6 +122,9 @@ definitions:
         lastLogin:
           type: string
           format: date-time
+        lastSeen:
+          type: string
+          format: date-time
         status:
           type: object
           properties:
@@ -239,6 +242,9 @@ definitions:
       isFirstLogin:
         type: boolean
       lastLogin:
+        type: string
+        format: date-time
+      lastSeen:
         type: string
         format: date-time
       status:

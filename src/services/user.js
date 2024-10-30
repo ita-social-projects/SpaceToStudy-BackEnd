@@ -279,9 +279,9 @@ const userService = {
           $set: {
             bookmarkedOffers: {
               $cond: [
-                { $in: [ObjectId(offerId), '$bookmarkedOffers'] },
-                { $setDifference: ['$bookmarkedOffers', [ObjectId(offerId)]] },
-                { $concatArrays: ['$bookmarkedOffers', [ObjectId(offerId)]] }
+                { $in: [new ObjectId(offerId), '$bookmarkedOffers'] },
+                { $setDifference: ['$bookmarkedOffers', [new ObjectId(offerId)]] },
+                { $concatArrays: ['$bookmarkedOffers', [new ObjectId(offerId)]] }
               ]
             }
           }
@@ -303,7 +303,7 @@ const userService = {
     }
 
     const [response] = await User.aggregate([
-      { $match: { _id: ObjectId(userId) } },
+      { $match: { _id: new ObjectId(userId) } },
       {
         $lookup: {
           from: 'offers',

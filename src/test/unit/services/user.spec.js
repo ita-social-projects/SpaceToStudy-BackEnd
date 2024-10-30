@@ -11,6 +11,7 @@ const {
 jest.mock('~/models/offer')
 jest.mock('~/services/offer')
 jest.mock('~/services/cooperation')
+const { createError } = require('~/utils/errorsHelper')
 
 describe('User service', () => {
   afterEach(() => {
@@ -326,6 +327,44 @@ describe('User service', () => {
       })
 
       await expect(userService.updateStatus(id, updateStatus)).rejects.toThrow(DOCUMENT_NOT_FOUND([User.modelName]))
+    })
+  })
+  describe('updateLastSeen', () => {
+    it('should update lastSeen field', async () => {
+      const id = '123'
+      const userMock = {
+        _id: '123'
+      }
+
+      jest.spyOn(User, 'findById').mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(userMock)
+      })
+
+      jest.spyOn(User, 'findByIdAndUpdate').mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(userMock)
+      })
+
+      await userService.updateLastSeen(id)
+
+      expect(User.findById).toHaveBeenCalledWith(id)
+      expect(User.findByIdAndUpdate).toHaveBeenCalledWith(id, { $set: { lastSeen: expect.any(Number) } }, { new: true })
+    })
+
+    it('should throw a 404 error if user is not found', async () => {
+      const id = 'non-existent id'
+
+      jest.spyOn(User, 'findById').mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(null)
+      })
+
+      await expect(userService.updateLastSeen(id)).rejects.toThrow(
+        createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
+      )
+
+      expect(User.findById).toHaveBeenCalledWith(id)
     })
   })
 })

@@ -41,9 +41,9 @@ const chatService = {
     const { id: user, role: userRole } = currentUser
 
     return await Chat.find({
-      'members.user': new ObjectId.createFromHexString(user),
+      'members.user': ObjectId.createFromHexString(user),
       'members.role': userRole,
-      'deletedFor.user': { $ne: new ObjectId.createFromHexString(user) }
+      'deletedFor.user': { $ne: ObjectId.createFromHexString(user) }
     }).populate([
       {
         path: 'latestMessage',

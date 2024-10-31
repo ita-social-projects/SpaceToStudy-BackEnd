@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
+const { ObjectId } = require('mongodb')
 const {
   enums: { STATUS_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
@@ -187,7 +188,7 @@ const offerAggregateOptions = (query, params, user) => {
         from: 'chats',
         let: {
           authorId: { $arrayElemAt: ['$author._id', 0] },
-          userId: new mongoose.Types.ObjectId(userId)
+          userId: ObjectId.createFromTime(userId)
         },
         pipeline: [
           {

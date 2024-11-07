@@ -28,7 +28,11 @@ paths:
                       needAction: 'tutor',
                       offer: '66ec53d40d9d9983a9525421',
                       price: 500,
-                      proficiencyLevel: 'Beginner',
+                      proficiencyLevel: ['Beginner'],
+                      description: "I'll teach you how to follow healthy diet",
+                      languages: ['English'],
+                      subject: '656605be8bebd72f0be55a3d',
+                      category: '6566040f8bebd72f0be55a28',
                       receiver: '66a7abbab3168fa64a8f5af1',
                       receiverRole: 'tutor',
                       sections:

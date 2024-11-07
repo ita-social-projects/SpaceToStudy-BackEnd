@@ -3,9 +3,13 @@ const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
+const subjectService = require('~/services/subject')
+const { getCategory } = require('~/test/test-utils')
+const { testCooperationData } = require('~/test/test-constants')
 
 const Cooperation = require('~/models/cooperation')
 const Note = require('~/models/note')
+const User = require('~/models/user')
 
 const endpointUrl = (id = ':id', noteId = '') => `/cooperations/${id}/notes/${noteId}`
 
@@ -19,7 +23,8 @@ const testNeedAction = {
   messages: []
 }
 
-const testCooperationData = {
+const cooperationDataMock = {
+  ...testCooperationData,
   price: 99,
   receiverRole: 'tutor',
   proficiencyLevel: 'Beginner',
@@ -42,8 +47,38 @@ const updateNoteData = {
   isPrivate: true
 }
 
+const subjectBody = { name: 'English' }
+
+const testOffer = {
+  price: 330,
+  proficiencyLevel: ['Beginner'],
+  title: 'Test Title',
+  author: '',
+  authorRole: 'tutor',
+  FAQ: [{ question: 'question1', answer: 'answer1' }],
+  description: 'description',
+  languages: ['Ukrainian'],
+  enrolledUsers: [],
+  subject: '',
+  category: {
+    _id: '',
+    appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+  }
+}
+
+const tutorUserData = {
+  role: ['tutor'],
+  firstName: 'albus',
+  lastName: 'dumbledore',
+  email: 'lovemagic@gmail.com',
+  password: 'supermagicpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  lastLogin: new Date().toJSON()
+}
+
 describe('Note controller', () => {
-  let app, server, accessToken, testUser, testCooperation, testNote
+  let app, server, accessToken, testUser, testCooperation, testNote, category, testSubject
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -51,12 +86,30 @@ describe('Note controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app)
+    const testTutorUser = await User.create(tutorUserData)
 
     testUser = TokenService.validateAccessToken(accessToken)
 
+    category = await getCategory()
+
+    subjectBody.category = category._id
+    testSubject = await subjectService.addSubject(subjectBody)
+
+    testOffer.category = category._id
+    testOffer.subject = testSubject._id
+    const testOfferResponse = await app
+      .post('/offers/')
+      .set('Cookie', [`accessToken=${accessToken}`])
+      .send(testOffer)
+
+    cooperationDataMock.category = category._id
+    cooperationDataMock.subject = testSubject._id
+    cooperationDataMock.offer = testOfferResponse.body._id
+    cooperationDataMock.receiver = testTutorUser._id
+
     testCooperation = await Cooperation.create({
-      initiator: testUser.id,
-      ...testCooperationData
+      ...cooperationDataMock,
+      initiator: testUser.id
     })
 
     testNote = await app
@@ -88,15 +141,16 @@ describe('Note controller', () => {
           firstName: expect.any(String),
           lastName: expect.any(String)
         },
-        cooperation: testCooperation._id.toString(),
+        cooperation: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })
+      expect(response.body[0].cooperation.toString()).toBe(testCooperation._id.toString())
     })
 
     it('should throw FORBIDDEN', async () => {
       const cooperation = await Cooperation.create({
-        ...testCooperationData,
+        ...cooperationDataMock,
         initiator: mockedInitiatorId
       })
 
@@ -127,15 +181,16 @@ describe('Note controller', () => {
         _id: testNote._body._id,
         text: expect.any(String),
         author: testUser.id,
-        cooperation: testCooperation._id.toString(),
+        cooperation: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })
+      expect(testNote.body.cooperation.toString()).toBe(testCooperation._id.toString())
     })
 
     it('should throw FORBIDDEN', async () => {
       const cooperation = await Cooperation.create({
-        ...testCooperationData,
+        ...cooperationDataMock,
         initiator: mockedInitiatorId
       })
 
@@ -177,7 +232,7 @@ describe('Note controller', () => {
 
     it('should throw FORBIDDEN', async () => {
       const cooperation = await Cooperation.create({
-        ...testCooperationData,
+        ...cooperationDataMock,
         initiator: mockedInitiatorId
       })
 
@@ -216,7 +271,7 @@ describe('Note controller', () => {
 
     it('should throw FORBIDDEN if cooperation doesn`t exist', async () => {
       const cooperation = await Cooperation.create({
-        ...testCooperationData,
+        ...cooperationDataMock,
         initiator: mockedInitiatorId
       })
 

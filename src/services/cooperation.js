@@ -39,7 +39,20 @@ const cooperationService = {
   },
 
   createCooperation: async (initiator, initiatorRole, data) => {
-    const { offer, proficiencyLevel, additionalInfo, receiver, receiverRole, price, title, sections } = data
+    const {
+      offer,
+      proficiencyLevel,
+      additionalInfo,
+      receiver,
+      receiverRole,
+      price,
+      title,
+      sections,
+      subject,
+      category,
+      description,
+      languages
+    } = data
 
     const initialNeedAction = {
       role: receiverRole,
@@ -58,6 +71,10 @@ const cooperationService = {
       price,
       proficiencyLevel,
       additionalInfo,
+      subject,
+      category,
+      description,
+      languages,
       needAction: initialNeedAction
     })
   },

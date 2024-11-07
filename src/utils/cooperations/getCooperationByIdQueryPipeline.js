@@ -299,74 +299,7 @@ const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden, userId) =>
         from: 'offers',
         localField: 'offer',
         foreignField: '_id',
-        as: 'offer',
-        pipeline: [
-          {
-            $lookup: {
-              from: 'categories',
-              localField: 'category',
-              foreignField: '_id',
-              as: 'category'
-            }
-          },
-          {
-            $lookup: {
-              from: 'users',
-              localField: 'author',
-              foreignField: '_id',
-              as: 'author'
-            }
-          },
-          {
-            $lookup: {
-              from: 'subjects',
-              localField: 'subject',
-              foreignField: '_id',
-              as: 'subject'
-            }
-          },
-          {
-            $set: {
-              author: {
-                $first: '$author'
-              },
-              category: {
-                $first: '$category'
-              },
-              subject: {
-                $first: '$subject'
-              }
-            }
-          },
-          {
-            $project: {
-              _id: true,
-              author: {
-                _id: true,
-                firstName: true,
-                lastName: true,
-                photo: true,
-                professionalSummary: true,
-                totalReviews: true,
-                FAQ: true,
-                averageRating: true
-              },
-              category: {
-                _id: true,
-                name: true,
-                appearance: true
-              },
-              subject: {
-                _id: true,
-                name: true
-              },
-              title: true,
-              languages: true,
-              proficiencyLevel: true,
-              description: true
-            }
-          }
-        ]
+        as: 'offer'
       }
     },
     {
@@ -378,7 +311,7 @@ const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden, userId) =>
           $first: '$receiver'
         },
         offer: {
-          $first: '$offer'
+          $first: '$offer._id'
         }
       }
     },

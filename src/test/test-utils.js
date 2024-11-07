@@ -2,6 +2,7 @@ const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const Category = require('~/models/category')
+
 const createUser = async (app, testUser = {}) => {
   const accessToken = await testUserAuthentication(app, testUser)
   const decodedToken = TokenService.validateAccessToken(accessToken)

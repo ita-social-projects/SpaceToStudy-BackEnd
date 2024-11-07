@@ -100,7 +100,19 @@ definitions:
             price:
               type: number
             proficiencyLevel:
+              type: array
+              items:
+                type: string
+            subject:
               type: string
+            category:
+              type: string
+            description:
+              type: string
+            languages:
+              type: array
+              items:
+                type: string
             receiver:
               type: string
             receiverRole:

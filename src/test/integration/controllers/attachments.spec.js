@@ -16,6 +16,7 @@ const {
 const resourcesCategoryService = require('~/services/resourcesCategory')
 const refs = require('~/consts/models')
 const { INVALID_ID } = require('~/consts/errors')
+const { testCooperationData } = require('~/test/test-constants')
 
 jest.mock('@azure/storage-blob', () => {
   const mockBlockBlobClient = {
@@ -391,16 +392,7 @@ describe('Attachments controller', () => {
 
     it('should delete attachment and remove references from all cooperation sections', async () => {
       const cooperationData = {
-        offer: '82a51e41de4debbccf0b3111',
-        initiator: currentUser.id,
-        initiatorRole: 'tutor',
-        receiver: '62a51e41de4debbccf0b3111',
-        receiverRole: 'student',
-        title: 'Web Development Course',
-        proficiencyLevel: 'Beginner',
-        price: 500,
-        status: 'active',
-        needAction: 'student',
+        ...testCooperationData,
         sections: [
           {
             title: 'Start with HTML',

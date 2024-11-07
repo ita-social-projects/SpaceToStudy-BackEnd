@@ -8,6 +8,7 @@ test-report.xml
 
 # sonar scanner work
 .scannerwork
+debug.json
 
 # misc
 .DS_Store

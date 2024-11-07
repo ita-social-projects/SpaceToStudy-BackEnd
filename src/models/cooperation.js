@@ -7,7 +7,7 @@ const {
   FIELD_MUST_BE_SELECTED,
   VALUE_MUST_BE_ABOVE
 } = require('~/consts/errors')
-const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ } = require('~/consts/models')
+const { USER, OFFER, COOPERATION, FINISHED_QUIZ, QUIZ, SUBJECT, CATEGORY } = require('~/consts/models')
 const {
   enums: {
     COOPERATION_STATUS_ENUM,
@@ -16,7 +16,8 @@ const {
     RESOURCES_TYPES_ENUM,
     RESOURCE_AVAILABILITY_STATUS_ENUM,
     RESOURCE_COMPLETION_STATUS_ENUM,
-    NEED_ACTION_ENUM
+    NEED_ACTION_ENUM,
+    SPOKEN_LANG_ENUM
   }
 } = require('~/consts/validation')
 const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
@@ -68,7 +69,7 @@ const cooperationSchema = new Schema(
       maxLength: [1000, FIELD_CANNOT_BE_LONGER('additional info', 1000)]
     },
     proficiencyLevel: {
-      type: String,
+      type: [String],
       enum: {
         values: PROFICIENCY_LEVEL_ENUM,
         message: ENUM_CAN_BE_ONE_OF('proficiency level', PROFICIENCY_LEVEL_ENUM)
@@ -117,6 +118,30 @@ const cooperationSchema = new Schema(
     finishedQuizzes: {
       type: [Schema.Types.ObjectId],
       ref: FINISHED_QUIZ
+    },
+    subject: {
+      type: Schema.Types.ObjectId,
+      ref: SUBJECT,
+      required: true
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: CATEGORY,
+      required: true
+    },
+    description: {
+      type: String,
+      minLength: [1, FIELD_CANNOT_BE_SHORTER('description', 1)],
+      maxLength: [1000, FIELD_CANNOT_BE_LONGER('description', 1000)],
+      required: [true, FIELD_CANNOT_BE_EMPTY('description')]
+    },
+    languages: {
+      type: [String],
+      enum: {
+        values: SPOKEN_LANG_ENUM,
+        message: ENUM_CAN_BE_ONE_OF('language', SPOKEN_LANG_ENUM)
+      },
+      required: [true, FIELD_MUST_BE_SELECTED('language(s)')]
     },
     sections: [
       {

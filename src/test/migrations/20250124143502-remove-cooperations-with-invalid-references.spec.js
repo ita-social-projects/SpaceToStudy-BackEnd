@@ -1,25 +1,9 @@
 const mongoose = require('mongoose')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const Cooperation = require('~/models/cooperation')
+const { testCooperationData: cooperation } = require('~/test/test-constants')
 
 const migration = require('@root/migrations/20250124143502-remove-cooperations-with-invalid-references')
-
-const cooperation = {
-  initiatorRole: 'student',
-  receiverRole: 'tutor',
-  title: 'Hawking radiation from supermassive black holes',
-  price: 300,
-  status: 'active',
-  needAction: {
-    role: 'student',
-    type: 'price',
-    messages: []
-  },
-  availableQuizzes: [],
-  finishedQuizzes: [],
-  sections: [],
-  proficiencyLevel: 'Intermediate'
-}
 
 const initiatorData = {
   email: 'john_doe@example.com',

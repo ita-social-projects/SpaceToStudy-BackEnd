@@ -25,6 +25,7 @@
     "jest-sonar-reporter": "^2.0.0",
     "lint-staged": "^15.5.0",
     "nodemon": "^3.1.9",
+    "migrate-mongo": "^11.0.0",
     "prettier": "2.5.1",
     "supertest": "^6.2.4"
   },

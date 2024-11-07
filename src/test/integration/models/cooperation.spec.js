@@ -69,7 +69,7 @@ describe('Cooperation model', () => {
       expect(typeof cooperation.receiverRole).toBe('string')
       expect(typeof cooperation.title).toBe('string')
       if (cooperation.proficiencyLevel) {
-        expect(typeof cooperation.proficiencyLevel).toBe('string')
+        expect(typeof cooperation.proficiencyLevel).toBe('object')
       }
       expect(typeof cooperation.price).toBe('number')
       expect(typeof cooperation.status).toBe('string')
@@ -176,7 +176,10 @@ describe('Cooperation model', () => {
     for (const cooperation of cooperations) {
       if (cooperation.proficiencyLevel) {
         const proficiencyLevel = cooperation.proficiencyLevel
-        expect(PROFICIENCY_LEVEL_ENUM).toContain(proficiencyLevel)
+
+        proficiencyLevel.forEach((level) => {
+          expect(PROFICIENCY_LEVEL_ENUM).toContain(level)
+        })
       }
     }
   })

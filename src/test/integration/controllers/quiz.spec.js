@@ -12,6 +12,7 @@ const {
 const resourceType = require('~/consts/resourceType')
 const { roles } = require('~/consts/auth')
 const cooperationService = require('~/services/cooperation')
+const { testCooperationData } = require('~/test/test-constants')
 
 const endpointUrl = '/quizzes/'
 const questionEndpointUrl = '/questions/'
@@ -258,16 +259,7 @@ describe('Quiz controller', () => {
 
     it('should delete lesson and remove references from all cooperation sections', async () => {
       const cooperationData = {
-        offer: '82a51e41de4debbccf0b3111',
-        initiator: currentUser.id,
-        initiatorRole: 'tutor',
-        receiver: '62a51e41de4debbccf0b3111',
-        receiverRole: 'student',
-        title: 'Web Development Course',
-        proficiencyLevel: 'Beginner',
-        price: 500,
-        status: 'active',
-        needAction: 'student',
+        ...testCooperationData,
         sections: [
           {
             title: 'Start with HTML',

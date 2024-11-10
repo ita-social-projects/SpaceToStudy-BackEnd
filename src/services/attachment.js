@@ -97,12 +97,24 @@ const attachmentService = {
     }
 
     await cooperationService.removeResourceFromCooperations(id, resourceType.ATTACHMENT, currentUser)
-
     await Attachment.findByIdAndRemove(id)
   },
 
   deleteAttachmentsByAuthor: async (author) => {
     await Attachment.deleteMany({ author })
+  },
+
+  downloadAttachment: async (id, res) => {
+    const attachment = await Attachment.findById(id).exec()
+
+    if (!attachment) {
+      throw createError(404, DOCUMENT_NOT_FOUND('Attachment'))
+    }
+
+    res.setHeader('Content-Disposition', `attachment; filename="${attachment.fileName}"`)
+    res.setHeader('Content-Type', 'application/octet-stream')
+
+    return await uploadService.downloadFile(attachment.link, ATTACHMENT, res)
   }
 }
 

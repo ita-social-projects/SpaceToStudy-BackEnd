@@ -71,6 +71,20 @@ const uploadService = {
     } catch (error) {
       throw new Error(`Failed to delete file: ${error.message}`)
     }
+  },
+
+
+  downloadFile: async (blobName, containerName, res) => {
+    const blobServiceClient = getBlobServiceClient()
+    const containerClient = blobServiceClient.getContainerClient(containerName)
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName)
+
+    try {
+      const downloadBlockBlobResponse = await blockBlobClient.download()
+      downloadBlockBlobResponse.readableStreamBody.pipe(res)
+    } catch (error) {
+      throw new Error(`Failed to download file: ${error.message}`)
+    }
   }
 }
 

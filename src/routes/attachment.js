@@ -21,6 +21,7 @@ router.use(restrictTo(TUTOR))
 router.param('id', idValidation)
 
 router.get('/', asyncWrapper(attachmentController.getAttachments))
+router.get('/:id', asyncWrapper(attachmentController.downloadAttachment))
 router.post('/', upload.array('files'), asyncWrapper(attachmentController.createAttachments))
 router.use(
   '/:id',

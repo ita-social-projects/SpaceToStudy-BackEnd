@@ -56,9 +56,16 @@ const deleteAttachment = async (req, res) => {
   res.status(204).end()
 }
 
+const downloadAttachment = async (req, res) => {
+  const { id } = req.params
+  const attachment = await attachmentService.downloadAttachment(id, res)
+  res.status(201).json(attachment)
+}
+
 module.exports = {
   getAttachments,
   createAttachments,
   updateAttachment,
-  deleteAttachment
+  deleteAttachment,
+  downloadAttachment
 }

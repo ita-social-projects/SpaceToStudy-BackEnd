@@ -78,7 +78,6 @@ const uploadService = {
     const blobServiceClient = getBlobServiceClient()
     const containerClient = blobServiceClient.getContainerClient(containerName)
     const blockBlobClient = containerClient.getBlockBlobClient(blobName)
-
     try {
       const downloadBlockBlobResponse = await blockBlobClient.download()
       downloadBlockBlobResponse.readableStreamBody.pipe(res)

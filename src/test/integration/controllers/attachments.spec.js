@@ -8,6 +8,8 @@ const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
 const cooperationService = require('~/services/cooperation')
 const uploadService = require('~/services/upload')
+const attachmentService = require('~/services/attachment')
+
 const {
   enums: { RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
@@ -435,5 +437,65 @@ describe('Attachments controller', () => {
         expect(section.resources).toHaveLength(0)
       })
     })
+  })
+})
+
+describe('downloadAttachment', () => {
+  jest.mock('~/models/attachment')
+  jest.mock('~/services/upload')
+  const ATTACHMENT = 'attachment'
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  beforeAll(() => {
+    uploadService.downloadFile = jest.fn()
+  })
+
+  it('should download the attachment successfully when it exists', async () => {
+    const attachmentId = 'testId'
+    const attachment = {
+      _id: attachmentId,
+      fileName: 'testFile.txt',
+      link: 'https://example.com/testFile.txt'
+    }
+
+    const responseMock = {
+      setHeader: jest.fn()
+    }
+
+    jest.spyOn(Attachment, 'findById').mockReturnValue({
+      exec: jest.fn().mockResolvedValue(attachment)
+    })
+    uploadService.downloadFile.mockResolvedValue()
+
+    await expect(attachmentService.downloadAttachment(attachmentId, responseMock)).resolves.toBeUndefined()
+
+    expect(Attachment.findById).toHaveBeenCalledWith(attachmentId)
+    expect(responseMock.setHeader).toHaveBeenCalledWith(
+      'Content-Disposition',
+      `attachment; filename="${attachment.fileName}"`
+    )
+    expect(responseMock.setHeader).toHaveBeenCalledWith('Content-Type', 'application/octet-stream')
+    expect(uploadService.downloadFile).toHaveBeenCalledWith(attachment.link, ATTACHMENT, responseMock)
+  })
+
+  it('should throw a 404 error if the attachment is not found', async () => {
+    const attachmentId = 'nonExistentId'
+    const responseMock = {
+      setHeader: jest.fn()
+    }
+
+    jest.spyOn(Attachment, 'findById').mockReturnValue({
+      exec: jest.fn().mockResolvedValue(null)
+    })
+
+    await expect(attachmentService.downloadAttachment(attachmentId, responseMock)).rejects.toThrow(
+      'Attachment with the specified IDs were not found.'
+    )
+    expect(Attachment.findById).toHaveBeenCalledWith(attachmentId)
+    expect(responseMock.setHeader).not.toHaveBeenCalled()
+    expect(uploadService.downloadFile).not.toHaveBeenCalled()
   })
 })

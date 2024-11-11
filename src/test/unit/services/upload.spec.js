@@ -4,7 +4,7 @@ const uploadService = require('~/services/upload')
 jest.mock('@azure/storage-blob')
 
 const file = {
-  buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
+  buffer: 'data:image/jpegbase64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
   name: 'example.jpg',
   newName: 'exampleName.jpg'
 }
@@ -159,5 +159,53 @@ describe('uploadService', () => {
     await expect(uploadService.updateFile(file.name, file.newName, 'container')).rejects.toThrow(
       'Blob copy did not succeed for: example.jpg'
     )
+  })
+})
+
+describe('downloadFile', () => {
+  jest.mock('azure-storage', () => ({
+    createBlobService: jest.fn()
+  }))
+
+  let blobServiceMock
+
+  beforeEach(() => {
+    blobServiceMock = {
+      getBlobToStream: jest.fn()
+    }
+    azureStorage.createBlobService.mockReturnValue(blobServiceMock)
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should resolve if the blob is downloaded successfully', async () => {
+    const fileName = 'testFile.txt'
+    const containerName = 'test-container'
+    const responseMock = jest.fn()
+
+    blobServiceMock.getBlobToStream.mockImplementation((container, file, res, callback) => {
+      callback(null)
+    })
+
+    await expect(uploadService.downloadFile(fileName, containerName, responseMock)).resolves.toBeUndefined()
+    expect(azureStorage.createBlobService).toHaveBeenCalled()
+    expect(blobServiceMock.getBlobToStream).toHaveBeenCalled()
+  })
+
+  it('should reject if there is an error downloading the blob', async () => {
+    const fileName = 'testFile.txt'
+    const containerName = 'test-container'
+    const responseMock = jest.fn()
+    const error = new Error('Download error')
+
+    blobServiceMock.getBlobToStream.mockImplementation((container, file, res, callback) => {
+      callback(error)
+    })
+
+    await expect(uploadService.downloadFile(fileName, containerName, responseMock)).rejects.toThrow('Download error')
+    expect(azureStorage.createBlobService).toHaveBeenCalled()
+    expect(blobServiceMock.getBlobToStream).toHaveBeenCalled()
   })
 })

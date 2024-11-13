@@ -22,7 +22,7 @@ definitions:
         maxLength: 1000
       attachments:
         type: array
-        $ref: '#/components/attachments'
+        $ref: '#/definitions/attachments'
       category:
         type: string
         $ref: '#/definitions/resourcesCategory'
@@ -45,7 +45,7 @@ definitions:
         type: string
       attachments:
         type: array
-        $ref: '#/components/attachments'
+        $ref: '#/definitions/attachments'
       category:
         type: string
         $ref: '#/definitions/resourcesCategory'

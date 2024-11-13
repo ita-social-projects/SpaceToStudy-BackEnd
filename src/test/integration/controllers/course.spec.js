@@ -1,8 +1,8 @@
 const Course = require('~/models/course')
 
+const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const uploadService = require('~/services/upload')
 const { expectError } = require('~/test/helpers')
-const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const testUserAuthentication = require('~/utils/testUserAuth')
 

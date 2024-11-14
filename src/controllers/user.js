@@ -65,6 +65,18 @@ const deactivateUser = async (req, res) => {
   res.status(204).end()
 }
 
+const blockUser = async (req, res) => {
+  const { role, id: currentUserId } = req.user
+  const { id } = req.params
+
+  if (id !== currentUserId) throw createForbiddenError()
+
+  const BLOCKED_STATUS = STATUS_ENUM[1]
+  await userService.updateStatus(id, { [role]: BLOCKED_STATUS })
+
+  res.status(204).end()
+}
+
 const activateUser = async (req, res) => {
   const { role, id: currentUserId } = req.user
   const { id } = req.params
@@ -102,6 +114,7 @@ module.exports = {
   updateUser,
   updateStatus,
   deactivateUser,
+  blockUser,
   activateUser,
   toggleOfferBookmark,
   getBookmarkedOffers

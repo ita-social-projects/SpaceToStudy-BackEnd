@@ -39,6 +39,6 @@ router.patch(
 
 router.use(restrictTo(ADMIN))
 router.patch('/:id/change-status', isEntityValid({ params }), asyncWrapper(userController.updateStatus))
-router.delete('/:id', isEntityValid({ params }), asyncWrapper(userController.deleteUser))
+router.delete('/:id', isEntityValid({ params }), asyncWrapper(userController.blockUser))
 
 module.exports = router

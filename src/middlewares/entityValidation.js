@@ -13,39 +13,40 @@ const validateSingleEntity = async (id, model, models) => {
   }
 }
 
+const validateEntitiesFromParams = async (params, req, models) => {
+  if (params?.length) {
+    for (const { model, idName } of params) {
+      const id = req.params[idName]
+
+      await validateSingleEntity(id, model, models)
+    }
+  }
+}
+
+const validateEntitiesFromBody = async (body, req, models) => {
+  if (body?.length) {
+    for (const { model, idName } of body) {
+      if (Array.isArray(req.body[idName])) {
+        await Promise.all(
+          req.body[idName].map(async (id) => {
+            await validateSingleEntity(id, model, models)
+          })
+        )
+      } else {
+        const id = req.body[idName]
+        await validateSingleEntity(id, model, models)
+      }
+    }
+  }
+}
+
 const isEntityValid = (entities) => {
   return async (req, _res, next) => {
     const models = []
 
-    let id = null
+    await validateEntitiesFromParams(entities.params, req, models)
 
-    if (entities.params?.length) {
-      for (const { model, idName } of entities.params) {
-        id = req.params[idName]
-
-        await validateSingleEntity(id, model, models)
-      }
-    }
-
-    if (entities.body?.length) {
-      for (const { model, idName } of entities.body) {
-        if (Array.isArray(req.body[idName])) {
-          await Promise.all(
-            req.body[idName].map(async (id) => {
-              const document = await model.findById(id)
-
-              if (!document && !models.includes(model.modelName)) {
-                models.push(model.modelName)
-              }
-            })
-          )
-        } else {
-          id = req.body[idName]
-
-          await validateSingleEntity(id, model, models)
-        }
-      }
-    }
+    await validateEntitiesFromBody(entities.body, req, models)
 
     if (models.length) {
       next(createError(404, DOCUMENT_NOT_FOUND(models)))

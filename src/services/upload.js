@@ -14,14 +14,13 @@ const uploadService = {
     return new Promise((resolve, reject) => {
       const stream = blobService.createWriteStreamToBlockBlob(containerName, blobName, (error) => {
         if (error) {
-          reject(error)
-        } else {
-          resolve(blobName)
+          return reject(new Error(`Failed to upload file: ${error.message}`))
         }
+        resolve(blobName)
       })
 
       stream.on('error', (error) => {
-        reject(error)
+        reject(new Error(`Stream error during upload: ${error.message}`))
       })
 
       stream.end(buffer)
@@ -37,16 +36,16 @@ const uploadService = {
     return new Promise((resolve, reject) => {
       blobService.startCopyBlob(blobUrl, containerName, newBlobName, (error) => {
         if (error) {
-          reject(error)
+          return reject(new Error(`Failed to copy blob: ${error.message}`))
         }
 
         blobService.getBlobProperties(containerName, newBlobName, (err, properties) => {
           if (err) {
-            reject(err)
+            return reject(new Error(`Failed to get blob properties: ${err.message}`))
           }
 
           if (properties.copy.status !== 'success') {
-            reject(name)
+            return reject(new Error(`Blob copy did not succeed for: ${name}`))
           }
 
           uploadService.deleteFile(name, containerName)
@@ -62,7 +61,7 @@ const uploadService = {
     return new Promise((resolve, reject) =>
       blobService.deleteBlobIfExists(containerName, fileName, (err, res) => {
         if (err) {
-          reject(err)
+          return reject(new Error(`Failed to delete file: ${err.message}`))
         }
         resolve(res)
       })

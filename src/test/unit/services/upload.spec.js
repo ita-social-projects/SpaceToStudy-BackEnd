@@ -15,8 +15,12 @@ const getNewBlobName = (blobUrl, containerName, newBlobName, cb) => {
   cb(null, newBlobName)
 }
 
-const getBlobPropertiesStatus = (container, blobName, cb) => {
+const getBlobPropertiesWithSuccessStatus = (container, blobName, cb) => {
   cb(null, { copy: { status: 'success' } })
+}
+
+const getBlobPropertiesWithFailedStatus = (container, blobName, cb) => {
+  cb(null, { copy: { status: 'failed' } })
 }
 
 const getNewBlobNameWithError = (blobUrl, containerName, newBlobName, cb) => {
@@ -89,7 +93,7 @@ describe('uploadService', () => {
 
     const blobServiceStub = {
       startCopyBlob: getNewBlobName,
-      getBlobProperties: getBlobPropertiesStatus
+      getBlobProperties: getBlobPropertiesWithSuccessStatus
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
@@ -118,6 +122,18 @@ describe('uploadService', () => {
 
     await expect(uploadService.updateFile(file.name, file.newName, 'container')).rejects.toThrow(
       'Failed to get blob properties: error'
+    )
+  })
+
+  it('Should show an error if blob copy does not succeed during the update', async () => {
+    const blobServiceStub = {
+      startCopyBlob: getNewBlobName,
+      getBlobProperties: getBlobPropertiesWithFailedStatus
+    }
+    azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+
+    await expect(uploadService.updateFile(file.name, file.newName, 'container')).rejects.toThrow(
+      'Blob copy did not succeed for: example.jpg'
     )
   })
 })

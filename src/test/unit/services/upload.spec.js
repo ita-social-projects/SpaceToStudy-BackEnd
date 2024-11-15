@@ -8,7 +8,7 @@ const getBlobName = (containerName, blobName, cb) => {
 }
 
 const getBlobNameWithError = (containerName, blobName, cb) => {
-  cb('error', blobName)
+  cb(new Error('error'), blobName)
 }
 
 const getNewBlobName = (blobUrl, containerName, newBlobName, cb) => {
@@ -20,11 +20,11 @@ const getBlobPropertiesStatus = (container, blobName, cb) => {
 }
 
 const getNewBlobNameWithError = (blobUrl, containerName, newBlobName, cb) => {
-  cb('error', newBlobName)
+  cb(new Error('error'), newBlobName)
 }
 
 const getBlobPropertiesStatusWithError = (container, blobName, cb) => {
-  cb('error', blobName)
+  cb(new Error('error'), blobName)
 }
 
 const file = {
@@ -47,42 +47,44 @@ describe('uploadService', () => {
     const result = await uploadService.uploadFile(file.name, file.buffer)
 
     expect(result).toContain(blobName)
-  }),
-    it('Should show an err during the upload', async () => {
-      const blobServiceStub = {
-        createWriteStreamToBlockBlob: getBlobNameWithError
-      }
-      azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+  })
 
-      try {
-        await uploadService.uploadFile(file.name, file.buffer)
-      } catch (err) {
-        expect(err).toBe('error')
-      }
-    }),
-    it('Should delete a file from Azure Blob Storage', async () => {
-      const blobServiceStub = {
-        deleteBlobIfExists: getBlobName
-      }
-      azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+  it('Should show an err during the upload', async () => {
+    const blobServiceStub = {
+      createWriteStreamToBlockBlob: getBlobNameWithError
+    }
+    azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
-      const result = await uploadService.deleteFile(fileName)
+    await expect(uploadService.uploadFile(file.name, file.buffer, 'container')).rejects.toThrow(
+      'Failed to upload file: error'
+    )
+  })
 
-      expect(result).toContain(fileName)
-    }),
-    it('Should show an error during the delete', async () => {
-      const blobServiceStub = {
-        deleteBlobIfExists: getBlobNameWithError
-      }
-      azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+  it('Should delete a file from Azure Blob Storage', async () => {
+    const blobServiceStub = {
+      deleteBlobIfExists: getBlobName
+    }
+    azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
-      try {
-        await uploadService.deleteFile(fileName)
-      } catch (err) {
-        expect(err).toBe('error')
-      }
-    })
-  it('should update a file in Azure Blob Storage successfully', async () => {
+    const result = await uploadService.deleteFile(fileName)
+
+    expect(result).toContain(fileName)
+  })
+
+  it('Should show an error during the delete', async () => {
+    const blobServiceStub = {
+      deleteBlobIfExists: getBlobNameWithError
+    }
+    azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
+
+    try {
+      await uploadService.deleteFile(fileName)
+    } catch (err) {
+      expect(err).toBe('error')
+    }
+  })
+
+  it('Should update a file in Azure Blob Storage successfully', async () => {
     const blobNameNew = `${file.newName}`
 
     const blobServiceStub = {
@@ -95,17 +97,16 @@ describe('uploadService', () => {
 
     expect(result).toContain(blobNameNew)
   })
+
   it('Should show an err on startCopyBlob during the update', async () => {
     const blobServiceStub = {
       startCopyBlob: getNewBlobNameWithError
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
-    try {
-      await uploadService.updateFile(file.name, file.newName, file.buffer)
-    } catch (err) {
-      expect(err).toBe('error')
-    }
+    await expect(uploadService.updateFile(file.name, file.newName, 'container')).rejects.toThrow(
+      'Failed to copy blob: error'
+    )
   })
 
   it('Should show an err on getBlobProperties during the update', async () => {
@@ -115,10 +116,8 @@ describe('uploadService', () => {
     }
     azureStorage.createBlobService.mockImplementationOnce(() => blobServiceStub)
 
-    try {
-      await uploadService.updateFile(file.name, file.newName, file.buffer)
-    } catch (err) {
-      expect(err).toBe('error')
-    }
+    await expect(uploadService.updateFile(file.name, file.newName, 'container')).rejects.toThrow(
+      'Failed to get blob properties: error'
+    )
   })
 })

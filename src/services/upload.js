@@ -61,7 +61,7 @@ const uploadService = {
     return new Promise((resolve, reject) =>
       blobService.deleteBlobIfExists(containerName, fileName, (err, res) => {
         if (err) {
-          return reject(new Error(`Failed to delete file: ${err.message}`))
+          reject(new Error(`Failed to delete file: ${err.message}`))
         }
         resolve(res)
       })

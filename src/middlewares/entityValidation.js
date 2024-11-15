@@ -1,6 +1,18 @@
 const { DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 
+const validateSingleEntity = async (id, model, models) => {
+  if (!id) {
+    return
+  }
+
+  const document = await model.findById(id)
+
+  if (!document && !models.includes(model.modelName)) {
+    models.push(model.modelName)
+  }
+}
+
 const isEntityValid = (entities) => {
   return async (req, _res, next) => {
     const models = []
@@ -11,11 +23,7 @@ const isEntityValid = (entities) => {
       for (const { model, idName } of entities.params) {
         id = req.params[idName]
 
-        if (!id) continue
-
-        const document = await model.findById(id)
-
-        if (!document && !models.includes(model.modelName)) models.push(model.modelName)
+        await validateSingleEntity(id, model, models)
       }
     }
 
@@ -34,11 +42,7 @@ const isEntityValid = (entities) => {
         } else {
           id = req.body[idName]
 
-          if (!id) continue
-
-          const document = await model.findById(id)
-
-          if (!document && !models.includes(model.modelName)) models.push(model.modelName)
+          await validateSingleEntity(id, model, models)
         }
       }
     }

@@ -4,7 +4,75 @@ const {
   enums: { STATUS_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
 
+const getSearchMatch = (search, isSearchFromOwnRequests) => {
+  const fullName = search.trim().split(' ')
+  const [firstName, lastName] = fullName
+
+  const firstNameRegex = getRegex(firstName)
+  const lastNameRegex = getRegex(lastName)
+
+  const additionalFields = isSearchFromOwnRequests
+    ? [{ 'subject.name': getRegex(search) }]
+    : [
+        { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
+        { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
+      ]
+
+  return { $or: [{ title: getRegex(search) }, ...additionalFields] }
+}
+
+const getSortOptions = (sort, authorRole) => {
+  const sortOption = {}
+
+  if (typeof sort === 'object' && sort.order && sort.orderBy) {
+    const { order, orderBy } = sort
+    const sortOrder = order === 'asc' ? 1 : -1
+    sortOption[orderBy] = sortOrder
+  } else if (typeof sort === 'string') {
+    if (sort === 'priceAsc') {
+      sortOption['price'] = 1
+    } else if (sort === 'priceDesc') {
+      sortOption['price'] = -1
+    } else if (sort === 'rating') {
+      sortOption[`author.averageRating.${authorRole}`] = -1
+    } else {
+      sortOption[sort] = -1
+    }
+  }
+
+  return sortOption
+}
+
+const getActiveRoleMatch = (authorRole) => {
+  const ACTIVE_STATUS = STATUS_ENUM[0]
+
+  if (authorRole) {
+    return {
+      [`author.status.${authorRole}`]: ACTIVE_STATUS
+    }
+  } else {
+    const cases = LOGIN_ROLE_ENUM.map((role) => ({
+      case: { $eq: ['$authorRole', role] },
+      then: { $eq: [`$author.status.${role}`, ACTIVE_STATUS] }
+    }))
+
+    return {
+      $expr: {
+        $switch: {
+          branches: cases
+        }
+      }
+    }
+  }
+}
+
 const offerAggregateOptions = (query, params, user) => {
+  console.log('QUERY: ')
+  console.log(query)
+  console.log('PARAMS: ')
+  console.log(params)
+  console.log('USER: ')
+  console.log(user)
   const {
     authorRole,
     price,
@@ -25,39 +93,9 @@ const offerAggregateOptions = (query, params, user) => {
 
   const match = {}
 
-  if (search) {
-    const searchArray = search.trim().split(' ')
-    const firstNameRegex = getRegex(searchArray[0])
-    const lastNameRegex = getRegex(searchArray[1])
+  const searchMatch = search ? getSearchMatch(search, Boolean(authorId)) : {}
 
-    const additionalFields = authorId
-      ? [{ 'subject.name': getRegex(search) }]
-      : [
-          { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
-          { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
-        ]
-
-    match['$or'] = [{ title: getRegex(search) }, ...additionalFields]
-  }
-
-  if (authorId !== userId) {
-    const ACTIVE_STATUS = STATUS_ENUM[0]
-
-    if (authorRole) {
-      match[`author.status.${authorRole}`] = ACTIVE_STATUS
-    } else {
-      const cases = LOGIN_ROLE_ENUM.map((role) => ({
-        case: { $eq: ['$authorRole', role] },
-        then: { $eq: [`$author.status.${role}`, ACTIVE_STATUS] }
-      }))
-
-      match['$expr'] = {
-        $switch: {
-          branches: cases
-        }
-      }
-    }
-  }
+  const activeRoleMatch = authorId !== userId ? getActiveRoleMatch(authorRole) : {}
 
   if (authorId) {
     match['author._id'] = mongoose.Types.ObjectId(authorId)
@@ -108,24 +146,12 @@ const offerAggregateOptions = (query, params, user) => {
     match._id = { $ne: mongoose.Types.ObjectId(excludedOfferId) }
   }
 
-  let sortOption = {}
+  const sortOption = sort ? getSortOptions(sort, authorRole) : {}
 
-  if (sort) {
-    if (typeof sort === 'object' && sort.order && sort.orderBy) {
-      const { order, orderBy } = sort
-      const sortOrder = order === 'asc' ? 1 : -1
-      sortOption = { [orderBy]: sortOrder }
-    } else if (typeof sort === 'string') {
-      if (sort === 'priceAsc') {
-        sortOption['price'] = 1
-      } else if (sort === 'priceDesc') {
-        sortOption['price'] = -1
-      } else if (sort === 'rating') {
-        sortOption[`author.averageRating.${authorRole}`] = -1
-      } else {
-        sortOption[sort] = -1
-      }
-    }
+  const resultMatch = {
+    ...match,
+    ...searchMatch,
+    ...activeRoleMatch
   }
 
   return [
@@ -220,7 +246,7 @@ const offerAggregateOptions = (query, params, user) => {
       $unwind: '$subject'
     },
     {
-      $match: match
+      $match: resultMatch
     },
     {
       $sort: sortOption

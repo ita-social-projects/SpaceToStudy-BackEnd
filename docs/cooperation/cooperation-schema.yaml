@@ -30,6 +30,48 @@ definitions:
             - active
             - declined
             - closed
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              description:
+                type: string
+              resources:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    resource:
+                      type: object
+                      additionalProperties: true
+                    resourceType:
+                      type: string
+                      enum:
+                        - lesson
+                        - quiz
+                        - attachment
+                    availability:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                          enum:
+                            - open
+                            - closed
+                            - openFrom
+                          default: open
+                        date:
+                          type: string
+                          format: date-time
+                          default: null
+                    completionStatus:
+                      type: string
+                      enum:
+                        - active
+                        - completed
         needAction:
           type: string
           enum:
@@ -107,6 +149,11 @@ definitions:
                         type: string
                         format: date-time
                         default: null
+                  completionStatus:
+                    type: string
+                    enum:
+                      - active
+                      - completed
       needAction:
         type: string
         enum:

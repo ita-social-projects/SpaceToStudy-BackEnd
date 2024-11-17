@@ -14,7 +14,8 @@ const {
     PROFICIENCY_LEVEL_ENUM,
     MAIN_ROLE_ENUM,
     RESOURCES_TYPES_ENUM,
-    RESOURCE_AVAILABILITY_STATUS_ENUM
+    RESOURCE_AVAILABILITY_STATUS_ENUM,
+    RESOURCE_COMPLETION_STATUS_ENUM
   }
 } = require('~/consts/validation')
 const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
@@ -144,6 +145,14 @@ const cooperationSchema = new Schema(
                 type: Date,
                 default: null
               }
+            },
+            completionStatus: {
+              type: String,
+              enum: {
+                values: RESOURCE_COMPLETION_STATUS_ENUM,
+                message: ENUM_CAN_BE_ONE_OF('resource completion status', RESOURCE_COMPLETION_STATUS_ENUM)
+              },
+              default: RESOURCE_COMPLETION_STATUS_ENUM[0]
             }
           }
         ]

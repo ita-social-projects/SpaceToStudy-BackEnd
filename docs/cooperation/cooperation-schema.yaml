@@ -30,6 +30,16 @@ definitions:
             - active
             - declined
             - closed
+        availableQuizzes:
+          type: array
+          items:
+            type: string
+            ref: '#components/quiz'
+        finishedQuizzes:
+          type: array
+          items:
+            type: string
+            ref: '#components/finishedQuiz'
         sections:
           type: array
           items:
@@ -112,6 +122,16 @@ definitions:
           - active
           - declined
           - closed
+      availableQuizzes:
+        type: array
+        items:
+          type: string
+          ref: '#components/quiz'
+      finishedQuizzes:
+        type: array
+        items:
+          type: string
+          ref: '#components/finishedQuiz'
       sections:
         type: array
         items:

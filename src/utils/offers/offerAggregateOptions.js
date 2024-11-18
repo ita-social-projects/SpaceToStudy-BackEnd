@@ -67,12 +67,6 @@ const getActiveRoleMatch = (authorRole) => {
 }
 
 const offerAggregateOptions = (query, params, user) => {
-  console.log('QUERY: ')
-  console.log(query)
-  console.log('PARAMS: ')
-  console.log(params)
-  console.log('USER: ')
-  console.log(user)
   const {
     authorRole,
     price,

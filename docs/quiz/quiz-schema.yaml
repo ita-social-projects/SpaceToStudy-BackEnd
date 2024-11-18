@@ -48,11 +48,15 @@ definitions:
       description:
         type: string
       category:
-        $ref: '#/definitions/resourcesCategory'
+        type: string
+        description: _id
+        ref: '#/definitions/resourcesCategory'
       items:
         type: array
         items:
-          $ref: '#/definitions/question'
+          type: string
+          description: _id
+          ref: '#/components/question'
       settings:
         type: object
         properties:

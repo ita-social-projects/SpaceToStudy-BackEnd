@@ -133,9 +133,13 @@ definitions:
     type: object
     properties:
       offer:
-        $ref: '#/definitions/offer'
+        type: string
+        description: _id
+        ref: '#/definitions/offer'
       receiver:
-        $ref: '#/definitions/user'
+        type: string
+        description: _id
+        ref: '#/definitions/user'
       receiverRole:
         type: string
       price:

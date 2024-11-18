@@ -30,7 +30,12 @@ paths:
                   needAction: student
                   availableQuizzes: []
                   finishedQuizzes: []
-                  sections: []
+                  user:
+                    _id: '6255bc080a75adf9223df100'
+                    firstName: 'Emily'
+                    lastName: 'Jhonson'
+                    photo: ''
+                    role: 'student'
                   createdAt: 2021-05-09T11:34:53.243+00:00
                   updatedAt: 2022-07-02T11:59:53.243+00:00
                 - _id: 63ebc6fbd2f34037d0aba314
@@ -46,7 +51,12 @@ paths:
                   needAction: tutor
                   availableQuizzes: []
                   finishedQuizzes: []
-                  sections: []
+                  user:
+                    _id: '6255bc080a75adf9223df100'
+                    firstName: 'Emily'
+                    lastName: 'Jhonson'
+                    photo: ''
+                    role: 'student'
                   createdAt: 2021-04-09T11:34:53.243+00:00
                   updatedAt: 2022-09-02T11:59:53.243+00:00
         401:
@@ -74,8 +84,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/cooperation'
+              $ref: '#/definitions/cooperationBody'
             example:
+              title: Violin lessons
+              proficiencyLevel: Test Preparation
               offer: 63ebc6fbd2f34037d0aba791
               receiver: 6255bc080a75adf9223df100
               receiverRole: student
@@ -147,7 +159,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/cooperationResponse'
+                $ref: '#/definitions/cooperation'
               example:
                 _id: 8755bc080a00adr9243df106
                 offer:

@@ -8,32 +8,31 @@ definitions:
           type: string
         title:
           type: string
-        description: 
+        description:
           type: string
         items:
           type: array
-          $ref: '#/components/question'
+          items:
+            $ref: '#/definitions/question'
         author:
-          type: string
           $ref: '#/components/user'
         category:
-          type: string
           $ref: '#/definitions/resourcesCategory'
-        settings: 
+        settings:
           type: object
-          properties: 
+          properties:
             view:
               type: string
-              enum: 
+              enum:
                 - Stepper
                 - Scroll
             shuffle:
               type: boolean
             pointValues:
               type: boolean
-            scoredResponses: 
+            scoredResponses:
               type: boolean
-            correctAnswers: 
+            correctAnswers:
               type: boolean
         createdAt:
           type: string
@@ -46,30 +45,30 @@ definitions:
     properties:
       title:
         type: string
-      description: 
+      description:
         type: string
       category:
-        type: string
         $ref: '#/definitions/resourcesCategory'
       items:
         type: array
-        $ref: '#/components/question'
-      settings: 
-          type: object
-          properties: 
-            view:
-              type: string
-              enum: 
-                - Stepper
-                - Scroll
-            shuffle:
-              type: boolean
-            pointValues:
-              type: boolean
-            scoredResponses: 
-              type: boolean
-            correctAnswers: 
-              type: boolean
+        items:
+          $ref: '#/definitions/question'
+      settings:
+        type: object
+        properties:
+          view:
+            type: string
+            enum:
+              - Stepper
+              - Scroll
+          shuffle:
+            type: boolean
+          pointValues:
+            type: boolean
+          scoredResponses:
+            type: boolean
+          correctAnswers:
+            type: boolean
   quiz:
     type: object
     properties:
@@ -77,37 +76,35 @@ definitions:
         type: string
       title:
         type: string
-      description: 
+      description:
         type: string
       items:
         type: array
-        $ref: '#/components/question'
+        items:
+          $ref: '#/definitions/question'
       author:
-        type: string
-        $ref: '#/components/user'
+        $ref: '#/definitions/user'
       category:
-        type: string
         $ref: '#/definitions/resourcesCategory'
-      settings: 
-          type: object
-          properties: 
-            view:
-              type: string
-              enum: 
-                - Stepper
-                - Scroll
-            shuffle:
-              type: boolean
-            pointValues:
-              type: boolean
-            scoredResponses: 
-              type: boolean
-            correctAnswers: 
-              type: boolean
+      settings:
+        type: object
+        properties:
+          view:
+            type: string
+            enum:
+              - Stepper
+              - Scroll
+          shuffle:
+            type: boolean
+          pointValues:
+            type: boolean
+          scoredResponses:
+            type: boolean
+          correctAnswers:
+            type: boolean
       createdAt:
         type: string
         format: date-time
       updatedAt:
         type: string
         format: date-time
-        

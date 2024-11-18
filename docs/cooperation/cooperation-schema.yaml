@@ -7,15 +7,12 @@ definitions:
         _id:
           type: string
         offer:
-          type: string
-          ref: '#components/offer'
+          $ref: '#/definitions/offer'
         initiator:
-          type: object
           $ref: '#/definitions/cooperationUser'
         initiatorRole:
           type: string
         receiver:
-          type: object
           $ref: '#/definitions/cooperationUser'
         receiverRole:
           type: string
@@ -46,13 +43,11 @@ definitions:
         availableQuizzes:
           type: array
           items:
-            type: string
-            ref: '#components/quiz'
+            $ref: '#/definitions/quiz'
         finishedQuizzes:
           type: array
           items:
-            type: string
-            ref: '#components/finishedQuiz'
+            $ref: '#/definitions/finishedQuiz'
         needAction:
           type: string
           enum:
@@ -78,15 +73,12 @@ definitions:
       _id:
         type: string
       offer:
-        type: string
-        ref: '#components/offer'
+        $ref: '#/definitions/offer'
       initiator:
-        type: object
         $ref: '#/definitions/cooperationUser'
       initiatorRole:
         type: string
       receiver:
-        type: object
         $ref: '#/definitions/cooperationUser'
       receiverRole:
         type: string
@@ -117,17 +109,14 @@ definitions:
       availableQuizzes:
         type: array
         items:
-          type: string
-          ref: '#components/quiz'
+          $ref: '#/definitions/quiz'
       finishedQuizzes:
         type: array
         items:
-          type: string
-          ref: '#components/finishedQuiz'
+          $ref: '#/definitions/finishedQuiz'
       sections:
         type: array
         items:
-          type: object
           $ref: '#/definitions/section'
       needAction:
         type: string
@@ -144,10 +133,8 @@ definitions:
     type: object
     properties:
       offer:
-        type: string
-        ref: '#components/offer'
+        $ref: '#/definitions/offer'
       receiver:
-        type: object
         $ref: '#/definitions/cooperationUser'
       receiverRole:
         type: string
@@ -171,7 +158,6 @@ definitions:
       sections:
         type: array
         items:
-          type: object
           $ref: '#/definitions/section'
     required:
       - title

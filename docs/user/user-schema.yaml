@@ -221,8 +221,17 @@ definitions:
             type: number
       nativeLanguage:
         type: string
-      notificatoinSettings:
-
+      notificationSettings:
+        type: object
+        properties:
+          isOfferStatusNotification:
+            type: boolean
+          isChatNotification:
+            type: boolean
+          isSimilarOffersNotification:
+            type: boolean
+          isEmailNotification:
+            type: boolean
       address:
         type: object
         properties:

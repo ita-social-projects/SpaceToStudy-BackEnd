@@ -9,11 +9,11 @@ definitions:
         offer:
           $ref: '#/definitions/offer'
         initiator:
-          $ref: '#/definitions/cooperationUser'
+          $ref: '#/definitions/user'
         initiatorRole:
           type: string
         receiver:
-          $ref: '#/definitions/cooperationUser'
+          $ref: '#/definitions/user'
         receiverRole:
           type: string
         price:
@@ -75,11 +75,11 @@ definitions:
       offer:
         $ref: '#/definitions/offer'
       initiator:
-        $ref: '#/definitions/cooperationUser'
+        $ref: '#/definitions/user'
       initiatorRole:
         type: string
       receiver:
-        $ref: '#/definitions/cooperationUser'
+        $ref: '#/definitions/user'
       receiverRole:
         type: string
       price:
@@ -135,7 +135,7 @@ definitions:
       offer:
         $ref: '#/definitions/offer'
       receiver:
-        $ref: '#/definitions/cooperationUser'
+        $ref: '#/definitions/user'
       receiverRole:
         type: string
       price:
@@ -206,83 +206,3 @@ definitions:
               enum:
                 - active
                 - completed
-  cooperationUser:
-    type: object
-    properties:
-      address:
-        type: object
-        properties:
-          country:
-            type: string
-          city:
-            type: string
-      mainSubjects:
-        type: object
-        properties:
-          student:
-            type: array
-            items:
-              type: string
-          tutor:
-            type: array
-            items:
-              type: object
-              properties:
-                category:
-                  type: string
-                subjects:
-                  type: array
-                  items:
-                    type: string
-                _id:
-                  type: string
-      totalReviews:
-        type: object
-        properties:
-          student:
-            type: integer
-          tutor:
-            type: integer
-      averageRating:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
-      status:
-        type: object
-        properties:
-          student:
-            type: string
-          tutor:
-            type: string
-          admin:
-            type: string
-      videoLink:
-        type: object
-        properties:
-          tutor:
-            type: string
-      professionalBlock:
-        type: object
-        properties:
-          awards:
-            type: string
-          scientificActivities:
-            type: string
-          workExperience:
-            type: string
-          education:
-            type: string
-      notificationSettings:
-        type: object
-        properties:
-          isOfferStatusNotification:
-            type: boolean
-          isChatNotification:
-            type: boolean
-          isSimilarOffersNotification:
-            type: boolean
-          isEmailNotification:
-            type: boolean

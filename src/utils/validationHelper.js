@@ -13,8 +13,26 @@ const validateRequired = (schemaFieldKey, required, field) => {
   }
 }
 
+const castValueToType = (value, type) => {
+  if (type === 'boolean' && value === 'true') {
+    return true
+  }
+
+  if (type === 'boolean' && value === 'false') {
+    return false
+  }
+
+  if (type === 'number') {
+    return Number(value)
+  }
+
+  return value
+}
+
 const validateType = (schemaFieldKey, type, field) => {
-  if (type != typeof field) {
+  const typeCastedField = castValueToType(field, type)
+
+  if (type != typeof typeCastedField) {
     throw createError(422, FIELD_IS_NOT_OF_PROPER_TYPE(schemaFieldKey, type))
   }
 }

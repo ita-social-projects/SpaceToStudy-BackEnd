@@ -1,20 +1,22 @@
 const { createError } = require('~/utils/errorsHelper')
 const { BODY_IS_NOT_DEFINED } = require('~/consts/errors')
 const { validateRequired, validateFunc } = require('~/utils/validationHelper')
+const requestDataSources = require('~/consts/requestDataSources')
 
-const validationMiddleware = (schema) => {
+const validationMiddleware = (schema, source = requestDataSources.BODY) => {
   return (req, _res, next) => {
-    const { body } = req
-    if (!body) {
+    const data = req[source]
+
+    if (!data && source === requestDataSources.body) {
       throw createError(422, BODY_IS_NOT_DEFINED)
     }
 
     Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
-      const reqBodyField = body[schemaFieldKey]
-      validateRequired(schemaFieldKey, schemaFieldValue?.required, reqBodyField)
-      if (reqBodyField) {
+      const reqSourceField = data[schemaFieldKey]
+      validateRequired(schemaFieldKey, schemaFieldValue?.required, reqSourceField)
+      if (reqSourceField) {
         Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
-          validateFunc[validationType](schemaFieldKey, validationValue, reqBodyField)
+          validateFunc[validationType](schemaFieldKey, validationValue, reqSourceField)
         })
       }
     })

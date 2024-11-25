@@ -4,6 +4,7 @@ const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { restrictTo, authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
+const validationMiddleware = require('~/middlewares/validation')
 
 const userController = require('~/controllers/user')
 const reviewRouter = require('~/routes/review')
@@ -13,6 +14,8 @@ const User = require('~/models/user')
 const {
   roles: { ADMIN }
 } = require('~/consts/auth')
+const getUserByIdValidationSchema = require('~/validation/schemas/getUserById')
+const requestDataSources = require('~/consts/requestDataSources')
 
 const params = [{ model: User, idName: 'id' }]
 
@@ -26,7 +29,12 @@ router.use('/:id/cooperations', isEntityValid({ params }), cooperationRouter)
 router.use('/:id/offers', isEntityValid({ params }), offerRouter)
 
 router.get('/', asyncWrapper(userController.getUsers))
-router.get('/:id', isEntityValid({ params }), asyncWrapper(userController.getUserById))
+router.get(
+  '/:id',
+  isEntityValid({ params }),
+  validationMiddleware(getUserByIdValidationSchema, requestDataSources.QUERY),
+  asyncWrapper(userController.getUserById)
+)
 router.get('/:id/bookmarks/offers', isEntityValid({ params }), asyncWrapper(userController.getBookmarkedOffers))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
 router.patch('/deactivate/:id', isEntityValid({ params }), asyncWrapper(userController.deactivateUser))

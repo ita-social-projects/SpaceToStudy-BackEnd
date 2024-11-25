@@ -220,6 +220,23 @@ const userSchema = new Schema(
       workExperience: { type: String, default: '', maxLength: [1000, FIELD_CANNOT_BE_LONGER('work experience', 1000)] },
       education: { type: String, default: '', maxLength: [1000, FIELD_CANNOT_BE_LONGER('education', 1000)] }
     },
+    aboutStudent: {
+      personalIntroduction: {
+        type: String,
+        default: '',
+        maxLength: [1000, FIELD_CANNOT_BE_LONGER('personal introduction', 1000)]
+      },
+      learningGoals: {
+        type: String,
+        default: '',
+        maxLength: [1000, FIELD_CANNOT_BE_LONGER('learning goals', 1000)]
+      },
+      learningActivities: {
+        type: String,
+        default: '',
+        maxLength: [1000, FIELD_CANNOT_BE_LONGER('learning activities', 1000)]
+      }
+    },
     notificationSettings: {
       isOfferStatusNotification: { type: Boolean, default: true },
       isChatNotification: { type: Boolean, default: true },

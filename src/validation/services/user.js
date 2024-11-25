@@ -30,7 +30,16 @@ const allowedTutorFieldsForUpdate = {
   }
 }
 
+const allowedStudentFieldsForUpdate = {
+  aboutStudent: {
+    personalIntroduction: true,
+    learningGoals: true,
+    learningActivities: true
+  }
+}
+
 module.exports = {
   allowedUserFieldsForUpdate,
-  allowedTutorFieldsForUpdate
+  allowedTutorFieldsForUpdate,
+  allowedStudentFieldsForUpdate
 }

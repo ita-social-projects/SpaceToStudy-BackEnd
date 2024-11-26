@@ -1,13 +1,13 @@
 const { createError } = require('~/utils/errorsHelper')
 const { BODY_IS_NOT_DEFINED } = require('~/consts/errors')
 const { validateRequired, validateFunc } = require('~/utils/validationHelper')
-const requestDataSources = require('~/consts/requestDataSources')
+const requestDataSource = require('~/consts/requestDataSource')
 
-const validationMiddleware = (schema, source = requestDataSources.BODY) => {
+const validationMiddleware = (schema, source = requestDataSource.BODY) => {
   return (req, _res, next) => {
     const data = req[source]
 
-    if (!data && source === requestDataSources.body) {
+    if (!data && source === requestDataSource.body) {
       throw createError(422, BODY_IS_NOT_DEFINED)
     }
 

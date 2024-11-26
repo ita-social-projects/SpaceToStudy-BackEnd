@@ -15,7 +15,7 @@ const {
   roles: { ADMIN }
 } = require('~/consts/auth')
 const getUserByIdValidationSchema = require('~/validation/schemas/getUserById')
-const requestDataSources = require('~/consts/requestDataSources')
+const requestDataSource = require('~/consts/requestDataSource')
 
 const params = [{ model: User, idName: 'id' }]
 
@@ -32,7 +32,7 @@ router.get('/', asyncWrapper(userController.getUsers))
 router.get(
   '/:id',
   isEntityValid({ params }),
-  validationMiddleware(getUserByIdValidationSchema, requestDataSources.QUERY),
+  validationMiddleware(getUserByIdValidationSchema, requestDataSource.QUERY),
   asyncWrapper(userController.getUserById)
 )
 router.get('/:id/bookmarks/offers', isEntityValid({ params }), asyncWrapper(userController.getBookmarkedOffers))

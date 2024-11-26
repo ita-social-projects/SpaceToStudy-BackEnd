@@ -1,6 +1,5 @@
-const mongoose = require('mongoose')
 const { CHAT_ALREADY_EXISTS } = require('~/consts/errors')
-
+const { ObjectId } = require('mongodb')
 const Chat = require('~/models/chat')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 
@@ -42,9 +41,9 @@ const chatService = {
     const { id: user, role: userRole } = currentUser
 
     return await Chat.find({
-      'members.user': mongoose.Types.ObjectId(user),
+      'members.user': ObjectId.createFromHexString(user),
       'members.role': userRole,
-      'deletedFor.user': { $ne: mongoose.Types.ObjectId(user) }
+      'deletedFor.user': { $ne: ObjectId.createFromHexString(user) }
     }).populate([
       {
         path: 'latestMessage',
@@ -67,7 +66,7 @@ const chatService = {
       throw createForbiddenError()
     }
 
-    await Chat.findByIdAndRemove(id).exec()
+    await Chat.findByIdAndDelete(id).exec()
   },
   markAsDeletedForCurrentUser: async (id, currentUser) => {
     const chat = await Chat.findById(id).exec()

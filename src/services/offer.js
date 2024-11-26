@@ -1,9 +1,9 @@
-const { ObjectId } = require('mongodb')
 const Offer = require('~/models/offer')
 
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedOfferFieldsForUpdate } = require('~/validation/services/offer')
 const { createForbiddenError } = require('~/utils/errorsHelper')
+const mongoose = require('mongoose')
 
 const offerService = {
   getOffers: async (pipeline) => {
@@ -26,12 +26,12 @@ const offerService = {
 
     const [chatLookup] = await Offer.aggregate([
       {
-        $match: { _id: ObjectId(id) }
+        $match: { _id: mongoose.Types.ObjectId.createFromHexString(id) }
       },
       {
         $lookup: {
           from: 'chats',
-          let: { authorId: '$author', userId: ObjectId(userId) },
+          let: { authorId: '$author', userId: mongoose.Types.ObjectId.createFromHexString(userId) },
           pipeline: [
             {
               $match: {
@@ -112,7 +112,7 @@ const offerService = {
   },
 
   deleteOffer: async (id) => {
-    await Offer.findByIdAndRemove(id).exec()
+    await Offer.findByIdAndDelete(id).exec()
   }
 }
 

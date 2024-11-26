@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
+const { ObjectId } = require('mongodb')
 
 const coopsAggregateOptions = (query, params = {}) => {
   const { id, role } = params
@@ -20,8 +21,8 @@ const coopsAggregateOptions = (query, params = {}) => {
     match.$and = [
       {
         $or: [
-          { initiator: mongoose.Types.ObjectId(id), initiatorRole: role },
-          { receiver: mongoose.Types.ObjectId(id), receiverRole: role }
+          { initiator: mongoose.Types.ObjectId.createFromHexString(id), initiatorRole: role },
+          { receiver: mongoose.Types.ObjectId.createFromHexString(id), receiverRole: role }
         ]
       }
     ]
@@ -44,7 +45,7 @@ const coopsAggregateOptions = (query, params = {}) => {
       $lookup: {
         from: 'users',
         let: {
-          lookUpField: { $cond: [{ $eq: ['$initiator', mongoose.Types.ObjectId(id)] }, '$receiver', '$initiator'] },
+          lookUpField: { $cond: [{ $eq: ['$initiator', ObjectId.createFromTime(id)] }, '$receiver', '$initiator'] },
           role: {
             $cond: [{ $eq: ['$initiatorRole', role] }, '$receiverRole', '$initiatorRole']
           }

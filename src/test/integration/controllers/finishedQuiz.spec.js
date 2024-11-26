@@ -45,7 +45,7 @@ describe('Quiz controller', () => {
   let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -60,7 +60,7 @@ describe('Quiz controller', () => {
 
     testFinishedQuiz = await app
       .post(endpointUrl)
-      .send({ quiz: testQuiz._id, ...testFinishedQuizData })
+      .send({ quiz: testQuiz._id.toString(), ...testFinishedQuizData })
       .set('Cookie', [`accessToken=${accessToken}`])
   })
 
@@ -79,7 +79,7 @@ describe('Quiz controller', () => {
         _id: expect.any(String),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
-        quiz: testQuiz._id,
+        quiz: testQuiz._id.toString(),
         ...testFinishedQuizData
       })
     })

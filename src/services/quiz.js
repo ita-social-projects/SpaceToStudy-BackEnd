@@ -63,7 +63,7 @@ const quizService = {
       throw createForbiddenError()
     }
 
-    await Quiz.findByIdAndRemove(id).exec()
+    await Quiz.findByIdAndDelete(id).exec()
   }
 }
 

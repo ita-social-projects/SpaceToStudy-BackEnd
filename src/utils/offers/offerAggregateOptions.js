@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const getRegex = require('../getRegex')
+const { ObjectId } = require('mongodb')
 const {
   enums: { STATUS_ENUM, LOGIN_ROLE_ENUM }
 } = require('~/consts/validation')
@@ -60,7 +61,7 @@ const offerAggregateOptions = (query, params, user) => {
   }
 
   if (authorId) {
-    match['author._id'] = mongoose.Types.ObjectId(authorId)
+    match['author._id'] = mongoose.Types.ObjectId.createFromHexString(authorId.toString())
   }
 
   if (authorRole) {
@@ -97,15 +98,15 @@ const offerAggregateOptions = (query, params, user) => {
   }
 
   if (categoryId) {
-    match['category._id'] = mongoose.Types.ObjectId(categoryId)
+    match['category._id'] = mongoose.Types.ObjectId.createFromHexString(categoryId.toString())
   }
 
   if (subjectId) {
-    match['subject._id'] = mongoose.Types.ObjectId(subjectId)
+    match['subject._id'] = mongoose.Types.ObjectId.createFromHexString(subjectId.toString())
   }
 
   if (excludedOfferId) {
-    match._id = { $ne: mongoose.Types.ObjectId(excludedOfferId) }
+    match._id = { $ne: mongoose.Types.ObjectId.createFromHexString(excludedOfferId.toString()) }
   }
 
   let sortOption = {}
@@ -185,7 +186,10 @@ const offerAggregateOptions = (query, params, user) => {
     {
       $lookup: {
         from: 'chats',
-        let: { authorId: { $arrayElemAt: ['$author._id', 0] }, userId: mongoose.Types.ObjectId(userId) },
+        let: {
+          authorId: { $arrayElemAt: ['$author._id', 0] },
+          userId: ObjectId.createFromTime(userId)
+        },
         pipeline: [
           {
             $match: {

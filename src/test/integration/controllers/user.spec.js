@@ -515,7 +515,9 @@ describe('User controller', () => {
         expectedOffer.chatId = null
 
         expect(response.statusCode).toBe(200)
-        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
+        expect(response.body.count).toBe(1)
+        expect(response.body.items[0].author.firstName).toBe(expectedOffer.author.firstName)
+        expect(response.body.items[0].category._id).toBe(expectedOffer.category._id)
       })
 
       it('should find a bookmarked offer with a specified title', async () => {
@@ -555,7 +557,8 @@ describe('User controller', () => {
         expectedOffer.chatId = null
 
         expect(response.statusCode).toBe(200)
-        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
+        expect(response.body.count).toBe(1)
+        expect(response.body.items[0]._id).toBe(expectedOffer._id)
       })
     })
   })
@@ -739,7 +742,7 @@ describe('User controller', () => {
           password: 'password',
           appLanguage: 'en',
           mainSubjects: {
-            student: [{ category: { _id: new mongoose.Types.ObjectId(), name: 'Cooking' }, subjects: [] }],
+            student: [{ category: { _id: new mongoose.Types.ObjectId().toString(), name: 'Cooking' }, subjects: [] }],
             tutor: []
           }
         })

@@ -264,7 +264,7 @@ const userService = {
   },
 
   deleteUser: async (id) => {
-    await User.findByIdAndRemove(id).exec()
+    await User.findByIdAndDelete(id).exec()
   },
 
   toggleOfferBookmark: async (offerId, userId) => {
@@ -279,9 +279,9 @@ const userService = {
           $set: {
             bookmarkedOffers: {
               $cond: [
-                { $in: [ObjectId(offerId), '$bookmarkedOffers'] },
-                { $setDifference: ['$bookmarkedOffers', [ObjectId(offerId)]] },
-                { $concatArrays: ['$bookmarkedOffers', [ObjectId(offerId)]] }
+                { $in: [ObjectId.createFromHexString(offerId), '$bookmarkedOffers'] },
+                { $setDifference: ['$bookmarkedOffers', [ObjectId.createFromHexString(offerId)]] },
+                { $concatArrays: ['$bookmarkedOffers', [ObjectId.createFromHexString(offerId)]] }
               ]
             }
           }
@@ -303,7 +303,7 @@ const userService = {
     }
 
     const [response] = await User.aggregate([
-      { $match: { _id: ObjectId(userId) } },
+      { $match: { _id: ObjectId.createFromHexString(userId) } },
       {
         $lookup: {
           from: 'offers',

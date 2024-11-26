@@ -5,14 +5,14 @@ const requestDataSource = require('~/consts/requestDataSource')
 
 const validationMiddleware = (schema, source = requestDataSource.BODY) => {
   return (req, _res, next) => {
-    const data = req[source]
-
-    if (!data && source === requestDataSource.body) {
+    if (source === requestDataSource.BODY && !req[source]) {
       throw createError(422, BODY_IS_NOT_DEFINED)
     }
 
+    const data = req[source]
+
     Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
-      const reqSourceField = data[schemaFieldKey]
+      const reqSourceField = data?.[schemaFieldKey]
       validateRequired(schemaFieldKey, schemaFieldValue?.required, reqSourceField)
       if (reqSourceField) {
         Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {

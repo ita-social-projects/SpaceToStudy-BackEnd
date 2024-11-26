@@ -346,8 +346,6 @@ const userService = {
   },
 
   checkOwnership: async (model, ownerFields, resourceId, userId, relationshipModel) => {
-    const config = relationshipModel
-
     const resource = await model.findById(resourceId)
     if (!resource) throw createError(404, DOCUMENT_NOT_FOUND([model.resourseType]))
 
@@ -356,11 +354,11 @@ const userService = {
     if (isOwner) return resource
 
     if (relationshipModel) {
-      const isRelated = await config.model.findOne({
-        [config.dynamicPaths.sectionsResources]: {
-          $elemMatch: { [config.dynamicPaths.resourceField]: resourceId }
+      const isRelated = await relationshipModel.model.findOne({
+        [relationshipModel.dynamicPaths.sectionsResources]: {
+          $elemMatch: { [relationshipModel.dynamicPaths.resourceField]: resourceId }
         },
-        $or: config.dynamicPaths.userFields.map((field) => ({ [field]: userId }))
+        $or: relationshipModel.dynamicPaths.userFields.map((field) => ({ [field]: userId }))
       })
 
       if (isRelated) return resource

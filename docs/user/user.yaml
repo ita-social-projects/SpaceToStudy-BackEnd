@@ -341,6 +341,16 @@ paths:
                 status: 404
                 code: 'DOCUMENT_NOT_FOUND'
                 message: 'User with the specified id was not found.'
+        422:
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 422
+                code: 'FIELD_IS_NOT_OF_PROPER_ENUM_VALUE'
+                message: 'role should be either one of the values: [student, tutor].'
     patch:
       security:
         - cookieAuth: []

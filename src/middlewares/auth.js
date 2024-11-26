@@ -48,13 +48,15 @@ const restrictTo = (...roles) => {
   }
 }
 
-const ownershipMiddleware = (model, accessFields) => async (req, res, next) => {
-  const resourceId = req.params.id
-  const userId = req.user.id
+const ownershipMiddleware =
+  (model, ownerFields, relationshipModel = null) =>
+  async (req, res, next) => {
+    const resourceId = req.params.id
+    const userId = req.user.id
 
-  await userService.checkOwnership(model, resourceId, userId, accessFields)
+    await userService.checkOwnership(model, ownerFields, resourceId, userId, relationshipModel)
 
-  next()
-}
+    next()
+  }
 
 module.exports = { authMiddleware, authSocketMiddleware, restrictTo, ownershipMiddleware }

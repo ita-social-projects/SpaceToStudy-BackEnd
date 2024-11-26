@@ -1,21 +1,22 @@
 const router = require('express').Router({ mergeParams: true })
 const Quiz = require('~/models/quiz')
-const Cooperation = require('~/models/cooperation')
-
-const {
-  ownerFields,
-  roles: { TUTOR }
-} = require('~/consts/auth')
 const quizController = require('~/controllers/quiz')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const isEntityValid = require('~/middlewares/entityValidation')
 const { authMiddleware, restrictTo, ownershipMiddleware } = require('~/middlewares/auth')
+const {
+  MODEL_CONFIGS: { CooperationModel }
+} = require('~/consts/modelPath')
+const {
+  ownerFields,
+  roles: { TUTOR }
+} = require('~/consts/auth')
 
 const params = [{ model: Quiz, idName: 'id' }]
 
 router.use(authMiddleware)
 
-router.use('/:id', isEntityValid({ params }), asyncWrapper(ownershipMiddleware(Quiz, ownerFields, Cooperation)))
+router.use('/:id', isEntityValid({ params }), asyncWrapper(ownershipMiddleware(Quiz, ownerFields, CooperationModel)))
 router.get('/:id', asyncWrapper(quizController.getQuizById))
 router.use(restrictTo(TUTOR))
 router.get('/', asyncWrapper(quizController.getQuizzes))

@@ -345,29 +345,28 @@ const userService = {
     return Boolean(userOffers?.length || userCooperations?.length)
   },
 
-  checkOwnership: async (model, resourceId, userId, ownerFields, relationshipModel = null) => {
+  checkOwnership: async (model, ownerFields, resourceId, userId, relationshipModel) => {
+    const config = relationshipModel
+
     const resource = await model.findById(resourceId)
-    if (!resource) {
-      throw createError(404, DOCUMENT_NOT_FOUND([model.modelName]))
-    }
+    if (!resource) throw createError(404, DOCUMENT_NOT_FOUND([model.resourseType]))
 
     const isOwner = ownerFields.some((field) => resource[field] && resource[field].toString() === userId)
 
-    if (!isOwner) {
-      throw createError(403, ACCESS_DENIED)
-    }
+    if (isOwner) return resource
 
     if (relationshipModel) {
-      const isRelated = await relationshipModel.findOne({
-        _id: resource.category,
-        $or: [{ initiator: userId }, { receiver: userId }]
+      const isRelated = await config.model.findOne({
+        [config.dynamicPaths.sectionsResources]: {
+          $elemMatch: { [config.dynamicPaths.resourceField]: resourceId }
+        },
+        $or: config.dynamicPaths.userFields.map((field) => ({ [field]: userId }))
       })
 
-      if (isRelated) {
-        return resource
-      }
+      if (isRelated) return resource
     }
-    return resource
+
+    throw createError(403, ACCESS_DENIED)
   }
 }
 

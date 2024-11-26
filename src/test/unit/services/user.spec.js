@@ -384,7 +384,8 @@ describe('User service', () => {
           resources: [
             {
               resource: '665826b3e82dd6b547d60630',
-              resourceType: 'lesson'
+              resourceType: 'lesson',
+              availability: 'open'
             }
           ]
         }
@@ -406,7 +407,8 @@ describe('User service', () => {
         dynamicPaths: {
           sectionsResources: 'sections.resources',
           resourceField: 'resource',
-          userFields: ['initiator', 'receiver']
+          userFields: ['initiator', 'receiver'],
+          availabilityField: 'availability'
         }
       }
     }
@@ -415,7 +417,7 @@ describe('User service', () => {
       jest.clearAllMocks()
     })
 
-    it('should return the lesson if user is an owner (initiator or receiver) via cooperation', async () => {
+    it('should return the lesson if user is an owner (initiator or receiver) via cooperation and availability is "open"', async () => {
       mockLessonModel.findById.mockResolvedValue(lessonResource)
       mockCooperationModel.findOne.mockResolvedValue(cooperationResource)
 
@@ -431,7 +433,7 @@ describe('User service', () => {
       expect(mockLessonModel.findById).toHaveBeenCalledWith(lessonResource._id)
       expect(mockCooperationModel.findOne).toHaveBeenCalledWith({
         'sections.resources': {
-          $elemMatch: { resource: lessonResource._id }
+          $elemMatch: { resource: lessonResource._id, availability: 'open' }
         },
         $or: [{ initiator: userId }, { receiver: userId }]
       })

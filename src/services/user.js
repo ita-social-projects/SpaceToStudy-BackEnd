@@ -347,19 +347,27 @@ const userService = {
 
   checkOwnership: async (model, ownerFields, resourceId, userId, relationshipModel) => {
     const resource = await model.findById(resourceId)
-    if (!resource) throw createError(404, DOCUMENT_NOT_FOUND([model.resourseType]))
+    if (!resource) throw createError(404, DOCUMENT_NOT_FOUND([model.resourceType]))
 
     const isOwner = ownerFields.some((field) => resource[field] && resource[field].toString() === userId)
 
     if (isOwner) return resource
 
     if (relationshipModel) {
-      const isRelated = await relationshipModel.model.findOne({
-        [relationshipModel.dynamicPaths.sectionsResources]: {
-          $elemMatch: { [relationshipModel.dynamicPaths.resourceField]: resourceId }
-        },
-        $or: relationshipModel.dynamicPaths.userFields.map((field) => ({ [field]: userId }))
-      })
+      const { sectionsResources, resourceField, userFields, availabilityField } = relationshipModel.dynamicPaths
+
+      const elemMatchQuery = { [resourceField]: resourceId }
+
+      if (availabilityField) {
+        elemMatchQuery[availabilityField] = 'open'
+      }
+
+      const query = {
+        [sectionsResources]: { $elemMatch: elemMatchQuery },
+        $or: userFields.map((field) => ({ [field]: userId }))
+      }
+
+      const isRelated = await relationshipModel.model.findOne(query)
 
       if (isRelated) return resource
     }

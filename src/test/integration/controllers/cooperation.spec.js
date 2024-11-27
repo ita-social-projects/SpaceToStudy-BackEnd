@@ -15,6 +15,7 @@ const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = requir
 const {
   enums: { RESOURCES_TYPES_ENUM, RESOURCE_COMPLETION_STATUS_ENUM }
 } = require('~/consts/validation')
+const { FIELD_IS_NOT_OF_PROPER_ENUM_VALUE } = require('~/consts/errors')
 
 const endpointUrl = '/cooperations/'
 const nonExistingCooperationId = '19cf23e07281224fbbee3241'
@@ -43,7 +44,7 @@ const studentUserData = {
   lastLoginAs: 'student'
 }
 
-const anotherUserData = {
+const anotherTutorUserData = {
   role: ['tutor'],
   firstName: 'james',
   lastName: 'potter',
@@ -165,7 +166,7 @@ describe('Cooperation controller', () => {
     server,
     accessToken,
     testOffer,
-    anotherUserAccessToken,
+    anotherTutorAccessToken,
     testCooperation,
     testStudentUser,
     testTutorUser,
@@ -177,7 +178,7 @@ describe('Cooperation controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, studentUserData)
-    anotherUserAccessToken = await testUserAuthentication(app, anotherUserData)
+    anotherTutorAccessToken = await testUserAuthentication(app, anotherTutorUserData)
     testStudentUser = TokenService.validateAccessToken(accessToken)
     testTutorUser = await User.create(tutorUserData)
 
@@ -507,7 +508,7 @@ describe('Cooperation controller', () => {
     it('should throw FORBIDDEN if user is not the initiator or receiver', async () => {
       const response = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${anotherUserAccessToken}`])
+        .set('Cookie', [`accessToken=${anotherTutorAccessToken}`])
         .send(updateStatus)
 
       expectError(403, FORBIDDEN, response)
@@ -532,6 +533,40 @@ describe('Cooperation controller', () => {
       expect(response.body.sections[0].resources[0].resource.completionStatus).toBe(
         updatedResourceCompletionStatus.status
       )
+    })
+
+    it('should throw FIELD_IS_NOT_OF_PROPER_ENUM_VALUE for invalid completion status', async () => {
+      const resourceId = testCooperation._body.sections[0].resources[0].resource
+      const invalidCompletionStatus = { completionStatus: 'invalidStatus' }
+
+      const response = await app
+        .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(invalidCompletionStatus)
+
+      expectError(422, FIELD_IS_NOT_OF_PROPER_ENUM_VALUE('completionStatus', RESOURCE_COMPLETION_STATUS_ENUM), response)
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND for invalid resource ID', async () => {
+      const resourceId = 'invalidId'
+
+      const updateResponse = await app
+        .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(updatedResourceCompletionStatus)
+
+      expectError(404, DOCUMENT_NOT_FOUND([`Resource in ${Cooperation.modelName}`]), updateResponse)
+    })
+
+    it('should throw FORBIDDEN for user who is not the initiator or receiver', async () => {
+      const resourceId = testCooperation._body.sections[0].resources[0].resource
+
+      const response = await app
+        .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
+        .set('Cookie', [`accessToken=${anotherTutorAccessToken}`])
+        .send(updatedResourceCompletionStatus)
+
+      expectError(403, FORBIDDEN, response)
     })
   })
 })

@@ -2,12 +2,20 @@ const Cooperation = require('~/models/cooperation')
 const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
 const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
 const handleResources = require('~/utils/handleResources')
-const validateCooperationUser = require('~/utils/cooperations/validateCooperationUser')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND, ROLE_REQUIRED_FOR_ACTION } = require('~/consts/errors')
 const { roles } = require('~/consts/auth')
 
 const cooperationService = {
+  _validateCooperationUser: (cooperation, userId) => {
+    const initiator = cooperation.initiator.toString()
+    const receiver = cooperation.receiver.toString()
+
+    if (initiator !== userId && receiver !== userId) {
+      throw createForbiddenError()
+    }
+  },
+
   getCooperations: async (pipeline) => {
     const [result] = await Cooperation.aggregate(pipeline).exec()
     return result
@@ -72,7 +80,7 @@ const cooperationService = {
     }
 
     const cooperation = await Cooperation.findById(id)
-    validateCooperationUser(cooperation, currentUserId)
+    cooperationService._validateCooperationUser(cooperation, currentUserId)
 
     if (price) {
       if (currentUserRole !== cooperation.needAction.toString()) {
@@ -117,7 +125,7 @@ const cooperationService = {
     }
 
     const cooperation = await Cooperation.findById(id)
-    validateCooperationUser(cooperation, currentUserId)
+    cooperationService._validateCooperationUser(cooperation, currentUserId)
 
     let resourceIdExists = false
 

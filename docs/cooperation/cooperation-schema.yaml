@@ -206,7 +206,9 @@ definitions:
                   format: date-time
                   default: null
             completionStatus:
-              type: string
-              enum:
-                - active
-                - completed
+              $ref: '#/definitions/completionStatus'
+  completionStatus:
+    type: string
+    enum:
+      - completed
+      - active

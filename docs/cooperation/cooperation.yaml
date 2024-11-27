@@ -406,3 +406,37 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Cooperation with the specified id was not found.
+  /cooperations/{id}/{resourceId}/completionStatus:
+    patch:
+      security:
+        - cookieAuth: []
+      tags:
+        - Cooperations
+      summary: Update completion status of resource in cooperation by ID
+      description: Finds and update a completion status of resource in cooperation with the specified ID.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Cooperation ID
+          schema:
+            type: string
+        - name: resourceId
+          in: path
+          required: true
+          description: Resource ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Provide required data to update completion status of resource in cooperation.
+        content:
+          application/json:
+            schema:
+              properties:
+                completionStatus:
+                  $ref: '#/definitions/completionStatus'
+            example:
+              completionStatus: completed

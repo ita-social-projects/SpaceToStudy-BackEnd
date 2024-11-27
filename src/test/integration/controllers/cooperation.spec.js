@@ -13,7 +13,7 @@ const TokenService = require('~/services/token')
 
 const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
 const {
-  enums: { RESOURCES_TYPES_ENUM }
+  enums: { RESOURCES_TYPES_ENUM, RESOURCE_COMPLETION_STATUS_ENUM }
 } = require('~/consts/validation')
 
 const endpointUrl = '/cooperations/'
@@ -29,7 +29,7 @@ const tutorUserData = {
   password: 'supermagicpass123',
   appLanguage: 'en',
   isEmailConfirmed: true,
-  lastLogin: new Date().toJSON()
+  lastLoginAs: 'tutor'
 }
 
 const studentUserData = {
@@ -40,7 +40,7 @@ const studentUserData = {
   password: 'supermagicpass123',
   appLanguage: 'en',
   isEmailConfirmed: true,
-  lastLogin: new Date().toJSON()
+  lastLoginAs: 'student'
 }
 
 const anotherUserData = {
@@ -51,7 +51,7 @@ const anotherUserData = {
   password: 'supersecretpass888',
   appLanguage: 'en',
   isEmailConfirmed: true,
-  lastLogin: new Date().toJSON()
+  lastLoginAs: 'tutor'
 }
 
 const testCooperationData = {
@@ -65,17 +65,15 @@ const testCooperationData = {
       description: 'Solving Quadratic Equations Using the Quadratic Formula',
       resources: [
         {
-          resource: {
-            _id: '6684179479e5232bce4579fa',
-            author: '6658f73f93885febb491e08b',
-            content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
-            description: 'The quadratic formula',
-            title: 'Solving Quadratic Equations Using the Quadratic Formula',
-            category: '6684175179e5232bce4579ed',
-            resourceType: RESOURCES_TYPES_ENUM[0]
-          },
+          resource: '6684179479e5232bce4579fa',
+          author: '6658f73f93885febb491e08b',
+          content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+          description: 'The quadratic formula',
+          title: 'Solving Quadratic Equations Using the Quadratic Formula',
+          category: '6684175179e5232bce4579ed',
           resourceType: RESOURCES_TYPES_ENUM[0],
-          availability: { status: 'open', date: null }
+          availability: { status: 'open', date: null },
+          completionStatus: RESOURCE_COMPLETION_STATUS_ENUM[0]
         }
       ]
     }
@@ -122,6 +120,10 @@ const updatedSections = [
     resources: []
   }
 ]
+
+const updatedResourceCompletionStatus = {
+  completionStatus: 'completed'
+}
 
 const testInitiator = {
   _id: '66b346570182fc9e49b09647',
@@ -509,6 +511,27 @@ describe('Cooperation controller', () => {
         .send(updateStatus)
 
       expectError(403, FORBIDDEN, response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}:id/:resourceId/completionStatus`, () => {
+    it('should update the completion status of a resource for valid request', async () => {
+      const resourceId = testCooperation._body.sections[0].resources[0].resource
+
+      const updateResponse = await app
+        .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send(updatedResourceCompletionStatus)
+
+      expect(updateResponse.status).toBe(204)
+
+      const response = await app
+        .get(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.body.sections[0].resources[0].resource.completionStatus).toBe(
+        updatedResourceCompletionStatus.status
+      )
     })
   })
 })

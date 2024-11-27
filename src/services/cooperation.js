@@ -4,6 +4,7 @@ const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
 const handleResources = require('~/utils/handleResources')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { roles } = require('~/consts/auth')
 
 const cooperationService = {
   getCooperations: async (pipeline) => {
@@ -114,6 +115,42 @@ const cooperationService = {
       cooperation.availableQuizzes = removeArraysUniqueValues(cooperation.availableQuizzes, cooperation.finishedQuizzes)
       await cooperation.save()
     }
+  },
+
+  updateResourceCompletionStatus: async ({ id, currentUser, resourceId, completionStatus }) => {
+    const { id: currentUserId, role: currentUserRole } = currentUser
+
+    const cooperation = await Cooperation.findById(id).exec()
+
+    const initiator = cooperation.initiator.toString()
+    const receiver = cooperation.receiver.toString()
+    if (initiator !== currentUserId && receiver !== currentUserId) {
+      throw createForbiddenError()
+    }
+
+    if (currentUserRole !== roles.STUDENT) {
+      throw createError(403, 'Only students can update resource completion status')
+    }
+
+    let resourceIdExists = false
+
+    cooperation.sections.forEach((section) => {
+      section.resources.forEach((resource) => {
+        if (resource.resource.toString() === resourceId) {
+          resource.completionStatus = completionStatus
+          resourceIdExists = true
+        }
+      })
+    })
+
+    if (!resourceIdExists) {
+      throw createError(404, DOCUMENT_NOT_FOUND([`Resource in ${Cooperation.modelName}`]))
+    }
+
+    cooperation.markModified('sections')
+
+    await cooperation.validate()
+    await cooperation.save()
   }
 }
 

@@ -112,12 +112,12 @@ const cooperationService = {
   updateResourceCompletionStatus: async ({ id, currentUser, resourceId, completionStatus }) => {
     const { id: currentUserId, role: currentUserRole } = currentUser
 
-    const cooperation = await Cooperation.findById(id)
-    validateCooperationUser(cooperation, currentUserId)
-
     if (currentUserRole !== roles.STUDENT) {
       throw createError(403, ROLE_REQUIRED_FOR_ACTION(roles.STUDENT))
     }
+
+    const cooperation = await Cooperation.findById(id)
+    validateCooperationUser(cooperation, currentUserId)
 
     let resourceIdExists = false
 

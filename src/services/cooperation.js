@@ -2,6 +2,7 @@ const Cooperation = require('~/models/cooperation')
 const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
 const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
 const handleResources = require('~/utils/handleResources')
+const validateCooperationUser = require('~/utils/cooperations/validateCooperationUser')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND, ROLE_REQUIRED_FOR_ACTION } = require('~/consts/errors')
 const { roles } = require('~/consts/auth')
@@ -70,17 +71,8 @@ const cooperationService = {
       throw createError(409, VALIDATION_ERROR('You can change only either the status or the price in one operation'))
     }
 
-    const cooperation = await Cooperation.findById(id).exec()
-    if (!cooperation) {
-      throw createError(404, DOCUMENT_NOT_FOUND(Cooperation.modelName))
-    }
-
-    const initiator = cooperation.initiator.toString()
-    const receiver = cooperation.receiver.toString()
-
-    if (initiator !== currentUserId && receiver !== currentUserId) {
-      throw createForbiddenError()
-    }
+    const cooperation = await Cooperation.findById(id)
+    validateCooperationUser(cooperation, currentUserId)
 
     if (price) {
       if (currentUserRole !== cooperation.needAction.toString()) {
@@ -120,13 +112,8 @@ const cooperationService = {
   updateResourceCompletionStatus: async ({ id, currentUser, resourceId, completionStatus }) => {
     const { id: currentUserId, role: currentUserRole } = currentUser
 
-    const cooperation = await Cooperation.findById(id).exec()
-
-    const initiator = cooperation.initiator.toString()
-    const receiver = cooperation.receiver.toString()
-    if (initiator !== currentUserId && receiver !== currentUserId) {
-      throw createForbiddenError()
-    }
+    const cooperation = await Cooperation.findById(id)
+    validateCooperationUser(cooperation, currentUserId)
 
     if (currentUserRole !== roles.STUDENT) {
       throw createError(403, ROLE_REQUIRED_FOR_ACTION(roles.STUDENT))

@@ -3,7 +3,7 @@ const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
 const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
 const handleResources = require('~/utils/handleResources')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
-const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND, ROLE_REQUIRED_FOR_ACTION } = require('~/consts/errors')
 const { roles } = require('~/consts/auth')
 
 const cooperationService = {
@@ -129,7 +129,7 @@ const cooperationService = {
     }
 
     if (currentUserRole !== roles.STUDENT) {
-      throw createError(403, 'Only students can update resource completion status')
+      throw createError(403, ROLE_REQUIRED_FOR_ACTION(roles.STUDENT))
     }
 
     let resourceIdExists = false

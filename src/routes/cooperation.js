@@ -24,5 +24,11 @@ router.get('/', asyncWrapper(cooperationController.getCooperations))
 router.post('/', isEntityValid({ body }), asyncWrapper(cooperationController.createCooperation))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(cooperationController.getCooperationById))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(cooperationController.updateCooperation))
+router.patch(
+  '/:id/:resourceId/completionStatus',
+  isEntityValid({ params }),
+  // TODO: add validation for body
+  asyncWrapper(cooperationController.updateResourceCompletionStatus)
+)
 
 module.exports = router

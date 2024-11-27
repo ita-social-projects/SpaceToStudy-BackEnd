@@ -36,9 +36,20 @@ const updateCooperation = async (req, res) => {
   res.status(204).end()
 }
 
+const updateResourceCompletionStatus = async (req, res) => {
+  const { id, resourceId } = req.params
+  const { completionStatus } = req.body
+  const currentUser = req.user
+
+  await cooperationService.updateResourceCompletionStatus({ id, currentUser, resourceId, completionStatus })
+
+  res.status(204).end()
+}
+
 module.exports = {
   getCooperations,
   getCooperationById,
   createCooperation,
-  updateCooperation
+  updateCooperation,
+  updateResourceCompletionStatus
 }

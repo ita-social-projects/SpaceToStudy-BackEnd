@@ -44,15 +44,15 @@ const studentUserData = {
   lastLoginAs: 'student'
 }
 
-const anotherTutorUserData = {
-  role: ['tutor'],
+const anotherStudentUserData = {
+  role: ['student'],
   firstName: 'james',
   lastName: 'potter',
   email: 'jamespotter@gmail.com',
   password: 'supersecretpass888',
   appLanguage: 'en',
   isEmailConfirmed: true,
-  lastLoginAs: 'tutor'
+  lastLoginAs: 'student'
 }
 
 const testCooperationData = {
@@ -166,7 +166,7 @@ describe('Cooperation controller', () => {
     server,
     accessToken,
     testOffer,
-    anotherTutorAccessToken,
+    anotherStudentAccessToken,
     testCooperation,
     testStudentUser,
     testTutorUser,
@@ -178,7 +178,7 @@ describe('Cooperation controller', () => {
 
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, studentUserData)
-    anotherTutorAccessToken = await testUserAuthentication(app, anotherTutorUserData)
+    anotherStudentAccessToken = await testUserAuthentication(app, anotherStudentUserData)
     testStudentUser = TokenService.validateAccessToken(accessToken)
     testTutorUser = await User.create(tutorUserData)
 
@@ -508,7 +508,7 @@ describe('Cooperation controller', () => {
     it('should throw FORBIDDEN if user is not the initiator or receiver', async () => {
       const response = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${anotherTutorAccessToken}`])
+        .set('Cookie', [`accessToken=${anotherStudentAccessToken}`])
         .send(updateStatus)
 
       expectError(403, FORBIDDEN, response)
@@ -563,7 +563,7 @@ describe('Cooperation controller', () => {
 
       const response = await app
         .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
-        .set('Cookie', [`accessToken=${anotherTutorAccessToken}`])
+        .set('Cookie', [`accessToken=${anotherStudentAccessToken}`])
         .send(updatedResourceCompletionStatus)
 
       expectError(403, FORBIDDEN, response)

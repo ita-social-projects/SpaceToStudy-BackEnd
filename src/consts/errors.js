@@ -147,11 +147,7 @@ const errors = {
   VALIDATION_ERROR: (message) => ({
     code: 'VALIDATION_ERROR',
     message: message
-  }),
-  ACCESS_DENIED: {
-    code: 'ACCESS_DENIED',
-    message: 'You do not have permission to access this resource.'
-  }
+  })
 }
 
 const validationErrors = {

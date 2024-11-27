@@ -8,7 +8,7 @@ const { USER } = require('~/consts/upload')
 const { hashPassword } = require('~/utils/passwordHelper')
 const { createError, createBadRequestError } = require('~/utils/errorsHelper')
 
-const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN, ACCESS_DENIED } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, ALREADY_REGISTERED, FORBIDDEN } = require('~/consts/errors')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedUserFieldsForUpdate } = require('~/validation/services/user')
 const {
@@ -372,7 +372,7 @@ const userService = {
       if (isRelated) return resource
     }
 
-    throw createError(403, ACCESS_DENIED)
+    throw createError(403, FORBIDDEN)
   }
 }
 

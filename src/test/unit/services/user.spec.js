@@ -3,7 +3,7 @@ const offerService = require('~/services/offer')
 const cooperationService = require('~/services/cooperation')
 const User = require('~/models/user')
 const Offer = require('~/models/offer')
-const { FORBIDDEN, DOCUMENT_NOT_FOUND, ACCESS_DENIED } = require('~/consts/errors')
+const { FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const {
   enums: { OFFER_STATUS_ENUM }
@@ -459,7 +459,7 @@ describe('User service', () => {
           invalidUserId,
           MODEL_CONFIGS.CooperationModel
         )
-      ).rejects.toThrowError(createError(403, ACCESS_DENIED))
+      ).rejects.toThrowError(createError(403, FORBIDDEN))
     })
 
     it('should return the lesson if user is a direct owner', async () => {
@@ -490,7 +490,7 @@ describe('User service', () => {
 
       await expect(
         userService.checkOwnership(mockLessonModel, ['initiator', 'receiver'], unrelatedLessonResource._id, userId)
-      ).rejects.toThrowError(createError(403, ACCESS_DENIED))
+      ).rejects.toThrowError(createError(403, FORBIDDEN))
     })
   })
 })

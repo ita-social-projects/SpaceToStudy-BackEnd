@@ -192,7 +192,7 @@ paths:
                 message: Chat with the specified id was not found.
     patch:
       security:
-        - bearerAuth: []
+        - cookieAuth: []
       tags:
         - Chats
       summary: Clears chat history for current user

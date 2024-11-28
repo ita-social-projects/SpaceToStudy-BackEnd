@@ -13,7 +13,7 @@ const User = require('~/models/user')
 const {
   roles: { ADMIN }
 } = require('~/consts/auth')
-const getUserByIdValidationSchema = require('~/validation/schemas/getUserById')
+const { getUserByIdValidationSchema, updateUserValidationSchema } = require('~/validation/schemas/user')
 const requestDataSource = require('~/consts/requestDataSource')
 
 const params = [{ model: User, idName: 'id' }]
@@ -34,7 +34,12 @@ router.get(
   asyncWrapper(userController.getUserById)
 )
 router.get('/:id/bookmarks/offers', isEntityValid({ params }), asyncWrapper(userController.getBookmarkedOffers))
-router.patch('/:id', isEntityValid({ params }), asyncWrapper(userController.updateUser))
+router.patch(
+  '/:id',
+  isEntityValid({ params }),
+  validationMiddleware(updateUserValidationSchema),
+  asyncWrapper(userController.updateUser)
+)
 router.patch('/deactivate/:id', isEntityValid({ params }), asyncWrapper(userController.deactivateUser))
 router.patch('/activate/:id', isEntityValid({ params }), asyncWrapper(userController.activateUser))
 router.patch(

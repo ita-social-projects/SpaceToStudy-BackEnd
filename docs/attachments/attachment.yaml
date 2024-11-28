@@ -81,19 +81,17 @@ paths:
         - Attachments
       summary: Create new attachments.
       description: Saves new attachments to the database.
-      consumes:
-        - multipart/form-data
-      parameters:
-        - in: formData
-          name: files
-          type: file
-          description: Array of files to upload
-          required: true
-        - in: formData
-          name: fileName
-          type: string
-          description: File name for the attachment
-          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                files:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
       responses:
         201:
           description: Created

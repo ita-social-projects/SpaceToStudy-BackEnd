@@ -18,8 +18,7 @@ const {
   roles: { ADMIN }
 } = require('~/consts/auth')
 const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
-const { allowedTutorFieldsForUpdate, allowedStudentFieldsForUpdate } = require('~/validation/services/user')
-
+const { allowedStudentFieldsForUpdate } = require('~/validation/services/user')
 const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
 const offerService = require('./offer')
 const cooperationService = require('./cooperation')

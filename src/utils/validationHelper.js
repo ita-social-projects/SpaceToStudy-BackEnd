@@ -30,11 +30,19 @@ const castValueToType = (value, type) => {
   return value
 }
 
-const validateType = (schemaFieldKey, type, field) => {
-  const typeCastedField = castValueToType(field, type)
+const checkAreTypesValid = (typeOrTypes, field) => {
+  const allowedTypes = Array.isArray(typeOrTypes) ? typeOrTypes : [typeOrTypes]
+  const typeCastedField = castValueToType(field, allowedTypes[0])
+  const fieldType = typeof typeCastedField
 
-  if (type != typeof typeCastedField) {
-    throw createError(422, FIELD_IS_NOT_OF_PROPER_TYPE(schemaFieldKey, type))
+  return allowedTypes.includes(fieldType)
+}
+
+const validateTypes = (schemaFieldKey, typeOrTypes, field) => {
+  const isTypeValid = checkAreTypesValid(typeOrTypes, field)
+
+  if (!isTypeValid) {
+    throw createError(422, FIELD_IS_NOT_OF_PROPER_TYPE(schemaFieldKey, typeOrTypes))
   }
 }
 
@@ -65,7 +73,7 @@ const validateEnum = (schemaFieldKey, enumSet, field) => {
 
 const validateFunc = {
   required: validateRequired,
-  type: validateType,
+  type: validateTypes,
   length: validateLength,
   range: validateRange,
   regex: validateRegex,
@@ -74,7 +82,7 @@ const validateFunc = {
 
 module.exports = {
   validateRequired,
-  validateType,
+  validateTypes,
   validateLength,
   validateRange,
   validateFunc

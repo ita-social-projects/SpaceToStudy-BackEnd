@@ -85,6 +85,21 @@ const updateUserValidationSchema = {
         required: false
       }
     }
+  },
+  photo: {
+    type: ['object', 'string'],
+    required: false,
+    regex: /^$/,
+    properties: {
+      src: {
+        type: 'string',
+        required: true
+      },
+      name: {
+        type: 'string',
+        required: true
+      }
+    }
   }
 }
 

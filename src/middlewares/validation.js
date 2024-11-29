@@ -12,7 +12,7 @@ const validateSchema = (schema, data) => {
       return
     }
 
-    if (typeof schemaFieldValue === 'object' && schemaFieldValue.properties) {
+    if (typeof reqSourceField === 'object' && schemaFieldValue.properties) {
       validateSchema(schemaFieldValue.properties, reqSourceField)
       return
     }

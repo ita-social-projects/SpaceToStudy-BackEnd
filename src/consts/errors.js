@@ -180,6 +180,10 @@ const validationErrors = {
   videoLink: {
     code: 'VIDEO_LINK_NOT_VALID',
     message: 'Video link should be a valid youtube URL.'
+  },
+  photo: {
+    code: 'PHOTO_NOT_VALID',
+    message: 'Photo must be either a valid object or an empty string to remove it.'
   }
 }
 

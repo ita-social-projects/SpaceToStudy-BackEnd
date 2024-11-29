@@ -3,6 +3,10 @@ const { BODY_IS_NOT_DEFINED } = require('~/consts/errors')
 const { validateRequired, validateFunc } = require('~/utils/validationHelper')
 const requestDataSource = require('~/consts/requestDataSource')
 
+const isTypeIncluded = (expectedType, valueToCheck) => {
+  return Array.isArray(valueToCheck) ? valueToCheck.includes(expectedType) : valueToCheck === expectedType
+}
+
 const validateSchema = (schema, data) => {
   Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
     const reqSourceField = data?.[schemaFieldKey]
@@ -12,7 +16,11 @@ const validateSchema = (schema, data) => {
       return
     }
 
-    if (typeof reqSourceField === 'object' && schemaFieldValue.properties) {
+    if (
+      typeof reqSourceField === 'object' &&
+      isTypeIncluded('object', schemaFieldValue?.type) &&
+      schemaFieldValue.properties
+    ) {
       validateSchema(schemaFieldValue.properties, reqSourceField)
       return
     }

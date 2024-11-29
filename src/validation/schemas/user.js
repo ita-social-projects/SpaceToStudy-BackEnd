@@ -53,6 +53,7 @@ const updateUserValidationSchema = {
     required: false
   },
   notificationSettings: {
+    type: 'object',
     required: false,
     properties: {
       isOfferStatusNotification: {
@@ -74,6 +75,7 @@ const updateUserValidationSchema = {
     }
   },
   address: {
+    type: 'object',
     required: false,
     properties: {
       country: {

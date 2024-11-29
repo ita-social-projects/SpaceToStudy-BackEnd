@@ -176,7 +176,11 @@ const validationErrors = {
     message: 'Password must contain at least one alphabetic and one numeric character.'
   },
   firstName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('firstName'),
-  lastName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('lastName')
+  lastName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('lastName'),
+  videoLink: {
+    code: 'VIDEO_LINK_NOT_VALID',
+    message: 'Video link should be a valid youtube URL.'
+  }
 }
 
 module.exports = errors

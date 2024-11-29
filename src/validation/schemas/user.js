@@ -49,9 +49,29 @@ const updateUserValidationSchema = {
     required: false
   },
   videoLink: {
-    type: 'string',
+    regex: VIDEOLINK_PATTERN,
+    required: false
+  },
+  notificationSettings: {
     required: false,
-    regex: VIDEOLINK_PATTERN
+    properties: {
+      isOfferStatusNotification: {
+        type: 'boolean',
+        required: false
+      },
+      isChatNotification: {
+        type: 'boolean',
+        required: false
+      },
+      isSimilarOffersNotification: {
+        type: 'boolean',
+        required: false
+      },
+      isEmailNotification: {
+        type: 'boolean',
+        required: false
+      }
+    }
   }
 }
 

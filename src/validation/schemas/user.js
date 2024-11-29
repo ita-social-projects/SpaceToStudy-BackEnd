@@ -72,6 +72,19 @@ const updateUserValidationSchema = {
         required: false
       }
     }
+  },
+  address: {
+    required: false,
+    properties: {
+      country: {
+        type: 'string',
+        required: false
+      },
+      city: {
+        type: 'string',
+        required: false
+      }
+    }
   }
 }
 

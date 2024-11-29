@@ -8,17 +8,20 @@ const validateSchema = (schema, data) => {
     const reqSourceField = data?.[schemaFieldKey]
     validateRequired(schemaFieldKey, schemaFieldValue?.required, reqSourceField)
 
-    if (reqSourceField) {
-      if (typeof schemaFieldValue === 'object' && schemaFieldValue.properties) {
-        validateSchema(schemaFieldValue.properties, reqSourceField)
-      } else {
-        Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
-          if (validateFunc[validationType]) {
-            validateFunc[validationType](schemaFieldKey, validationValue, reqSourceField)
-          }
-        })
-      }
+    if (!reqSourceField) {
+      return
     }
+
+    if (typeof schemaFieldValue === 'object' && schemaFieldValue.properties) {
+      validateSchema(schemaFieldValue.properties, reqSourceField)
+      return
+    }
+
+    Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
+      if (validateFunc[validationType]) {
+        validateFunc[validationType](schemaFieldKey, validationValue, reqSourceField)
+      }
+    })
   })
 }
 

@@ -1,6 +1,7 @@
 const {
+  lengths: { MAX_NAME_LENGTH, MIN_NAME_LENGTH, MIN_PROFFESSIONAL_SUMMARY_LENGTH, MAX_PROFFESSIONAL_SUMMARY_LENGTH },
   enums: { MAIN_ROLE_ENUM, SPOKEN_LANG_ENUM, APP_LANG_ENUM },
-  regex: { VIDEOLINK_PATTERN }
+  regex: { VIDEOLINK_PATTERN, NAME_PATTERN }
 } = require('~/consts/validation')
 
 const getUserByIdValidationSchema = {
@@ -16,22 +17,28 @@ const getUserByIdValidationSchema = {
 
 const updateUserValidationSchema = {
   firstName: {
-    type: 'string',
+    regex: NAME_PATTERN,
     required: false,
-    minLength: 1,
-    maxLength: 30
+    length: {
+      min: MIN_NAME_LENGTH,
+      max: MAX_NAME_LENGTH
+    }
   },
   lastName: {
-    type: 'string',
+    regex: NAME_PATTERN,
     required: false,
-    minLength: 1,
-    maxLength: 30
+    length: {
+      min: MIN_NAME_LENGTH,
+      max: MAX_NAME_LENGTH
+    }
   },
   professionalSummary: {
     type: 'string',
     required: false,
-    minLength: 1,
-    maxLength: 200
+    length: {
+      min: MIN_PROFFESSIONAL_SUMMARY_LENGTH,
+      max: MAX_PROFFESSIONAL_SUMMARY_LENGTH
+    }
   },
   nativeLanguage: {
     enum: SPOKEN_LANG_ENUM,

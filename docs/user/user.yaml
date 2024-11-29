@@ -328,7 +328,7 @@ paths:
               schema:
                 $ref: '#/components/Error'
               example:
-                status: 404
+                status: 401
                 code: 'UNAUTHORIZED'
                 message: 'The requested URL requires user authorization.'
         404:

@@ -108,12 +108,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/review'
+              $ref: '#/definitions/reviewPostBody'
             example:
-              _id: 8755bc080a00adr9243df104
               comment: Best tutor!
               rating: 5
-              author: 6255bc080a75adf9223df211
               targetUserId: 6255bc080a75adf9223df212
               targetUserRole: tutor
               offer: 63ebc6fbd2f34037d0aba791
@@ -123,7 +121,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/reviewResponse'
+                $ref: '#/definitions/review'
               example:
                 _id: 8755bc080a00adr9243df104
                 comment: Best tutor!
@@ -218,7 +216,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/reviewResponse'
+                $ref: '#/definitions/review'
               example:
                 _id: 6255bc080a75adf9223df100
                 comment: Not bad

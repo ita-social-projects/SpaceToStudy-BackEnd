@@ -1,33 +1,14 @@
 definitions:
-  reviews:
-    type: array
-    items:
-      type: object
-      properties:
-        _id:
-          type: string
-        comment:
-          type: string
-        rating:
-          type: number
-        author:
-          type: object
-          ref: '#/components/user'
-        targetUserId:
-          type: string
-          ref: '#components/user'
-        targetUserRole:
-          type: string
-        offer:
-          type: object
-          ref: '#components/offer'
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
   reviewResponse:
+    type: object
+    properties:
+      count:
+        type: number
+      reviews:
+        type: array
+        items:
+          $ref: '#/definitions/review'
+  review:
     type: object
     properties:
       _id:
@@ -86,30 +67,26 @@ definitions:
       updatedAt:
         type: string
         format: date-time
-  review:
+  reviewPostBody:
     type: object
     properties:
       comment:
         type: string
       rating:
         type: number
-      author:
-        type: object
-        ref: '#/components/user'
       targetUserId:
         type: string
-        ref: '#components/user'
       targetUserRole:
         type: string
       offer:
-        type: object
-        ref: '#components/offer'
-      createdAt:
         type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
+        description: _id
+    required:
+      - comment
+      - rating
+      - targetUserId
+      - targetUserRole
+      - offer
   update-review:
     type: object
     properties:

@@ -76,6 +76,10 @@ const errors = {
     code: 'BAD_REQUEST',
     message: 'The request could not be processed due to invalid or missing parameters.'
   },
+  CANNOT_TARGET_SELF: {
+    code: 'CANNOT_TARGET_SELF',
+    message: 'You cannot perform this action on yourself.'
+  },
   BAD_CONFIRM_TOKEN: {
     code: 'BAD_CONFIRM_TOKEN',
     message: 'The confirm token is either invalid or has expired.'

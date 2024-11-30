@@ -1,9 +1,10 @@
 const Review = require('~/models/review')
 const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
-const { createForbiddenError } = require('~/utils/errorsHelper')
+const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedReviewFieldsForUpdate } = require('~/validation/services/review')
 const cooperationService = require('./cooperation')
+const { CANNOT_TARGET_SELF } = require('~/consts/errors')
 
 const reviewService = {
   getReviews: async (match, skip, limit) => {
@@ -91,6 +92,10 @@ const reviewService = {
 
   addReview: async (author, data) => {
     const { comment, rating, targetUserId, targetUserRole, offer } = data
+
+    if (author === targetUserId) {
+      throw createError(400, CANNOT_TARGET_SELF)
+    }
 
     const review = await Review.create({
       comment,

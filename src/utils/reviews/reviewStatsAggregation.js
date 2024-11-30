@@ -10,40 +10,25 @@ const calculateReviewStats = (targetUserId, targetUserRole) => {
       }
     },
     {
-      $facet: {
-        numbers: [
-          {
-            $group: {
-              _id: {
-                user: '$targetUserId',
-                rating: '$rating'
-              },
-              count: {
-                $sum: 1.0
-              }
-            }
-          },
-          {
-            $group: {
-              _id: '$_id.user',
-              counts: {
-                $push: {
-                  rating: '$_id.rating',
-                  count: '$count'
-                }
-              }
-            }
-          }
-        ]
+      $group: {
+        _id: {
+          user: '$targetUserId',
+          rating: '$rating'
+        },
+        count: {
+          $sum: 1.0
+        }
       }
     },
     {
-      $unwind: '$numbers'
-    },
-    {
-      $project: {
-        _id: 0,
-        stats: '$numbers.counts'
+      $group: {
+        _id: '$_id.user',
+        counts: {
+          $push: {
+            rating: '$_id.rating',
+            count: '$count'
+          }
+        }
       }
     }
   ])

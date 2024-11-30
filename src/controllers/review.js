@@ -45,8 +45,9 @@ const updateReview = async (req, res) => {
 
 const deleteReview = async (req, res) => {
   const { id } = req.params
+  const { id: currentUserId } = req.user
 
-  await reviewService.deleteReview(id)
+  await reviewService.deleteReview(id, currentUserId)
 
   res.status(204).end()
 }

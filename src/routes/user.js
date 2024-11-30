@@ -7,7 +7,6 @@ const isEntityValid = require('~/middlewares/entityValidation')
 const validationMiddleware = require('~/middlewares/validation')
 
 const userController = require('~/controllers/user')
-const reviewRouter = require('~/routes/review')
 const cooperationRouter = require('~/routes/cooperation')
 const offerRouter = require('~/routes/offer')
 const User = require('~/models/user')
@@ -24,7 +23,6 @@ router.use(authMiddleware)
 router.param('id', idValidation)
 router.param('offerId', idValidation)
 
-router.use('/:id/reviews', isEntityValid({ params }), reviewRouter)
 router.use('/:id/cooperations', isEntityValid({ params }), cooperationRouter)
 router.use('/:id/offers', isEntityValid({ params }), offerRouter)
 

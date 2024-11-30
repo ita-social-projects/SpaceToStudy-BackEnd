@@ -65,10 +65,6 @@ const reviewService = {
     }
   },
 
-  getReviewStatsByUserId: async (id, role) => {
-    return await calculateReviewStats(id, role)
-  },
-
   getReviewById: async (id) => {
     const review = await Review.findById(id)
       .populate({ path: 'author', select: ['firstName', 'lastName', 'photo'] })

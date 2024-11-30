@@ -11,15 +11,6 @@ const getReviews = async (req, res) => {
   res.status(200).json(reviews)
 }
 
-const getReviewStatsByUserId = async (req, res) => {
-  const { id } = req.params
-  const { role } = req.query
-
-  const reviewStats = await reviewService.getReviewStatsByUserId(id, role)
-
-  res.status(200).json(reviewStats)
-}
-
 const getReviewById = async (req, res) => {
   const { id } = req.params
 
@@ -57,7 +48,6 @@ const deleteReview = async (req, res) => {
 
 module.exports = {
   getReviews,
-  getReviewStatsByUserId,
   getReviewById,
   addReview,
   updateReview,

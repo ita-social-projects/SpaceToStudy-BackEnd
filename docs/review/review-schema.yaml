@@ -38,15 +38,48 @@ definitions:
         type: number
       author:
         type: object
-        ref: '#/components/user'
+        properties:
+          _id:
+            type: string
+          firstName:
+            type: string
+          lastName:
+            type: string
+          avatar:
+            type: string
       targetUserId:
         type: string
-        ref: '#components/user'
+        description: _id
       targetUserRole:
         type: string
       offer:
         type: object
-        ref: '#components/offer'
+        properties:
+          _id:
+            type: string
+          subject:
+            type: object
+            properties:
+              _id:
+                type: string
+              name:
+                type: string
+          category:
+            type: object
+            properties:
+              _id:
+                type: string
+              name:
+                type: string
+      proficiencyLevel:
+        type: string
+        enum:
+          - Beginner
+          - Intermediate
+          - Advanced
+          - Test Preparation
+          - Professional
+          - Specialized
       createdAt:
         type: string
         format: date-time

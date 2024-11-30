@@ -11,20 +11,25 @@ paths:
         - application/json
       parameters:
         - in: query
+          name: user
+          schema:
+            type: string
+        - in: query
+          name: role
+          schema:
+            type: string
+        - in: query
           name: rating
           schema:
             type: integer
-          required: false
         - in: query
           name: skip
           schema:
             type: integer
-          required: false
         - in: query
           name: limit
           schema:
             type: integer
-          required: false
       responses:
         200:
           description: OK
@@ -47,13 +52,13 @@ paths:
                     targetUserRole: tutor
                     offer:
                       _id: 63ebc6fbd2f34037d0aba791
-                      proficiencyLevel: Beginner
                       subject:
                         _id: 6255bc080a71adf9223df134
                         name: English
                       category:
                         _id: 64045f98b131dd04d7896af6
                         name: languages
+                    proficiencyLevel: Beginner
                     createdAt: 2022-10-18T13:25:36.292Z
                     updatedAt: 2022-10-18T13:25:36.292Z
                   - _id: 8755bc080a00adr9243df104
@@ -68,13 +73,13 @@ paths:
                     targetUserRole: tutor
                     offer:
                       _id: 63ebc6fbd2f34037d0aba79
-                      proficiencyLevel: Advanced
                       subject:
                         _id: 6255bc080a71adf9222df134
                         name: English
                       category:
                         _id: 64045f98b131dd04d7896af6
                         name: languages
+                    proficiencyLevel: Advanced
                     createdAt: 2022-10-18T13:25:36.292Z
                     updatedAt: 2022-10-18T13:25:36.292Z
 
@@ -136,10 +141,7 @@ paths:
                           { _id: 6255bc080a75adf9223df444, name: Languages },
                           { _id: 6255bc080a75adf443d7644, name: Biology }
                         ],
-                      tutor:
-                        [
-                          { _id: 6255bc080a75adf9223df444, name: English }
-                        ]
+                      tutor: [{ _id: 6255bc080a75adf9223df444, name: English }]
                     }
                   totalReviews: 10
                   averageRating: 4.5
@@ -234,10 +236,7 @@ paths:
                           { _id: 6255bc080a75adf9223df444, name: Languages },
                           { _id: 6255bc080a75adf443d7644, name: Biology }
                         ],
-                      tutor:
-                        [
-                          { _id: 6255bc080a75adf9223df444, name: English }
-                        ]
+                      tutor: [{ _id: 6255bc080a75adf9223df444, name: English }]
                     }
                   totalReviews: 10
                   averageRating: 4.5
@@ -270,7 +269,7 @@ paths:
                     name: languages
                     appearance:
                       icon: mocked-path-to-icon
-                      color: "#66c42c"
+                      color: '#66c42c'
                     totalOffers: 9
                     subjects: [{ _id: 6255bc080a71adf9223df134, name: English }]
                     createdAt: 2023-20-01T13:25:36.292Z

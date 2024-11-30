@@ -223,55 +223,20 @@ paths:
                 rating: 4
                 author:
                   _id: 6255bc080a75adf9223df100
-                  role: [student, tutor]
                   firstName: John
                   lastName: Doe
-                  email: johndoe@gmail.com
-                  mainSubjects:
-                    {
-                      student:
-                        [
-                          { _id: 6255bc080a75adf9223df444, name: Languages },
-                          { _id: 6255bc080a75adf443d7644, name: Biology }
-                        ],
-                      tutor: [{ _id: 6255bc080a75adf9223df444, name: English }]
-                    }
-                  totalReviews: 10
-                  averageRating: 4.5
-                  nativeLanguage: english
-                  address: { country: The USA, city: California }
-                  education: KNPU H.S. Skovoroda
                   photo: john-doe-photo.jpg
-                  lastLogin: null
-                  createdAt: 2021-04-09T11:34:53.243+00:00
-                  updatedAt: 2022-09-02T11:59:53.243+00:00
                 targetUserId: 6255bc080a75adf9223df212
                 targetUserRole: tutor
                 offer:
                   _id: 63ebc6fbd2f34037d0aba791
-                  price: 111
-                  proficiencyLevel: Beginner
-                  description: This is a new course for those who want to start learning English
-                  languages: English
-                  authorRole: tutor
-                  author: 6255bc080a75adf9223df212
                   subject:
-                    _id: 6255bc080a71adf9222df134
+                    _id: 6255bc080a71adf9223df134
                     name: English
-                    category: 63525e23bf163f5ea609ff27
-                    totalOffers: 3
-                    createdAt: 2023-20-01T13:25:36.292Z
-                    updatedAt: 2023-20-01T13:25:36.292Z
                   category:
                     _id: 64045f98b131dd04d7896af6
                     name: languages
-                    appearance:
-                      icon: mocked-path-to-icon
-                      color: '#66c42c'
-                    totalOffers: 9
-                    subjects: [{ _id: 6255bc080a71adf9223df134, name: English }]
-                    createdAt: 2023-20-01T13:25:36.292Z
-                    updatedAt: 2023-20-01T13:25:36.292Z
+                proficiencyLevel: Beginner
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:
@@ -325,7 +290,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/update-review'
+              $ref: '#/definitions/reviewPatchBody'
             example:
               comment: Best tutor!
               rating: 5

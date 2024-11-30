@@ -87,7 +87,7 @@ definitions:
       - targetUserId
       - targetUserRole
       - offer
-  update-review:
+  reviewPatchBody:
     type: object
     properties:
       comment:

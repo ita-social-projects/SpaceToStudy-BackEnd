@@ -134,8 +134,9 @@ const reviewService = {
 
   deleteReview: async (id, currentUserId) => {
     const review = await Review.findById(id).lean().exec()
-    const { author, targetUserId, targetUserRole } = review
+    const { targetUserId, targetUserRole } = review
 
+    const author = review.author.toString()
     if (author !== currentUserId) {
       throw createForbiddenError()
     }

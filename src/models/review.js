@@ -61,7 +61,8 @@ const reviewSchema = new Schema(
   }
 )
 
-reviewSchema.index({ author: 1, targetUserId: 1 }, { unique: true })
+reviewSchema.index({ author: 1, targetUserId: 1 })
+reviewSchema.index({ author: 1, offer: 1 }, { unique: true })
 
 reviewSchema.statics.calcAverageRatings = async function (targetUserId, targetUserRole) {
   const stats = await this.aggregate([

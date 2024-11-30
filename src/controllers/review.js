@@ -1,8 +1,13 @@
 const reviewService = require('~/services/review')
 const getMatchOptions = require('~/utils/getMatchOptions')
+const checkIdValidity = require('~/utils/checkIdValidity')
 
 const getReviews = async (req, res) => {
   const { user: targetUserId, role: targetUserRole, rating, skip, limit } = req.query
+
+  if (targetUserId) {
+    checkIdValidity(targetUserId)
+  }
 
   const match = getMatchOptions({ targetUserId, targetUserRole, rating })
 

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 const Review = require('~/models/review')
 
-const calculateReviewStats = async (targetUserId, targetUserRole) => {
-  const [reviews] = await Review.aggregate([
+const calculateReviewStats = (targetUserId, targetUserRole) => {
+  Review.aggregate([
     {
       $match: {
         targetUserId: mongoose.Types.ObjectId(targetUserId),
@@ -47,8 +47,6 @@ const calculateReviewStats = async (targetUserId, targetUserRole) => {
       }
     }
   ])
-
-  return { ...reviews }
 }
 
 module.exports = calculateReviewStats

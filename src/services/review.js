@@ -96,7 +96,7 @@ const reviewService = {
   addReview: async (author, data) => {
     const { comment, rating, targetUserId, targetUserRole, offer } = data
 
-    return await Review.create({
+    const review = await Review.create({
       comment,
       rating,
       author,
@@ -104,6 +104,10 @@ const reviewService = {
       targetUserRole,
       offer
     })
+
+    await calculateReviewStats(targetUserId, targetUserRole)
+
+    return review
   },
 
   updateReview: async (id, currentUserId, updateData) => {
@@ -120,11 +124,19 @@ const reviewService = {
     for (const field in filteredUpdateData) {
       review[field] = filteredUpdateData[field]
     }
+
     await review.save()
+
+    const { targetUserId, targetUserRole } = review
+    await calculateReviewStats(targetUserId, targetUserRole)
   },
 
   deleteReview: async (id) => {
+    const review = await Review.findById(id).lean().exec()
+    const { targetUserId, targetUserRole } = review
+
     await Review.findByIdAndRemove(id).exec()
+    await calculateReviewStats(targetUserId, targetUserRole)
   }
 }
 

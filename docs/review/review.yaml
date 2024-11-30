@@ -5,8 +5,8 @@ paths:
         - cookieAuth: []
       tags:
         - Reviews
-      summary: Find all reviews
-      description: Finds and returns an array with a list of reviews.
+      summary: Retrieve reviews based on criteria or all reviews.
+      description: Find all reviews that match the specified criteria or all reviews if no criteria is provided.
       produces:
         - application/json
       parameters:

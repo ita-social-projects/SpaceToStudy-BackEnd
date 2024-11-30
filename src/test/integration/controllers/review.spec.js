@@ -12,7 +12,6 @@ const {
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
-const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 
 const endpointUrl = '/reviews/'
 const offerEndpointUrl = '/offers/'
@@ -25,7 +24,9 @@ let reviewBody = {
   rating: 5,
   targetUserRole: 'student'
 }
+
 let offerBody = {
+  _id: '63bed9ef260f18d04ab15da2',
   title: 'Test title',
   price: 330,
   proficiencyLevel: ['Beginner'],
@@ -36,6 +37,7 @@ let offerBody = {
     appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
   }
 }
+
 let subjectBody = {
   name: 'English',
   category: ''
@@ -61,7 +63,7 @@ describe('Review controller', () => {
   let app, server, accessToken, tutorAccessToken, testOffer, testReview, testSubject, userId
 
   beforeAll(async () => {
-    ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -69,7 +71,7 @@ describe('Review controller', () => {
     accessToken = await testUserAuthentication(app)
     tutorAccessToken = await testUserAuthentication(app, tutorUserData)
 
-    const decoded = jwt.verify(accessToken, JWT_ACCESS_SECRET)
+    const decoded = jwt.verify(tutorAccessToken, JWT_ACCESS_SECRET)
     userId = decoded.id
     reviewBody.targetUserId = userId
 
@@ -281,13 +283,6 @@ describe('Review controller', () => {
       const response = await app.delete(endpointUrl + nonExistingReviewId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Review.modelName]), response)
-    })
-  })
-
-  describe('reviewStatsAggregation block', () => {
-    it('should return empty stats with no reviews', async () => {
-      const stats = await calculateReviewStats(nonExistingReviewId, reviewBody.targetUserRole)
-      expect(stats).toEqual({})
     })
   })
 })

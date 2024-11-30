@@ -147,6 +147,27 @@ const cooperationService = {
 
     await cooperation.validate()
     await cooperation.save()
+  },
+
+  getProficiencyLevels: async (offerId, requesterId, partnerId) => {
+    const proficiencyLevel = await Cooperation.findOne({
+      offer: offerId,
+      $or: [
+        {
+          receiver: requesterId,
+          initiator: partnerId
+        },
+        {
+          receiver: partnerId,
+          initiator: requesterId
+        }
+      ]
+    })
+      .select('proficiencyLevel')
+      .lean()
+      .exec()
+
+    return proficiencyLevel ? proficiencyLevel.proficiencyLevel : null
   }
 }
 

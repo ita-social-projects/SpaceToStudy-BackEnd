@@ -3,16 +3,20 @@ const calculateReviewStats = require('~/utils/reviews/reviewStatsAggregation')
 const { createForbiddenError } = require('~/utils/errorsHelper')
 const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedReviewFieldsForUpdate } = require('~/validation/services/review')
+const cooperationService = require('~/services/cooperation')
 
 const reviewService = {
   getReviews: async (match, skip, limit) => {
     const count = await Review.countDocuments(match)
 
     const reviews = await Review.find(match)
-      .populate({ path: 'author', select: ['firstName', 'lastName', 'photo'] })
+      .populate({
+        path: 'author',
+        select: ['firstName', 'lastName', 'photo']
+      })
       .populate({
         path: 'offer',
-        select: ['subject', 'proficiencyLevel', 'category'],
+        select: ['subject', 'category'],
         populate: [
           { path: 'category', select: 'name' },
           { path: 'subject', select: 'name' }
@@ -22,6 +26,15 @@ const reviewService = {
       .limit(limit)
       .lean()
       .exec()
+
+    for (const review of reviews) {
+      const {
+        offer: { _id: offerId },
+        author,
+        targetUserId
+      } = review
+      review.proficiencyLevel = await cooperationService.getProficiencyLevels(offerId, author, targetUserId)
+    }
 
     return {
       count,

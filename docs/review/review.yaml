@@ -82,7 +82,16 @@ paths:
                     proficiencyLevel: Advanced
                     createdAt: 2022-10-18T13:25:36.292Z
                     updatedAt: 2022-10-18T13:25:36.292Z
-
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 400
+                code: INVALID_ID
+                message: ID is invalid.
         401:
           description: Unauthorized
           content:
@@ -123,45 +132,25 @@ paths:
               schema:
                 $ref: '#/definitions/review'
               example:
-                _id: 8755bc080a00adr9243df104
-                comment: Best tutor!
-                rating: 5
+                _id: 6255bc080a75adf9223df100
+                comment: Not bad
+                rating: 4
                 author:
-                  _id: 6255bc080a75adf9223df211
-                  role: [student, tutor]
+                  _id: 6255bc080a75adf9223df100
                   firstName: John
                   lastName: Doe
-                  email: johndoe@gmail.com
-                  mainSubjects:
-                    {
-                      student:
-                        [
-                          { _id: 6255bc080a75adf9223df444, name: Languages },
-                          { _id: 6255bc080a75adf443d7644, name: Biology }
-                        ],
-                      tutor: [{ _id: 6255bc080a75adf9223df444, name: English }]
-                    }
-                  totalReviews: 10
-                  averageRating: 4.5
-                  nativeLanguage: english
-                  address: { country: The USA, city: California }
-                  education: KNPU H.S. Skovoroda
                   photo: john-doe-photo.jpg
-                  lastLogin: null
-                  createdAt: 2021-04-09T11:34:53.243+00:00
-                  updatedAt: 2022-09-02T11:59:53.243+00:00
                 targetUserId: 6255bc080a75adf9223df212
                 targetUserRole: tutor
                 offer:
                   _id: 63ebc6fbd2f34037d0aba791
-                  price: 300
-                  proficiencyLevel: Advanced
-                  description: Extended English language course
-                  languages: English, Ukrainian
-                  authorRole: tutor
-                  author: 63e63bb04d1bf3bea00e3d88
-                  subject: 6255bc080a71adf9222df134
-                  category: 64045f98b131dd04d7896af6
+                  subject:
+                    _id: 6255bc080a71adf9223df134
+                    name: English
+                  category:
+                    _id: 64045f98b131dd04d7896af6
+                    name: languages
+                proficiencyLevel: Beginner
                 createdAt: 2022-10-18T13:25:36.292Z
                 updatedAt: 2022-10-18T13:25:36.292Z
         400:
@@ -172,8 +161,8 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 400
-                code: REVIEW_NOT_CREATED
-                message: You are allowed to leave only one review for a tutor.
+                code: CANNOT_TARGET_SELF
+                message: You cannot perform this action on yourself.
         401:
           description: Unauthorized
           content:
@@ -184,16 +173,16 @@ paths:
                 status: 401
                 code: UNAUTHORIZED
                 message: The requested URL requires user authorization.
-        403:
-          description: Forbidden
+        404:
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/Error'
               example:
-                status: 403
-                code: FORBIDDEN
-                message: You do not have permission to perform this action.
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Offer with the specified ID was not found.
   /reviews/{id}:
     get:
       security:

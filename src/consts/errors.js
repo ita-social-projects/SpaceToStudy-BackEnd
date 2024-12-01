@@ -31,6 +31,10 @@ const errors = {
     code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
     message: `${field} cannot be shorter than ${length.min} and longer than ${length.max} characters.`
   }),
+  FIELD_IS_NOT_IN_RANGE: (field, range) => ({
+    code: 'FIELD_IS_NOT_IN_RANGE',
+    message: `${field} should be in range from ${range.min} to ${range.max}.`
+  }),
   NAME_FIELD_IS_NOT_OF_PROPER_FORMAT: (field) => ({
     code: 'NAME_NOT_VALID',
     message: `${field} can contain alphabetic characters only.`

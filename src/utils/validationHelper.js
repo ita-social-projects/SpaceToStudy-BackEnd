@@ -2,6 +2,7 @@ const {
   FIELD_IS_NOT_DEFINED,
   FIELD_IS_NOT_OF_PROPER_TYPE,
   FIELD_IS_NOT_OF_PROPER_LENGTH,
+  FIELD_IS_NOT_IN_RANGE,
   FIELD_IS_NOT_OF_PROPER_FORMAT,
   FIELD_IS_NOT_OF_PROPER_ENUM_VALUE
 } = require('~/consts/errors')
@@ -23,7 +24,7 @@ const castValueToType = (value, type) => {
   }
 
   if (type === 'number') {
-    return Number(value)
+    return isNaN(Number(value)) ? value : Number(value)
   }
 
   return value
@@ -40,6 +41,12 @@ const validateType = (schemaFieldKey, type, field) => {
 const validateLength = (schemaFieldKey, length, field) => {
   if (field.length < length.min || field.length > length.max) {
     throw createError(422, FIELD_IS_NOT_OF_PROPER_LENGTH(schemaFieldKey, length))
+  }
+}
+
+const validateRange = (schemaFieldKey, range, field) => {
+  if (field < range.min || field > range.max) {
+    throw createError(422, FIELD_IS_NOT_IN_RANGE(schemaFieldKey, range))
   }
 }
 
@@ -60,6 +67,7 @@ const validateFunc = {
   required: validateRequired,
   type: validateType,
   length: validateLength,
+  range: validateRange,
   regex: validateRegex,
   enum: validateEnum
 }
@@ -68,5 +76,6 @@ module.exports = {
   validateRequired,
   validateType,
   validateLength,
+  validateRange,
   validateFunc
 }

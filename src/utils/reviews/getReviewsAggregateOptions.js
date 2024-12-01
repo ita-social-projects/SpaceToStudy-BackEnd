@@ -117,6 +117,7 @@ const getReviewsAggregateOptions = (match, skip, limit) => {
         'offer.category.name': 1,
         'offer.category._id': 1,
         'offer._id': 1,
+        'author._id': 1,
         'author.firstName': 1,
         'author.lastName': 1,
         'author.photo': 1,
@@ -131,12 +132,12 @@ const getReviewsAggregateOptions = (match, skip, limit) => {
     }
   ]
 
-  if (!isNaN(Number(skip))) {
-    pipeline.push({ $skip: parseInt(skip) })
+  if (Number.isInteger(skip) && skip > 0) {
+    pipeline.push({ $skip: skip })
   }
 
-  if (!isNaN(Number(limit))) {
-    pipeline.push({ $limit: parseInt(limit) })
+  if (Number.isInteger(limit) && limit > 0) {
+    pipeline.push({ $limit: limit })
   }
 
   return pipeline

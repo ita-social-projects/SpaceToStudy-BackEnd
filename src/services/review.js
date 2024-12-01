@@ -9,7 +9,7 @@ const getReviewsAggregateOptions = require('~/utils/reviews/getReviewsAggregateO
 
 const reviewService = {
   getReviews: async (match, skip, limit) => {
-    const count = await Review.countDocuments(match)
+    const count = await Review.countDocuments(match).skip(skip).limit(limit).exec()
 
     const pipeline = getReviewsAggregateOptions(match, skip, limit)
     const reviews = await Review.aggregate(pipeline).exec()

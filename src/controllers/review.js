@@ -11,7 +11,7 @@ const getReviews = async (req, res) => {
 
   const match = getMatchOptions({ targetUserId, targetUserRole, rating })
 
-  const reviews = await reviewService.getReviews(match, parseInt(skip), parseInt(limit))
+  const reviews = await reviewService.getReviews(match, skip, limit)
 
   res.status(200).json(reviews)
 }

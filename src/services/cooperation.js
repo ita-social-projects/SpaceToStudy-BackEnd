@@ -168,25 +168,6 @@ const cooperationService = {
       .exec()
 
     return proficiencyLevel ? proficiencyLevel.proficiencyLevel : null
-  },
-
-  getCooperationsByOfferAndUsers: async (offerIds, authorIds, targetUserIds) => {
-    return Cooperation.find({
-      offer: { $in: offerIds },
-      $or: [
-        {
-          receiver: { $in: authorIds },
-          initiator: { $in: targetUserIds }
-        },
-        {
-          receiver: { $in: targetUserIds },
-          initiator: { $in: authorIds }
-        }
-      ]
-    })
-      .select('offer proficiencyLevel receiver initiator')
-      .lean()
-      .exec()
   }
 }
 

@@ -129,14 +129,15 @@ const cooperationService = {
 
     let resourceIdExists = false
 
-    cooperation.sections.forEach((section) => {
-      section.resources.forEach((resource) => {
+    for (const section of cooperation.sections) {
+      for (const resource of section.resources) {
         if (resource.resource.toString() === resourceId) {
           resource.completionStatus = completionStatus
           resourceIdExists = true
+          break
         }
-      })
-    })
+      }
+    }
 
     if (!resourceIdExists) {
       throw createError(404, DOCUMENT_NOT_FOUND([`Resource in ${Cooperation.modelName}`]))

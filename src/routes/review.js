@@ -4,7 +4,9 @@ const idValidation = require('~/middlewares/idValidation')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const { authMiddleware } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
+const validationMiddleware = require('~/middlewares/validation')
 
+const { updateValidationSchema } = require('~/validation/schemas/review')
 const reviewController = require('~/controllers/review')
 const User = require('~/models/user')
 const Offer = require('~/models/offer')
@@ -23,7 +25,12 @@ router.param('id', idValidation)
 router.get('/', asyncWrapper(reviewController.getReviews))
 router.post('/', isEntityValid({ body }), asyncWrapper(reviewController.addReview))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(reviewController.getReviewById))
-router.patch('/:id', isEntityValid({ params }), asyncWrapper(reviewController.updateReview))
+router.patch(
+  '/:id',
+  isEntityValid({ params }),
+  validationMiddleware(updateValidationSchema),
+  asyncWrapper(reviewController.updateReview)
+)
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(reviewController.deleteReview))
 
 module.exports = router

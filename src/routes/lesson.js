@@ -1,7 +1,7 @@
 const router = require('express').Router()
 
 const asyncWrapper = require('~/middlewares/asyncWrapper')
-const { authMiddleware, restrictTo, ownershipMiddleware } = require('~/middlewares/auth')
+const { authMiddleware, restrictTo, ownershipMiddleware, availabilityMiddleware } = require('~/middlewares/auth')
 const idValidation = require('~/middlewares/idValidation')
 const isEntityValid = require('~/middlewares/entityValidation')
 const lessonController = require('~/controllers/lesson')
@@ -24,7 +24,7 @@ router.param('id', idValidation)
 
 router.get('/', asyncWrapper(lessonController.getLessons))
 router.use('/:id', isEntityValid({ params }), asyncWrapper(ownershipMiddleware(Lesson, ownerFields, CooperationModel)))
-router.get('/:id', asyncWrapper(lessonController.getLessonById))
+router.get('/:id', asyncWrapper(availabilityMiddleware(CooperationModel)), asyncWrapper(lessonController.getLessonById))
 router.use(restrictTo(TUTOR))
 router.post('/', isEntityValid({ body }), asyncWrapper(lessonController.createLesson))
 router.patch('/:id', asyncWrapper(lessonController.updateLesson))

@@ -5,7 +5,7 @@ const Question = require('~/models/question')
 const questionController = require('~/controllers/question')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const isEntityValid = require('~/middlewares/entityValidation')
-const { authMiddleware, restrictTo, ownershipMiddleware } = require('~/middlewares/auth')
+const { authMiddleware, restrictTo, ownershipMiddleware, availabilityMiddleware } = require('~/middlewares/auth')
 const {
   MODEL_CONFIGS: { CooperationModel }
 } = require('~/consts/modelPath')
@@ -23,7 +23,11 @@ router.use(
   isEntityValid({ params }),
   asyncWrapper(ownershipMiddleware(Question, ownerFields, CooperationModel))
 )
-router.get('/:id', isEntityValid({ params }), asyncWrapper(questionController.getQuestionById))
+router.get(
+  '/:id',
+  asyncWrapper(availabilityMiddleware(CooperationModel)),
+  asyncWrapper(questionController.getQuestionById)
+)
 router.use(restrictTo(TUTOR))
 router.post('/', asyncWrapper(questionController.createQuestion))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(questionController.deleteQuestion))

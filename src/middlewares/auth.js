@@ -59,4 +59,13 @@ const ownershipMiddleware =
     next()
   }
 
-module.exports = { authMiddleware, authSocketMiddleware, restrictTo, ownershipMiddleware }
+const availabilityMiddleware =
+  (relationshipModel, expectedAvailability = 'open') =>
+  async (req, res, next) => {
+    const resourceId = req.params.id
+
+    await userService.checkAvailability({ relationshipModel, resourceId, expectedAvailability })
+    next()
+  }
+
+module.exports = { authMiddleware, authSocketMiddleware, restrictTo, ownershipMiddleware, availabilityMiddleware }

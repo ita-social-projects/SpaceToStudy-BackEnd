@@ -6,9 +6,9 @@ const MODEL_CONFIGS = {
     ownerFields: ['author', 'initiator', 'receiver'],
     dynamicPaths: {
       sectionsResources: 'sections.resources',
-      availabilityField: 'availability.status',
       resourceField: 'resource',
-      userFields: ['initiator', 'receiver']
+      userFields: ['initiator', 'receiver'],
+      availabilityField: 'availability.status'
     }
   }
 }

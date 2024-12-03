@@ -1,71 +1,73 @@
-const azureStorage = require('azure-storage')
+const { BlobServiceClient, StorageSharedKeyCredential } = require('@azure/storage-blob')
 const {
   azureAccess: { STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST }
 } = require('~/configs/config')
 
-let blobService
+let blobServiceClient
+let containerClient
+let blockBlobClient
+let newBlockBlobClient
+
+function getBlobServiceClient() {
+  const credential = new StorageSharedKeyCredential(STORAGE_ACCOUNT, ACCESS_KEY)
+  const _blobServiceClient = new BlobServiceClient(AZURE_HOST, credential)
+
+  return _blobServiceClient
+}
 
 const uploadService = {
-  uploadFile: (name, buffer, containerName) => {
-    blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
-
+  uploadFile: async (name, buffer, containerName) => {
     const blobName = `${Date.now()}-${name}`
-
-    return new Promise((resolve, reject) => {
-      const stream = blobService.createWriteStreamToBlockBlob(containerName, blobName, (error) => {
-        if (error) {
-          return reject(new Error(`Failed to upload file: ${error.message}`))
-        }
-        resolve(blobName)
-      })
-
-      stream.on('error', (error) => {
-        reject(new Error(`Stream error during upload: ${error.message}`))
-      })
-
-      stream.end(buffer)
-    })
+    blobServiceClient = getBlobServiceClient()
+    containerClient = blobServiceClient.getContainerClient(containerName)
+    blockBlobClient = containerClient.getBlockBlobClient(blobName)
+    try {
+      await blockBlobClient.uploadData(buffer)
+      return blobName
+    } catch (error) {
+      throw new Error(`Failed to upload file: ${error.message}`)
+    }
   },
 
   updateFile: async (name, newName, containerName) => {
-    blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
+    blobServiceClient = getBlobServiceClient()
+    containerClient = blobServiceClient.getContainerClient(containerName)
+    blockBlobClient = containerClient.getBlockBlobClient(name)
 
-    const blobUrl = `${AZURE_HOST}/${containerName}/${name}`
+    const blobUrl = blockBlobClient.url
     const newBlobName = `${Date.now()}-${newName}`
+    newBlockBlobClient = containerClient.getBlockBlobClient(newBlobName)
 
-    return new Promise((resolve, reject) => {
-      blobService.startCopyBlob(blobUrl, containerName, newBlobName, (error) => {
-        if (error) {
-          return reject(new Error(`Failed to copy blob: ${error.message}`))
-        }
+    let properties
 
-        blobService.getBlobProperties(containerName, newBlobName, (err, properties) => {
-          if (err) {
-            return reject(new Error(`Failed to get blob properties: ${err.message}`))
-          }
+    try {
+      const copyResponse = await newBlockBlobClient.beginCopyFromURL(blobUrl)
+      await copyResponse.pollUntilDone()
+    } catch (error) {
+      throw new Error(`Failed to copy blob: ${error.message}`)
+    }
+    try {
+      properties = await newBlockBlobClient.getProperties()
+    } catch (error) {
+      throw new Error(`Failed to get blob properties: ${error.message}`)
+    }
 
-          if (properties.copy.status !== 'success') {
-            return reject(new Error(`Blob copy did not succeed for: ${name}`))
-          }
+    if (properties.copyStatus !== 'success') throw new Error(`Blob copy did not succeed for: ${name}`)
 
-          uploadService.deleteFile(name, containerName)
-          resolve(newBlobName)
-        })
-      })
-    })
+    uploadService.deleteFile(name, containerName)
+    return newName
   },
 
-  deleteFile: (fileName, containerName) => {
-    blobService = azureStorage.createBlobService(STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST)
-
-    return new Promise((resolve, reject) =>
-      blobService.deleteBlobIfExists(containerName, fileName, (err, res) => {
-        if (err) {
-          reject(new Error(`Failed to delete file: ${err.message}`))
-        }
-        resolve(res)
-      })
-    ).catch((e) => e.message)
+  deleteFile: async (blobName, containerName) => {
+    blobServiceClient = getBlobServiceClient()
+    containerClient = blobServiceClient.getContainerClient(containerName)
+    blockBlobClient = containerClient.getBlockBlobClient(blobName)
+    try {
+      await blockBlobClient.deleteIfExists()
+      return blobName
+    } catch (error) {
+      throw new Error(`Failed to delete file: ${error.message}`)
+    }
   }
 }
 

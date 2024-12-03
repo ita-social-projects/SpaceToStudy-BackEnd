@@ -5,22 +5,32 @@ const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors
 const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
 const uploadService = require('~/services/upload')
-
+const util = require('util')
 const {
   enums: { RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
 
-jest.mock('azure-storage', () => {
-  const fn = (containerName, blobName, cb) => {
-    cb(null, blobName)
+jest.mock('@azure/storage-blob', () => {
+  const mockBlockBlobClient = {
+    uploadData: jest.fn(() => {
+      Promise.resolve()
+    })
+  }
+
+  const mockContainerClient = {
+    getBlockBlobClient: jest.fn(() => mockBlockBlobClient)
   }
 
   const blobServiceStub = {
-    createWriteStreamToBlockBlob: fn
+    getContainerClient: jest.fn(() => mockContainerClient)
   }
 
   return {
-    createBlobService: jest.fn(() => blobServiceStub)
+    StorageSharedKeyCredential: jest.fn(() => ({
+      accountName: 'mockAccount',
+      accountKey: 'mockKey'
+    })),
+    BlobServiceClient: jest.fn(() => blobServiceStub)
   }
 })
 
@@ -82,6 +92,8 @@ describe('Attachments controller', () => {
       .post(endpointUrl)
       .set('Cookie', [`accessToken=${accessToken}`])
       .send({ testFile })
+
+    console.log('AHAHHAHAHAAHHAAH' + util.inspect(testAttachmentsResponse.body) + 'jopa')
     testAttachmentId = testAttachmentsResponse.body[0]._id
   })
 

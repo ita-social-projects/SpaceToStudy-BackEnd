@@ -5,7 +5,6 @@ const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors
 const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
 const uploadService = require('~/services/upload')
-const util = require('util')
 const {
   enums: { RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
@@ -93,7 +92,6 @@ describe('Attachments controller', () => {
       .set('Cookie', [`accessToken=${accessToken}`])
       .send({ testFile })
 
-    console.log('AHAHHAHAHAAHHAAH' + util.inspect(testAttachmentsResponse.body) + 'jopa')
     testAttachmentId = testAttachmentsResponse.body[0]._id
   })
 

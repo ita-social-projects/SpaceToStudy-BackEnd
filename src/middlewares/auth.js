@@ -60,12 +60,12 @@ const ownershipMiddleware =
   }
 
 const availabilityMiddleware =
-  (relationshipModel, expectedAvailability = 'open') =>
+  (model, relationshipModel, expectedAvailability = 'open') =>
   async (req, res, next) => {
     const resourceId = req.params.id
     const userId = req.user.id
 
-    await userService.checkAvailability({ relationshipModel, resourceId, userId, expectedAvailability })
+    await userService.checkAvailability({ model, relationshipModel, resourceId, userId, expectedAvailability })
     next()
   }
 

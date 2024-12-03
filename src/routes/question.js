@@ -25,7 +25,7 @@ router.use(
 )
 router.get(
   '/:id',
-  asyncWrapper(availabilityMiddleware(CooperationModel)),
+  asyncWrapper(availabilityMiddleware(Question, CooperationModel)),
   asyncWrapper(questionController.getQuestionById)
 )
 router.use(restrictTo(TUTOR))

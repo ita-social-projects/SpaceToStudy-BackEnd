@@ -393,7 +393,8 @@ describe('User service', () => {
     }
 
     const mockLessonModel = {
-      findById: jest.fn()
+      findById: jest.fn(),
+      findOne: jest.fn()
     }
 
     const mockCooperationModel = {
@@ -496,18 +497,20 @@ describe('User service', () => {
     })
 
     describe('checkAvailability', () => {
-      it('should return true if the resource is available and user is a receiver', async () => {
-        const receiverQuery = {
-          [MODEL_CONFIGS.CooperationModel.dynamicPaths.userFields[1]]: userId,
-          [MODEL_CONFIGS.CooperationModel.dynamicPaths.sectionsResources]: {
-            $elemMatch: {
-              [MODEL_CONFIGS.CooperationModel.dynamicPaths.resourceField]: lessonResource._id
-            }
-          }
+      beforeEach(() => {
+        jest.clearAllMocks()
+      })
+
+      it('should return true if the user is the author of the resource', async () => {
+        const lessonResourceWithAuthor = {
+          ...lessonResource,
+          author: userId
         }
-        mockCooperationModel.findOne.mockResolvedValue(cooperationResource)
+
+        mockLessonModel.findOne.mockResolvedValue(lessonResourceWithAuthor)
 
         const result = await userService.checkAvailability({
+          model: mockLessonModel,
           relationshipModel: MODEL_CONFIGS.CooperationModel,
           resourceId: lessonResource._id,
           userId,
@@ -515,7 +518,10 @@ describe('User service', () => {
         })
 
         expect(result).toBe(true)
-        expect(mockCooperationModel.findOne).toHaveBeenCalledWith(receiverQuery)
+        expect(mockLessonModel.findOne).toHaveBeenCalledWith({
+          _id: lessonResource._id,
+          author: userId
+        })
       })
 
       it('should return true if the resource has the expected availability', async () => {
@@ -528,26 +534,31 @@ describe('User service', () => {
           }
         }
 
-        mockCooperationModel.findOne.mockResolvedValueOnce(null).mockResolvedValueOnce(cooperationResource)
+        mockLessonModel.findOne.mockResolvedValue(null)
+        mockCooperationModel.findOne.mockResolvedValue(cooperationResource)
 
         const result = await userService.checkAvailability({
+          model: mockLessonModel,
           relationshipModel: MODEL_CONFIGS.CooperationModel,
           resourceId: lessonResource._id,
+          userId,
           expectedAvailability: 'open'
         })
 
         expect(result).toBe(true)
-        expect(mockCooperationModel.findOne).toHaveBeenNthCalledWith(2, availabilityQuery)
+        expect(mockCooperationModel.findOne).toHaveBeenCalledWith(availabilityQuery)
       })
 
-      it('should throw a 403 error if the user is not a receiver and resource is not available', async () => {
+      it('should throw a 403 error if the user is neither the author nor the resource is available', async () => {
+        mockLessonModel.findOne.mockResolvedValue(null)
         mockCooperationModel.findOne.mockResolvedValue(null)
 
         await expect(
           userService.checkAvailability({
+            model: mockLessonModel,
             relationshipModel: MODEL_CONFIGS.CooperationModel,
             resourceId: lessonResource._id,
-            userId: invalidUserId,
+            userId,
             expectedAvailability: 'open'
           })
         ).rejects.toThrowError(createError(403, FORBIDDEN))

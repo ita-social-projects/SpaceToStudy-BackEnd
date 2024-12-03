@@ -24,7 +24,11 @@ router.param('id', idValidation)
 
 router.get('/', asyncWrapper(lessonController.getLessons))
 router.use('/:id', isEntityValid({ params }), asyncWrapper(ownershipMiddleware(Lesson, ownerFields, CooperationModel)))
-router.get('/:id', asyncWrapper(availabilityMiddleware(CooperationModel)), asyncWrapper(lessonController.getLessonById))
+router.get(
+  '/:id',
+  asyncWrapper(availabilityMiddleware(Lesson, CooperationModel)),
+  asyncWrapper(lessonController.getLessonById)
+)
 router.use(restrictTo(TUTOR))
 router.post('/', isEntityValid({ body }), asyncWrapper(lessonController.createLesson))
 router.patch('/:id', asyncWrapper(lessonController.updateLesson))

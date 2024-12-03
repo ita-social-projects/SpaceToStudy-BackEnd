@@ -368,17 +368,12 @@ const userService = {
     throw createError(403, FORBIDDEN)
   },
 
-  checkAvailability: async ({ relationshipModel, resourceId, userId, expectedAvailability = 'open' }) => {
-    const { sectionsResources, resourceField, availabilityField, userFields } = relationshipModel.dynamicPaths
+  checkAvailability: async ({ model, relationshipModel, resourceId, userId, expectedAvailability = 'open' }) => {
+    const { sectionsResources, resourceField, availabilityField } = relationshipModel.dynamicPaths
 
-    const isReceiverQuery = {
-      [userFields[1]]: userId,
-      [sectionsResources]: { $elemMatch: { [resourceField]: resourceId } }
-    }
+    const isAuthor = await model.findOne({ _id: resourceId, author: userId })
 
-    const isReceiver = await relationshipModel.model.findOne(isReceiverQuery)
-
-    if (isReceiver) {
+    if (isAuthor) {
       return true
     }
 

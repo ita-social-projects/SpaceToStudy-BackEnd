@@ -368,7 +368,7 @@ describe('User service', () => {
     })
   })
 
-  describe('checkOwnership', () => {
+  describe('Ownership and Availability Services', () => {
     const userId = '1'
     const invalidUserId = '10'
     const lessonResource = {
@@ -417,80 +417,114 @@ describe('User service', () => {
       jest.clearAllMocks()
     })
 
-    it('should return the lesson if user is an owner (initiator or receiver) via cooperation and availability is "open"', async () => {
-      mockLessonModel.findById.mockResolvedValue(lessonResource)
-      mockCooperationModel.findOne.mockResolvedValue(cooperationResource)
+    describe('checkOwnership', () => {
+      it('should return the lesson if user is an owner (initiator or receiver) via cooperation', async () => {
+        mockLessonModel.findById.mockResolvedValue(lessonResource)
+        mockCooperationModel.findOne.mockResolvedValue(cooperationResource)
 
-      const result = await userService.checkOwnership(
-        mockLessonModel,
-        ['initiator', 'receiver'],
-        lessonResource._id,
-        userId,
-        MODEL_CONFIGS.CooperationModel
-      )
-
-      expect(result).toEqual(lessonResource)
-      expect(mockLessonModel.findById).toHaveBeenCalledWith(lessonResource._id)
-      expect(mockCooperationModel.findOne).toHaveBeenCalledWith({
-        'sections.resources': {
-          $elemMatch: { resource: lessonResource._id, availability: 'open' }
-        },
-        $or: [{ initiator: userId }, { receiver: userId }]
-      })
-    })
-
-    it('should throw a 404 error if the resource does not exist', async () => {
-      mockLessonModel.findById.mockResolvedValue(null)
-
-      await expect(
-        userService.checkOwnership(mockLessonModel, ['initiator', 'receiver'], lessonResource._id, userId)
-      ).rejects.toThrowError(createError(404, DOCUMENT_NOT_FOUND([mockLessonModel.modelName])))
-    })
-
-    it('should throw a 403 error if the user is not an owner or related via cooperation', async () => {
-      mockLessonModel.findById.mockResolvedValue(lessonResource)
-      mockCooperationModel.findOne.mockResolvedValue(null)
-
-      await expect(
-        userService.checkOwnership(
+        const result = await userService.checkOwnership(
           mockLessonModel,
           ['initiator', 'receiver'],
           lessonResource._id,
-          invalidUserId,
+          userId,
           MODEL_CONFIGS.CooperationModel
         )
-      ).rejects.toThrowError(createError(403, FORBIDDEN))
+
+        expect(result).toEqual(lessonResource)
+        expect(mockLessonModel.findById).toHaveBeenCalledWith(lessonResource._id)
+        expect(mockCooperationModel.findOne).toHaveBeenCalledWith({
+          'sections.resources': {
+            $elemMatch: { resource: lessonResource._id }
+          },
+          $or: [{ initiator: userId }, { receiver: userId }]
+        })
+      })
+
+      it('should throw a 404 error if the resource does not exist', async () => {
+        mockLessonModel.findById.mockResolvedValue(null)
+
+        await expect(
+          userService.checkOwnership(mockLessonModel, ['initiator', 'receiver'], lessonResource._id, userId)
+        ).rejects.toThrowError(createError(404, DOCUMENT_NOT_FOUND([mockLessonModel.modelName])))
+      })
+
+      it('should throw a 403 error if the user is not an owner or related via cooperation', async () => {
+        mockLessonModel.findById.mockResolvedValue(lessonResource)
+        mockCooperationModel.findOne.mockResolvedValue(null)
+
+        await expect(
+          userService.checkOwnership(
+            mockLessonModel,
+            ['initiator', 'receiver'],
+            lessonResource._id,
+            invalidUserId,
+            MODEL_CONFIGS.CooperationModel
+          )
+        ).rejects.toThrowError(createError(403, FORBIDDEN))
+      })
+
+      it('should return the lesson if user is a direct owner', async () => {
+        const directOwnerLessonResource = {
+          ...lessonResource,
+          initiator: userId
+        }
+        mockLessonModel.findById.mockResolvedValue(directOwnerLessonResource)
+
+        const result = await userService.checkOwnership(
+          mockLessonModel,
+          ['initiator', 'receiver'],
+          directOwnerLessonResource._id,
+          userId
+        )
+
+        expect(result).toEqual(directOwnerLessonResource)
+        expect(mockLessonModel.findById).toHaveBeenCalledWith(directOwnerLessonResource._id)
+      })
+
+      it('should throw a 403 error if relationshipModel is not provided and user is not a direct owner', async () => {
+        const unrelatedLessonResource = {
+          ...lessonResource,
+          initiator: '2',
+          receiver: '3'
+        }
+        mockLessonModel.findById.mockResolvedValue(unrelatedLessonResource)
+
+        await expect(
+          userService.checkOwnership(mockLessonModel, ['initiator', 'receiver'], unrelatedLessonResource._id, userId)
+        ).rejects.toThrowError(createError(403, FORBIDDEN))
+      })
     })
 
-    it('should return the lesson if user is a direct owner', async () => {
-      const directOwnerLessonResource = {
-        ...lessonResource,
-        initiator: userId
-      }
-      mockLessonModel.findById.mockResolvedValue(directOwnerLessonResource)
+    describe('checkAvailability', () => {
+      it('should not throw an error if the resource is available with expected availability', async () => {
+        mockCooperationModel.findOne.mockResolvedValue(cooperationResource)
 
-      const result = await userService.checkOwnership(
-        mockLessonModel,
-        ['initiator', 'receiver'],
-        directOwnerLessonResource._id,
-        userId
-      )
+        await expect(
+          userService.checkAvailability({
+            relationshipModel: MODEL_CONFIGS.CooperationModel,
+            resourceId: lessonResource._id,
+            expectedAvailability: 'open'
+          })
+        ).resolves.not.toThrow()
 
-      expect(result).toEqual(directOwnerLessonResource)
-      expect(mockLessonModel.findById).toHaveBeenCalledWith(directOwnerLessonResource._id)
-    })
+        expect(mockCooperationModel.findOne).toHaveBeenCalledWith({
+          'sections.resources': {
+            $elemMatch: { resource: lessonResource._id, availability: 'open' }
+          }
+        })
+      })
 
-    it('should throw a 403 error if relationshipModel is not provided and user is not a direct owner', async () => {
-      const unrelatedLessonResource = {
-        ...lessonResource,
-        initiator: '2',
-        receiver: '3'
-      }
-      mockLessonModel.findById.mockResolvedValue(unrelatedLessonResource)
+      it('should throw a 403 error if the resource does not have the expected availability', async () => {
+        mockCooperationModel.findOne.mockResolvedValue(null)
 
-      await expect(
-        userService.checkOwnership(mockLessonModel, ['initiator', 'receiver'], unrelatedLessonResource._id, userId)
-      ).rejects.toThrowError(createError(403, FORBIDDEN))
+        await expect(
+          userService.checkAvailability({
+            relationshipModel: MODEL_CONFIGS.CooperationModel,
+            resourceId: lessonResource._id,
+            expectedAvailability: 'open'
+          })
+        ).rejects.toThrowError(createError(403, FORBIDDEN))
+      })
     })
   })
 })

@@ -2,7 +2,7 @@ const router = require('express').Router()
 
 const courseController = require('~/controllers/course')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
-const { authMiddleware, restrictTo, ownershipMiddleware } = require('~/middlewares/auth')
+const { authMiddleware, restrictTo } = require('~/middlewares/auth')
 const isEntityValid = require('~/middlewares/entityValidation')
 const idValidation = require('~/middlewares/idValidation')
 const Course = require('~/models/course')
@@ -10,10 +10,6 @@ const Lesson = require('~/models/lesson')
 
 const Attachment = require('~/models/attachment')
 const {
-  MODEL_CONFIGS: { CooperationModel }
-} = require('~/consts/modelPath')
-const {
-  ownerFields,
   roles: { TUTOR }
 } = require('~/consts/auth')
 
@@ -26,7 +22,7 @@ const params = [{ model: Course, idName: 'id' }]
 router.use(authMiddleware)
 
 router.param('id', idValidation)
-router.use('/:id', isEntityValid({ params }), asyncWrapper(ownershipMiddleware(Course, ownerFields, CooperationModel)))
+router.use('/:id', isEntityValid({ params }))
 
 router.get('/:id', asyncWrapper(courseController.getCourseById))
 router.use(restrictTo(TUTOR))

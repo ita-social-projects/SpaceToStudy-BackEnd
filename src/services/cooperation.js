@@ -167,7 +167,7 @@ const cooperationService = {
       .lean()
       .exec()
 
-    return proficiencyLevel ? proficiencyLevel.proficiencyLevel : null
+    return proficiencyLevel?.proficiencyLevel ?? null
   }
 }
 

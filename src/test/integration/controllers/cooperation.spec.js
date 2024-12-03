@@ -74,6 +74,33 @@ const testCooperationData = {
           resourceType: RESOURCES_TYPES_ENUM[0],
           availability: { status: 'open', date: null },
           completionStatus: RESOURCE_COMPLETION_STATUS_ENUM[0]
+        },
+        {
+          resource: {
+            _id: '6684179479e5232bce4579fa',
+            author: '6658f73f93885febb491e08b',
+            content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+            description: 'The quadratic formula',
+            title: 'Solving Quadratic Equations Using the Quadratic Formula',
+            category: '6684175179e5232bce4579ed',
+            resourceType: RESOURCES_TYPES_ENUM[0]
+          },
+          resourceType: RESOURCES_TYPES_ENUM[0],
+          availability: { status: 'closed', date: null },
+          completionStatus: RESOURCE_COMPLETION_STATUS_ENUM[0]
+        },
+        {
+          resource: {
+            _id: '6684179479e5232bce4579fa',
+            author: '6658f73f93885febb491e08b',
+            content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+            description: 'The quadratic formula',
+            title: 'Solving Quadratic Equations Using the Quadratic Formula',
+            category: '6684175179e5232bce4579ed',
+            resourceType: RESOURCES_TYPES_ENUM[0]
+          },
+          resourceType: RESOURCES_TYPES_ENUM[0],
+          availability: { status: 'openFrom', date: '2024-12-13T22:00:00.000Z' }
         }
       ]
     }
@@ -248,7 +275,25 @@ describe('Cooperation controller', () => {
       ...testActiveQuizData
     })
 
-    const testLessonResource = await Lesson.create({
+    const testLessonOpenResource = await Lesson.create({
+      author: testTutorUser.id,
+      content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+      description: 'The quadratic formula',
+      title: 'Solving Quadratic Equations Using the Quadratic Formula',
+      category: category._id,
+      resourceType: RESOURCES_TYPES_ENUM[0]
+    })
+
+    const testLessonClosedResource = await Lesson.create({
+      author: testTutorUser.id,
+      content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
+      description: 'The quadratic formula',
+      title: 'Solving Quadratic Equations Using the Quadratic Formula',
+      category: category._id,
+      resourceType: RESOURCES_TYPES_ENUM[0]
+    })
+
+    const testLessonOpenFromResource = await Lesson.create({
       author: testTutorUser.id,
       content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
       description: 'The quadratic formula',
@@ -264,9 +309,19 @@ describe('Cooperation controller', () => {
           ...testCooperationData.sections[0],
           resources: [
             {
-              resource: testLessonResource._id,
+              resource: testLessonOpenResource._id,
               resourceType: RESOURCES_TYPES_ENUM[0],
               availability: { status: 'open', date: null }
+            },
+            {
+              resource: testLessonClosedResource._id,
+              resourceType: RESOURCES_TYPES_ENUM[0],
+              availability: { status: 'closed', date: null }
+            },
+            {
+              resource: testLessonOpenFromResource._id,
+              resourceType: RESOURCES_TYPES_ENUM[0],
+              availability: { status: 'openFrom', date: '2024-12-13T22:00:00.000Z' }
             }
           ]
         }
@@ -391,6 +446,130 @@ describe('Cooperation controller', () => {
             ]
           }
         ],
+        createdAt: testCooperation._body.createdAt,
+        updatedAt: testCooperation._body.updatedAt
+      })
+    })
+
+    it('should not send closed resources for student', async () => {
+      const response = await app
+        .get(endpointUrl + testCooperation.body._id)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
+
+      expect(response.status).toBe(200)
+      expect(response.body).toMatchObject({
+        _id: testCooperation._body._id,
+        offer: {
+          _id: testOffer._id,
+          author: testOffer.author
+        },
+        initiator: {
+          ...testInitiator,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          lastLogin: expect.any(String),
+          _id: expect.any(String)
+        },
+        receiver: {
+          ...testTutor,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          lastLogin: expect.any(String),
+          _id: expect.any(String)
+        },
+        receiverRole: tutorUserData.role[0],
+        proficiencyLevel: testCooperationData.proficiencyLevel,
+        price: testCooperationData.price,
+        title: testCooperationData.title,
+        status: 'pending',
+        needAction: tutorUserData.role[0],
+        sections: [
+          {
+            _id: expect.any(String),
+            title: testCooperationData.sections[0].title,
+            description: testCooperationData.sections[0].description,
+            resources: [
+              {
+                resource: expect.objectContaining({
+                  _id: expect.any(String),
+                  author: expect.any(String),
+                  content: expect.any(String),
+                  description: expect.any(String),
+                  title: expect.any(String),
+                  category: expect.any(String),
+                  resourceType: expect.any(String)
+                }),
+                resourceType: testCooperationData.sections[0].resources[0].resourceType,
+                availability: {
+                  status: testCooperationData.sections[0].resources[0].availability.status,
+                  date: testCooperationData.sections[0].resources[0].availability.date
+                }
+              }
+            ]
+          }
+        ],
+        createdAt: testCooperation._body.createdAt,
+        updatedAt: testCooperation._body.updatedAt
+      })
+    })
+
+    it('should send closed resources for tutor', async () => {
+      const response = await app
+        .get(endpointUrl + testCooperation.body._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+
+      expect(response.status).toBe(200)
+      expect(response.body).toMatchObject({
+        _id: testCooperation._body._id,
+        offer: {
+          _id: testOffer._id,
+          author: testOffer.author
+        },
+        initiator: {
+          ...testInitiator,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          lastLogin: expect.any(String),
+          _id: expect.any(String)
+        },
+        receiver: {
+          ...testTutor,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          lastLogin: expect.any(String),
+          _id: expect.any(String)
+        },
+        receiverRole: tutorUserData.role[0],
+        proficiencyLevel: testCooperationData.proficiencyLevel,
+        price: testCooperationData.price,
+        title: testCooperationData.title,
+        status: 'pending',
+        needAction: tutorUserData.role[0],
+        sections: testCooperationData.sections.map((section) => {
+          return {
+            _id: expect.any(String),
+            title: section.title,
+            description: section.description,
+            resources: section.resources.map((resource) => {
+              return {
+                resource: expect.objectContaining({
+                  _id: expect.any(String),
+                  author: expect.any(String),
+                  content: expect.any(String),
+                  description: expect.any(String),
+                  title: expect.any(String),
+                  category: expect.any(String),
+                  resourceType: expect.any(String)
+                }),
+                resourceType: resource.resourceType,
+                availability: {
+                  status: resource.availability.status,
+                  date: resource.availability.date
+                }
+              }
+            })
+          }
+        }),
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })

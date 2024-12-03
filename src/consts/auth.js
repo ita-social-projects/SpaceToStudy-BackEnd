@@ -14,9 +14,11 @@ const tokenNames = {
 
 const oneDayInMs = 86400000
 const thirtyDaysInMs = 30 * oneDayInMs
+const ownerFields = ['initiator', 'receiver', 'author']
 
 module.exports = {
   roles,
+  ownerFields,
   oneDayInMs,
   thirtyDaysInMs,
   tokenNames

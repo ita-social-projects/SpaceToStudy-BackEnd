@@ -1,5 +1,6 @@
 const cookie = require('cookie')
 const { createUnauthorizedError, createForbiddenError } = require('~/utils/errorsHelper')
+const userService = require('~/services/user')
 const tokenService = require('~/services/token')
 
 const authMiddleware = (req, _res, next) => {
@@ -47,4 +48,13 @@ const restrictTo = (...roles) => {
   }
 }
 
-module.exports = { authMiddleware, authSocketMiddleware, restrictTo }
+const ownershipMiddleware = (model, accessFields) => async (req, res, next) => {
+  const resourceId = req.params.id
+  const userId = req.user.id
+
+  await userService.checkOwnership(model, resourceId, userId, accessFields)
+
+  next()
+}
+
+module.exports = { authMiddleware, authSocketMiddleware, restrictTo, ownershipMiddleware }

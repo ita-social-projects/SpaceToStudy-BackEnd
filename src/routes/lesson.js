@@ -1,13 +1,15 @@
 const router = require('express').Router()
 
 const asyncWrapper = require('~/middlewares/asyncWrapper')
-const { authMiddleware, restrictTo } = require('~/middlewares/auth')
+const { authMiddleware, restrictTo, ownershipMiddleware } = require('~/middlewares/auth')
 const idValidation = require('~/middlewares/idValidation')
 const isEntityValid = require('~/middlewares/entityValidation')
 const lessonController = require('~/controllers/lesson')
 const Lesson = require('~/models/lesson')
+const Cooperation = require('~/models/cooperation')
 const Attachment = require('~/models/attachment')
 const {
+  ownerFields,
   roles: { TUTOR }
 } = require('~/consts/auth')
 
@@ -18,11 +20,12 @@ router.use(authMiddleware)
 
 router.param('id', idValidation)
 
-router.get('/:id', isEntityValid({ params }), asyncWrapper(lessonController.getLessonById))
 router.get('/', asyncWrapper(lessonController.getLessons))
+router.use('/:id', isEntityValid({ params }), asyncWrapper(ownershipMiddleware(Lesson, ownerFields, Cooperation)))
+router.get('/:id', asyncWrapper(lessonController.getLessonById))
 router.use(restrictTo(TUTOR))
 router.post('/', isEntityValid({ body }), asyncWrapper(lessonController.createLesson))
-router.patch('/:id', isEntityValid({ params }), asyncWrapper(lessonController.updateLesson))
-router.delete('/:id', isEntityValid({ params }), asyncWrapper(lessonController.deleteLesson))
+router.patch('/:id', asyncWrapper(lessonController.updateLesson))
+router.delete('/:id', asyncWrapper(lessonController.deleteLesson))
 
 module.exports = router

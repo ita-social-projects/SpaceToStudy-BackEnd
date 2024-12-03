@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const Cooperation = require('~/models/cooperation')
 const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
 const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
@@ -24,10 +25,18 @@ const cooperationService = {
     return result
   },
 
-  getCooperationById: async (id) => {
-    return await (
-      await Cooperation.findById(id)
-    ).populate([
+  getCooperationById: async function (id, userRole) {
+    const isStudent = userRole === roles.STUDENT
+
+    const cooperationById = await (isStudent
+      ? this.getCooperationByIdForStudent(id)
+      : this.getCooperationByIdForTutor(id))
+
+    return cooperationById
+  },
+
+  getCooperationByIdForTutor: async (id) => {
+    const cooperationById = await Cooperation.findById(id).populate([
       { path: 'sections.resources.resource', select: '-createdAt -updatedAt' },
       {
         path: 'offer',
@@ -54,6 +63,408 @@ const cooperationService = {
         path: 'receiver'
       }
     ])
+
+    return cooperationById
+  },
+
+  getCooperationByIdForStudent: async (id) => {
+    const [cooperationById] = await Cooperation.aggregate([
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId(id)
+        }
+      },
+      {
+        $set: {
+          sections: {
+            $map: {
+              input: '$sections',
+              as: 'section',
+              in: {
+                _id: '$$section._id',
+                title: '$$section.title',
+                description: '$$section.description',
+                resources: {
+                  $filter: {
+                    input: '$$section.resources',
+                    as: 'resource',
+                    cond: {
+                      $eq: ['$$resource.availability.status', 'open']
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $unwind: {
+          path: '$sections',
+          includeArrayIndex: 'sections.sectionOrder',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $unwind: {
+          path: '$sections.resources',
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $lookup: {
+          from: 'attachments',
+          localField: 'sections.resources.resource',
+          foreignField: '_id',
+          as: 'attachment'
+        }
+      },
+      {
+        $lookup: {
+          from: 'lessons',
+          localField: 'sections.resources.resource',
+          foreignField: '_id',
+          as: 'lesson'
+        }
+      },
+      {
+        $lookup: {
+          from: 'quizzes',
+          localField: 'sections.resources.resource',
+          foreignField: '_id',
+          as: 'quiz'
+        }
+      },
+      {
+        $lookup: {
+          from: 'questions',
+          localField: 'sections.resources.resource',
+          foreignField: '_id',
+          as: 'question'
+        }
+      },
+      {
+        $set: {
+          'sections.resources.resource': {
+            $switch: {
+              branches: [
+                {
+                  case: {
+                    $eq: ['$sections.resources.resourceType', 'attachment']
+                  },
+                  then: {
+                    $first: '$attachment'
+                  }
+                },
+                {
+                  case: {
+                    $eq: ['$sections.resources.resourceType', 'lesson']
+                  },
+                  then: {
+                    $first: '$lesson'
+                  }
+                },
+                {
+                  case: {
+                    $eq: ['$sections.resources.resourceType', 'quiz']
+                  },
+                  then: {
+                    $first: '$quiz'
+                  }
+                },
+                {
+                  case: {
+                    $eq: ['$sections.resources.resourceType', 'question']
+                  },
+                  then: {
+                    $first: '$question'
+                  }
+                }
+              ],
+              default: '$$REMOVE'
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$sections._id',
+          resources: {
+            $push: '$sections.resources'
+          },
+          cooperationId: {
+            $first: '$_id'
+          },
+          offer: {
+            $first: '$offer'
+          },
+          initiator: {
+            $first: '$initiator'
+          },
+          initiatorRole: {
+            $first: '$initiatorRole'
+          },
+          receiver: {
+            $first: '$receiver'
+          },
+          receiverRole: {
+            $first: '$receiverRole'
+          },
+          title: {
+            $first: '$title'
+          },
+          additionalInfo: {
+            $first: '$additionalInfo'
+          },
+          proficiencyLevel: {
+            $first: '$proficiencyLevel'
+          },
+          price: {
+            $first: '$price'
+          },
+          status: {
+            $first: '$status'
+          },
+          needAction: {
+            $first: '$needAction'
+          },
+          availableQuizzes: {
+            $first: '$availableQuizzes'
+          },
+          finishedQuizzes: {
+            $first: '$finishedQuizzes'
+          },
+          sections: {
+            $first: '$sections'
+          },
+          createdAt: {
+            $first: '$createdAt'
+          },
+          updatedAt: {
+            $first: '$updatedAt'
+          },
+          sectionOrder: {
+            $first: '$sectionOrder'
+          }
+        }
+      },
+      {
+        $sort: {
+          'sections.sectionOrder': 1
+        }
+      },
+      {
+        $set: {
+          _id: '$cooperationId',
+          resources: '$$REMOVE',
+          cooperationId: '$$REMOVE',
+          'sections.sectionOrder': '$$REMOVE',
+          'sections.resources': {
+            $filter: {
+              input: '$resources',
+              as: 'resource',
+              cond: { $ne: ['$$resource', {}] }
+            }
+          }
+        }
+      },
+      {
+        $set: {
+          sections: {
+            $cond: {
+              if: {
+                $eq: ['$sections', { resources: [] }]
+              },
+              then: '$$REMOVE',
+              else: '$sections'
+            }
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$_id',
+          offer: {
+            $first: '$offer'
+          },
+          initiator: {
+            $first: '$initiator'
+          },
+          initiatorRole: {
+            $first: '$initiatorRole'
+          },
+          receiver: {
+            $first: '$receiver'
+          },
+          receiverRole: {
+            $first: '$receiverRole'
+          },
+          title: {
+            $first: '$title'
+          },
+          additionalInfo: {
+            $first: '$additionalInfo'
+          },
+          proficiencyLevel: {
+            $first: '$proficiencyLevel'
+          },
+          price: {
+            $first: '$price'
+          },
+          status: {
+            $first: '$status'
+          },
+          needAction: {
+            $first: '$needAction'
+          },
+          availableQuizzes: {
+            $first: '$availableQuizzes'
+          },
+          finishedQuizzes: {
+            $first: '$finishedQuizzes'
+          },
+          sections: {
+            $push: '$sections'
+          },
+          createdAt: {
+            $first: '$createdAt'
+          },
+          updatedAt: {
+            $first: '$updatedAt'
+          }
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'initiator',
+          foreignField: '_id',
+          as: 'initiator'
+        }
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'receiver',
+          foreignField: '_id',
+          as: 'receiver'
+        }
+      },
+      {
+        $lookup: {
+          from: 'offers',
+          localField: 'offer',
+          foreignField: '_id',
+          as: 'offer',
+          pipeline: [
+            {
+              $lookup: {
+                from: 'categories',
+                localField: 'category',
+                foreignField: '_id',
+                as: 'category'
+              }
+            },
+            {
+              $lookup: {
+                from: 'users',
+                localField: 'author',
+                foreignField: '_id',
+                as: 'author'
+              }
+            },
+            {
+              $lookup: {
+                from: 'subjects',
+                localField: 'subject',
+                foreignField: '_id',
+                as: 'subject'
+              }
+            },
+            {
+              $set: {
+                author: {
+                  $first: ['$author']
+                },
+                category: {
+                  $first: ['$category']
+                },
+                subject: {
+                  $first: ['$subject']
+                }
+              }
+            },
+            {
+              $project: {
+                _id: true,
+                author: {
+                  _id: true,
+                  firstName: true,
+                  lastName: true,
+                  photo: true,
+                  professionalSummary: true,
+                  totalReviews: true,
+                  FAQ: true,
+                  averageRating: true
+                },
+                category: {
+                  _id: true,
+                  name: true,
+                  appearance: true
+                },
+                subject: {
+                  _id: true,
+                  name: true
+                },
+                title: true,
+                languages: true,
+                proficiencyLevel: true,
+                description: true
+              }
+            }
+          ]
+        }
+      },
+      {
+        $set: {
+          initiator: {
+            $first: ['$initiator']
+          },
+          receiver: {
+            $first: ['$receiver']
+          },
+          offer: {
+            $first: ['$offer']
+          }
+        }
+      },
+      {
+        $project: {
+          initiator: {
+            appLanguage: false,
+            bookmarkedOffers: false,
+            isEmailConfirmed: false,
+            isFirstLogin: false,
+            lastLoginAs: false,
+            password: false
+          },
+          receiver: {
+            appLanguage: false,
+            bookmarkedOffers: false,
+            isEmailConfirmed: false,
+            isFirstLogin: false,
+            lastLoginAs: false,
+            password: false
+          },
+          'sections.resources.resource': {
+            createdAt: false,
+            updatedAt: false
+          }
+        }
+      }
+    ])
+
+    return cooperationById
   },
 
   createCooperation: async (initiator, initiatorRole, data) => {

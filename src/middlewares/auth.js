@@ -63,8 +63,9 @@ const availabilityMiddleware =
   (relationshipModel, expectedAvailability = 'open') =>
   async (req, res, next) => {
     const resourceId = req.params.id
+    const userId = req.user.id
 
-    await userService.checkAvailability({ relationshipModel, resourceId, expectedAvailability })
+    await userService.checkAvailability({ relationshipModel, resourceId, userId, expectedAvailability })
     next()
   }
 

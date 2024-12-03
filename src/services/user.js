@@ -368,9 +368,23 @@ const userService = {
     throw createError(403, FORBIDDEN)
   },
 
-  checkAvailability: async ({ relationshipModel, resourceId, expectedAvailability = 'open' }) => {
-    const { sectionsResources, resourceField, availabilityField } = relationshipModel.dynamicPaths
-    const elemMatchQuery = { [resourceField]: resourceId }
+  checkAvailability: async ({ relationshipModel, resourceId, userId, expectedAvailability = 'open' }) => {
+    const { sectionsResources, resourceField, availabilityField, userFields } = relationshipModel.dynamicPaths
+
+    const isReceiverQuery = {
+      [userFields[1]]: userId,
+      [sectionsResources]: { $elemMatch: { [resourceField]: resourceId } }
+    }
+
+    const isReceiver = await relationshipModel.model.findOne(isReceiverQuery)
+
+    if (isReceiver) {
+      return true
+    }
+
+    const elemMatchQuery = {
+      [resourceField]: resourceId
+    }
 
     if (availabilityField) {
       elemMatchQuery[availabilityField] = expectedAvailability
@@ -385,6 +399,8 @@ const userService = {
     if (!isAvailable) {
       throw createError(403, FORBIDDEN)
     }
+
+    return true
   }
 }
 

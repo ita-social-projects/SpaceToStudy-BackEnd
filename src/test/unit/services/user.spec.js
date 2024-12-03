@@ -496,31 +496,58 @@ describe('User service', () => {
     })
 
     describe('checkAvailability', () => {
-      it('should not throw an error if the resource is available with expected availability', async () => {
+      it('should return true if the resource is available and user is a receiver', async () => {
+        const receiverQuery = {
+          [MODEL_CONFIGS.CooperationModel.dynamicPaths.userFields[1]]: userId,
+          [MODEL_CONFIGS.CooperationModel.dynamicPaths.sectionsResources]: {
+            $elemMatch: {
+              [MODEL_CONFIGS.CooperationModel.dynamicPaths.resourceField]: lessonResource._id
+            }
+          }
+        }
         mockCooperationModel.findOne.mockResolvedValue(cooperationResource)
 
-        await expect(
-          userService.checkAvailability({
-            relationshipModel: MODEL_CONFIGS.CooperationModel,
-            resourceId: lessonResource._id,
-            expectedAvailability: 'open'
-          })
-        ).resolves.not.toThrow()
-
-        expect(mockCooperationModel.findOne).toHaveBeenCalledWith({
-          'sections.resources': {
-            $elemMatch: { resource: lessonResource._id, availability: 'open' }
-          }
+        const result = await userService.checkAvailability({
+          relationshipModel: MODEL_CONFIGS.CooperationModel,
+          resourceId: lessonResource._id,
+          userId,
+          expectedAvailability: 'open'
         })
+
+        expect(result).toBe(true)
+        expect(mockCooperationModel.findOne).toHaveBeenCalledWith(receiverQuery)
       })
 
-      it('should throw a 403 error if the resource does not have the expected availability', async () => {
+      it('should return true if the resource has the expected availability', async () => {
+        const availabilityQuery = {
+          [MODEL_CONFIGS.CooperationModel.dynamicPaths.sectionsResources]: {
+            $elemMatch: {
+              [MODEL_CONFIGS.CooperationModel.dynamicPaths.resourceField]: lessonResource._id,
+              [MODEL_CONFIGS.CooperationModel.dynamicPaths.availabilityField]: 'open'
+            }
+          }
+        }
+
+        mockCooperationModel.findOne.mockResolvedValueOnce(null).mockResolvedValueOnce(cooperationResource)
+
+        const result = await userService.checkAvailability({
+          relationshipModel: MODEL_CONFIGS.CooperationModel,
+          resourceId: lessonResource._id,
+          expectedAvailability: 'open'
+        })
+
+        expect(result).toBe(true)
+        expect(mockCooperationModel.findOne).toHaveBeenNthCalledWith(2, availabilityQuery)
+      })
+
+      it('should throw a 403 error if the user is not a receiver and resource is not available', async () => {
         mockCooperationModel.findOne.mockResolvedValue(null)
 
         await expect(
           userService.checkAvailability({
             relationshipModel: MODEL_CONFIGS.CooperationModel,
             resourceId: lessonResource._id,
+            userId: invalidUserId,
             expectedAvailability: 'open'
           })
         ).rejects.toThrowError(createError(403, FORBIDDEN))

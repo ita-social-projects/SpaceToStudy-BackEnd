@@ -68,7 +68,7 @@ paths:
       security:
         - cookieAuth: []
       tags:
-        - Category
+        - Categories
       summary: Create new category.
       description: Saves a new category to the database.
       produces:
@@ -246,7 +246,7 @@ paths:
       security:
         - cookieAuth: []
       tags:
-        - Offers
+        - Categories
       summary: Find and return min and max price.
       description: Find and return min and max prices of offers in accordance with specific role.
       produces:

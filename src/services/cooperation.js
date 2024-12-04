@@ -5,6 +5,9 @@ const handleResources = require('~/utils/handleResources')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND, ROLE_REQUIRED_FOR_ACTION } = require('~/consts/errors')
 const { roles } = require('~/consts/auth')
+const {
+  enums: { COOPERATION_STATUS_ENUM }
+} = require('~/consts/validation')
 
 const cooperationService = {
   _validateCooperationUser: (cooperation, userId) => {
@@ -91,7 +94,11 @@ const cooperationService = {
       await Cooperation.findByIdAndUpdate(id, { price, needAction: updatedNeedAction }).exec()
     }
     if (status) {
-      await Cooperation.findByIdAndUpdate(id, { status }).exec()
+      const isRequestToClose = status === COOPERATION_STATUS_ENUM[4]
+      const otherRole = currentUserRole === roles.STUDENT ? roles.TUTOR : roles.STUDENT
+      const updatedNeedAction = isRequestToClose ? otherRole : undefined
+
+      await Cooperation.findByIdAndUpdate(id, { status, needAction: updatedNeedAction }, { runValidators: true })
     }
     if (sections) {
       cooperation.sections = await Promise.all(

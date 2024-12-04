@@ -184,13 +184,18 @@ definitions:
           properties:
             resource:
               type: object
-              additionalProperties: true
+              oneOf:
+                - $ref: '#/definitions/lesson'
+                - $ref: '#/definitions/quiz'
+                - $ref: '#/definitions/attachment'
+                - $ref: '#/definitions/question'
             resourceType:
               type: string
               enum:
                 - lesson
                 - quiz
                 - attachment
+                - question
             availability:
               type: object
               properties:

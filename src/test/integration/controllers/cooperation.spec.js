@@ -100,7 +100,8 @@ const testCooperationData = {
             resourceType: RESOURCES_TYPES_ENUM[0]
           },
           resourceType: RESOURCES_TYPES_ENUM[0],
-          availability: { status: 'openFrom', date: '2024-12-13T22:00:00.000Z' }
+          availability: { status: 'openFrom', date: '2024-12-13T22:00:00.000Z' },
+          completionStatus: RESOURCE_COMPLETION_STATUS_ENUM[0]
         }
       ]
     }

@@ -23,14 +23,10 @@ definitions:
   chatBody:
     type: object
     properties:
-      members:
-        type: object
-        properties:
-          user:
-            type: string
-            ref: '#/components/user'
-          role:
-            type: string
+      member:
+        type: string
+      memberRole:
+        type: string
   chat:
     type: object
     properties:

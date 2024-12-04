@@ -1,5 +1,4 @@
 const Offer = require('~/models/offer')
-const User = require('~/models/user')
 const Category = require('~/models/category')
 const Subject = require('~/models/subject')
 const Cooperation = require('~/models/cooperation')
@@ -104,6 +103,10 @@ const updatePrice = {
   price: 150
 }
 
+const requestToCloseStatus = {
+  status: 'request to close'
+}
+
 const updatingSections = [
   {
     _id: '65bc2bec67c9f1ec287a1514',
@@ -161,10 +164,46 @@ const testInitiator = {
   updatedAt: '2024-08-07T10:03:03.587Z'
 }
 
+const testTutor = {
+  _id: '66b346570182fc9e49b09647',
+  averageRating: {
+    student: 0,
+    tutor: 0
+  },
+  createdAt: '2024-08-07T10:03:03.488Z',
+  email: 'lovemagic@gmail.com',
+  firstName: 'albus',
+  lastLogin: '2024-08-07T10:03:03.587Z',
+  lastName: 'dumbledore',
+  mainSubjects: {
+    student: [],
+    tutor: []
+  },
+  nativeLanguage: null,
+  professionalBlock: {
+    awards: '',
+    education: '',
+    scientificActivities: '',
+    workExperience: ''
+  },
+  role: ['tutor'],
+  status: {
+    admin: 'active',
+    student: 'active',
+    tutor: 'active'
+  },
+  totalReviews: {
+    student: 0,
+    tutor: 0
+  },
+  updatedAt: '2024-08-07T10:03:03.587Z'
+}
+
 describe('Cooperation controller', () => {
   let app,
     server,
-    accessToken,
+    studentAccessToken,
+    tutorAccessToken,
     testOffer,
     anotherStudentAccessToken,
     testCooperation,
@@ -177,10 +216,11 @@ describe('Cooperation controller', () => {
   })
 
   beforeEach(async () => {
-    accessToken = await testUserAuthentication(app, studentUserData)
+    studentAccessToken = await testUserAuthentication(app, studentUserData)
     anotherStudentAccessToken = await testUserAuthentication(app, anotherStudentUserData)
-    testStudentUser = TokenService.validateAccessToken(accessToken)
-    testTutorUser = await User.create(tutorUserData)
+    testStudentUser = TokenService.validateAccessToken(studentAccessToken)
+    tutorAccessToken = await testUserAuthentication(app, tutorUserData)
+    testTutorUser = TokenService.validateAccessToken(tutorAccessToken)
 
     const category = await Category.create({
       name: 'Dark Magic',
@@ -196,20 +236,20 @@ describe('Cooperation controller', () => {
     })
 
     testOffer = await Offer.create({
-      author: testTutorUser._id,
+      author: testTutorUser.id,
       subject: subject._id,
       category: category._id,
       ...testOfferData
     })
 
     testActiveQuiz = await Quiz.create({
-      author: testTutorUser._id,
+      author: testTutorUser.id,
       category: category._id,
       ...testActiveQuizData
     })
 
     const testLessonResource = await Lesson.create({
-      author: testTutorUser._id,
+      author: testTutorUser.id,
       content: '<p><strong>Solving Quadratic Equations Using the Quadratic Formula</strong></p>',
       description: 'The quadratic formula',
       title: 'Solving Quadratic Equations Using the Quadratic Formula',
@@ -235,9 +275,9 @@ describe('Cooperation controller', () => {
 
     testCooperation = await app
       .post(endpointUrl)
-      .set('Cookie', [`accessToken=${accessToken}`])
+      .set('Cookie', [`accessToken=${studentAccessToken}`])
       .send({
-        receiver: testTutorUser._id,
+        receiver: testTutorUser.id,
         receiverRole: tutorUserData.role[0],
         offer: testOffer._id,
         sections: updatedTestCooperationData.sections,
@@ -264,7 +304,7 @@ describe('Cooperation controller', () => {
       const response = await app
         .get(endpointUrl)
         .query(query)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expect(response.status).toBe(200)
       expect(response.body.count).toBe(1)
@@ -275,7 +315,7 @@ describe('Cooperation controller', () => {
           _id: testOffer._id
         },
         initiator: testStudentUser.id,
-        receiver: testTutorUser._id,
+        receiver: testTutorUser.id,
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
@@ -297,7 +337,7 @@ describe('Cooperation controller', () => {
     it('get cooperation by ID', async () => {
       const response = await app
         .get(endpointUrl + testCooperation.body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
@@ -313,7 +353,13 @@ describe('Cooperation controller', () => {
           lastLogin: expect.any(String),
           _id: expect.any(String)
         },
-        receiver: testTutorUser._id,
+        receiver: {
+          ...testTutor,
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          lastLogin: expect.any(String),
+          _id: expect.any(String)
+        },
         receiverRole: tutorUserData.role[0],
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
@@ -353,7 +399,7 @@ describe('Cooperation controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = await app
         .get(endpointUrl + nonExistingCooperationId)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
     })
@@ -372,7 +418,7 @@ describe('Cooperation controller', () => {
         _id: testCooperation._body._id,
         offer: testOffer._id,
         initiator: testStudentUser.id,
-        receiver: testTutorUser._id,
+        receiver: testTutorUser.id,
         receiverRole: tutorUserData.role[0],
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
@@ -397,10 +443,10 @@ describe('Cooperation controller', () => {
     it('should throw DOCUMENT_NOT_FOUND for offer entity', async () => {
       const response = await app
         .post(endpointUrl)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send({
           initiator: testStudentUser.id,
-          receiver: testTutorUser._id,
+          receiver: testTutorUser.id,
           offer: nonExistingOfferId,
           ...testCooperationData
         })
@@ -419,7 +465,7 @@ describe('Cooperation controller', () => {
     it('should throw FORBIDDEN if user role does not match needAction role when updating price', async () => {
       const response = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(updatePrice)
 
       expectError(403, FORBIDDEN, response)
@@ -428,26 +474,56 @@ describe('Cooperation controller', () => {
     it('should update the status of a cooperation', async () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(updateStatus)
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(updateStatus.status)
     })
 
+    it('should change needAction to "tutor" after closing request from student', async () => {
+      const updateResponse = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
+        .send(requestToCloseStatus)
+
+      const response = await app
+        .get(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
+
+      expect(updateResponse.status).toBe(204)
+      expect(response.body.status).toBe(requestToCloseStatus.status)
+      expect(response.body.needAction).toBe('tutor')
+    })
+
+    it('should change needAction to "student" after closing request from tutor', async () => {
+      const updateResponse = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+        .send(requestToCloseStatus)
+
+      const response = await app
+        .get(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+
+      expect(updateResponse.status).toBe(204)
+      expect(response.body.status).toBe(requestToCloseStatus.status)
+      expect(response.body.needAction).toBe('student')
+    })
+
     it('should update the sections of a cooperation', async () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send({ sections: updatingSections })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.sections).toEqual(updatedSections)
@@ -456,12 +532,12 @@ describe('Cooperation controller', () => {
     it('should update the available quizzes of a cooperation', async () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send({ availableQuizzes: [testActiveQuiz._id] })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.availableQuizzes).toEqual([testActiveQuiz._id.toString()])
@@ -470,12 +546,12 @@ describe('Cooperation controller', () => {
     it('should update the finished quizzes of a cooperation', async () => {
       const updateResponse = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send({ finishedQuizzes: [testActiveQuiz._id] })
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.finishedQuizzes).toEqual([testActiveQuiz._id.toString()])
@@ -484,7 +560,7 @@ describe('Cooperation controller', () => {
     it('should throw DOCUMENT_NOT_FOUND', async () => {
       const response = (testCooperation = await app
         .patch(endpointUrl + nonExistingCooperationId)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(updateStatus))
 
       expectError(404, DOCUMENT_NOT_FOUND([Cooperation.modelName]), response)
@@ -499,7 +575,7 @@ describe('Cooperation controller', () => {
     it('should throw VALIDATION_ERROR', async () => {
       const response = await app
         .patch(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send({ ...updateStatus, ...updatePrice })
 
       expectError(409, VALIDATION_ERROR(validationErrorMessage), response)
@@ -521,14 +597,14 @@ describe('Cooperation controller', () => {
 
       const updateResponse = await app
         .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(updatedResourceCompletionStatus)
 
       expect(updateResponse.status).toBe(204)
 
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expect(response.body.sections[0].resources[0].resource.completionStatus).toBe(
         updatedResourceCompletionStatus.status
@@ -541,7 +617,7 @@ describe('Cooperation controller', () => {
 
       const response = await app
         .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(invalidCompletionStatus)
 
       expectError(422, FIELD_IS_NOT_OF_PROPER_ENUM_VALUE('completionStatus', RESOURCE_COMPLETION_STATUS_ENUM), response)
@@ -552,7 +628,7 @@ describe('Cooperation controller', () => {
 
       const updateResponse = await app
         .patch(`${endpointUrl}${testCooperation._body._id}/${resourceId}/completionStatus`)
-        .set('Cookie', [`accessToken=${accessToken}`])
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send(updatedResourceCompletionStatus)
 
       expectError(404, DOCUMENT_NOT_FOUND([`Resource in ${Cooperation.modelName}`]), updateResponse)

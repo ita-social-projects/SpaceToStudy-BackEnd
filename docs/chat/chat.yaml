@@ -16,8 +16,9 @@ paths:
           application/json:
             schema:
               $ref: '#/definitions/chatBody'
-            member: 6421d9833cdf38b706756dff
-            memberRole: student
+            example:
+              member: 6421d9833cdf38b706756dff
+              memberRole: student
       responses:
         201:
           description: OK

@@ -8,6 +8,7 @@
     "start": "nodemon src/app.js --legacy-watch",
     "migrate:up": "migrate-mongo up",
     "migrate:rollback": "migrate-mongo down",
+    "migrate:create": "migrate-mongo create",
     "lint": "eslint . --fix",
     "prepare": "husky install",
     "pre-commit": "lint-staged"

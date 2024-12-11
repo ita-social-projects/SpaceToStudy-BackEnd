@@ -39,19 +39,19 @@ definitions:
           type: string
         author:
           type: string
-          ref: '#components/user'
+          $ref: '#definitions/user'
         enrolledUsers:
           type: array
-          ref: '#components/user'
+          $ref: '#definitions/user'
         subject:
           type: string
-          ref: '#components/subject'
+          $ref: '#definitions/subject'
         category:
           type: string
-          ref: '#components/category'
+          $ref: '#definitions/category'
         chatId:
           type: string
-          ref: '#/components/chat'
+          $ref: '#/definitions/chat'
         status:
           type: string
           enum:
@@ -109,13 +109,13 @@ definitions:
         type: string
       enrolledUsers:
         type: array
-        ref: '#components/user'
+        $ref: '#definitions/user'
       subject:
         type: string
-        ref: '#components/subject'
+        $ref: '#definitions/subject'
       category:
         type: string
-        ref: '#components/category'
+        $ref: '#definitions/category'
       status:
         type: string
         enum:
@@ -169,19 +169,19 @@ definitions:
         type: string
       author:
         type: string
-        ref: '#components/user'
+        $ref: '#definitions/user'
       enrolledUsers:
         type: array
-        ref: '#components/user'
+        $ref: '#definitions/user'
       subject:
         type: string
-        ref: '#components/subject'
+        $ref: '#definitions/subject'
       category:
         type: string
-        ref: '#components/category'
+        $ref: '#definitions/category'
       chatId:
         type: string
-        ref: '#/components/chat'
+        $ref: '#/definitions/chat'
       status:
         type: string
         enum:

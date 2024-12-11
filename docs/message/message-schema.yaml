@@ -14,12 +14,12 @@ definitions:
     properties:
       author:
         type: string
-        ref: '#/components/user'
+        $ref: '#/definitions/user'
       text:
         type: string
       chat:
         type: string
-        ref: '#/components/chat'
+        $ref: '#/definitions/chat'
   message:
     type: object
     properties:
@@ -30,7 +30,7 @@ definitions:
         properties:
           _id:
             type: string
-            ref: '#/components/user'
+            $ref: '#/definitions/user'
           photo:
             type: string
       authorRole:
@@ -46,7 +46,7 @@ definitions:
         type: boolean
       chat:
         type: string
-        ref: '#/components/chat'
+        $ref: '#/definitions/chat'
       createdAt:
         type: string
         format: date-time

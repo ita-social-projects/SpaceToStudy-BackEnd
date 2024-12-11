@@ -42,7 +42,7 @@ definitions:
         type: string
       category:
         type: string
-        $ref: '#/components/category'
+        $ref: '#/definitions/category'
   subject:
     type: object
     properties:
@@ -52,7 +52,7 @@ definitions:
         type: string
       category:
         type: string
-        $ref: '#/components/category'
+        $ref: '#/definitions/category'
       totalOffers:
         type: object
         properties:

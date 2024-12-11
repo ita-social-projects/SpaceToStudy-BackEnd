@@ -40,7 +40,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -118,7 +118,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -128,7 +128,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 403
                 code: FORBIDDEN
@@ -138,7 +138,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
@@ -166,7 +166,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -176,7 +176,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 403
                 code: FORBIDDEN
@@ -186,7 +186,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
@@ -221,7 +221,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -231,7 +231,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 403
                 code: FORBIDDEN
@@ -241,7 +241,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
@@ -270,7 +270,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 400
                 code: INVALID_ID
@@ -280,7 +280,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -290,7 +290,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 403
                 code: FORBIDDEN
@@ -300,7 +300,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
@@ -339,7 +339,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 400
                 code: INVALID_ID
@@ -349,7 +349,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 401
                 code: UNAUTHORIZED
@@ -359,7 +359,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 403
                 code: FORBIDDEN
@@ -369,7 +369,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/Error'
+                $ref: '#/definitions/Error'
               example:
                 status: 404
                 code: DOCUMENT_NOT_FOUND

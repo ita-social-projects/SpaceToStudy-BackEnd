@@ -16,7 +16,7 @@ definitions:
           type: number
         category:
           type: string
-          ref: '#/definitions/resourcesCategory'
+          $ref: '#/definitions/resourcesCategory'
         createdAt:
           type: string
           format: date-time
@@ -36,7 +36,7 @@ definitions:
         type: number
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
   attachment:
     type: object
     properties:
@@ -52,7 +52,7 @@ definitions:
         type: number
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
       createdAt:
         type: string
         format: date-time

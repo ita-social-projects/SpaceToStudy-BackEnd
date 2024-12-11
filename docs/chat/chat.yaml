@@ -85,8 +85,7 @@ paths:
       tags:
         - Chats
       summary: Find your messages in chat
-      description: >-
-        Finds and returns an array with a list of all your messages related to
+      description: Finds and returns an array with a list of all your messages related to
         specific chat.
       produces:
         - application/json

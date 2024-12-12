@@ -37,7 +37,7 @@ definitions:
         properties:
           user:
             type: string
-            ref: '#/components/user'
+            $ref: '#/components/user'
           role:
             type: string
       createdAt:

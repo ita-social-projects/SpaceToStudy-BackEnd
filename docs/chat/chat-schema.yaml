@@ -10,7 +10,7 @@ definitions:
           type: object
           properties:
             user:
-              type: string
+              type: object
               $ref: '#/components/user'
             role:
               type: string
@@ -20,6 +20,17 @@ definitions:
         updatedAt:
           type: string
           format: date-time
+        deletedFor:
+          type: array
+          items:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/components/user'
+        latestMessage:
+          type: string
+          $ref: '#/definitions/message'
   chatBody:
     type: object
     properties:
@@ -36,7 +47,7 @@ definitions:
         type: object
         properties:
           user:
-            type: string
+            type: object
             ref: '#/components/user'
           role:
             type: string
@@ -46,3 +57,14 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+      deletedFor:
+        type: array
+        items:
+          type: object
+          properties:
+            user:
+              type: object
+              $ref: '#/components/user'
+      latestMessage:
+        type: string
+        $ref: '#/definitions/message'

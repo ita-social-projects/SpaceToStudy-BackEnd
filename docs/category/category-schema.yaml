@@ -1,4 +1,11 @@
 definitions:
+  priceRange:
+    type: object
+    properties:
+      minPrice:
+        type: number
+      maxPrice:
+        type: number
   categories:
     type: array
     items:

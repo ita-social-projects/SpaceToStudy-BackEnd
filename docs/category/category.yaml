@@ -276,7 +276,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/offer'
+                $ref: '#/definitions/priceRange'
               example:
                 minPrice: 300
                 maxPrice: 500

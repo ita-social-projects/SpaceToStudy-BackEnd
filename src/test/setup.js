@@ -17,8 +17,7 @@ const serverCleanup = async () => {
   const safeTestFolder = path.resolve(process.cwd(), 'test/integration/models')
 
   if (currentTestFolder.startsWith(safeTestFolder)) {
-    console.log('Safe test folder detected. Database cleanup is skipped.')
-    return
+    throw new Error('Unsafe test folder detected. Database cleanup operation aborted to prevent data loss.')
   }
 
   await mongoose.connection.db.dropDatabase()

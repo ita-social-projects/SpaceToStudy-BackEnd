@@ -5,7 +5,7 @@ require('~/initialization/envSetup')
 const initialization = require('~/initialization/initialization')
 
 const connectToDatabase = async () => {
-  const dbUri = process.env.MONGODB_URL
+  const dbUri = process.env.MONGODB_URL_PROD
 
   if (!dbUri) {
     throw new Error('MONGODB_URL is not defined in the environment variables')

@@ -4,19 +4,14 @@ const request = require('supertest')
 require('~/initialization/envSetup')
 const initialization = require('~/initialization/initialization')
 const logger = require('~/logger/logger')
-const { createError } = require('~/utils/errorsHelper')
-const { READ_ONLY_ERROR } = require('~/consts/errors')
+const { restrictOperations } = require('~/test/helpers')
 const restrictedOperations = require('~/consts/restrictedOperations')
 
 const connectToDatabase = async () => {
   const dbUri = process.env.MONGODB_URL_READONLY_TEST
 
   try {
-    restrictedOperations.forEach((operation) => {
-      mongoose.Model[operation] = async function () {
-        throw createError(403, READ_ONLY_ERROR)
-      }
-    })
+    restrictOperations(restrictedOperations, mongoose.Model)
 
     await mongoose.connect(dbUri, {
       useNewUrlParser: true,

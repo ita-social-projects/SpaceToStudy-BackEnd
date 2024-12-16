@@ -127,6 +127,10 @@ const errors = {
     code: 'INVALID_LANGUAGE',
     message: `The language name is invalid. Possible options: ${APP_LANG_ENUM.join(', ')}.`
   },
+  READ_ONLY_ERROR: {
+    code: 'READ_ONLY_ERROR',
+    message: 'Modification commands are disabled in read-only mode.'
+  },
   DOCUMENT_NOT_FOUND: (document) => ({
     code: 'DOCUMENT_NOT_FOUND',
     message: `${document} with the specified ${document.length > 1 ? 'IDs were' : 'ID was'} not found.`
@@ -155,6 +159,10 @@ const errors = {
   VALIDATION_ERROR: (message) => ({
     code: 'VALIDATION_ERROR',
     message: message
+  }),
+  RESTRICTED_PATH: (functionName, path) => ({
+    code: 'RESTRICTED_PATH_ERROR',
+    message: `The function ${functionName} is restricted in files under the ${path} path!`
   })
 }
 

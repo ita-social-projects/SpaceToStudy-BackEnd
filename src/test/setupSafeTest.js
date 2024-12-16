@@ -3,28 +3,29 @@ const express = require('express')
 const request = require('supertest')
 require('~/initialization/envSetup')
 const initialization = require('~/initialization/initialization')
+const logger = require('~/logger/logger')
+const { createError } = require('~/utils/errorsHelper')
+const { READ_ONLY_ERROR } = require('~/consts/errors')
+const restrictedOperations = require('~/consts/restrictedOperations')
 
 const connectToDatabase = async () => {
-  const dbUri = process.env.MONGODB_URL_PROD
-
-  if (!dbUri) {
-    throw new Error('MONGODB_URL is not defined in the environment variables')
-  }
+  const dbUri = process.env.MONGODB_URL_READONLY_TEST
 
   try {
+    restrictedOperations.forEach((operation) => {
+      mongoose.Model[operation] = async function () {
+        throw createError(403, READ_ONLY_ERROR)
+      }
+    })
+
     await mongoose.connect(dbUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
 
-    mongoose.connection.db.command = async (cmd, options) => {
-      if (['insert', 'update', 'delete'].some((op) => cmd[op])) {
-        throw new Error('Modification commands are disabled in read-only mode.')
-      }
-      return mongoose.connection.db.originalCommand ? mongoose.connection.db.originalCommand(cmd, options) : null
-    }
+    logger.info('Connected to MongoDB in read-only mode.')
   } catch (err) {
-    console.error('Failed to connect to the database:', err.message)
+    logger.error(`Failed to connect to the database: ${err.message}`, { error: err })
     process.exit(1)
   }
 }
@@ -33,7 +34,6 @@ const setupTestServer = async () => {
   const app = express()
 
   await connectToDatabase()
-
   initialization(app)
 
   const server = app.listen(process.env.SERVER_PORT || 8080)

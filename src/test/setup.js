@@ -2,7 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose')
 const request = require('supertest')
 require('~/initialization/envSetup')
-const path = require('path')
+const { createError } = require('~/utils/errorsHelper')
+const { RESTRICTED_PATH } = require('~/consts/errors')
+const { isRestrictedPath } = require('~/utils/isRestrictedPath')
 
 const serverSetup = require('~/initialization/serverSetup')
 
@@ -13,11 +15,8 @@ const serverInit = async () => {
 }
 
 const serverCleanup = async () => {
-  const currentTestFolder = path.resolve(__dirname)
-  const safeTestFolder = path.resolve(process.cwd(), 'test/integration/models')
-
-  if (currentTestFolder.startsWith(safeTestFolder)) {
-    throw new Error('Unsafe test folder detected. Database cleanup operation aborted to prevent data loss.')
+  if (isRestrictedPath('/models/')) {
+    throw createError(403, RESTRICTED_PATH('serverCleanup', '/models/'))
   }
 
   await mongoose.connection.db.dropDatabase()

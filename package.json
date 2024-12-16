@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --maxWorkers=1",
+    "test:models": "jest --maxWorkers=1 src/test/integration/models",
     "start": "nodemon src/app.js --legacy-watch",
     "migrate:up": "migrate-mongo up",
     "migrate:rollback": "migrate-mongo down",

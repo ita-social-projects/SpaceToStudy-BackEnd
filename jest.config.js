@@ -31,7 +31,8 @@ module.exports = {
   testMatch: [
     '<rootDir>/src/test/integration/**/*.spec.js',
     '<rootDir>/src/test/unit/**/*.spec.js',
-    '<rootDir>/src/test/migrations/*.spec.js'
+    '<rootDir>/src/test/migrations/*.spec.js',
+    '!<rootDir>/src/test/integration/models/**/*.spec.js'
   ],
   testResultsProcessor: 'jest-sonar-reporter'
 }

@@ -62,22 +62,62 @@ paths:
               schema:
                 $ref: '#/definitions/chat'
               example:
-                - _id: 64a54c6c7bca605aaf2da66c
+                - _id: 67604def753afa7bbd3bd98a
                   members:
-                    - user: 6491d003a634c3c427b69daa
+                    - user:
+                        _id: 67519181170a70623366d30c
+                        firstName: Diana
+                        lastName: Test
                       role: tutor
-                    - user: 6421d9833cdf38b706756dff
+                    - user:
+                        _id: 673f342709e56a9071f5308c
+                        firstName: valya
+                        lastName: dudchak
+                        professionalSummary: ""
+                        photo: 1733337385040-photofordemo.jpg
                       role: student
-                  createdAt: 2024-08-01T13:25:36.292Z
-                  updatedAt: 2024-08-01T13:25:36.292Z
-                - _id: 64a54c6c7bca605aaf2da6df
+                  createdAt: 2024-12-16T15:57:35.632Z
+                  updatedAt: 2024-12-16T15:57:35.949Z
+                  deletedFor: []
+                  latestMessage:
+                    _id: 67604def753afa7bbd3bd98c
+                    author:
+                      _id: 67519181170a70623366d30c
+                      firstName: Diana
+                      lastName: Test
+                    authorRole: tutor
+                    text: hi test message
+                    chat: 67604def753afa7bbd3bd98a
+                    clearedFor: []
+                    createdAt: 2024-12-16T15:57:35.862Z
+                    updatedAt: 2024-12-16T15:57:35.862Z
+                - _id: 67604eca753afa7bbd3bd9c1
                   members:
-                    - user: 6491d003a634c3c427b69dda
-                      role: student
-                    - user: 6421d9833cdf38b706756d22
+                    - user:
+                        _id: 67519181170a70623366d30c
+                        firstName: Diana
+                        lastName: Test
                       role: tutor
-                  createdAt: 2024-08-01T13:25:36.292Z
-                  updatedAt: 2024-08-01T13:25:36.292Z
+                    - user:
+                        _id: 6735ff2cc8f5e44cc3de002d
+                        firstName: Pavlo
+                        lastName: Butynets
+                      role: student
+                  createdAt: 2024-12-16T16:01:14.667Z
+                  updatedAt: 2024-12-16T16:01:14.991Z
+                  deletedFor: []
+                  latestMessage:
+                    _id: 67604eca753afa7bbd3bd9c3
+                    author:
+                      _id: 67519181170a70623366d30c
+                      firstName: Diana
+                      lastName: Test
+                    authorRole: tutor
+                    text: hi test
+                    chat: 67604eca753afa7bbd3bd9c1
+                    clearedFor: []
+                    createdAt: 2024-12-16T16:01:14.916Z
+                    updatedAt: 2024-12-16T16:01:14.916Z
   /chats/{id}/messages:
     get:
       security:

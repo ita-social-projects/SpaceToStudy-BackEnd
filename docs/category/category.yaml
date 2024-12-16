@@ -300,57 +300,32 @@ paths:
                 status: 404
                 code: NOT_FOUND
                 message: The requested URL was not found.
-  /categories/{id}/subjects:
+  /categories/subjects/names:
     get:
       security:
         - cookieAuth: []
       tags:
         - Categories
-      summary: Find subjects by category
-      description: Finds and returns subjects by specified category ID.
+      summary: Find all subjects's names
+      description: Finds and returns all subjects's names.
       produces:
         - application/json
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: ID of category
-          type: string
-        - in: query
-          name: name
-          schema:
-            type: string
-          required: false
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/definitions/categories'
+                $ref: '#/definitions/subjects'
               example:
                 - _id: 6422dbb9823be47b41eeb8d6
                   name: bass
-                  category: 6421ed8ed991d46a84721dfa
-                  totalOffers: { student: 10, tutor: 8 }
-                  createdAt: 2023-20-01T13:25:36.292Z
-                  updatedAt: 2023-20-01T13:25:36.292Z
                 - _id: 6422d995d898aa732d038e8f
                   name: guitar
-                  category: 6421ed8ed991d46a84721dfa
-                  totalOffers: { student: 10, tutor: 8 }
-                  createdAt: 2023-20-01T13:25:36.292Z
-                  updatedAt: 2023-20-01T13:25:36.292Z
-        400:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/Error'
-              example:
-                status: 400
-                code: INVALID_ID
-                message: ID is invalid.
+                - _id: 6675859059019cd05eb119ff
+                  name: spanish
+                - _id: 6675878f59019cd05eb11a1e
+                  name: product design
         401:
           description: Unauthorized
           content:

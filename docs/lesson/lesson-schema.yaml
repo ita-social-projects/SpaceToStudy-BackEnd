@@ -36,7 +36,7 @@ definitions:
         type: string
       author:
         type: string
-        $ref: '#components/user'
+        $ref: '#definitions/user'
       title:
         type: string
       description:

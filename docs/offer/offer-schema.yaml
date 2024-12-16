@@ -39,10 +39,10 @@ definitions:
           type: string
         author:
           type: string
-          $ref: '#components/user'
+          $ref: '#definitions/user'
         enrolledUsers:
           type: array
-          $ref: '#components/user'
+          $ref: '#definitions/user'
         subject:
           type: string
           $ref: '#definitions/subject'
@@ -109,7 +109,7 @@ definitions:
         type: string
       enrolledUsers:
         type: array
-        $ref: '#components/user'
+        $ref: '#definitions/user'
       subject:
         type: string
         $ref: '#definitions/subject'
@@ -169,10 +169,10 @@ definitions:
         type: string
       author:
         type: string
-        $ref: '#components/user'
+        $ref: '#definitions/user'
       enrolledUsers:
         type: array
-        $ref: '#components/user'
+        $ref: '#definitions/user'
       subject:
         type: string
         $ref: '#definitions/subject'

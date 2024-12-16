@@ -14,7 +14,7 @@ definitions:
     properties:
       author:
         type: string
-        $ref: '#/components/user'
+        $ref: '#/definitions/user'
       text:
         type: string
       chat:
@@ -30,7 +30,7 @@ definitions:
         properties:
           _id:
             type: string
-            $ref: '#/components/user'
+            $ref: '#/definitions/user'
           photo:
             type: string
       authorRole:

@@ -10,7 +10,7 @@ definitions:
           type: string
         author:
           type: string
-          $ref: '#components/user'
+          $ref: '#definitions/user'
         isPrivate:
           type: boolean
         createdAt:
@@ -35,7 +35,7 @@ definitions:
         type: string
       author:
         type: string
-        $ref: '#components/user'
+        $ref: '#definitions/user'
       isPrivate:
         type: boolean
       createdAt:

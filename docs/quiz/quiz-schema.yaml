@@ -15,7 +15,7 @@ definitions:
           items:
             $ref: '#/definitions/question'
         author:
-          $ref: '#/components/user'
+          $ref: '#/definitions/user'
         category:
           $ref: '#/definitions/resourcesCategory'
         settings:
@@ -87,7 +87,7 @@ definitions:
         items:
           $ref: '#/definitions/question'
       author:
-        $ref: '#/components/user'
+        $ref: '#/definitions/user'
       category:
         $ref: '#/definitions/resourcesCategory'
       settings:

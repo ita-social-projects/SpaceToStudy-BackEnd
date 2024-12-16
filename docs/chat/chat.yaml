@@ -368,12 +368,17 @@ paths:
               schema:
                 $ref: '#/definitions/chat'
               example:
-                - _id: 64a54c6c7bca605aaf2da66c
-                  members:
-                    [{ user: 6491d003a634c3c427b69daa, role: tutor }, { user: 6421d9833cdf38b706756dff, role: student }]
-                  deletedFor: [{ user: 6491d003a634c3c427b69daa }]
-                  createdAt: 2023-20-01T13:25:36.292Z
-                  updatedAt: 2023-20-01T13:25:36.292Z
+                _id: 67604eca753afa7bbd3bd9c1
+                members:
+                  - user: 67519181170a70623366d30c
+                    role: tutor
+                  - user: 6735ff2cc8f5e44cc3de002d
+                    role: student
+                deletedFor:
+                  - user: 67519181170a70623366d30c
+                createdAt: 2024-12-16T16:01:14.667Z
+                updatedAt: 2024-12-16T16:20:01.463Z
+                latestMessage: 67604eca753afa7bbd3bd9c3
         400:
           description: Bad Request
           content:

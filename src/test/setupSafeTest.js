@@ -5,7 +5,7 @@ require('~/initialization/envSetup')
 const initialization = require('~/initialization/initialization')
 const logger = require('~/logger/logger')
 const { restrictOperations } = require('~/test/helpers')
-const restrictedOperations = require('~/consts/restrictedOperations')
+const { restrictedOperations } = require('~/test/test-consts')
 
 const connectToDatabase = async () => {
   const dbUri = process.env.MONGODB_URL_READONLY_TEST

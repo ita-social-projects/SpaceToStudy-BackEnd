@@ -19,4 +19,4 @@ const restrictedOperations = [
   'bulkWrite'
 ]
 
-module.exports = restrictedOperations
+module.exports = { restrictedOperations }

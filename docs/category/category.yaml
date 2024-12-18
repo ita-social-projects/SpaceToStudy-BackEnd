@@ -185,7 +185,7 @@ paths:
         - cookieAuth: []
       tags:
         - Categories
-      summary: Finds and returns all subjects
+      summary: Finds and returns all subjects's names
       description: Finds and returns names of all subjects in all categories.
       produces:
         - application/json
@@ -195,7 +195,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/categoriesSubjects'
+                $ref: '#/definitions/categoriesSubjectsNames'
               example:
                 - _id: 6422dbb9823be47b41eeb8d6
                   name: Bass

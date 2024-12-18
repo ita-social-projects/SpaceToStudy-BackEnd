@@ -71,7 +71,7 @@ definitions:
       updatedAt:
         type: string
         format: date-time
-  categoriesSubjects:
+  categoriesSubjectsNames:
     type: array
     items:
       type: object

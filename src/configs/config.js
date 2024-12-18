@@ -1,5 +1,6 @@
 const config = {
   MONGODB_URL: process.env.MONGODB_URL,
+  MONGODB_URL_READONLY_TEST: process.env.MONGODB_URL_READONLY_TEST,
   CLIENT_URL: process.env.CLIENT_URL,
   COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
   SERVER_URL: process.env.SERVER_URL,

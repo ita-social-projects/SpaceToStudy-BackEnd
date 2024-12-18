@@ -6,9 +6,12 @@ const initialization = require('~/initialization/initialization')
 const logger = require('~/logger/logger')
 const { restrictOperations } = require('~/test/helpers')
 const { restrictedOperations } = require('~/test/test-consts')
+const {
+  config: { MONGODB_URL_READONLY_TEST, SERVER_PORT }
+} = require('~/configs/config')
 
 const connectToDatabase = async () => {
-  const dbUri = process.env.MONGODB_URL_READONLY_TEST
+  const dbUri = MONGODB_URL_READONLY_TEST
 
   try {
     restrictOperations(restrictedOperations, mongoose.Model)
@@ -31,7 +34,7 @@ const setupTestServer = async () => {
   await connectToDatabase()
   initialization(app)
 
-  const server = app.listen(process.env.SERVER_PORT || 8080)
+  const server = app.listen(SERVER_PORT || 8080)
 
   return { app: request(app), server }
 }

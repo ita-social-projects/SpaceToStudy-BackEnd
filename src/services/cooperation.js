@@ -154,6 +154,37 @@ const cooperationService = {
       .exec()
 
     return proficiencyLevel?.proficiencyLevel ?? null
+  },
+
+  openScheduledCooperationResources: async (currentDate) => {
+    await Cooperation.updateMany(
+      {
+        sections: { $exists: true },
+        'sections.resources': { $exists: true },
+        'sections.resources.availability.status': 'openFrom',
+        'sections.resources.availability.data': {
+          $ne: null,
+          $lte: currentDate
+        }
+      },
+      {
+        $set: {
+          'sections.$[].resources.$[resource].availability.status': 'open',
+          'sections.$[].resources.$[resource].availability.date': null
+        }
+      },
+      {
+        arrayFilters: [
+          {
+            resource: { $exists: true },
+            'resource.availability.date': {
+              $ne: null,
+              $lte: currentDate
+            }
+          }
+        ]
+      }
+    )
   }
 }
 

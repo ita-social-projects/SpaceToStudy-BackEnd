@@ -1,7 +1,7 @@
 const Cooperation = require('~/models/cooperation')
 const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
 const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
-const getCooperationByIdPipeline = require('~/utils/cooperations/getCooperationByIdPipeline')
+const getCooperationByIdQueryPipeline = require('~/utils/cooperations/getCooperationByIdQueryPipeline')
 const handleResources = require('~/utils/handleResources')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND, ROLE_REQUIRED_FOR_ACTION } = require('~/consts/errors')
@@ -28,7 +28,7 @@ const cooperationService = {
   getCooperationById: async (id, userRole) => {
     const isClosedResourcesHidden = userRole === roles.STUDENT
 
-    const pipeline = getCooperationByIdPipeline(id, isClosedResourcesHidden)
+    const pipeline = getCooperationByIdQueryPipeline(id, isClosedResourcesHidden)
 
     const [cooperationById] = await Cooperation.aggregate(pipeline)
 

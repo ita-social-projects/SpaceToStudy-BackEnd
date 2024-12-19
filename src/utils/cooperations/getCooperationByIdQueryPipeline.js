@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { DEFAULT_AGGREGATION_UNSELECTABLE_USER_FIELDS } = require('~/consts/user')
 
-const getCooperationByIdPipeline = (id, isClosedResourcesHidden) => {
+const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden) => {
   const filterOnlyOpenResources = {
     sections: {
       $map: {
@@ -353,4 +353,4 @@ const getCooperationByIdPipeline = (id, isClosedResourcesHidden) => {
   ]
 }
 
-module.exports = getCooperationByIdPipeline
+module.exports = getCooperationByIdQueryPipeline

@@ -34,7 +34,7 @@ const setupTestServer = async () => {
   await connectToDatabase()
   initialization(app)
 
-  const server = app.listen(SERVER_PORT || 8080)
+  const server = app.listen(SERVER_PORT ?? 8080)
 
   return { app: request(app), server }
 }

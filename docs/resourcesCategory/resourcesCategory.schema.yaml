@@ -42,7 +42,7 @@ definitions:
   resourcesCategoryAttachment:
     type: object
     properties:
-      id_: 
+      _id: 
         type: string
       name:
         type: string

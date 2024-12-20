@@ -17,32 +17,31 @@ definitions:
         size:
           type: number
         category:
-          type: object
-          properties:
-            _id:
-              type: string
-            name:
-              type: string
+          $ref: '#/definitions/resourcesCategoryAttachment'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-        resourceType:
-          type: string
+      resourceType:
+        type: string
+        enum:
+          - attachment
+          - lesson
+          - quiz
+      isDublicate:
+        type: boolean
   attachmentBody:
     type: object
     properties:
-      id:
-        type: string
       fileName:
         type: string
       description:
         type: string
       category:
         type: string
-        ref: '#/definitions/resourcesCategoryAttachment'
+        description: 'This id related to resourcesCategory'
   attachment:
     type: object
     properties:
@@ -57,12 +56,7 @@ definitions:
       size:
         type: number
       category:
-        type: object
-        properties:
-          _id:
-            type: string
-          name:
-            type: string
+        $ref: '#/definitions/resourcesCategoryAttachment'
       createdAt:
         type: string
         format: date-time

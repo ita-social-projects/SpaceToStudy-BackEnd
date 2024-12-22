@@ -56,6 +56,62 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  courseWithCategoryId:
+    type: object
+    properties:
+      _id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      author:
+        type: string
+        ref: '#components/user'
+      category:
+        type: string
+        description: 'We get the ID of the chosen category'
+      subject:
+        type: string
+        ref: '#components/subject'
+      proficiencyLevel:
+        type: array
+        items:
+          type: string
+          enum:
+            - Beginner
+            - Intermediate
+            - Advanced
+            - Test Preparation
+            - Professional
+            - Specialized
+      sections:
+        type: array
+        items:
+          type: object
+          properties:
+            title: string
+            description: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - lesson
+                      - quiz
+                      - attachment
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
   courseBody:
     type: object
     properties:

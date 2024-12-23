@@ -131,6 +131,40 @@ paths:
                 status: 409
                 code: CATEGORY_ALREADY_EXISTS
                 message: Category with the specified name already exists.
+  /categories/names:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Categories
+      summary: Finds and returns all category's names
+      description: Finds and returns names of all categories in offers.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/categoriesSubjectsNames'
+              example:
+                - _id: 64884fedfdc2d1a130c24ade
+                  name: Computer science
+                - _id: 64884f4dfdc2d1a130c24ac6
+                  name: Music
+                - _id: 64884f33fdc2d1a130c24ac2
+                  name: Mathematics
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
   /categories/{id}/subjects/names:
     get:
       security:

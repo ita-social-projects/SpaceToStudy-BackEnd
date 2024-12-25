@@ -68,3 +68,10 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  subjectWithName:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string

@@ -9,49 +9,25 @@ definitions:
         price:
           type: number
         proficiencyLevel:
-          type: array
-          items:
-            type: string
-            enum:
-              - Beginner
-              - Intermediate
-              - Advanced
-              - Test Preparation
-              - Professional
-              - Specialized
+          $ref: '#/definitions/offerProficiencyLevelValues'
         title:
           type: string
         description:
           type: string
         languages:
-          type: array
-          items:
-            type: string
-            enum:
-              - English
-              - Ukrainian
-              - Polish
-              - German
-              - French
-              - Spanish
-              - Arabic
+          $ref: '#/definitions/offerLanguagesValues'
         authorRole:
           type: string
         author:
-          type: string
-          ref: '#components/user'
+          $ref: '#/definitions/offerAuthorExtended'
         enrolledUsers:
           type: array
-          ref: '#components/user'
+          items:
+            type: string
         subject:
-          type: string
-          ref: '#components/subject'
+          $ref: '#/definitions/subjectWithName'
         category:
-          type: string
-          ref: '#components/category'
-        chatId:
-          type: string
-          ref: '#/components/chat'
+          $ref: '#/definitions/categoryWithAppearance'
         status:
           type: string
           enum:
@@ -67,55 +43,40 @@ definitions:
                 type: string
               answer:
                 type: string
+              _id:
+                type: string
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+        chatId:
+          type: string
+          nullable: true
   offerBody:
     type: object
     properties:
       price:
         type: number
       proficiencyLevel:
-        type: array
-        items:
-          type: string
-          enum:
-            - Beginner
-            - Intermediate
-            - Advanced
-            - Test Preparation
-            - Professional
-            - Specialized
+        $ref: '#/definitions/offerProficiencyLevelValues'
       title:
         type: string
       description:
         type: string
       languages:
-        type: array
-        items:
-          type: string
-          enum:
-            - English
-            - Ukrainian
-            - Polish
-            - German
-            - French
-            - Spanish
-            - Arabic
+        $ref: '#/definitions/offerLanguagesValues'
       authorRole:
         type: string
       enrolledUsers:
         type: array
-        ref: '#components/user'
+        items:
+          type: string
       subject:
         type: string
-        ref: '#components/subject'
       category:
         type: string
-        ref: '#components/category'
       status:
         type: string
         enum:
@@ -139,49 +100,25 @@ definitions:
       price:
         type: number
       proficiencyLevel:
-        type: array
-        items:
-          type: string
-          enum:
-            - Beginner
-            - Intermediate
-            - Advanced
-            - Test Preparation
-            - Professional
-            - Specialized
+        $ref: '#/definitions/offerProficiencyLevelValues'
       title:
         type: string
       description:
         type: string
       languages:
-        type: array
-        items:
-          type: string
-          enum:
-            - English
-            - Ukrainian
-            - Polish
-            - German
-            - French
-            - Spanish
-            - Arabic
+        $ref: '#/definitions/offerLanguagesValues'
       authorRole:
         type: string
       author:
-        type: string
-        ref: '#components/user'
+        $ref: '#/definitions/offerAuthor'
       enrolledUsers:
         type: array
-        ref: '#components/user'
+        items:
+          type: string
       subject:
-        type: string
-        ref: '#components/subject'
+        $ref: '#/definitions/subjectWithName'
       category:
-        type: string
-        ref: '#components/category'
-      chatId:
-        type: string
-        ref: '#/components/chat'
+        $ref: '#/definitions/categoryWithAppearance'
       status:
         type: string
         enum:
@@ -197,9 +134,103 @@ definitions:
               type: string
             answer:
               type: string
+            _id:
+              type: string
       createdAt:
         type: string
         format: date-time
       updatedAt:
         type: string
         format: date-time
+      chatId:
+        type: string
+        nullable: true
+  offerProficiencyLevelValues:
+    type: array
+    items:
+      type: string
+      enum:
+        - Beginner
+        - Intermediate
+        - Advanced
+        - Test Preparation
+        - Professional
+        - Specialized
+  offerLanguagesValues:
+    type: array
+    items:
+      type: string
+      enum:
+        - English
+        - Ukrainian
+        - Polish
+        - German
+        - French
+        - Spanish
+        - Arabic
+  offerAuthor:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      totalReviews:
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
+      averageRating:
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
+      photo:
+        type: string
+      professionalSummary:
+        type: string
+  offerAuthorExtended:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      totalReviews:
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
+      averageRating:
+        type: object
+        properties:
+          student:
+            type: number
+          tutor:
+            type: number
+      nativeLanguage:
+        type: string
+        enum:
+          - English
+          - Ukrainian
+          - Polish
+          - German
+          - French
+          - Spanish
+          - Arabic
+      status:
+        $ref: '#/definitions/userStatusEnum'
+      photo:
+        type: string
+      professionalSummary:
+        type: string

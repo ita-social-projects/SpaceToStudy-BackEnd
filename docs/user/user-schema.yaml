@@ -330,3 +330,8 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/offers'
+  userStatusEnum:
+    type: string
+    enum:
+      - active
+      - blocked

@@ -80,62 +80,92 @@ paths:
                 $ref: '#/definitions/offers'
               example:
                 count: 2
-                offers:
-                  - _id: 63ebc6fbd2f34037d0aba791
-                    price: 111
-                    proficiencyLevel: [Beginner]
-                    title: this is a new title for test purposes
-                    description: this is a new description for test purposes
-                    languages: [English]
-                    enrolledUsers: [6512e1ca5fd987b6ce926c2e]
-                    authorRole: tutor
-                    authorFirstName: Amanda
-                    authorLastName: Smith
-                    authorAvgRating: 4
-                    author:
-                      _id: 63e63bb04d1bf3bea00e3d88
-                      totalReviews:
-                        student: 0
-                        tutor: 0
-                      FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
-                      professionalSummary: My professional summary
-                      photo: link-to-photo.png
-                    subject:
-                      _id: 63da8767c9ad4c9a0b0eacd3
-                      name: english
-                    category: 63525e23bf163f5ea609ff2b
-                    chatId: '64be59667f4136e211435a55'
-                    FAQ: { question: offer question, _id: 63525e23bf163f5ea609ff2b, answer: offer answer }
-                  - _id: 63ebc6fbd2f34037d0aba791
+                items:
+                  - _id: 666c2ecf89ff51666ab11a4a
                     price: 300
-                    proficiencyLevel: [Intermediate, Advanced]
-                    title: this is a new title for test purposes
-                    description: Lorem ipsum dolor sit amet consectetur
+                    proficiencyLevel: [Intermediate]
+                    title: Advanced English Course
+                    description: A comprehensive English course for intermediate learners.
                     languages: [English, Ukrainian]
-                    enrolledUsers: [6512e1ca5fd987b6ce926c2e]
                     authorRole: tutor
-                    authorFirstName: John
-                    authorLastName: Smith
-                    authorAvgRating: 5
                     author:
-                      _id: 63e63bb04d1bf3bea00e3d88
+                      _id: 666c26bd89ff51666ab119d2
+                      firstName: John
+                      lastName: Doe
                       totalReviews:
                         student: 0
                         tutor: 0
-                      FAQ:
-                        - question: tutor question
-                          _id: 63525e23bf163f5ea609ff2b
-                          answer: tutor answer
-                      professionalSummary: My professional summary
-                      photo: link-to-photo.png
+                      averageRating:
+                        student: 0
+                        tutor: 0
+                      nativeLanguage: Ukrainian
+                      status:
+                        student: active
+                        tutor: active
+                        admin: active
+                      photo: 1718364085578-What-is-landscape-photography.jpg
+                      professionalSummary: Experienced tutor with 10 years of experience in language teaching.
+                    enrolledUsers: []
                     subject:
-                      _id: 63da8767c9ad4c9a0b0eacd3
-                      name: bass
-                    category: 63525e23bf163f5ea609ff2b
+                      _id: 65660fbbcb972798c401a9b4
+                      name: English
+                    category:
+                      _id: 64884f4dfdc2d1a130c24ac6
+                      appearance:
+                        icon: mocked-path-to-icon
+                        color: '#F67C41'
+                    status: active
                     FAQ:
-                      - question: offer question
-                        _id: 63525e23bf163f5ea609ff2b
-                        answer: offer answer
+                      - question: What is the course duration?
+                        answer: The course lasts for 8 weeks.
+                        _id: 666c2ecf89ff51666ab11a4b
+                      - question: Are there any prerequisites?
+                        answer: Basic English knowledge is required.
+                        _id: 666c2ecf89ff51666ab11a4c
+                    createdAt: 2024-06-14T11:51:43.406Z
+                    updatedAt: 2024-06-14T13:45:22.406Z
+                    chatId: null
+                  - _id: 666c2ecf89ff51666ab11a4b
+                    price: 350
+                    proficiencyLevel: [Advanced]
+                    title: Data Science with Python
+                    description: An advanced course on data science techniques using Python.
+                    languages: [English]
+                    authorRole: tutor
+                    author:
+                      _id: 666c26bd89ff51666ab119d5
+                      firstName: Jane
+                      lastName: Doe
+                      totalReviews:
+                        student: 0
+                        tutor: 0
+                      averageRating:
+                        student: 0
+                        tutor: 0
+                      nativeLanguage: English
+                      status:
+                        student: active
+                        tutor: active
+                        admin: active
+                      photo: 1718364095578-What-is-landscape-photography.jpg
+                      professionalSummary: Data scientist with extensive experience in machine learning.
+                    enrolledUsers: []
+                    subject:
+                      _id: 65660fbbcb972798c401a9b8
+                      name: Data Science
+                    category:
+                      _id: 64884f4dfdc2d1a130c24ad6
+                      appearance:
+                        icon: mocked-path-to-icon
+                        color: '#F67C31'
+                    status: active
+                    FAQ:
+                      question: Is prior programming experience necessary?
+                      answer: Yes, basic Python knowledge is recommended.
+                      _id: 666c2ecf89ff51666ab11a4d
+                    createdAt: 2024-07-12T11:51:43.406Z
+                    updatedAt: 2024-07-14T13:45:22.406Z
+                    chatId: null
         401:
           description: Unauthorized
           content:
@@ -163,16 +193,17 @@ paths:
             schema:
               $ref: '#/definitions/offerBody'
             example:
-              price: 300,
-              proficiencyLevel: [Advanced]
-              title: this is a new title for test purposes
-              description: Lorem ipsum dolor sit amet consectetur
+              price: 300
+              proficiencyLevel: [Beginner]
+              title: Introduction to Web Development
+              description: A beginner-friendly course to learn the basics of web development.
               languages: [English, Ukrainian]
-              subject: 63da8767c9ad4c9a0b0eacd3
-              category: 63525e23bf163f5ea609ff2b
-              FAQ:
-                - question: offer question
-                  answer: offer answer
+              enrolledUsers: []
+              subject: 66758f4059019cd05eb11a94
+              category: 64884fedfdc2d1a130c24ade
+              status: active
+              FAQ: []
+
       responses:
         201:
           description: Created
@@ -182,22 +213,19 @@ paths:
                 $ref: '#/definitions/offer'
               example:
                 price: 300
-                proficiencyLevel: [Advanced]
-                title: this is a new title for test purposes
-                description: Lorem ipsum dolor sit amet consectetur
+                proficiencyLevel: [Beginner]
+                title: Introduction to Web Development
+                description: A beginner-friendly course to learn the basics of web development.
                 languages: [English, Ukrainian]
                 authorRole: tutor
-                author: 63e63bb04d1bf3bea00e3d88
-                authorFirstName: John
-                authorLastName: Smith
-                authorAvgRating: 5
-                subject: 63da8767c9ad4c9a0b0eacd3
-                category: 63525e23bf163f5ea609ff2b
-                status: pending
-                FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
-                _id: 63ec1cd51e9d781cdb6f4b14
-                createdAt: 2023-02-14T23:44:21.334Z
-                updatedAt: 2023-02-14T23:44:21.334Z
+                enrolledUsers: []
+                subject: 66758f4059019cd05eb11a94
+                category: 64884fedfdc2d1a130c24ade
+                status: active
+                FAQ: []
+                _id: 676b4147a966dba1a48b8081
+                createdAt: 2024-12-24T23:18:31.432Z
+                updatedAt: 2024-12-24T23:18:31.432Z
         401:
           description: Unauthorized
           content:
@@ -243,32 +271,44 @@ paths:
                 $ref: '#/definitions/offer'
               example:
                 _id: 63ec1cd51e9d781cdb6f4b14
-                price: 300,
+                price: 300
                 proficiencyLevel: [Advanced]
-                title: this is a new title for test purposes
-                description: Lorem ipsum dolor sit amet consectetur
+                title: Advanced English Course
+                description: A comprehensive English course for intermediate learners.
                 languages: [English, Ukrainian]
-                enrolledUsers: [6512e1ca5fd987b6ce926c2e]
                 authorRole: tutor
-                authorFirstName: John
-                authorLastName: Smith
-                authorAvgRating: 5
                 author:
                   _id: 63e63bb04d1bf3bea00e3d88
+                  firstName: John
+                  lastName: Doe
                   totalReviews:
                     student: 0
                     tutor: 0
-                  FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
-                  professionalSummary: My professional summary
-                  photo: link-to-photo.png
+                  averageRating:
+                    student: 0
+                    tutor: 0
+                  photo: 1718364095578-What-is-landscape-photography.jpg
+                  professionalSummary: Data scientist with extensive experience in machine learning.
+                enrolledUsers: [6512e1ca5fd987b6ce926c2e]
                 subject:
-                  _id: 63da8767c9ad4c9a0b0eacd3
-                  name: piano
-                category: 63525e23bf163f5ea609ff2b
-                chatId: '64be59667f4136e211435a55'
-                FAQ: { question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }
-                createdAt: 2023-02-14T23:44:21.334Z
-                updatedAt: 2023-02-14T23:44:21.334Z
+                  _id: 65660fbbcb972798c401a9b4
+                  name: English
+                category:
+                  _id: 64884f4dfdc2d1a130c24ac6
+                  appearance:
+                    icon: mocked-path-to-icon
+                    color: '#F67C41'
+                status: active
+                FAQ:
+                  - question: What is the course duration?
+                    answer: The course lasts for 8 weeks.
+                    _id: 666c2ecf89ff51666ab11a4b
+                  - question: Are there any prerequisites?
+                    answer: Basic English knowledge is required.
+                    _id: 666c2ecf89ff51666ab11a4c
+                createdAt: 2024-06-14T11:51:43.406Z
+                updatedAt: 2024-06-14T13:45:22.406Z
+                chatId: null
         400:
           description: Bad Request
           content:
@@ -332,7 +372,7 @@ paths:
         - name: id
           in: path
           required: true
-          description: ID of the offer that needs to be deleted
+          description: ID of the offer that needs to be updated
           type: string
       requestBody:
         required: true
@@ -342,14 +382,16 @@ paths:
             schema:
               $ref: '#/definitions/offer'
             example:
-              price: 300,
+              price: 300
               proficiencyLevel: [Advanced]
-              title: this is a new title for test purposes
-              description: this is a test text 123
+              title: Advanced English Course
+              description: A comprehensive English course for intermediate learners.
               languages: [Ukrainian, Polish]
               enrolledUsers: [6512e1ca5fd987b6ce926c2e]
-              subjectId: 63da8767c9ad4c9a0b0eacd3
-              categoryId: 63525e23bf163f5ea609ff2b
+              subject: 63da8767c9ad4c9a0b0eacd3
+              category: 63525e23bf163f5ea609ff2b
+              status: active
+              FAQ: []
       responses:
         204:
           description: No Content

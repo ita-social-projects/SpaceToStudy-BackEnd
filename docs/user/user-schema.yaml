@@ -335,3 +335,13 @@ definitions:
     enum:
       - active
       - blocked
+  userSpokenLanguagesEnum:
+    type: string
+    enum:
+      - English
+      - Ukrainian
+      - Polish
+      - German
+      - French
+      - Spanish
+      - Arabic

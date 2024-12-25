@@ -159,15 +159,7 @@ definitions:
   offerLanguagesValues:
     type: array
     items:
-      type: string
-      enum:
-        - English
-        - Ukrainian
-        - Polish
-        - German
-        - French
-        - Spanish
-        - Arabic
+      $ref: '#/definitions/userSpokenLanguagesEnum'
   offerAuthor:
     type: object
     properties:
@@ -219,15 +211,7 @@ definitions:
           tutor:
             type: number
       nativeLanguage:
-        type: string
-        enum:
-          - English
-          - Ukrainian
-          - Polish
-          - German
-          - French
-          - Spanish
-          - Arabic
+        $ref: '#/definitions/userSpokenLanguagesEnum'
       status:
         $ref: '#/definitions/userStatusEnum'
       photo:

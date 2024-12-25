@@ -145,17 +145,19 @@ definitions:
       chatId:
         type: string
         nullable: true
+  offerProficiencyLevelEnum:
+    type: string
+    enum:
+      - Beginner
+      - Intermediate
+      - Advanced
+      - Test Preparation
+      - Professional
+      - Specialized
   offerProficiencyLevelValues:
     type: array
     items:
-      type: string
-      enum:
-        - Beginner
-        - Intermediate
-        - Advanced
-        - Test Preparation
-        - Professional
-        - Specialized
+      $ref: '#/definitions/offerProficiencyLevelEnum'
   offerLanguagesValues:
     type: array
     items:

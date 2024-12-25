@@ -73,7 +73,7 @@ definitions:
       _id:
         type: string
       offer:
-        $ref: '#/definitions/cooperationOffer'
+        $ref: '#/definitions/offer'
       initiator:
         $ref: '#/definitions/user'
       initiatorRole:
@@ -217,11 +217,3 @@ definitions:
     enum:
       - completed
       - active
-  cooperationOffer:
-    type: object
-    properties:
-      _id: string
-      proficiencyLevel:
-        $ref: '#/definitions/proficiencyLevelValues'
-      title: string
-      description: string

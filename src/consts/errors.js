@@ -13,19 +13,23 @@ const errors = {
   },
   BODY_IS_NOT_DEFINED: {
     code: 'BODY_IS_NOT_DEFINED',
-    message: 'request body should not be null or undefined'
+    message: 'request body should not be null or undefined.'
   },
   FIELD_CAN_BE_ONE_OF: (field, enums) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
-    message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}`
+    message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}.`
+  }),
+  FIELD_IS_EMPTY: (field) => ({
+    code: 'FIELD_IS_EMPTY',
+    message: `${field} cannot be empty.`
   }),
   FIELD_IS_NOT_DEFINED: (field) => ({
     code: 'FIELD_IS_NOT_DEFINED',
-    message: `${field} field should be defined`
+    message: `${field} field should be defined.`
   }),
   FIELD_IS_NOT_OF_PROPER_TYPE: (field, type) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
-    message: `${field} should be of type ${type}`
+    message: `${field} should be of type ${type}.`
   }),
   FIELD_IS_NOT_OF_PROPER_LENGTH: (field, length) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
@@ -42,7 +46,7 @@ const errors = {
   FIELD_IS_NOT_OF_PROPER_FORMAT: (field) => validationErrors[field],
   FIELD_IS_NOT_OF_PROPER_ENUM_VALUE: (field, enumSet) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_ENUM_VALUE',
-    message: `${field} should be either one of the values: [${enumSet.join(', ')}]`
+    message: `${field} should be either one of the values: [${enumSet.join(', ')}].`
   }),
   ROLE_REQUIRED_FOR_ACTION: (role) => ({
     code: 'ROLE_REQUIRED_FOR_ACTION',
@@ -66,7 +70,7 @@ const errors = {
   },
   WRONG_CURRENT_PASSWORD: {
     code: 'WRONG_CURRENT_PASSWORD',
-    message: 'Wrong current password'
+    message: 'Wrong current password.'
   },
   NOT_FOUND: {
     code: 'NOT_FOUND',

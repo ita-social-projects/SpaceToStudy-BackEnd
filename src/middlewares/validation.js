@@ -1,15 +1,15 @@
 const { createError } = require('~/utils/errorsHelper')
 const { BODY_IS_NOT_DEFINED } = require('~/consts/errors')
-const { validateRequired, validateFunc } = require('~/utils/validationHelper')
+const { validateRequired, validateNonEmptyObject, validateFunc } = require('~/utils/validationHelper')
 const requestDataSource = require('~/consts/requestDataSource')
 
-const isTypeIncluded = (expectedType, valueToCheck) => {
+const isExpectedType = (expectedType, valueToCheck) => {
   return Array.isArray(valueToCheck) ? valueToCheck.includes(expectedType) : valueToCheck === expectedType
 }
 
 const validateSchema = (schema, data) => {
   Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
-    const reqSourceField = data?.[schemaFieldKey]
+    const reqSourceField = data[schemaFieldKey]
     validateRequired(schemaFieldKey, schemaFieldValue?.required, reqSourceField)
 
     if (!reqSourceField) {
@@ -18,9 +18,11 @@ const validateSchema = (schema, data) => {
 
     if (
       typeof reqSourceField === 'object' &&
-      isTypeIncluded('object', schemaFieldValue?.type) &&
+      isExpectedType('object', schemaFieldValue?.type) &&
       schemaFieldValue.properties
     ) {
+      validateNonEmptyObject(reqSourceField, schemaFieldKey)
+
       validateSchema(schemaFieldValue.properties, reqSourceField)
       return
     }

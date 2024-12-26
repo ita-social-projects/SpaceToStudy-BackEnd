@@ -1,4 +1,5 @@
 const {
+  FIELD_IS_EMPTY,
   FIELD_IS_NOT_DEFINED,
   FIELD_IS_NOT_OF_PROPER_TYPE,
   FIELD_IS_NOT_OF_PROPER_LENGTH,
@@ -52,6 +53,12 @@ const validateLength = (schemaFieldKey, length, field) => {
   }
 }
 
+const validateNonEmptyObject = (fieldName, schemaFieldKey) => {
+  if (Object.keys(fieldName).length === 0) {
+    throw createError(422, FIELD_IS_EMPTY(schemaFieldKey))
+  }
+}
+
 const validateRange = (schemaFieldKey, range, field) => {
   if (field < range.min || field > range.max) {
     throw createError(422, FIELD_IS_NOT_IN_RANGE(schemaFieldKey, range))
@@ -84,6 +91,7 @@ module.exports = {
   validateRequired,
   validateTypes,
   validateLength,
+  validateNonEmptyObject,
   validateRange,
   validateFunc
 }

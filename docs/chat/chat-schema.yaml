@@ -10,7 +10,7 @@ definitions:
           type: array
           properties:
             user:
-              $ref: '#/definitions/userAsMember'
+              $ref: '#/definitions/userChatMember'
             role:
               type: string
         createdAt:
@@ -28,6 +28,7 @@ definitions:
                 type: string
         latestMessage:
           $ref: '#/definitions/message'
+          nullable: true
   chatBody:
     type: object
     properties:
@@ -44,7 +45,7 @@ definitions:
         type: object
         properties:
           user:
-            $ref: '#/definitions/userAsMember'
+            $ref: '#/definitions/userChatMember'
           role:
             type: string
       createdAt:
@@ -62,7 +63,8 @@ definitions:
               type: string
       latestMessage:
         $ref: '#/definitions/message'
-  userAsMember:
+        nullable: true
+  userChatMember:
     type: object
     properties:
       _id:
@@ -75,7 +77,3 @@ definitions:
         type: string
       professionalSummary:
         type: string
-    required:
-      - _id
-      - firstName
-      - lastName

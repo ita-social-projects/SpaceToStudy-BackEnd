@@ -1,5 +1,12 @@
 const {
-  lengths: { MAX_NAME_LENGTH, MIN_NAME_LENGTH, MIN_PROFFESSIONAL_SUMMARY_LENGTH, MAX_PROFFESSIONAL_SUMMARY_LENGTH },
+  lengths: {
+    MAX_NAME_LENGTH,
+    MIN_NAME_LENGTH,
+    MIN_PROFFESSIONAL_SUMMARY_LENGTH,
+    MAX_PROFFESSIONAL_SUMMARY_LENGTH,
+    MAX_PROFESSIONAL_BLOCK_FIELD_LENGTH,
+    MAX_ABOUT_STUDENT_FIELD_LENGTH
+  },
   enums: { MAIN_ROLE_ENUM, SPOKEN_LANG_ENUM, APP_LANG_ENUM },
   regex: { VIDEOLINK_PATTERN, NAME_PATTERN }
 } = require('~/consts/validation')
@@ -100,6 +107,67 @@ const updateUserValidationSchema = {
       name: {
         type: 'string',
         required: true
+      }
+    }
+  },
+  professionalBlock: {
+    type: 'object',
+    required: false,
+    properties: {
+      awards: {
+        type: 'string',
+        required: false,
+        length: {
+          max: MAX_PROFESSIONAL_BLOCK_FIELD_LENGTH
+        }
+      },
+      scientificActivities: {
+        type: 'string',
+        required: false,
+        length: {
+          max: MAX_PROFESSIONAL_BLOCK_FIELD_LENGTH
+        }
+      },
+      workExperience: {
+        type: 'string',
+        required: false,
+        length: {
+          max: MAX_PROFESSIONAL_BLOCK_FIELD_LENGTH
+        }
+      },
+      education: {
+        type: 'string',
+        required: false,
+        length: {
+          max: MAX_PROFESSIONAL_BLOCK_FIELD_LENGTH
+        }
+      }
+    }
+  },
+  aboutStudent: {
+    type: 'object',
+    required: false,
+    properties: {
+      personalIntroduction: {
+        type: 'string',
+        required: false,
+        length: {
+          max: MAX_ABOUT_STUDENT_FIELD_LENGTH
+        }
+      },
+      learningGoals: {
+        type: 'string',
+        required: false,
+        length: {
+          max: MAX_ABOUT_STUDENT_FIELD_LENGTH
+        }
+      },
+      learningActivities: {
+        type: 'string',
+        required: false,
+        length: {
+          max: MAX_ABOUT_STUDENT_FIELD_LENGTH
+        }
       }
     }
   }

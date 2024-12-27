@@ -1,11 +1,11 @@
 const {
-  FIELD_IS_EMPTY,
   FIELD_IS_NOT_DEFINED,
   FIELD_IS_NOT_OF_PROPER_TYPE,
   FIELD_IS_NOT_OF_PROPER_LENGTH,
   FIELD_IS_NOT_IN_RANGE,
   FIELD_IS_NOT_OF_PROPER_FORMAT,
-  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE
+  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE,
+  OBJECT_MUST_HAVE_PROPERTY
 } = require('~/consts/errors')
 const { createError } = require('./errorsHelper')
 
@@ -55,7 +55,7 @@ const validateLength = (schemaFieldKey, length, field) => {
 
 const validateNonEmptyObject = (fieldName, schemaFieldKey) => {
   if (Object.keys(fieldName).length === 0) {
-    throw createError(422, FIELD_IS_EMPTY(schemaFieldKey))
+    throw createError(422, OBJECT_MUST_HAVE_PROPERTY(schemaFieldKey))
   }
 }
 

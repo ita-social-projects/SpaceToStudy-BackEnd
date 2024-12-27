@@ -19,10 +19,6 @@ const errors = {
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
     message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}.`
   }),
-  FIELD_IS_EMPTY: (field) => ({
-    code: 'FIELD_IS_EMPTY',
-    message: `${field} cannot be empty.`
-  }),
   FIELD_IS_NOT_DEFINED: (field) => ({
     code: 'FIELD_IS_NOT_DEFINED',
     message: `${field} field should be defined.`
@@ -31,10 +27,18 @@ const errors = {
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
     message: `${field} should be of type ${type}.`
   }),
-  FIELD_IS_NOT_OF_PROPER_LENGTH: (field, length) => ({
-    code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
-    message: `${field} cannot be shorter than ${length.min} and longer than ${length.max} characters.`
-  }),
+  FIELD_IS_NOT_OF_PROPER_LENGTH: (field, length) => {
+    const lengthLimitMessages = []
+    length.min && lengthLimitMessages.push(`shorter than ${length.min}`)
+    length.max && lengthLimitMessages.push(`longer than ${length.max}`)
+
+    const message = `${field} cannot be ${lengthLimitMessages.join(' and ')} characters.`
+
+    return {
+      code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
+      message
+    }
+  },
   FIELD_IS_NOT_IN_RANGE: (field, range) => ({
     code: 'FIELD_IS_NOT_IN_RANGE',
     message: `${field} should be in range from ${range.min} to ${range.max}.`
@@ -76,6 +80,10 @@ const errors = {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'
   },
+  OBJECT_MUST_HAVE_PROPERTY: (field) => ({
+    code: 'OBJECT_MUST_HAVE_PROPERTY',
+    message: `${field} must have at least one property.`
+  }),
   FORBIDDEN: {
     code: 'FORBIDDEN',
     message: 'You do not have permission to perform this action.'

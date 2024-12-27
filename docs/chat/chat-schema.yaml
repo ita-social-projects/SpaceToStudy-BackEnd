@@ -7,11 +7,11 @@ definitions:
         _id:
           type: string
         members:
-          type: object
+          type: array
           properties:
             user:
               type: object
-              $ref: '#/components/user'
+              $ref: '#/definitions/user'
             role:
               type: string
         createdAt:
@@ -27,9 +27,9 @@ definitions:
             properties:
               user:
                 type: object
-                $ref: '#/components/user'
+                $ref: '#/definitions/user'
         latestMessage:
-          type: string
+          type: object
           $ref: '#/definitions/message'
   chatBody:
     type: object
@@ -48,7 +48,7 @@ definitions:
         properties:
           user:
             type: object
-            ref: '#/components/user'
+            ref: '#/definitions/user'
           role:
             type: string
       createdAt:
@@ -64,7 +64,7 @@ definitions:
           properties:
             user:
               type: object
-              $ref: '#/components/user'
+              $ref: '#/definitions/user'
       latestMessage:
-        type: string
+        type: object
         $ref: '#/definitions/message'

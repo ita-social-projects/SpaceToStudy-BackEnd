@@ -60,7 +60,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/chat'
+                $ref: '#/definitions/chats'
               example:
                 - _id: 67604def753afa7bbd3bd98a
                   members:

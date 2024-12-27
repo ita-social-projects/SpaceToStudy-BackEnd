@@ -190,6 +190,50 @@ const updateUserValidationSchema = {
         }
       }
     }
+  },
+  FAQ: {
+    type: 'object',
+    required: false,
+    properties: {
+      type: 'object',
+      required: false,
+      properties: {
+        student: {
+          type: 'array',
+          required: false,
+          items: {
+            type: 'object',
+            properties: {
+              question: {
+                type: 'string',
+                required: true
+              },
+              answer: {
+                type: 'string',
+                required: true
+              }
+            }
+          }
+        },
+        tutor: {
+          type: 'array',
+          required: false,
+          items: {
+            type: 'object',
+            properties: {
+              question: {
+                type: 'string',
+                required: true
+              },
+              answer: {
+                type: 'string',
+                required: true
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

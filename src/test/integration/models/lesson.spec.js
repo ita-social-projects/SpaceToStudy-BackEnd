@@ -1,7 +1,7 @@
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
-const Lesson = require('~/models/Lesson')
-const User = require('~/models/User')
-const ResourcesCategory = require('~/models/ResourcesCategory')
+const Lesson = require('~/models/lesson')
+const User = require('~/models/user')
+const ResourcesCategory = require('~/models/resourcesCategory')
 
 describe('Lesson Model - Production Data Validation', () => {
   let server

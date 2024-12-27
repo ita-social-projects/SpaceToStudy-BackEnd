@@ -10,8 +10,7 @@ definitions:
           type: array
           properties:
             user:
-              type: object
-              $ref: '#/definitions/user'
+              $ref: '#/definitions/userAsMember'
             role:
               type: string
         createdAt:
@@ -26,8 +25,7 @@ definitions:
             type: object
             properties:
               user:
-                type: object
-                $ref: '#/definitions/user'
+                type: string
         latestMessage:
           type: object
           $ref: '#/definitions/message'
@@ -48,7 +46,7 @@ definitions:
         properties:
           user:
             type: object
-            ref: '#/definitions/user'
+            $ref: '#/definitions/userAsMember'
           role:
             type: string
       createdAt:
@@ -63,8 +61,24 @@ definitions:
           type: object
           properties:
             user:
-              type: object
-              $ref: '#/definitions/user'
+              type: string
       latestMessage:
         type: object
         $ref: '#/definitions/message'
+  userAsMember:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      photo:
+        type: string
+      professionalSummary:
+        type: string
+    required:
+      - _id
+      - firstName
+      - lastName

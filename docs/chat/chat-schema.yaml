@@ -27,7 +27,6 @@ definitions:
               user:
                 type: string
         latestMessage:
-          type: object
           $ref: '#/definitions/message'
   chatBody:
     type: object
@@ -45,7 +44,6 @@ definitions:
         type: object
         properties:
           user:
-            type: object
             $ref: '#/definitions/userAsMember'
           role:
             type: string
@@ -63,7 +61,6 @@ definitions:
             user:
               type: string
       latestMessage:
-        type: object
         $ref: '#/definitions/message'
   userAsMember:
     type: object

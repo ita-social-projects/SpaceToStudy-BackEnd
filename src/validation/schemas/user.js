@@ -170,6 +170,26 @@ const updateUserValidationSchema = {
         }
       }
     }
+  },
+  mainSubjects: {
+    type: 'object',
+    required: false,
+    properties: {
+      student: {
+        type: 'array',
+        required: false,
+        items: {
+          type: 'string'
+        }
+      },
+      tutor: {
+        type: 'array',
+        required: false,
+        items: {
+          type: 'string'
+        }
+      }
+    }
   }
 }
 

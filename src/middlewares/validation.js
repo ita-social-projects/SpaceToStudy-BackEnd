@@ -7,6 +7,30 @@ const isExpectedType = (expectedType, valueToCheck) => {
   return Array.isArray(valueToCheck) ? valueToCheck.includes(expectedType) : valueToCheck === expectedType
 }
 
+const validatePrimitiveField = (schemaFieldValue, schemaFieldKey, reqSourceField) => {
+  Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
+    if (validateFunc[validationType]) {
+      validateFunc[validationType](schemaFieldKey, validationValue, reqSourceField)
+    }
+  })
+}
+
+const validateSchemaField = (schemaFieldKey, schemaFieldValue, reqSourceField) => {
+  if (
+    typeof reqSourceField === 'object' &&
+    isExpectedType('object', schemaFieldValue?.type) &&
+    schemaFieldValue.properties
+  ) {
+    validateNonEmptyObject(reqSourceField, schemaFieldKey)
+
+    validateSchema(schemaFieldValue.properties, reqSourceField)
+
+    return
+  }
+
+  validatePrimitiveField(schemaFieldValue, schemaFieldKey, reqSourceField)
+}
+
 const validateSchema = (schema, data) => {
   Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
     const reqSourceField = data[schemaFieldKey]
@@ -16,22 +40,15 @@ const validateSchema = (schema, data) => {
       return
     }
 
-    if (
-      typeof reqSourceField === 'object' &&
-      isExpectedType('object', schemaFieldValue?.type) &&
-      schemaFieldValue.properties
-    ) {
-      validateNonEmptyObject(reqSourceField, schemaFieldKey)
+    if (Array.isArray(reqSourceField) && isExpectedType('array', schemaFieldValue?.type) && schemaFieldValue.items) {
+      reqSourceField.forEach((item) => {
+        validateSchemaField(`${schemaFieldKey} array item`, schemaFieldValue.items, item)
+      })
 
-      validateSchema(schemaFieldValue.properties, reqSourceField)
       return
     }
 
-    Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
-      if (validateFunc[validationType]) {
-        validateFunc[validationType](schemaFieldKey, validationValue, reqSourceField)
-      }
-    })
+    validateSchemaField(schemaFieldKey, schemaFieldValue, reqSourceField)
   })
 }
 

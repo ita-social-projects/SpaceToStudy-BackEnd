@@ -129,6 +129,7 @@ definitions:
         type: string
       category:
         type: string
+        nullable: true
         default: null
       resourceType:
         $ref: '#/definitions/resourceType'

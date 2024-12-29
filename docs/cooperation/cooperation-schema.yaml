@@ -18,12 +18,8 @@ definitions:
           $ref: '#/definitions/baseUserRoleEnum'
         title:
           type: string
-          minLength: 1
-          maxLength: 100
         additionalInfo:
           type: string
-          minLength: 30
-          maxLength: 1000
         proficiencyLevel:
           $ref: '#/definitions/offerProficiencyLevelEnum'
         price:
@@ -67,8 +63,6 @@ definitions:
         type: string
       additionalInfo:
         type: string
-        minLength: 30
-        maxLength: 1000
       proficiencyLevel:
         $ref: '#/definitions/offerProficiencyLevelEnum'
       price:
@@ -101,11 +95,9 @@ definitions:
       offer:
         type: string
         description: _id
-        ref: '#/definitions/offer'
       receiver:
         type: string
         description: _id
-        ref: '#/definitions/user'
       receiverRole:
         type: string
       price:
@@ -117,14 +109,7 @@ definitions:
         minLength: 30
         maxLength: 1000
       proficiencyLevel:
-        type: string
-        enum:
-          - Beginner
-          - Intermediate
-          - Advanced
-          - Test Preparation
-          - Professional
-          - Specialized
+        $ref: '#/definitions/offerProficiencyLevelEnum'
       sections:
         type: array
         items:

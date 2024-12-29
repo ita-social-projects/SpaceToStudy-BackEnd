@@ -30,7 +30,7 @@ const validateSchema = (schema, data) => {
     const requestSourceField = data[schemaFieldKey]
     validateRequired(schemaFieldKey, schemaFieldValue.required, requestSourceField)
 
-    if (!requestSourceField) {
+    if (requestSourceField === undefined) {
       return
     }
 

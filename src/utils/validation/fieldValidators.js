@@ -7,28 +7,13 @@ const {
   FIELD_IS_NOT_OF_PROPER_ENUM_VALUE,
   OBJECT_MUST_HAVE_PROPERTY
 } = require('~/consts/errors')
-const { createError } = require('./errorsHelper')
+const { createError } = require('../errorsHelper')
+const { castValueToType } = require('./typeHelpers')
 
 const validateRequired = (schemaFieldKey, required, field) => {
   if (required && !field) {
     throw createError(422, FIELD_IS_NOT_DEFINED(schemaFieldKey))
   }
-}
-
-const castValueToType = (value, type) => {
-  if (type === 'boolean' && value === 'true') {
-    return true
-  }
-
-  if (type === 'boolean' && value === 'false') {
-    return false
-  }
-
-  if (type === 'number') {
-    return isNaN(Number(value)) ? value : Number(value)
-  }
-
-  return value
 }
 
 const checkAreTypesValid = (typeOrTypes, field) => {
@@ -78,7 +63,7 @@ const validateEnum = (schemaFieldKey, enumSet, field) => {
   }
 }
 
-const validateFunc = {
+const fieldValidator = {
   required: validateRequired,
   type: validateTypes,
   length: validateLength,
@@ -93,5 +78,5 @@ module.exports = {
   validateLength,
   validateNonEmptyObject,
   validateRange,
-  validateFunc
+  fieldValidator
 }

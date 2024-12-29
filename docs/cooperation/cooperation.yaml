@@ -17,48 +17,73 @@ paths:
               schema:
                 $ref: '#/definitions/cooperations'
               example:
-                - _id: 63ebc6fbd2f34037d0aba314
-                  offer: 63ebc6fbd2f34037d0aba791
-                  initiator: 6255bc080a75adf9223df212
-                  initiatorRole: tutor
-                  receiver: 6255bc080a75adf9223df100
-                  receiverRole: student
-                  title: 'Violin lessons'
-                  proficiencyLevel: Intermediate
-                  price: 200
-                  status: active
-                  needAction: student
-                  availableQuizzes: []
-                  finishedQuizzes: []
-                  user:
-                    _id: '6255bc080a75adf9223df100'
-                    firstName: 'Emily'
-                    lastName: 'Jhonson'
-                    photo: ''
-                    role: 'student'
-                  createdAt: 2021-05-09T11:34:53.243+00:00
-                  updatedAt: 2022-07-02T11:59:53.243+00:00
-                - _id: 63ebc6fbd2f34037d0aba314
-                  offer: 63ebc6fbd2f34037d0aba791
-                  initiator: 6255bc080a75adf9223df212
-                  initiatorRole: tutor
-                  receiver: 6255bc080a75adf9223df100
-                  receiverRole: student
-                  title: 'Violin lessons'
-                  proficiencyLevel: Intermediate
-                  price: 300
-                  status: closed
-                  needAction: tutor
-                  availableQuizzes: []
-                  finishedQuizzes: []
-                  user:
-                    _id: '6255bc080a75adf9223df100'
-                    firstName: 'Emily'
-                    lastName: 'Jhonson'
-                    photo: ''
-                    role: 'student'
-                  createdAt: 2021-04-09T11:34:53.243+00:00
-                  updatedAt: 2022-09-02T11:59:53.243+00:00
+                count: 2
+                items:
+                  - _id: 63ebc6fbd2f34037d0aba314
+                    offer:
+                      _id: 6741b51f1550cb6f3fae7a6c
+                      price: 500
+                      title: Advanced English Course
+                      subject:
+                        _id: 6675874d59019cd05eb11a14
+                        name: English
+                      category:
+                        _id: 64884f4dfdc2d1a130c24ac6
+                        appearance:
+                          icon: mocked-path-to-icon
+                          color: '#F67C41'
+                    initiator: 6255bc080a75adf9223df212
+                    initiatorRole: tutor
+                    receiver: 6255bc080a75adf9223df100
+                    receiverRole: student
+                    title: Advanced English Course
+                    additionalInfo: The Advanced English Course is designed for individuals who already have a strong grasp of English and wish to refine their skills to reach professional or near-native proficiency. This course focuses on advanced grammar, vocabulary, nuanced language use, and cultural fluency.
+                    proficiencyLevel: Advanced
+                    price: 500
+                    status: active
+                    needAction: student
+                    availableQuizzes: []
+                    finishedQuizzes: []
+                    createdAt: 2021-05-09T11:34:53.243+00:00
+                    updatedAt: 2022-07-02T11:59:53.243+00:00
+                    user:
+                      _id: '6255bc080a75adf9223df100'
+                      firstName: 'Emily'
+                      lastName: 'Jonson'
+                      photo: ''
+                      role: 'student'
+                  - _id: 63ebc6fbd2f34037d0aba315
+                    offer:
+                      _id: 6741b51f1550cb6f3fae7a6d
+                      price: 800
+                      title: 'Biochemistry: Enzymes and Their Functions'
+                      subject:
+                        _id: 6675874d59019cd05eb11a54
+                        name: Biochemistry
+                      category:
+                        _id: 64884f4dfdc2d1a130c24ac6
+                        appearance:
+                          icon: mocked-path-to-icon
+                          color: '#F67C42'
+                    initiator: 6255bc080a75adf9223df213
+                    initiatorRole: tutor
+                    receiver: 6255bc080a75adf9223df103
+                    receiverRole: student
+                    title: 'Biochemistry: Enzymes and Their Functions'
+                    additionalInfo: This course explores the world of enzymes, the catalysts of life. It includes enzyme classification, mechanisms of action, kinetics, regulation, and real-world applications in medicine and biotechnology. Perfect for students aiming to deepen their understanding of biochemical processes.
+                    price: 800
+                    status: active
+                    needAction: student
+                    availableQuizzes: []
+                    finishedQuizzes: []
+                    createdAt: 2021-06-12T11:34:53.243+00:00
+                    updatedAt: 2022-06-13T11:59:53.243+00:00
+                    user:
+                      _id: '6255bc080a75adf9223df154'
+                      firstName: 'Liam'
+                      lastName: 'Brown'
+                      photo: ''
+                      role: 'student'
         401:
           description: Unauthorized
           content:
@@ -305,21 +330,21 @@ paths:
                         description: Section description
                         resources:
                           - resource:
-                                title: Colors in English
-                                description: With this lesson you will learn all about colors in English.
-                                content: <h1>Title</h1>
-                                author: 63da8767c9ad4c9a0b0eacd3
-                                attachments:
-                                  - 63ed1cd25e9d781cdb6a6b15
-                                category:
-                                  _id: 6477007a6fa4d05e1a800ce1
-                                  name: Languages
-                                _id: 63ed1cd25e9d781cdb6a6b17
+                              title: Colors in English
+                              description: With this lesson you will learn all about colors in English.
+                              content: <h1>Title</h1>
+                              author: 63da8767c9ad4c9a0b0eacd3
+                              attachments:
+                                - 63ed1cd25e9d781cdb6a6b15
+                              category:
+                                _id: 6477007a6fa4d05e1a800ce1
+                                name: Languages
+                              _id: 63ed1cd25e9d781cdb6a6b17
                             resourceType: lesson
                             availability:
                               status: open
                               date: null
-                        _id:	674cae6458b8af8857ffac8a
+                        _id: 674cae6458b8af8857ffac8a
                     createdAt: '2024-07-02T16:29:40.956Z'
                     updatedAt: '2024-09-06T15:27:29.999Z'
                 tutorView:
@@ -506,7 +531,7 @@ paths:
                             availability:
                               status: openFrom
                               date: '2024-09-06T15:27:29.999Z'
-                        _id:	674cae6458b8af8857ffac8a
+                        _id: 674cae6458b8af8857ffac8a
                     createdAt: '2024-07-02T16:29:40.956Z'
                     updatedAt: '2024-09-06T15:27:29.999Z'
         400:

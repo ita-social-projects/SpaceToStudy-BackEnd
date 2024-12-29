@@ -38,6 +38,20 @@ const mainSubjectsItem = {
   }
 }
 
+const FAQItem = {
+  type: 'object',
+  properties: {
+    question: {
+      type: 'string',
+      required: true
+    },
+    answer: {
+      type: 'string',
+      required: true
+    }
+  }
+}
+
 const updateUserValidationSchema = {
   firstName: {
     regex: NAME_PATTERN,
@@ -213,36 +227,12 @@ const updateUserValidationSchema = {
         student: {
           type: 'array',
           required: false,
-          items: {
-            type: 'object',
-            properties: {
-              question: {
-                type: 'string',
-                required: true
-              },
-              answer: {
-                type: 'string',
-                required: true
-              }
-            }
-          }
+          items: FAQItem
         },
         tutor: {
           type: 'array',
           required: false,
-          items: {
-            type: 'object',
-            properties: {
-              question: {
-                type: 'string',
-                required: true
-              },
-              answer: {
-                type: 'string',
-                required: true
-              }
-            }
-          }
+          items: FAQItem
         }
       }
     }

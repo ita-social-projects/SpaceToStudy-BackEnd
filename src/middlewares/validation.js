@@ -7,7 +7,7 @@ const isExpectedType = (expectedType, valueToCheck) => {
   return Array.isArray(valueToCheck) ? valueToCheck.includes(expectedType) : valueToCheck === expectedType
 }
 
-const validatePrimitiveField = (schemaFieldValue, schemaFieldKey, reqSourceField) => {
+const validatePrimitiveField = (schemaFieldKey, schemaFieldValue, reqSourceField) => {
   Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
     if (validateFunc[validationType]) {
       validateFunc[validationType](schemaFieldKey, validationValue, reqSourceField)
@@ -18,7 +18,7 @@ const validatePrimitiveField = (schemaFieldValue, schemaFieldKey, reqSourceField
 const validateSchemaField = (schemaFieldKey, schemaFieldValue, reqSourceField) => {
   if (
     typeof reqSourceField === 'object' &&
-    isExpectedType('object', schemaFieldValue?.type) &&
+    isExpectedType('object', schemaFieldValue.type) &&
     schemaFieldValue.properties
   ) {
     validateNonEmptyObject(reqSourceField, schemaFieldKey)
@@ -28,27 +28,27 @@ const validateSchemaField = (schemaFieldKey, schemaFieldValue, reqSourceField) =
     return
   }
 
-  validatePrimitiveField(schemaFieldValue, schemaFieldKey, reqSourceField)
+  validatePrimitiveField(schemaFieldKey, schemaFieldValue, reqSourceField)
 }
 
 const validateSchema = (schema, data) => {
   Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
-    const reqSourceField = data[schemaFieldKey]
-    validateRequired(schemaFieldKey, schemaFieldValue?.required, reqSourceField)
+    const requestSourceField = data[schemaFieldKey]
+    validateRequired(schemaFieldKey, schemaFieldValue.required, requestSourceField)
 
-    if (!reqSourceField) {
+    if (!requestSourceField) {
       return
     }
 
-    if (Array.isArray(reqSourceField) && isExpectedType('array', schemaFieldValue?.type) && schemaFieldValue.items) {
-      reqSourceField.forEach((item) => {
+    if (Array.isArray(requestSourceField) && isExpectedType('array', schemaFieldValue.type) && schemaFieldValue.items) {
+      requestSourceField.forEach((item) => {
         validateSchemaField(`${schemaFieldKey} array item`, schemaFieldValue.items, item)
       })
 
       return
     }
 
-    validateSchemaField(schemaFieldKey, schemaFieldValue, reqSourceField)
+    validateSchemaField(schemaFieldKey, schemaFieldValue, requestSourceField)
   })
 }
 

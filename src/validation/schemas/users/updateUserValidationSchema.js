@@ -7,20 +7,9 @@ const {
     MAX_PROFESSIONAL_BLOCK_FIELD_LENGTH,
     MAX_ABOUT_STUDENT_FIELD_LENGTH
   },
-  enums: { MAIN_ROLE_ENUM, SPOKEN_LANG_ENUM, APP_LANG_ENUM },
+  enums: { SPOKEN_LANG_ENUM, APP_LANG_ENUM },
   regex: { VIDEOLINK_PATTERN, NAME_PATTERN }
 } = require('~/consts/validation')
-
-const getUserByIdValidationSchema = {
-  role: {
-    enum: MAIN_ROLE_ENUM,
-    required: false
-  },
-  isEdit: {
-    type: 'boolean',
-    required: false
-  }
-}
 
 const updateUserValidationSchema = {
   firstName: {
@@ -237,4 +226,4 @@ const updateUserValidationSchema = {
   }
 }
 
-module.exports = { getUserByIdValidationSchema, updateUserValidationSchema }
+module.exports = updateUserValidationSchema

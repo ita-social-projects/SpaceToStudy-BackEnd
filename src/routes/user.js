@@ -13,7 +13,8 @@ const User = require('~/models/user')
 const {
   roles: { ADMIN }
 } = require('~/consts/auth')
-const { getUserByIdValidationSchema, updateUserValidationSchema } = require('~/validation/schemas/user')
+const getUserByIdValidationSchema = require('~/validation/schemas/users/getUserByIdValidationSchema')
+const updateUserValidationSchema = require('~/validation/schemas/users/updateUserValidationSchema')
 const requestDataSource = require('~/consts/requestDataSource')
 
 const params = [{ model: User, idName: 'id' }]

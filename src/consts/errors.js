@@ -195,7 +195,7 @@ const validationErrors = {
   },
   photo: {
     code: 'PHOTO_NOT_VALID',
-    message: 'Photo must be either a valid object or an empty string to remove it.'
+    message: 'Photo must either have name and a src or be an empty string to remove it.'
   }
 }
 

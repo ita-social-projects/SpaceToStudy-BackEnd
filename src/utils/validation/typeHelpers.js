@@ -18,7 +18,16 @@ const castValueToType = (value, type) => {
   return value
 }
 
+const checkAreTypesValid = (typeOrTypes, field) => {
+  const allowedTypes = Array.isArray(typeOrTypes) ? typeOrTypes : [typeOrTypes]
+  const typeCastedField = castValueToType(field, allowedTypes[0])
+  const fieldType = typeof typeCastedField
+
+  return allowedTypes.includes(fieldType)
+}
+
 module.exports = {
   isExpectedType,
-  castValueToType
+  castValueToType,
+  checkAreTypesValid
 }

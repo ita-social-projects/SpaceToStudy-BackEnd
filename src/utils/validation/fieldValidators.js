@@ -8,20 +8,12 @@ const {
   OBJECT_MUST_HAVE_PROPERTY
 } = require('~/consts/errors')
 const { createError } = require('../errorsHelper')
-const { castValueToType } = require('./typeHelpers')
+const { checkAreTypesValid } = require('./typeHelpers')
 
 const validateRequired = (schemaFieldKey, required, field) => {
   if (required && !field) {
     throw createError(422, FIELD_IS_NOT_DEFINED(schemaFieldKey))
   }
-}
-
-const checkAreTypesValid = (typeOrTypes, field) => {
-  const allowedTypes = Array.isArray(typeOrTypes) ? typeOrTypes : [typeOrTypes]
-  const typeCastedField = castValueToType(field, allowedTypes[0])
-  const fieldType = typeof typeCastedField
-
-  return allowedTypes.includes(fieldType)
 }
 
 const validateTypes = (schemaFieldKey, typeOrTypes, field) => {

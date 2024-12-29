@@ -11,6 +11,33 @@ const {
   regex: { VIDEOLINK_PATTERN, NAME_PATTERN }
 } = require('~/consts/validation')
 
+const mainSubjectsItem = {
+  type: 'object',
+  properties: {
+    category: {
+      type: 'object',
+      required: true,
+      properties: {
+        _id: {
+          type: 'string'
+        }
+      }
+    },
+    subjects: {
+      type: 'array',
+      required: true,
+      items: {
+        type: 'object',
+        properties: {
+          _id: {
+            type: 'string'
+          }
+        }
+      }
+    }
+  }
+}
+
 const updateUserValidationSchema = {
   firstName: {
     regex: NAME_PATTERN,
@@ -167,16 +194,12 @@ const updateUserValidationSchema = {
       student: {
         type: 'array',
         required: false,
-        items: {
-          type: 'string'
-        }
+        items: mainSubjectsItem
       },
       tutor: {
         type: 'array',
         required: false,
-        items: {
-          type: 'string'
-        }
+        items: mainSubjectsItem
       }
     }
   },

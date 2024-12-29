@@ -172,19 +172,9 @@ definitions:
       lastName:
         type: string
       totalReviews:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/usersTotalReviews'
       averageRating:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/usersAverageRating'
       photo:
         type: string
       professionalSummary:
@@ -199,19 +189,9 @@ definitions:
       lastName:
         type: string
       totalReviews:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/usersTotalReviews'
       averageRating:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/usersAverageRating'
       nativeLanguage:
         $ref: '#/definitions/userSpokenLanguagesEnum'
       status:
@@ -220,3 +200,35 @@ definitions:
         type: string
       professionalSummary:
         type: string
+  offerInCooperations:
+    type: object
+    properties:
+      _id:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+      subject:
+        $ref: '#/definitions/subjectWithName'
+      category:
+        $ref: '#/definitions/categoryWithAppearance'
+  offerInCooperationExtended:
+    type: object
+    properties:
+      _id:
+        type: string
+      proficiencyLevel:
+        $ref: '#/definitions/offerProficiencyLevelValues'
+      title:
+        type: string
+      description:
+        type: string
+      languages:
+        $ref: '#/definitions/offerLanguagesValues'
+      author:
+        $ref: '#/definitions/offerAuthor'
+      subject:
+        $ref: '#/definitions/subjectWithName'
+      category:
+        $ref: '#/definitions/categoryWithNameAppearance'

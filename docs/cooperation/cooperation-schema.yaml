@@ -7,83 +7,62 @@ definitions:
         _id:
           type: string
         offer:
-          $ref: '#/definitions/offer'
+          $ref: '#/definitions/offerInCooperations'
         initiator:
-          $ref: '#/definitions/user'
+          type: string
         initiatorRole:
-          type: string
+          $ref: '#/definitions/baseUserRoleEnum'
         receiver:
-          $ref: '#/definitions/user'
-        receiverRole:
           type: string
-        price:
-          type: number
+        receiverRole:
+          $ref: '#/definitions/baseUserRoleEnum'
         title:
           type: string
+          minLength: 1
+          maxLength: 100
         additionalInfo:
           type: string
           minLength: 30
           maxLength: 1000
         proficiencyLevel:
-          type: string
-          enum:
-            - Beginner
-            - Intermediate
-            - Advanced
-            - Test Preparation
-            - Professional
-            - Specialized
+          $ref: '#/definitions/offerProficiencyLevelEnum'
+        price:
+          type: number
         status:
-          type: string
-          enum:
-            - pending
-            - active
-            - declined
-            - closed
+          $ref: '#/definitions/cooperationStatusEnum'
+        needAction:
+          $ref: '#/definitions/baseUserRoleEnum'
         availableQuizzes:
           type: array
           items:
-            $ref: '#/definitions/quiz'
+            type: string
         finishedQuizzes:
           type: array
           items:
-            $ref: '#/definitions/finishedQuiz'
-        needAction:
+            type: string
+        createdAt:
           type: string
-          enum:
-            - student
-            - tutor
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
         user:
-          type: object
-          description: Details of the partner user involved in the cooperation
-          properties:
-            _id:
-              type: string
-            firstName:
-              type: string
-            lastName:
-              type: string
-            photo:
-              type: string
-            role:
-              type: string
+          $ref: '#/definitions/userInCooperations'
   cooperation:
     type: object
     properties:
       _id:
         type: string
       offer:
-        $ref: '#/definitions/offer'
+        $ref: '#/definitions/offerInCooperationExtended'
       initiator:
-        $ref: '#/definitions/user'
+        $ref: '#/definitions/userInCooperationsExtended'
       initiatorRole:
         type: string
       receiver:
-        $ref: '#/definitions/user'
+        $ref: '#/definitions/userInCooperationsExtended'
       receiverRole:
         type: string
-      price:
-        type: number
       title:
         type: string
       additionalInfo:
@@ -91,38 +70,25 @@ definitions:
         minLength: 30
         maxLength: 1000
       proficiencyLevel:
-        type: string
-        enum:
-          - Beginner
-          - Intermediate
-          - Advanced
-          - Test Preparation
-          - Professional
-          - Specialized
+        $ref: '#/definitions/offerProficiencyLevelEnum'
+      price:
+        type: number
       status:
-        type: string
-        enum:
-          - pending
-          - active
-          - declined
-          - closed
+        $ref: '#/definitions/cooperationStatusEnum'
+      needAction:
+        $ref: '#/definitions/baseUserRoleEnum'
       availableQuizzes:
         type: array
         items:
-          $ref: '#/definitions/quiz'
+          type: string
       finishedQuizzes:
         type: array
         items:
-          $ref: '#/definitions/finishedQuiz'
+          type: string
       sections:
         type: array
         items:
           $ref: '#/definitions/section'
-      needAction:
-        type: string
-        enum:
-          - student
-          - tutor
       createdAt:
         type: string
         format: date-time
@@ -185,17 +151,12 @@ definitions:
             resource:
               type: object
               oneOf:
-                - $ref: '#/definitions/lesson'
-                - $ref: '#/definitions/quiz'
-                - $ref: '#/definitions/attachment'
+                - $ref: '#/definitions/cooperationLesson'
+                - $ref: '#/definitions/cooperationQuiz'
+                - $ref: '#/definitions/cooperationAttachment'
                 - $ref: '#/definitions/question'
             resourceType:
-              type: string
-              enum:
-                - lesson
-                - quiz
-                - attachment
-                - question
+              $ref: '#/definitions/resourceType'
             availability:
               type: object
               properties:
@@ -217,3 +178,18 @@ definitions:
     enum:
       - completed
       - active
+  cooperationStatusEnum:
+    type: string
+    enum:
+      - pending
+      - active
+      - declined
+      - closed
+      - request to close
+  resourceType:
+    type: string
+    enum:
+      - lesson
+      - quiz
+      - attachment
+      - question

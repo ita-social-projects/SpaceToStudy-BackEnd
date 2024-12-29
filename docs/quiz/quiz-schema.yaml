@@ -112,3 +112,41 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  cooperationQuiz:
+    type: object
+    properties:
+      _id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      items:
+        type: array
+        items:
+          type: string
+      author:
+        type: string
+      category:
+        type: string
+        default: null
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      isDuplicate:
+        type: boolean
+      settings:
+        type: object
+        properties:
+          view:
+            type: string
+            enum:
+              - Stepper
+              - Scroll
+          shuffle:
+            type: boolean
+          pointValues:
+            type: boolean
+          scoredResponses:
+            type: boolean
+          correctAnswers:
+            type: boolean

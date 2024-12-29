@@ -49,3 +49,30 @@ definitions:
       category:
         type: string
         $ref: '#/definitions/resourcesCategory'
+  cooperationLesson:
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+        minLength: 1
+        maxLength: 1000
+      content:
+        type: string
+        minLength: 50
+      attachments:
+        type: array
+        items:
+          type: string
+      category:
+        type: string
+        default: null
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      isDuplicate:
+        type: boolean

@@ -47,11 +47,11 @@ definitions:
       _id:
         type: string
       category:
-        type: object
-        $ref: '#/components/category'
+        type: string
       subjects:
         type: array
-        $ref: '#/components/subject'
+        items:
+          type: string
   users:
     type: array
     items:
@@ -335,6 +335,15 @@ definitions:
     enum:
       - active
       - blocked
+  userFullStatus:
+    type: object
+    properties:
+      student:
+        $ref: '#/definitions/userStatusEnum'
+      tutor:
+        $ref: '#/definitions/userStatusEnum'
+      admin:
+        $ref: '#/definitions/userStatusEnum'
   userSpokenLanguagesEnum:
     type: string
     enum:
@@ -345,3 +354,114 @@ definitions:
       - French
       - Spanish
       - Arabic
+  baseUserRoleEnum:
+    type: string
+    enum:
+      - tutor
+      - student
+  userInCooperations:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      photo:
+        type: string
+      role:
+        $ref: '#/definitions/baseUserRoleEnum'
+  usersTotalReviews:
+    type: object
+    properties:
+      student:
+        type: number
+      tutor:
+        type: number
+  usersAverageRating:
+    type: object
+    properties:
+      student:
+        type: number
+      tutor:
+        type: number
+  userInCooperationsExtended:
+    type: object
+    properties:
+      _id:
+        type: string
+      role:
+        type: array
+        items:
+          $ref: '#/descriptions/baseUserRoleEnum'
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      mainSubjects:
+        type: object
+        properties:
+          student:
+            type: array
+            items:
+              $ref: '#/definitions/userMainSubjects'
+          tutor:
+            type: array
+            items:
+              $ref: '#/definitions/userMainSubjects'
+      totalReviews:
+        $ref: '#/definitions/usersTotalReviews'
+      averageRating:
+        $ref: '#/definitions/usersAverageRating'
+      nativeLanguage:
+        $ref: '#/definitions/userSpokenLanguagesEnum'
+      lastLogin:
+        type: string
+        format: date-time
+      status:
+        $ref: '#/definitions/userFullStatus'
+      professionalBlock:
+        type: object
+        properties:
+          awards:
+            type: string
+          scientificActivities:
+            type: string
+          workExperience:
+            type: string
+          education:
+            type: string
+      notificationSettings:
+        type: object
+        properties:
+          isOfferStatusNotification:
+            type: boolean
+          isChatNotification:
+            type: boolean
+          isSimilarOffersNotification:
+            type: boolean
+          isEmailNotification:
+            type: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      address:
+        type: object
+        properties:
+          city:
+            type: string
+          country:
+            type: string
+      photo:
+        type: string
+      professionalSummary:
+        type: string
+      lastSeen:
+        type: string
+        format: date-time

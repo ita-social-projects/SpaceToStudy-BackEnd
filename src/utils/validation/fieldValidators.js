@@ -64,7 +64,6 @@ const validateEnum = (schemaFieldKey, enumSet, field) => {
 }
 
 const fieldValidator = {
-  required: validateRequired,
   type: validateTypes,
   length: validateLength,
   range: validateRange,

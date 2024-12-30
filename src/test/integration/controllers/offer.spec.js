@@ -6,7 +6,7 @@ const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const {
-  roles: { TUTOR, STUDENT }
+  roles: { TUTOR, STUDENT, ADMIN }
 } = require('~/consts/auth')
 const {
   enums: { STATUS_ENUM }
@@ -81,9 +81,11 @@ describe('Offer controller', () => {
     const { _id, appearance } = categoryResponse[0]
     const category = { _id: _id.toString(), appearance }
 
+    const addminAccessToken = await testUserAuthentication(app, { role: ADMIN })
+
     const subjectResponse = await app
       .post('/subjects/')
-      .set('Cookie', [`accessToken=${accessToken}`])
+      .set('Cookie', [`accessToken=${addminAccessToken}`])
       .send({
         name: 'testSubject',
         category: category

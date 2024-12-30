@@ -1,6 +1,6 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
-const { DOCUMENT_NOT_FOUND, DOCUMENT_ALREADY_EXISTS } = require('~/consts/errors')
+const { DOCUMENT_NOT_FOUND, DOCUMENT_ALREADY_EXISTS, FORBIDDEN } = require('~/consts/errors')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const Subject = require('~/models/subject')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
@@ -67,6 +67,28 @@ describe('Subject controller', () => {
         .send(subjectBody)
 
       expectError(409, DOCUMENT_ALREADY_EXISTS('name'), error)
+    })
+
+    it('should throw ACCESS_DENIED for tutor role', async () => {
+      const tutorAccessToken = await testUserAuthentication(app, { role: TUTOR })
+
+      const error = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+        .send(subjectBody)
+
+      expectError(403, FORBIDDEN, error)
+    })
+
+    it('should throw ACCESS_DENIED for student role', async () => {
+      const studentAccessToken = await testUserAuthentication(app, { role: STUDENT })
+
+      const error = await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${studentAccessToken}`])
+        .send(subjectBody)
+
+      expectError(403, FORBIDDEN, error)
     })
 
     it('should create a subject', async () => {

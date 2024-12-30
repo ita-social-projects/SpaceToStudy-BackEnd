@@ -240,7 +240,7 @@ paths:
                         tutor: active
                         admin: active
                       videoLink:
-                        student: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe'
+                        student: https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe
                       professionalBlock:
                         awards: Gold medal in mathematics competition
                         scientificActivities: Founded the Math Club at the University of Cambridge
@@ -294,7 +294,7 @@ paths:
                         tutor: active
                         admin: active
                       videoLink:
-                        tutor: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe'
+                        tutor: https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe
                       professionalBlock:
                         awards: The best tutor of the year 2023
                         scientificActivities: The author of the scientific work 'The role of mathematics in the development of society'
@@ -401,7 +401,7 @@ paths:
                         tutor: active
                         admin: active
                       videoLink:
-                        student: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe'
+                        student: https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe
                       professionalBlock:
                         awards: Gold medal in mathematics competition
                         scientificActivities: Founded the Math Club at the University of Cambridge
@@ -455,7 +455,7 @@ paths:
                         tutor: active
                         admin: active
                       videoLink:
-                        tutor: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe'
+                        tutor: https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe
                       professionalBlock:
                         awards: The best tutor of the year 2023
                         scientificActivities: The author of the scientific work 'The role of mathematics in the development of society'

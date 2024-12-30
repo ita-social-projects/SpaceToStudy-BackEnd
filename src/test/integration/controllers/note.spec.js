@@ -13,6 +13,12 @@ const nonExistingCooperationId = '19cf23e07281224fbbee3241'
 
 const mockedInitiatorId = '649c1fc9c75d3e44440e3a15'
 
+const testNeedAction = {
+  role: 'tutor',
+  type: 'price',
+  messages: []
+}
+
 const testCooperationData = {
   price: 99,
   receiverRole: 'tutor',
@@ -23,7 +29,7 @@ const testCooperationData = {
   offer: '649c148cc75d3e44440e3a13',
   title: 'First class teacher. Director of the Hogwarts school witchcraft and wizardry.',
   initiatorRole: 'student',
-  needAction: 'tutor'
+  needAction: testNeedAction
 }
 
 const testNoteData = {
@@ -40,7 +46,7 @@ describe('Note controller', () => {
   let app, server, accessToken, testUser, testCooperation, testNote
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

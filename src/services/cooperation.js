@@ -40,7 +40,7 @@ const cooperationService = {
 
     const initialNeedAction = {
       role: receiverRole,
-      type: 'Price',
+      type: 'price',
       messages: []
     }
 

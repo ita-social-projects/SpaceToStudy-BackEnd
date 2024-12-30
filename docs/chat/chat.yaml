@@ -68,14 +68,14 @@ paths:
                         _id: 67519181170a70623366d30c
                         firstName: Diana
                         lastName: Romovych
-                        professionalSummary: ""
+                        professionalSummary: ''
                         photo: null
                       role: tutor
                     - user:
                         _id: 673f342709e56a9071f5308c
                         firstName: Valentyna
                         lastName: Dudchak
-                        professionalSummary: ""
+                        professionalSummary: ''
                         photo: 1733337385040-photofordemo.jpg
                       role: student
                   createdAt: 2024-12-16T15:57:35.632Z
@@ -99,14 +99,14 @@ paths:
                         _id: 67519181170a70623366d30c
                         firstName: Diana
                         lastName: Romovych
-                        professionalSummary: ""
+                        professionalSummary: ''
                         photo: null
                       role: tutor
                     - user:
                         _id: 6735ff2cc8f5e44cc3de002d
                         firstName: Pavlo
                         lastName: Butynets
-                        professionalSummary: ""
+                        professionalSummary: ''
                         photo: null
                       role: student
                   createdAt: 2024-12-16T16:01:14.667Z

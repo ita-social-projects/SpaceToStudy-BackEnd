@@ -26,6 +26,7 @@ const enums = {
   MAIN_ROLE_ENUM: ['student', 'tutor'],
   STATUS_ENUM: ['active', 'blocked', 'deactivated'],
   COOPERATION_STATUS_ENUM: ['pending', 'active', 'declined', 'closed', 'request to close'],
+  NEED_ACTION_ENUM: ['waiting for approval', 'waiting for answer', 'price'],
   PARAMS_ENUM: ['id', 'categoryId', 'subjectId'],
   OFFER_STATUS_ENUM: ['active', 'draft', 'closed'],
   NOTIFICATION_TYPE_ENUM: [

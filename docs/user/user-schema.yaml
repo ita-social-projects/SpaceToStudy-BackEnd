@@ -359,14 +359,14 @@ definitions:
     enum:
       - tutor
       - student
-  usersTotalReviews:
+  userTotalReviews:
     type: object
     properties:
       student:
         type: number
       tutor:
         type: number
-  usersAverageRating:
+  userAverageRating:
     type: object
     properties:
       student:

@@ -145,7 +145,7 @@ definitions:
       chatId:
         type: string
         nullable: true
-  offerProficiencyLevelEnum:
+  proficiencyLevelEnum:
     type: string
     enum:
       - Beginner
@@ -157,7 +157,7 @@ definitions:
   offerProficiencyLevelValues:
     type: array
     items:
-      $ref: '#/definitions/offerProficiencyLevelEnum'
+      $ref: '#/definitions/proficiencyLevelEnum'
   offerLanguagesValues:
     type: array
     items:
@@ -172,9 +172,9 @@ definitions:
       lastName:
         type: string
       totalReviews:
-        $ref: '#/definitions/usersTotalReviews'
+        $ref: '#/definitions/userTotalReviews'
       averageRating:
-        $ref: '#/definitions/usersAverageRating'
+        $ref: '#/definitions/userAverageRating'
       photo:
         type: string
       professionalSummary:
@@ -189,9 +189,9 @@ definitions:
       lastName:
         type: string
       totalReviews:
-        $ref: '#/definitions/usersTotalReviews'
+        $ref: '#/definitions/userTotalReviews'
       averageRating:
-        $ref: '#/definitions/usersAverageRating'
+        $ref: '#/definitions/userAverageRating'
       nativeLanguage:
         $ref: '#/definitions/userSpokenLanguagesEnum'
       status:

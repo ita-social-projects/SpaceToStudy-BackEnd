@@ -21,7 +21,7 @@ definitions:
         additionalInfo:
           type: string
         proficiencyLevel:
-          $ref: '#/definitions/offerProficiencyLevelEnum'
+          $ref: '#/definitions/proficiencyLevelEnum'
         price:
           type: number
         status:
@@ -64,7 +64,7 @@ definitions:
       additionalInfo:
         type: string
       proficiencyLevel:
-        $ref: '#/definitions/offerProficiencyLevelEnum'
+        $ref: '#/definitions/proficiencyLevelEnum'
       price:
         type: number
       status:
@@ -107,7 +107,7 @@ definitions:
         minLength: 30
         maxLength: 1000
       proficiencyLevel:
-        $ref: '#/definitions/offerProficiencyLevelEnum'
+        $ref: '#/definitions/proficiencyLevelEnum'
       sections:
         type: array
         items:
@@ -217,9 +217,9 @@ definitions:
             items:
               $ref: '#/definitions/userMainSubjects'
       totalReviews:
-        $ref: '#/definitions/usersTotalReviews'
+        $ref: '#/definitions/userTotalReviews'
       averageRating:
-        $ref: '#/definitions/usersAverageRating'
+        $ref: '#/definitions/userAverageRating'
       nativeLanguage:
         $ref: '#/definitions/userSpokenLanguagesEnum'
       lastLogin:

@@ -76,7 +76,5 @@ definitions:
         type: string
         default: null
         nullable: true
-      resourceType:
-        $ref: '#/definitions/resourceType'
       description:
         type: string

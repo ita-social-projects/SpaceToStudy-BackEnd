@@ -70,7 +70,5 @@ definitions:
         type: string
         nullable: true
         default: null
-      resourceType:
-        $ref: '#/definitions/resourceType'
       isDuplicate:
         type: boolean

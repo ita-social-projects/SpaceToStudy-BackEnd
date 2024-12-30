@@ -335,7 +335,7 @@ definitions:
     enum:
       - active
       - blocked
-  userFullStatus:
+  roleBasedStatus:
     type: object
     properties:
       student:
@@ -359,19 +359,6 @@ definitions:
     enum:
       - tutor
       - student
-  userInCooperations:
-    type: object
-    properties:
-      _id:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      photo:
-        type: string
-      role:
-        $ref: '#/definitions/baseUserRoleEnum'
   usersTotalReviews:
     type: object
     properties:
@@ -386,82 +373,3 @@ definitions:
         type: number
       tutor:
         type: number
-  userInCooperationsExtended:
-    type: object
-    properties:
-      _id:
-        type: string
-      role:
-        type: array
-        items:
-          $ref: '#/descriptions/baseUserRoleEnum'
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
-      mainSubjects:
-        type: object
-        properties:
-          student:
-            type: array
-            items:
-              $ref: '#/definitions/userMainSubjects'
-          tutor:
-            type: array
-            items:
-              $ref: '#/definitions/userMainSubjects'
-      totalReviews:
-        $ref: '#/definitions/usersTotalReviews'
-      averageRating:
-        $ref: '#/definitions/usersAverageRating'
-      nativeLanguage:
-        $ref: '#/definitions/userSpokenLanguagesEnum'
-      lastLogin:
-        type: string
-        format: date-time
-      status:
-        $ref: '#/definitions/userFullStatus'
-      professionalBlock:
-        type: object
-        properties:
-          awards:
-            type: string
-          scientificActivities:
-            type: string
-          workExperience:
-            type: string
-          education:
-            type: string
-      notificationSettings:
-        type: object
-        properties:
-          isOfferStatusNotification:
-            type: boolean
-          isChatNotification:
-            type: boolean
-          isSimilarOffersNotification:
-            type: boolean
-          isEmailNotification:
-            type: boolean
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
-      address:
-        type: object
-        properties:
-          city:
-            type: string
-          country:
-            type: string
-      photo:
-        type: string
-      professionalSummary:
-        type: string
-      lastSeen:
-        type: string
-        format: date-time

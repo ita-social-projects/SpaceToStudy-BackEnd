@@ -94,10 +94,8 @@ definitions:
     properties:
       offer:
         type: string
-        description: _id
       receiver:
         type: string
-        description: _id
       receiverRole:
         type: string
       price:
@@ -156,6 +154,7 @@ definitions:
                   type: string
                   format: date-time
                   default: null
+                  nullable: true
             completionStatus:
               $ref: '#/definitions/completionStatus'
   completionStatus:
@@ -178,3 +177,127 @@ definitions:
       - quiz
       - attachment
       - question
+  userInCooperations:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      photo:
+        type: string
+      role:
+        $ref: '#/definitions/baseUserRoleEnum'
+  userInCooperationsExtended:
+    type: object
+    properties:
+      _id:
+        type: string
+      role:
+        type: array
+        items:
+          $ref: '#/descriptions/baseUserRoleEnum'
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      mainSubjects:
+        type: object
+        properties:
+          student:
+            type: array
+            items:
+              $ref: '#/definitions/userMainSubjects'
+          tutor:
+            type: array
+            items:
+              $ref: '#/definitions/userMainSubjects'
+      totalReviews:
+        $ref: '#/definitions/usersTotalReviews'
+      averageRating:
+        $ref: '#/definitions/usersAverageRating'
+      nativeLanguage:
+        $ref: '#/definitions/userSpokenLanguagesEnum'
+      lastLogin:
+        type: string
+        format: date-time
+      status:
+        $ref: '#/definitions/roleBasedStatus'
+      professionalBlock:
+        type: object
+        properties:
+          awards:
+            type: string
+          scientificActivities:
+            type: string
+          workExperience:
+            type: string
+          education:
+            type: string
+      notificationSettings:
+        type: object
+        properties:
+          isOfferStatusNotification:
+            type: boolean
+          isChatNotification:
+            type: boolean
+          isSimilarOffersNotification:
+            type: boolean
+          isEmailNotification:
+            type: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      address:
+        type: object
+        properties:
+          city:
+            type: string
+          country:
+            type: string
+      photo:
+        type: string
+      professionalSummary:
+        type: string
+      lastSeen:
+        type: string
+        format: date-time
+  offerInCooperations:
+    type: object
+    properties:
+      _id:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+      subject:
+        $ref: '#/definitions/subjectWithName'
+      category:
+        $ref: '#/definitions/categoryWithAppearance'
+  offerInCooperationExtended:
+    type: object
+    properties:
+      _id:
+        type: string
+      proficiencyLevel:
+        $ref: '#/definitions/offerProficiencyLevelValues'
+      title:
+        type: string
+      description:
+        type: string
+      languages:
+        $ref: '#/definitions/offerLanguagesValues'
+      author:
+        $ref: '#/definitions/offerAuthor'
+      subject:
+        $ref: '#/definitions/subjectWithName'
+      category:
+        $ref: '#/definitions/categoryWithNameAppearance'

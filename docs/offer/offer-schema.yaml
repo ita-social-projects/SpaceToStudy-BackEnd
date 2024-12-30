@@ -200,35 +200,3 @@ definitions:
         type: string
       professionalSummary:
         type: string
-  offerInCooperations:
-    type: object
-    properties:
-      _id:
-        type: string
-      price:
-        type: number
-      title:
-        type: string
-      subject:
-        $ref: '#/definitions/subjectWithName'
-      category:
-        $ref: '#/definitions/categoryWithAppearance'
-  offerInCooperationExtended:
-    type: object
-    properties:
-      _id:
-        type: string
-      proficiencyLevel:
-        $ref: '#/definitions/offerProficiencyLevelValues'
-      title:
-        type: string
-      description:
-        type: string
-      languages:
-        $ref: '#/definitions/offerLanguagesValues'
-      author:
-        $ref: '#/definitions/offerAuthor'
-      subject:
-        $ref: '#/definitions/subjectWithName'
-      category:
-        $ref: '#/definitions/categoryWithNameAppearance'

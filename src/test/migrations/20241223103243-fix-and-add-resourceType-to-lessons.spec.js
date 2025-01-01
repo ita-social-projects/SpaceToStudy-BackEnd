@@ -37,13 +37,12 @@ describe('20241223082318-update-resource-type-in-lessons', () => {
       {
         ...lessonBase,
         title: 'Lesson 1',
-        resourceType: 'lesson',
+        resourceType: 'lessons',
         otherField: 'value1'
       },
       {
         ...lessonBase,
         title: 'Lesson 2',
-        resourceType: 'quiz',
         otherField: 'value2'
       }
     ])
@@ -55,15 +54,13 @@ describe('20241223082318-update-resource-type-in-lessons', () => {
     expect(updatedDocs).toHaveLength(2)
 
     updatedDocs.forEach((doc) => {
-      if (doc.title === 'Lesson 1') {
+      if (doc.title === 'Lesson 1' || doc.title === 'Lesson 2') {
         expect(doc.resourceType).toBe('lesson')
-      } else if (doc.title === 'Lesson 2') {
-        expect(doc.resourceType).toBe('quiz')
       }
     })
   })
 
-  it('should revert resourceType to "lessons" or unset it (down)', async () => {
+  it('should revert resourceType to "lessons" for documents with "resourceType: lesson" (down)', async () => {
     await insertLessons([
       {
         ...lessonBase,

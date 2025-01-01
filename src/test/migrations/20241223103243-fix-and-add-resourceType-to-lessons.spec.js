@@ -18,8 +18,9 @@ describe('20241223082318-update-resource-type-in-lessons', () => {
     await stopServer(server)
   })
 
-  const insertLessons = async (data) => {
-    await Lessons.insertMany(data)
+  const insertLessonsWithoutValidation = async (data) => {
+    const lessonsCollection = mongoose.connection.db.collection('lessons')
+    await lessonsCollection.insertMany(data)
   }
 
   const getLessons = async () => {
@@ -29,21 +30,20 @@ describe('20241223082318-update-resource-type-in-lessons', () => {
   const lessonBase = {
     content: '<p>'.concat('Content 1 '.repeat(10), '</p>'),
     description: 'This is a test description.',
-    author: new mongoose.Types.ObjectId()
+    author: new mongoose.Types.ObjectId(),
+    title: 'Default Title'
   }
 
   it('should update resourceType to "lesson" for documents with "resourceType: lessons" or missing field (up)', async () => {
-    await insertLessons([
+    await insertLessonsWithoutValidation([
       {
         ...lessonBase,
         title: 'Lesson 1',
-        resourceType: 'lessons',
-        otherField: 'value1'
+        resourceType: 'lessons'
       },
       {
         ...lessonBase,
-        title: 'Lesson 2',
-        otherField: 'value2'
+        title: 'Lesson 2'
       }
     ])
 
@@ -54,25 +54,25 @@ describe('20241223082318-update-resource-type-in-lessons', () => {
     expect(updatedDocs).toHaveLength(2)
 
     updatedDocs.forEach((doc) => {
-      if (doc.title === 'Lesson 1' || doc.title === 'Lesson 2') {
+      if (doc.title === 'Lesson 1') {
+        expect(doc.resourceType).toBe('lesson')
+      } else if (doc.title === 'Lesson 2') {
         expect(doc.resourceType).toBe('lesson')
       }
     })
   })
 
   it('should revert resourceType to "lessons" for documents with "resourceType: lesson" (down)', async () => {
-    await insertLessons([
+    await insertLessonsWithoutValidation([
       {
         ...lessonBase,
         title: 'Lesson 1',
-        resourceType: 'lesson',
-        otherField: 'value1'
+        resourceType: 'lesson'
       },
       {
         ...lessonBase,
         title: 'Lesson 2',
-        resourceType: 'quiz',
-        otherField: 'value2'
+        resourceType: 'quiz'
       }
     ])
 

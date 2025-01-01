@@ -15,6 +15,18 @@ const {
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
 
+let adminUser = {
+  role: [ADMIN],
+  firstName: 'TestAdmin',
+  lastName: 'AdminTest',
+  email: 'testadmin@gmail.com',
+  password: 'supersecretpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  isFirstLogin: false,
+  lastLoginAs: ADMIN
+}
+
 let testOffer = {
   price: 330,
   proficiencyLevel: ['Beginner'],
@@ -81,7 +93,7 @@ describe('Offer controller', () => {
     const { _id, appearance } = categoryResponse[0]
     const category = { _id: _id.toString(), appearance }
 
-    const addminAccessToken = await testUserAuthentication(app, { role: ADMIN })
+    const addminAccessToken = await testUserAuthentication(app, adminUser)
 
     const subjectResponse = await app
       .post('/subjects/')

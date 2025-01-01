@@ -11,7 +11,5 @@ module.exports = {
     const lessonsCollection = db.collection('lessons')
 
     await lessonsCollection.updateMany({ resourceType: 'lesson' }, { $set: { resourceType: 'lessons' } })
-
-    await lessonsCollection.updateMany({ resourceType: 'lesson' }, { $unset: { resourceType: '' } })
   }
 }

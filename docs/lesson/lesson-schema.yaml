@@ -36,7 +36,6 @@ definitions:
         type: string
       author:
         type: string
-        $ref: '#components/user'
       title:
         type: string
       description:
@@ -45,7 +44,31 @@ definitions:
         type: string
       attachments:
         type: array
-        $ref: '#/definitions/attachments'
+        items:
+          type: string
       category:
+        $ref: '#/definitions/lessonCategory'
+      resourceType:
         type: string
-        $ref: '#/definitions/resourcesCategory'
+        enum: [lesson, quiz, attachment, question]
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  lessons:
+    type: object
+    properties:
+      count:
+        type: number
+      items:
+        type: array
+        $ref: '#/definitions/lesson'
+  lessonCategory:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string

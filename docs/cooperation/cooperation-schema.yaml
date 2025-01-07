@@ -54,11 +54,11 @@ definitions:
       initiator:
         $ref: '#/definitions/userInCooperationsExtended'
       initiatorRole:
-        type: string
+        $ref: '#/definitions/baseUserRoleEnum'
       receiver:
         $ref: '#/definitions/userInCooperationsExtended'
       receiverRole:
-        type: string
+        $ref: '#/definitions/baseUserRoleEnum'
       title:
         type: string
       additionalInfo:

@@ -97,7 +97,7 @@ definitions:
       receiver:
         type: string
       receiverRole:
-        type: string
+        $ref: '#/definitions/baseUserRoleEnum'
       price:
         type: number
       title:

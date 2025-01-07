@@ -35,16 +35,7 @@ definitions:
             - draft
             - closed
         FAQ:
-          type: array
-          items:
-            type: object
-            properties:
-              question:
-                type: string
-              answer:
-                type: string
-              _id:
-                type: string
+          $ref: '#/definitions/FAQ'
         createdAt:
           type: string
           format: date-time
@@ -84,14 +75,7 @@ definitions:
           - draft
           - closed
       FAQ:
-        type: array
-        items:
-          type: object
-          properties:
-            question:
-              type: string
-            answer:
-              type: string
+        $ref: '#/definitions/FAQ'
   offer:
     type: object
     properties:
@@ -126,16 +110,7 @@ definitions:
           - draft
           - closed
       FAQ:
-        type: array
-        items:
-          type: object
-          properties:
-            question:
-              type: string
-            answer:
-              type: string
-            _id:
-              type: string
+        $ref: '#/definitions/FAQ'
       createdAt:
         type: string
         format: date-time

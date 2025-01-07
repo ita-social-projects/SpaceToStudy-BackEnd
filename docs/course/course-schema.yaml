@@ -73,7 +73,7 @@ definitions:
         description: We get the ID of the chosen category
       subject:
         type: string
-        $ref: '#components/subject'
+        description: This ID related to subject
       proficiencyLevel:
         type: array
         items:

@@ -60,12 +60,7 @@ definitions:
         _id:
           type: string
         role:
-          type: array
-          items:
-            type: string
-            enum:
-              - student
-              - tutor
+          $ref: '#/definitions/userRoleEnumExtended'
         firstName:
           type: string
         lastName:
@@ -77,97 +72,66 @@ definitions:
           properties:
             student:
               type: array
-              $ref: '#/definitions/userMainSubjects'
+              items:
+                $ref: '#/definitions/userSubjectsMain'
             tutor:
               type: array
-              $ref: '#/definitions/userMainSubjects'
+              items:
+                $ref: '#/definitions/userSubjectsMain'
         totalReviews:
-          type: object
-          properties:
-            student:
-              type: number
-            tutor:
-              type: number
+          $ref: '#/definitions/userTotalReviews'
         averageRating:
-          type: object
-          properties:
-            student:
-              type: number
-            tutor:
-              type: number
+          $ref: '#/definitions/userAverageRating'
         nativeLanguage:
-          type: string
+          $ref: '#/definitions/userSpokenLanguagesEnum'
+          nullable: true
         notificationSettings:
-          type: object
-          properties:
-            isOfferStatusNotification:
-              type: boolean
-            isChatNotification:
-              type: boolean
-            isSimilarOffersNotification:
-              type: boolean
-            isEmailNotification:
-              type: boolean
+          $ref: '#/definitions/userNotificationSettings'
         address:
-          type: object
-          properties:
-            country:
-              type: string
-            city:
-              type: string
+          $ref: '#/definitions/userAddress'
         professionalSummary:
           type: string
+        professionalBlock:
+          type: object
+          properties:
+            awards:
+              type: string
+            scientificActivities:
+              type: string
+            workExperience:
+              type: string
+            education:
+              type: string
+        aboutStudent:
+          type: object
+          properties:
+            personalIntroduction:
+              type: string
+            learningGoals:
+              type: string
+            learningActivities:
+              type: string
         photo:
           type: string
         lastLogin:
           type: string
           format: date-time
+          nullable: true
         lastSeen:
           type: string
           format: date-time
+          nullable: true
         status:
-          type: object
-          properties:
-            student:
-              type: string
-              enum:
-                - active
-                - blocked
-            tutor:
-              type: string
-              enum:
-                - active
-                - blocked
-            admin:
-              type: string
-              enum:
-                - active
-                - blocked
+          $ref: '#/definitions/roleBasedStatus'
         FAQ:
           type: object
           properties:
             student:
-              type: array
-              items:
-                type: object
-                properties:
-                  question:
-                    type: string
-                  _id:
-                    type: string
-                  answer:
-                    type: string
+              $ref: '#/definitions/FAQ'
             tutor:
-              type: array
-              items:
-                type: object
-                properties:
-                  question:
-                    type: string
-                  _id:
-                    type: string
-                  answer:
-                    type: string
+              $ref: '#/definitions/FAQ'
+            _id:
+              type: string
         videoLink:
           type: object
           properties:
@@ -211,6 +175,7 @@ definitions:
         $ref: '#/definitions/userAverageRating'
       nativeLanguage:
         $ref: '#/definitions/userSpokenLanguagesEnum'
+        nullable: true
       isEmailConfirmed:
         type: boolean
       isFirstLogin:
@@ -238,16 +203,7 @@ definitions:
           education:
             type: string
       notificationSettings:
-        type: object
-        properties:
-          isOfferStatusNotification:
-            type: boolean
-          isChatNotification:
-            type: boolean
-          isSimilarOffersNotification:
-            type: boolean
-          isEmailNotification:
-            type: boolean
+        $ref: '#/definitions/userNotificationSettings'
       createdAt:
         type: string
         format: date-time
@@ -263,6 +219,20 @@ definitions:
       lastSeen:
         type: string
         format: date-time
+      videoLink:
+        type: object
+        properties:
+          user:
+            type: string
+          tutor:
+            type: string
+      FAQ:
+        type: object
+        properties:
+          student:
+            $ref: '#/definitions/FAQ'
+          tutor:
+            $ref: '#/definitions/FAQ'
   toggleBookmarkResponse:
     type: array
     items:
@@ -342,7 +312,7 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/subjectWithName'
-      id:
+      _id:
         type: string
   userAddress:
     type: object
@@ -351,3 +321,25 @@ definitions:
         type: string
       city:
         type: string
+  userNotificationSettings:
+    type: object
+    properties:
+      isOfferStatusNotification:
+        type: boolean
+      isChatNotification:
+        type: boolean
+      isSimilarOffersNotification:
+        type: boolean
+      isEmailNotification:
+        type: boolean
+  FAQ:
+    type: array
+    items:
+      type: object
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+        _id:
+          type: string

@@ -184,22 +184,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#definitions/lessonBody'
+                $ref: '#definitions/lessonById'
               example:
+                _id: 93ec1cd51e9d781cdb6f5b56
+                author: 64a33e71eea95284f397a6ee
                 title: Title of the lesson
                 description: Some information about this lesson
-                content: <h1>Title</h1>
-                author: 64a33e71eea95284f397a6ee
+                content: <h1>Lesson title</h1>\n<p>Some long description for the lesson.</p>\n<p>Another paragraph for the lesson.</p>
                 attachments:
                   - _id: 63ec1cd51e9d781cdb6f4b14
                     author: 648afee884936e09a37deaaa
                     fileName: EnglishB2Level.pdf
                     link: 3302931_EnglishB2Level.pdf
-                    size: 230
+                    size: 195123
+                    category: 677c11c0a1d060a32ade5fed
+                    resourceType: attachment
                     createdAt: 2023-02-14T23:44:21.334Z
                     updatedAt: 2023-02-14T23:44:21.334Z
-                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
-                _id: 93ec1cd51e9d781cdb6f5b56
+                category: 6477007a6fa4d05e1a800ce1
+                resourceType: lesson
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
         400:

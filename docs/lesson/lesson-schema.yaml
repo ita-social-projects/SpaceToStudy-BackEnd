@@ -19,8 +19,7 @@ definitions:
       category:
         $ref: '#/definitions/lessonCategory'
       resourceType:
-        type: string
-        enum: [lesson, quiz, attachment, question]
+        $ref: '#/definitions/resourceType'
       createdAt:
         type: string
         format: date-time
@@ -79,8 +78,62 @@ definitions:
       category:
         $ref: '#/definitions/lessonCategory'
       resourceType:
+        $ref: '#/definitions/resourceType'
+      size:
+        type: number
+      createdAt:
         type: string
-        enum: [lesson, quiz, attachment, question]
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  lessonById:
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      title:
+        type: string
+        minLength: 1
+        maxLength: 100
+      description:
+        type: string
+        minLength: 1
+        maxLength: 1000
+      content:
+        type: string
+        minLength: 50
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/attachmentInLessonById'
+      category:
+        type: string
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  attachmentInLessonById:
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      fileName:
+        type: string
+      link:
+        type: string
+      category:
+        type: string
+      resourceType:
+        $ref: '#/definitions/resourceType'
       size:
         type: number
       createdAt:

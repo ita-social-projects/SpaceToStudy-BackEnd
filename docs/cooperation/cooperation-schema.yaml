@@ -256,12 +256,7 @@ definitions:
         type: string
         format: date-time
       address:
-        type: object
-        properties:
-          city:
-            type: string
-          country:
-            type: string
+        $ref: '#/definitions/userAddress'
       photo:
         type: string
       professionalSummary:

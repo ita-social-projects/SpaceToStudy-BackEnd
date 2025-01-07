@@ -187,12 +187,7 @@ definitions:
       _id:
         type: string
       role:
-        type: array
-        items:
-          type: string
-          enum:
-            - student
-            - tutor
+        $ref: '#/definitions/userRoleEnumExtended'
       firstName:
         type: string
       lastName:
@@ -204,26 +199,44 @@ definitions:
         properties:
           student:
             type: array
-            $ref: '#/definitions/userMainSubjects'
+            items:
+              $ref: '#/definitions/userSubjectsMain'
           tutor:
             type: array
-            $ref: '#/definitions/userMainSubjects'
+            items:
+              $ref: '#/definitions/userSubjectsMain'
       totalReviews:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/userTotalReviews'
       averageRating:
+        $ref: '#/definitions/userAverageRating'
+      nativeLanguage:
+        $ref: '#/definitions/userSpokenLanguagesEnum'
+      isEmailConfirmed:
+        type: boolean
+      isFirstLogin:
+        type: boolean
+      lastLogin:
+        type: string
+        format: date-time
+      status:
+        $ref: '#/definitions/roleBasedStatus'
+      lastLoginAs:
+        $ref: '#/definitions/userLoginRoleEnum'
+      bookmarkedOffers:
+        type: array
+        items:
+          type: string
+      professionalBlock:
         type: object
         properties:
-          student:
-            type: number
-          tutor:
-            type: number
-      nativeLanguage:
-        type: string
+          awards:
+            type: string
+          scientificActivities:
+            type: string
+          workExperience:
+            type: string
+          education:
+            type: string
       notificationSettings:
         type: object
         properties:
@@ -235,88 +248,22 @@ definitions:
             type: boolean
           isEmailNotification:
             type: boolean
-      address:
-        type: object
-        properties:
-          country:
-            type: string
-          city:
-            type: string
-      professionalSummary:
-        type: string
-      photo:
-        type: string
-      isEmailConfirmed:
-        type: boolean
-      isFirstLogin:
-        type: boolean
-      lastLogin:
-        type: string
-        format: date-time
-      lastSeen:
-        type: string
-        format: date-time
-      status:
-        type: object
-        properties:
-          student:
-            type: string
-            enum:
-              - active
-              - blocked
-          tutor:
-            type: string
-            enum:
-              - active
-              - blocked
-          admin:
-            type: string
-            enum:
-              - active
-              - blocked
-      bookmarkedOffers:
-        type: array
-        items:
-          type: object
-      FAQ:
-        type: object
-        properties:
-          student:
-            type: array
-            items:
-              type: object
-              properties:
-                question:
-                  type: string
-                _id:
-                  type: string
-                answer:
-                  type: string
-          tutor:
-            type: array
-            items:
-              type: object
-              properties:
-                question:
-                  type: string
-                _id:
-                  type: string
-                answer:
-                  type: string
-      videoLink:
-        type: object
-        properties:
-          student:
-            type: string
-          tutor:
-            type: string
       createdAt:
         type: string
         format: date-time
       updatedAt:
         type: string
         format: date-time
-  toggleBookmarkReponse:
+      address:
+        $ref: '#/definitions/userAddress'
+      photo:
+        type: string
+      professionalSummary:
+        type: string
+      lastSeen:
+        type: string
+        format: date-time
+  toggleBookmarkResponse:
     type: array
     items:
       type: string
@@ -359,6 +306,19 @@ definitions:
     enum:
       - tutor
       - student
+  userLoginRoleEnum:
+    type: string
+    enum:
+      - tutor
+      - student
+      - admin
+  userRoleEnumExtended:
+    type: string
+    enum:
+      - student
+      - tutor
+      - admin
+      - superadmin
   userTotalReviews:
     type: object
     properties:
@@ -373,3 +333,21 @@ definitions:
         type: number
       tutor:
         type: number
+  userSubjectsMain:
+    type: object
+    properties:
+      category:
+        $ref: '#/definitions/categoryWithNameAppearance'
+      subjects:
+        type: array
+        items:
+          $ref: '#/definitions/subjectWithName'
+      id:
+        type: string
+  userAddress:
+    type: object
+    properties:
+      country:
+        type: string
+      city:
+        type: string

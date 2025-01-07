@@ -261,8 +261,7 @@ paths:
                     student: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }],
                     tutor: [{ question: tutor question, _id: 63525e23bf163f5ea609ff2b, answer: tutor answer }]
                   }
-                videoLink:
-                  { student: www.youtube.com/watch?v=ebTnuLRnIOY, tutor: www.youtube.com/watch?v=ebTnuLRnIOY }
+                videoLink: { student: www.youtube.com/watch?v=ebTnuLRnIOY, tutor: www.youtube.com/watch?v=ebTnuLRnIOY }
                 createdAt: 2021-04-09T11:34:53.243+00:00
                 updatedAt: 2022-09-02T11:59:53.243+00:00
         400:
@@ -780,7 +779,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/toggleBookmarkReponse'
+                $ref: '#/definitions/toggleBookmarkResponse'
               example: [6566061a8a848ff2202df85a, 656616ed22db8e88f5fa1659]
         400:
           description: Bad Request

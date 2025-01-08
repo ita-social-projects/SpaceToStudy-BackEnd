@@ -549,9 +549,9 @@ paths:
               example:
                 - _id: 63ebc6fbd2f34037d0aba314
                   offer:
-                    id: 63ebc6fbd2f34037d0aba791,
+                    id: 63ebc6fbd2f34037d0aba791
                     price: 200,
-                    title: Introduction to Web Development,
+                    title: Introduction to Web Development
                     subject:
                       _id: 66758f4059019cd05eb11a94
                       name: Data Structures and Algorithms
@@ -582,9 +582,9 @@ paths:
                     role: student
                 - _id: 63ebc6fbd2f34037d0aba314
                   offer:
-                    id: 64ebc6fbd2f34037d0aba781,
+                    id: 64ebc6fbd2f34037d0aba781
                     price: 150,
-                    title: Advanced JavaScript Programming,
+                    title: Advanced JavaScript Programming
                     subject:
                       _id: 66758f4059019cd05eb11a95
                       name: Software Engineering Principles

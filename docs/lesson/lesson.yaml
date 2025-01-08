@@ -266,9 +266,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/updateLessonRequest'
+              $ref: '#definitions/patchLessonBody'
             example:
-              title: Nature in english
+              title: Colors in English 2
+              description: With this lesson you will learn all about colors in English, part 2.
+              content: <h1>New very very long lesson title and something else, updated</h1>
+              attachments:
+                - author: "67519181170a70623366d30c"
+                  category:
+                    name: Math
+                    _id: "677c11c0a1d060a32ade5fed"
+                  fileName: colors.png
+                  link: 1736184224413-colors.png
+                  resourceType: attachment
+                  size: 195123
+                  createdAt: 2023-02-14T23:44:21.334Z
+                  updatedAt: 2023-02-14T23:44:21.334Z
+                  _id: "687c11a0a1d089a32ade5be6"
+              category: 677c11c0a1d060a32ade5fed
       responses:
         204:
           description: No Content

@@ -96,15 +96,10 @@ definitions:
         type: string
       title:
         type: string
-        minLength: 1
-        maxLength: 100
       description:
         type: string
-        minLength: 1
-        maxLength: 1000
       content:
         type: string
-        minLength: 50
       attachments:
         type: array
         items:
@@ -142,10 +137,23 @@ definitions:
       updatedAt:
         type: string
         format: date-time
-  updateLessonRequest:
+  patchLessonBody:
     type: object
     properties:
       title:
         type: string
         minLength: 1
         maxLength: 100
+      description:
+        type: string
+        minLength: 1
+        maxLength: 1000
+      content:
+        type: string
+        minLength: 50
+      attachments:
+        type: array
+        items:
+          $ref: '#/definitions/attachmentInPostLesson'
+      category:
+        type: string

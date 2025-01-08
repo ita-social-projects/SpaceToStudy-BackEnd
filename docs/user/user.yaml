@@ -36,7 +36,7 @@ paths:
                         subjects:
                           _id: 6421ed8ed991d46a84721df2
                           name: XSS Attack
-                      - _id: 64593435263b62124ce4c3ck,
+                      - _id: 64593435263b62124ce4c3ck
                         category:
                           _id: 6421ed8ed991d46a84721dfa
                           name: music
@@ -47,7 +47,7 @@ paths:
                           _id: 6422d995d898aa732d038e8f
                           name: Guitar
                     tutor:
-                      - _id: 64593435163b62124ce4c3ab,
+                      - _id: 64593435163b62124ce4c3ab
                         category:
                           _id: 6421ed8ed991d46a84721df2
                           name: Cybersecurity
@@ -106,7 +106,7 @@ paths:
                   email: joedoe@outlook.com
                   mainSubjects:
                     tutor:
-                      - _id: 64593435163b62124ce4c3ab,
+                      - _id: 64593435163b62124ce4c3ab
                         category:
                           _id: 6421ed8ed991d46a84721df2
                           name: Cybersecurity
@@ -670,10 +670,13 @@ paths:
                 items:
                   - _id: 666c2ecf89ff51666ab11a4a
                     price: 300
-                    proficiencyLevel: [Intermediate]
+                    proficiencyLevel:
+                      - Intermediate
                     title: Advanced English Course
                     description: A comprehensive English course for intermediate learners.
-                    languages: [English, Ukrainian]
+                    languages:
+                      - English
+                      - Ukrainian
                     authorRole: tutor
                     author:
                       _id: 666c26bd89ff51666ab119d2
@@ -714,10 +717,12 @@ paths:
                     chatId: null
                   - _id: 666c2ecf89ff51666ab11a4b
                     price: 350
-                    proficiencyLevel: [Advanced]
+                    proficiencyLevel:
+                      - Advanced
                     title: Data Science with Python
                     description: An advanced course on data science techniques using Python.
-                    languages: [English]
+                    languages:
+                      - English
                     authorRole: tutor
                     author:
                       _id: 666c26bd89ff51666ab119d5
@@ -828,10 +833,13 @@ paths:
                 items:
                   - _id: 666c2ecf89ff51666ab11a4a
                     price: 300
-                    proficiencyLevel: [Intermediate]
+                    proficiencyLevel:
+                      - Intermediate
                     title: Advanced English Course
                     description: A comprehensive English course for intermediate learners.
-                    languages: [English, Ukrainian]
+                    languages:
+                      - English
+                      - Ukrainian
                     authorRole: tutor
                     author:
                       _id: 666c26bd89ff51666ab119d2
@@ -872,10 +880,12 @@ paths:
                     chatId: null
                   - _id: 666c2ecf89ff51666ab11a4b
                     price: 350
-                    proficiencyLevel: [Advanced]
+                    proficiencyLevel:
+                      - Advanced
                     title: Data Science with Python
                     description: An advanced course on data science techniques using Python.
-                    languages: [English]
+                    languages:
+                      - English
                     authorRole: tutor
                     author:
                       _id: 666c26bd89ff51666ab119d5
@@ -969,7 +979,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/definitions/toggleBookmarkResponse'
-              example: [6566061a8a848ff2202df85a, 656616ed22db8e88f5fa1659]
+              example:
+                - 6566061a8a848ff2202df85a
+                - 656616ed22db8e88f5fa1659
         400:
           description: Bad Request
           content:

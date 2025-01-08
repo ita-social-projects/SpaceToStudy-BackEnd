@@ -60,7 +60,9 @@ definitions:
         _id:
           type: string
         role:
-          $ref: '#/definitions/userRoleEnumExtended'
+          type: array
+          items:
+            $ref: '#/definitions/userRoleEnumExtended'
         firstName:
           type: string
         lastName:
@@ -202,8 +204,6 @@ definitions:
             type: string
           education:
             type: string
-      notificationSettings:
-        $ref: '#/definitions/userNotificationSettings'
       createdAt:
         type: string
         format: date-time
@@ -314,6 +314,9 @@ definitions:
           $ref: '#/definitions/subjectWithName'
       _id:
         type: string
+      isDeletionBlocked:
+        type: boolean
+        description: This property is included only if the query parameter `isEdit=true`.
   userAddress:
     type: object
     properties:

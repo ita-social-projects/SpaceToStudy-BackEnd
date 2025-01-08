@@ -106,7 +106,12 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/postLessonBody'
+              allOf:
+              - $ref: '#definitions/postLessonBody'
+              required:
+                - title
+                - description
+                - content
             example:
               title: Colors in English
               description: With this lesson you will learn all about colors in English.
@@ -266,7 +271,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/patchLessonBody'
+              $ref: '#definitions/postLessonBody'
             example:
               title: Colors in English 2
               description: With this lesson you will learn all about colors in English, part 2.

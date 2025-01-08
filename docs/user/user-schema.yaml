@@ -94,16 +94,7 @@ definitions:
         professionalSummary:
           type: string
         professionalBlock:
-          type: object
-          properties:
-            awards:
-              type: string
-            scientificActivities:
-              type: string
-            workExperience:
-              type: string
-            education:
-              type: string
+          $ref: '#/definitions/userProfessionalBlock'
         aboutStudent:
           type: object
           properties:
@@ -194,16 +185,7 @@ definitions:
         items:
           type: string
       professionalBlock:
-        type: object
-        properties:
-          awards:
-            type: string
-          scientificActivities:
-            type: string
-          workExperience:
-            type: string
-          education:
-            type: string
+        $ref: '#/definitions/userProfessionalBlock'
       createdAt:
         type: string
         format: date-time
@@ -346,3 +328,14 @@ definitions:
           type: string
         _id:
           type: string
+  userProfessionalBlock:
+    type: object
+    properties:
+      awards:
+        type: string
+      scientificActivities:
+        type: string
+      workExperience:
+        type: string
+      education:
+        type: string

@@ -228,27 +228,9 @@ definitions:
       status:
         $ref: '#/definitions/roleBasedStatus'
       professionalBlock:
-        type: object
-        properties:
-          awards:
-            type: string
-          scientificActivities:
-            type: string
-          workExperience:
-            type: string
-          education:
-            type: string
+        $ref: '#/definitions/userProfessionalBlock'
       notificationSettings:
-        type: object
-        properties:
-          isOfferStatusNotification:
-            type: boolean
-          isChatNotification:
-            type: boolean
-          isSimilarOffersNotification:
-            type: boolean
-          isEmailNotification:
-            type: boolean
+        $ref: '#/definitions/userNotificationSettings'
       createdAt:
         type: string
         format: date-time

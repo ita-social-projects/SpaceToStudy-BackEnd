@@ -1,5 +1,5 @@
 definitions:
-  lesson:
+  baseLesson:
     type: object
     properties:
       _id:
@@ -12,10 +12,6 @@ definitions:
         type: string
       content:
         type: string
-      attachments:
-        type: array
-        items:
-          type: string
       category:
         $ref: '#/definitions/lessonCategory'
       resourceType:
@@ -26,6 +22,26 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  lesson:
+    type: object
+    allOf:
+      - $ref: '#/definitions/baseLesson'
+      - type: object
+        properties:
+          attachments:
+            type: array
+            items:
+              type: string
+  lessonById:
+    type: object
+    allOf:
+      - $ref: '#/definitions/baseLesson'
+      - type: object
+        properties:
+          attachments:
+            type: array
+            items:
+              $ref: '#/definitions/attachmentInLessonById'
   lessons:
     type: object
     properties:
@@ -33,13 +49,6 @@ definitions:
         type: number
       items:
         $ref: '#/definitions/lesson'
-  lessonCategory:
-    type: object
-    properties:
-      _id:
-        type: string
-      name:
-        type: string
   postLessonBody:
     type: object
     properties:
@@ -60,6 +69,13 @@ definitions:
           $ref: '#/definitions/attachmentInPostLesson'
       category:
         type: string
+  lessonCategory:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string
   attachmentInPostLesson:
     type: object
     properties:
@@ -77,33 +93,6 @@ definitions:
         $ref: '#/definitions/resourceType'
       size:
         type: number
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
-  lessonById:
-    type: object
-    properties:
-      _id:
-        type: string
-      author:
-        type: string
-      title:
-        type: string
-      description:
-        type: string
-      content:
-        type: string
-      attachments:
-        type: array
-        items:
-          $ref: '#/definitions/attachmentInLessonById'
-      category:
-        type: string
-      resourceType:
-        $ref: '#/definitions/resourceType'
       createdAt:
         type: string
         format: date-time

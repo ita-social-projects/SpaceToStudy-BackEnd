@@ -48,18 +48,15 @@ describe('Course model', () => {
       expect(course.updatedAt).toBeInstanceOf(Date)
     }
   })
-  it('should not allow empty title or description', async () => {
+  it('should not allow empty title', async () => {
     const courses = await Course.find({})
 
     for (const course of courses) {
       expect(course.title).not.toBeNull()
       expect(course.title.trim()).not.toEqual('')
-
-      expect(course.description).not.toBeNull()
-      expect(course.description.trim()).not.toEqual('')
     }
   })
-  it('should validate length constraints of title and description', async () => {
+  it('should validate length constraints of title', async () => {
     const courses = await Course.find({})
 
     for (const course of courses) {
@@ -67,6 +64,20 @@ describe('Course model', () => {
         expect(course.title.length).toBeGreaterThanOrEqual(1)
         expect(course.title.length).toBeLessThanOrEqual(100)
       }
+    }
+  })
+  it('should not allow empty description', async () => {
+    const courses = await Course.find({})
+
+    for (const course of courses) {
+      expect(course.description).not.toBeNull()
+      expect(course.description.trim()).not.toEqual('')
+    }
+  })
+  it('should validate length constraints of description', async () => {
+    const courses = await Course.find({})
+
+    for (const course of courses) {
       if (course.description) {
         expect(course.description.length).toBeGreaterThanOrEqual(1)
         expect(course.description.length).toBeLessThanOrEqual(1000)

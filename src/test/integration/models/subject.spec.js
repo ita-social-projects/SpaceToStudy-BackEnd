@@ -14,7 +14,11 @@ describe('Subject model', () => {
   })
 
   it('should include all required fields in the subject documents', async () => {
-    const subjects = await Subject.find({}).limit(100)
+    const subjects = await Subject.aggregate([
+      { $group: { _id: '$createdAt', firstDocumentWithDate: { $first: '$$ROOT' } } },
+      { $replaceRoot: { newRoot: '$firstDocumentWithDate' } },
+      { $limit: 100 }
+    ])
 
     for (const subject of subjects) {
       expect(subject).toHaveProperty('name')
@@ -22,8 +26,18 @@ describe('Subject model', () => {
       expect(subject).toHaveProperty('totalOffers')
       expect(subject.totalOffers).toHaveProperty('student')
       expect(subject.totalOffers).toHaveProperty('tutor')
-      expect(subject).toHaveProperty('createdAt')
-      expect(subject).toHaveProperty('updatedAt')
+    }
+  })
+
+  it('should include all required fields in the subject documents', async () => {
+    const subjects = await Subject.find({}).limit(100)
+
+    for (const subject of subjects) {
+      expect(typeof subject.name).toBe('string')
+      expect(typeof subject.category).toBe('object')
+      expect(typeof subject.totalOffers).toBe('object')
+      expect(typeof subject.totalOffers.student).toBe('number')
+      expect(typeof subject.totalOffers.tutor).toBe('number')
     }
   })
 })

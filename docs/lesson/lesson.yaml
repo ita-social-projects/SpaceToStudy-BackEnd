@@ -64,7 +64,7 @@ paths:
                     author: 67519181170a70623366d30c
                     title: Lesson 2
                     description: Description for lesson 2.
-                    content: '<h4>Very very very long lesson text and something else</h4>'
+                    content: <h4>Very very very long lesson text and something else</h4>
                     attachments: []
                     category:
                       _id: 677c11c0a1d060a32ade5fed
@@ -117,17 +117,17 @@ paths:
               description: With this lesson you will learn all about colors in English.
               content: <h1>Very very very long lesson title and something else</h1>
               attachments:
-                - author: '67519181170a70623366d30c'
+                - author: 67519181170a70623366d30c
                   category:
                     name: Math
-                    _id: '677c11c0a1d060a32ade5fed'
+                    _id: 677c11c0a1d060a32ade5fed
                   fileName: image.png
                   link: 1736184224413-image.png
                   resourceType: attachment
                   size: 195123
                   createdAt: 2023-02-14T23:44:21.334Z
                   updatedAt: 2023-02-14T23:44:21.334Z
-                  _id: '677c11a0a1d060a32ade5fe5'
+                  _id: 677c11a0a1d060a32ade5fe5
               category: 677c11c0a1d060a32ade5fed
       responses:
         201:
@@ -278,17 +278,17 @@ paths:
               description: With this lesson you will learn all about colors in English, part 2.
               content: <h1>New very very long lesson title and something else, updated</h1>
               attachments:
-                - author: '67519181170a70623366d30c'
+                - author: 67519181170a70623366d30c
                   category:
                     name: Math
-                    _id: '677c11c0a1d060a32ade5fed'
+                    _id: 677c11c0a1d060a32ade5fed
                   fileName: colors.png
                   link: 1736184224413-colors.png
                   resourceType: attachment
                   size: 195123
                   createdAt: 2023-02-14T23:44:21.334Z
                   updatedAt: 2023-02-14T23:44:21.334Z
-                  _id: '687c11a0a1d089a32ade5be6'
+                  _id: 687c11a0a1d089a32ade5be6
               category: 677c11c0a1d060a32ade5fed
       responses:
         204:

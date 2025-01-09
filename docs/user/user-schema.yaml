@@ -144,7 +144,9 @@ definitions:
       _id:
         type: string
       role:
-        $ref: '#/definitions/userRoleEnumExtended'
+        type: array
+        items:
+          $ref: '#/definitions/userRoleEnumExtended'
       firstName:
         type: string
       lastName:

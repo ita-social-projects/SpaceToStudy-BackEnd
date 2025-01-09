@@ -78,3 +78,50 @@ definitions:
         nullable: true
       description:
         type: string
+  attachmentInPostLesson:
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      fileName:
+        type: string
+      link:
+        type: string
+      category:
+        $ref: '#/definitions/lessonCategory'
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      size:
+        type: number
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  attachmentInLessonById:
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      fileName:
+        type: string
+      link:
+        type: string
+      category:
+        type: string
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      size:
+        type: number
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+

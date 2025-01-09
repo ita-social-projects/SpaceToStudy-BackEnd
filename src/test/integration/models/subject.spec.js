@@ -40,4 +40,13 @@ describe('Subject model', () => {
       expect(typeof subject.totalOffers.tutor).toBe('number')
     }
   })
+
+  it('should have unique name for each subject', async () => {
+    const subjects = await Subject.find({}).select({ name: 1, _id: 0 }).limit(100)
+
+    const names = subjects.map((subject) => subject.name)
+    const uniqueNames = new Set(names)
+
+    expect(names.length).toBe(uniqueNames.size)
+  })
 })

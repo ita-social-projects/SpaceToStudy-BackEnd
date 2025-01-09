@@ -14,7 +14,7 @@ describe('Subject model', () => {
     await stopServer(server)
   })
 
-  it('should include all required fields in the subject documents', async () => {
+  it('should include all required fields', async () => {
     const subjects = await Subject.find({})
 
     for (const subject of subjects) {
@@ -28,7 +28,7 @@ describe('Subject model', () => {
     }
   })
 
-  it('should include all required fields in the subject documents', async () => {
+  it('should have valid fields data types', async () => {
     const subjects = await Subject.find({})
 
     for (const subject of subjects) {
@@ -42,7 +42,7 @@ describe('Subject model', () => {
     }
   })
 
-  it('should have unique name for each subject', async () => {
+  it('should have unique name', async () => {
     const subjects = await Subject.find({}).select({ name: 1, _id: 0 })
 
     const names = subjects.map((subject) => subject.name)
@@ -52,11 +52,20 @@ describe('Subject model', () => {
   })
 
   it('should have valid category references', async () => {
-    const subjects = await Subject.find({}).populate('category')
+    const subjects = await Subject.find({}).select({ category: 1 }).populate('category')
 
     for (const subject of subjects) {
       expect(subject.category).not.toBeNull()
       expect(subject.category).toBeInstanceOf(Category)
+    }
+  })
+
+  it('should have non-null required fields', async () => {
+    const subjects = await Subject.find({}).select({ name: 1, category: 1 })
+
+    for (const subject of subjects) {
+      expect(subject.name).not.toBeNull()
+      expect(subject.category).not.toBeNull()
     }
   })
 })

@@ -1,5 +1,6 @@
-const Subject = require('~/models/subject')
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
+const Subject = require('~/models/subject')
+const Category = require('~/models/category')
 
 describe('Subject model', () => {
   let server
@@ -14,11 +15,7 @@ describe('Subject model', () => {
   })
 
   it('should include all required fields in the subject documents', async () => {
-    const subjects = await Subject.aggregate([
-      { $group: { _id: '$createdAt', firstDocumentWithDate: { $first: '$$ROOT' } } },
-      { $replaceRoot: { newRoot: '$firstDocumentWithDate' } },
-      { $limit: 100 }
-    ])
+    const subjects = await Subject.find({})
 
     for (const subject of subjects) {
       expect(subject).toHaveProperty('name')
@@ -26,11 +23,13 @@ describe('Subject model', () => {
       expect(subject).toHaveProperty('totalOffers')
       expect(subject.totalOffers).toHaveProperty('student')
       expect(subject.totalOffers).toHaveProperty('tutor')
+      expect(subject).toHaveProperty('createdAt')
+      expect(subject).toHaveProperty('updatedAt')
     }
   })
 
   it('should include all required fields in the subject documents', async () => {
-    const subjects = await Subject.find({}).limit(100)
+    const subjects = await Subject.find({})
 
     for (const subject of subjects) {
       expect(typeof subject.name).toBe('string')
@@ -38,15 +37,26 @@ describe('Subject model', () => {
       expect(typeof subject.totalOffers).toBe('object')
       expect(typeof subject.totalOffers.student).toBe('number')
       expect(typeof subject.totalOffers.tutor).toBe('number')
+      expect(subject.createdAt).toBeInstanceOf(Date)
+      expect(subject.updatedAt).toBeInstanceOf(Date)
     }
   })
 
   it('should have unique name for each subject', async () => {
-    const subjects = await Subject.find({}).select({ name: 1, _id: 0 }).limit(100)
+    const subjects = await Subject.find({}).select({ name: 1, _id: 0 })
 
     const names = subjects.map((subject) => subject.name)
     const uniqueNames = new Set(names)
 
     expect(names.length).toBe(uniqueNames.size)
+  })
+
+  it('should have valid category references', async () => {
+    const subjects = await Subject.find({}).populate('category')
+
+    for (const subject of subjects) {
+      expect(subject.category).not.toBeNull()
+      expect(subject.category).toBeInstanceOf(Category)
+    }
   })
 })

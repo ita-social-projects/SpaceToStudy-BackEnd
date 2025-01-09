@@ -43,7 +43,7 @@ describe('Subject model', () => {
   })
 
   it('should have unique name', async () => {
-    const subjects = await Subject.find({}).select({ name: 1, _id: 0 })
+    const subjects = await Subject.find({}).select({ name: true, _id: false })
 
     const names = subjects.map((subject) => subject.name)
     const uniqueNames = new Set(names)
@@ -52,7 +52,7 @@ describe('Subject model', () => {
   })
 
   it('should have valid category references', async () => {
-    const subjects = await Subject.find({}).select({ category: 1 }).populate('category')
+    const subjects = await Subject.find({}).select({ category: true }).populate('category')
 
     for (const subject of subjects) {
       expect(subject.category).not.toBeNull()
@@ -61,7 +61,7 @@ describe('Subject model', () => {
   })
 
   it('should have non-null required fields', async () => {
-    const subjects = await Subject.find({}).select({ name: 1, category: 1 })
+    const subjects = await Subject.find({}).select({ name: true, category: true })
 
     for (const subject of subjects) {
       expect(subject.name).not.toBeNull()

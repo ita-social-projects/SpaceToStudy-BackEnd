@@ -2,6 +2,17 @@ const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
 const Subject = require('~/models/subject')
 const Category = require('~/models/category')
 
+const subjectFields = [
+  'name',
+  'category',
+  'totalOffers',
+  'createdAt',
+  'updatedAt',
+  '_id',
+  'totalOffers.student',
+  'totalOffers.tutor'
+]
+
 describe('Subject model', () => {
   let server
 
@@ -14,17 +25,13 @@ describe('Subject model', () => {
     await stopServer(server)
   })
 
-  it('should include all required fields', async () => {
+  it('should have all required fields', async () => {
     const subjects = await Subject.find({})
 
     for (const subject of subjects) {
-      expect(subject).toHaveProperty('name')
-      expect(subject).toHaveProperty('category')
-      expect(subject).toHaveProperty('totalOffers')
-      expect(subject.totalOffers).toHaveProperty('student')
-      expect(subject.totalOffers).toHaveProperty('tutor')
-      expect(subject).toHaveProperty('createdAt')
-      expect(subject).toHaveProperty('updatedAt')
+      subjectFields.forEach((field) => {
+        expect(subject).toHaveProperty(field)
+      })
     }
   })
 

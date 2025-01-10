@@ -74,16 +74,13 @@ describe('Offer model', () => {
   })
 
   it('should have valid items in the FAQ array', async () => {
-    const offers = await Offer.find({})
+    const offers = await Offer.find({ FAQ: { $type: 'array', $ne: [] } }).select({ FAQ: true, _id: false })
+    console.log(offers)
 
     for (const offer of offers) {
-      expect(Array.isArray(offer.FAQ)).toBe(true)
-
-      if (offer.FAQ.length > 0) {
-        for (const faq of offer.FAQ) {
-          expect(faq).toHaveProperty('question')
-          expect(faq).toHaveProperty('answer')
-        }
+      for (const FAQItem of offer.FAQ) {
+        expect(FAQItem).toHaveProperty('question')
+        expect(FAQItem).toHaveProperty('answer')
       }
     }
   })

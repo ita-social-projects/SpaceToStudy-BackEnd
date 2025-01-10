@@ -161,6 +161,14 @@ describe('Subject controller', () => {
 
       expectError(404, DOCUMENT_NOT_FOUND([Subject.modelName]), response)
     })
+    it('should throw FORBIDDEN', async () => {
+      testUserAccessToken = await testUserAuthentication(app)
+      const response = await app
+        .delete(endpointUrl + testSubject.body._id)
+        .set('Cookie', [`accessToken=${testUserAccessToken}`])
+
+      expect(response.statusCode).toBe(403)
+    })
   })
 
   describe(`DELETE ${endpointUrl}:id`, () => {

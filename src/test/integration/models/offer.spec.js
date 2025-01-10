@@ -1,5 +1,6 @@
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
 const Offer = require('~/models/offer')
+const { mongooseDefaultInternalFields } = require('~/consts/mongoFields')
 
 const offerFields = [
   'price',
@@ -30,7 +31,7 @@ describe('Offer model', () => {
     await stopServer(server)
   })
 
-  it('should include all fields', async () => {
+  it('should have all required fields', async () => {
     const offers = await Offer.find({})
 
     for (const offer of offers) {
@@ -44,7 +45,9 @@ describe('Offer model', () => {
     const offers = await Offer.find({})
 
     for (const offer of offers) {
-      const extraFields = Object.keys(offer).filter((key) => !offerFields.includes(key))
+      const extraFields = Object.keys(offer).filter(
+        (key) => !offerFields.includes(key) && !mongooseDefaultInternalFields.includes(key)
+      )
       expect(extraFields.length).toBe(0)
     }
   })

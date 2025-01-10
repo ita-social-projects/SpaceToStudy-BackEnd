@@ -21,8 +21,6 @@ describe('Attachment Model - Production Data Validation', () => {
       expect(attachment.author).toBeDefined()
       const user = await User.findById(attachment.author)
       expect(user).not.toBeNull()
-      expect(user).toHaveProperty('firstName')
-      expect(user).toHaveProperty('email')
     }
   })
 

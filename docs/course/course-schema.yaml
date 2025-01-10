@@ -91,6 +91,12 @@ definitions:
         items:
           type: object
           properties:
+            _id:
+              type: string
+            title:
+              type: string
+            description: 
+              type: string
             resources:
               type: array
               items:
@@ -159,7 +165,6 @@ definitions:
                         type: string
                       author:
                         type: string
-                        ref: '#components/user'
                       attachments:
                         type: array
                         items:

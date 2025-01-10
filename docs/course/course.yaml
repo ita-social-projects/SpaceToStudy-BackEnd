@@ -178,7 +178,8 @@ paths:
                 subject: 6488509cfdc2d1a130c24ae4
                 proficiencyLevel: [Advanced]
                 sections:
-                  - title: Section First
+                  - _id: 6781349b8c7432471f221116
+                    title: Section First
                     description: some description
                     resources:
                       [

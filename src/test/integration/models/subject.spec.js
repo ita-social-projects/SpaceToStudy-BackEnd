@@ -14,20 +14,20 @@ const subjectFields = [
 ]
 
 describe('Subject model', () => {
-  let server
+  let server, subjects
 
   beforeAll(async () => {
     const setup = await setupTestServer()
     server = setup.server
+
+    subjects = await Subject.find({})
   })
 
   afterAll(async () => {
     await stopServer(server)
   })
 
-  it('should have all required fields', async () => {
-    const subjects = await Subject.find({})
-
+  it('should have all required fields', () => {
     for (const subject of subjects) {
       subjectFields.forEach((field) => {
         expect(subject).toHaveProperty(field)
@@ -35,9 +35,7 @@ describe('Subject model', () => {
     }
   })
 
-  it('should have valid fields data types', async () => {
-    const subjects = await Subject.find({})
-
+  it('should have valid fields data types', () => {
     for (const subject of subjects) {
       expect(typeof subject.name).toBe('string')
       expect(typeof subject.category).toBe('object')
@@ -49,9 +47,7 @@ describe('Subject model', () => {
     }
   })
 
-  it('should have unique name', async () => {
-    const subjects = await Subject.find({}).select({ name: true, _id: false })
-
+  it('should have unique name', () => {
     const names = subjects.map((subject) => subject.name)
     const uniqueNames = new Set(names)
 
@@ -59,17 +55,15 @@ describe('Subject model', () => {
   })
 
   it('should have valid category references', async () => {
-    const subjects = await Subject.find({}).select({ category: true }).populate('category')
+    const subjectsWithCategories = await Subject.find({}).select({ category: true }).populate('category')
 
-    for (const subject of subjects) {
+    for (const subject of subjectsWithCategories) {
       expect(subject.category).not.toBeNull()
       expect(subject.category).toBeInstanceOf(Category)
     }
   })
 
-  it('should have non-null required fields', async () => {
-    const subjects = await Subject.find({}).select({ name: true, category: true })
-
+  it('should have non-null required fields', () => {
     for (const subject of subjects) {
       expect(subject.name).not.toBeNull()
       expect(subject.category).not.toBeNull()

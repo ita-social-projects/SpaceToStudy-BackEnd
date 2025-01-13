@@ -1,5 +1,8 @@
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
 const Offer = require('~/models/offer')
+const User = require('~/models/user')
+const Subject = require('~/models/subject')
+const Category = require('~/models/category')
 const { mongooseDefaultInternalFields } = require('~/consts/mongoFields')
 const {
   enums: { SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM, OFFER_STATUS_ENUM }
@@ -143,6 +146,33 @@ describe('Offer model', () => {
       if (offer.status !== null) {
         expect(OFFER_STATUS_ENUM).toContain(offer.status)
       }
+    }
+  })
+
+  it('should have a valid author user reference', async () => {
+    const offersIncludingAuthors = await Offer.find({}).select({ author: true }).populate('author')
+
+    for (const offer of offersIncludingAuthors) {
+      expect(offer.author).not.toBeNull()
+      expect(offer.author).toBeInstanceOf(User)
+    }
+  })
+
+  it('should have a valid subject reference', async () => {
+    const offersIncludingSubjects = await Offer.find({}).select({ subject: true }).populate('subject')
+
+    for (const offer of offersIncludingSubjects) {
+      expect(offer.subject).not.toBeNull()
+      expect(offer.subject).toBeInstanceOf(Subject)
+    }
+  })
+
+  it('should have a valid category reference', async () => {
+    const offersWithCategories = await Offer.find({}).select({ category: true }).populate('category')
+
+    for (const offer of offersWithCategories) {
+      expect(offer.category).not.toBeNull()
+      expect(offer.category).toBeInstanceOf(Category)
     }
   })
 })

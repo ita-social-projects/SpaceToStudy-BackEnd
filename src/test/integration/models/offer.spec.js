@@ -39,7 +39,7 @@ describe('Offer model', () => {
     await stopServer(server)
   })
 
-  it('should have all expected fields', async () => {
+  it('should have all expected fields', () => {
     for (const offer of offers) {
       offerFields.forEach((field) => {
         expect(offer).toHaveProperty(field)
@@ -47,7 +47,7 @@ describe('Offer model', () => {
     }
   })
 
-  it('should not have any extra fields', async () => {
+  it('should not have any extra fields', () => {
     for (const offer of offers) {
       const extraFields = Object.keys(offer).filter(
         (key) => !offerFields.includes(key) && !mongooseDefaultInternalFields.includes(key)
@@ -56,7 +56,7 @@ describe('Offer model', () => {
     }
   })
 
-  it('should have valid fields data types', async () => {
+  it('should have valid fields data types', () => {
     for (const offer of offers) {
       expect(typeof offer.price).toBe('number')
       expect(typeof offer.title).toBe('string')
@@ -106,13 +106,13 @@ describe('Offer model', () => {
     }
   })
 
-  it('should have a price that is a positive number', async () => {
+  it('should have a price that is a positive number', () => {
     for (const offer of offers) {
       expect(offer.price).toBeGreaterThanOrEqual(1)
     }
   })
 
-  it('should have proficiency levels within the allowed enum values', async () => {
+  it('should have proficiency levels within the allowed enum values', () => {
     for (const offer of offers) {
       for (const level of offer.proficiencyLevel) {
         expect(PROFICIENCY_LEVEL_ENUM).toContain(level)
@@ -120,13 +120,13 @@ describe('Offer model', () => {
     }
   })
 
-  it('should have author roles within the allowed enum values', async () => {
+  it('should have author roles within the allowed enum values', () => {
     for (const offer of offers) {
       expect(MAIN_ROLE_ENUM).toContain(offer.authorRole)
     }
   })
 
-  it('should have a status within the allowed enum values if it is not null', async () => {
+  it('should have a status within the allowed enum values if it is not null', () => {
     for (const offer of offers) {
       if (offer.status !== null) {
         expect(OFFER_STATUS_ENUM).toContain(offer.status)
@@ -134,14 +134,14 @@ describe('Offer model', () => {
     }
   })
 
-  it('should have a title with a valid length', async () => {
+  it('should have a title with a valid length', () => {
     for (const offer of offers) {
       expect(offer.title.length).toBeGreaterThanOrEqual(1)
       expect(offer.title.length).toBeLessThanOrEqual(100)
     }
   })
 
-  it('should have a description with a valid length', async () => {
+  it('should have a description with a valid length', () => {
     for (const offer of offers) {
       expect(offer.description.length).toBeGreaterThanOrEqual(1)
       expect(offer.description.length).toBeLessThanOrEqual(1000)

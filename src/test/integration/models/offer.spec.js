@@ -107,7 +107,7 @@ describe('Offer model', () => {
     }
   })
 
-  it('should have a price greater than or equal to the minimum value', async () => {
+  it('should have a price that is a positive number', async () => {
     for (const offer of offers) {
       expect(offer.price).toBeGreaterThanOrEqual(1)
     }
@@ -117,6 +117,20 @@ describe('Offer model', () => {
     for (const offer of offers) {
       for (const level of offer.proficiencyLevel) {
         expect(PROFICIENCY_LEVEL_ENUM).toContain(level)
+      }
+    }
+  })
+
+  it('should have author roles within the allowed enum values', async () => {
+    for (const offer of offers) {
+      expect(MAIN_ROLE_ENUM).toContain(offer.authorRole)
+    }
+  })
+
+  it('should have a status within the allowed enum values if it is not null', async () => {
+    for (const offer of offers) {
+      if (offer.status !== null) {
+        expect(OFFER_STATUS_ENUM).toContain(offer.status)
       }
     }
   })
@@ -132,20 +146,6 @@ describe('Offer model', () => {
     for (const offer of offers) {
       expect(offer.description.length).toBeGreaterThanOrEqual(1)
       expect(offer.description.length).toBeLessThanOrEqual(1000)
-    }
-  })
-
-  it('should have author roles within the allowed enum values', async () => {
-    for (const offer of offers) {
-      expect(MAIN_ROLE_ENUM).toContain(offer.authorRole)
-    }
-  })
-
-  it('should have a valid status if it is not null', async () => {
-    for (const offer of offers) {
-      if (offer.status !== null) {
-        expect(OFFER_STATUS_ENUM).toContain(offer.status)
-      }
     }
   })
 

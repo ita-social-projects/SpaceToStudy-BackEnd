@@ -49,7 +49,6 @@ describe('Notification model', () => {
     const notifications = await Notification.find({}).select({ user: true }).populate('user')
 
     for (const notification of notifications) {
-      expect(notification.user).not.toBeNull()
       expect(notification.user).toBeInstanceOf(User)
     }
   })

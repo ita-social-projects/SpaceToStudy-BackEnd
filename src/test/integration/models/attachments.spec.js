@@ -1,9 +1,7 @@
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
 const Attachment = require('~/models/attachment')
-const User = require('~/models/user')
-const ResourcesCategory = require('~/models/resourcesCategory')
 
-describe('Attachment Model - Production Data Validation', () => {
+describe('Attachment Model', () => {
   let server
 
   beforeAll(async () => {
@@ -15,16 +13,16 @@ describe('Attachment Model - Production Data Validation', () => {
     await stopServer(server)
   })
 
-  it('Should validate the author field references a real user', async () => {
+  it('should validate the author field references a real user', async () => {
     const attachments = await Attachment.find({}).populate('author')
     for (const attachment of attachments) {
       expect(attachment.author).toBeDefined()
-      const user = await User.findById(attachment.author)
-      expect(user).not.toBeNull()
+      expect(attachment.author).not.toBeNull()
+      expect(attachment.author).toHaveProperty('firstName')
     }
   })
 
-  it('Should validate the fileName field is valid', async () => {
+  it('should validate the fileName field is valid', async () => {
     const attachments = await Attachment.find({})
     for (const attachment of attachments) {
       expect(attachment.fileName).toBeDefined()
@@ -34,7 +32,7 @@ describe('Attachment Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the description field is valid if present', async () => {
+  it('should validate the description field is valid if present', async () => {
     const attachments = await Attachment.find({})
     for (const attachment of attachments) {
       if (attachment.description) {
@@ -44,7 +42,7 @@ describe('Attachment Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the link field is valid', async () => {
+  it('should validate the link field is valid', async () => {
     const attachments = await Attachment.find({})
     for (const attachment of attachments) {
       expect(attachment.link).toBeDefined()
@@ -53,7 +51,7 @@ describe('Attachment Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the size field is valid', async () => {
+  it('should validate the size field is valid', async () => {
     const attachments = await Attachment.find({})
     for (const attachment of attachments) {
       expect(attachment.size).toBeDefined()
@@ -62,25 +60,24 @@ describe('Attachment Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the category field references a real category if present', async () => {
+  it('should validate the category field references a real category if present', async () => {
     const attachments = await Attachment.find({}).populate('category')
     for (const attachment of attachments) {
       if (attachment.category) {
-        const category = await ResourcesCategory.findById(attachment.category)
-        expect(category).not.toBeNull()
-        expect(category).toHaveProperty('name')
+        expect(attachment.category).toBeDefined()
+        expect(attachment.category).toHaveProperty('name')
       }
     }
   })
 
-  it('Should validate the resourceType field contains a valid value', async () => {
+  it('should validate the resourceType field contains a valid value', async () => {
     const attachments = await Attachment.find({})
     for (const attachment of attachments) {
       expect(Attachment.schema.path('resourceType').enumValues).toContain(attachment.resourceType)
     }
   })
 
-  it('Should validate the isDuplicate field is a boolean if present', async () => {
+  it('should validate the isDuplicate field is a boolean if present', async () => {
     const attachments = await Attachment.find({})
     for (const attachment of attachments) {
       if (attachment.isDuplicate !== undefined) {
@@ -89,7 +86,7 @@ describe('Attachment Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate timestamps exist and are correct', async () => {
+  it('should validate timestamps exist and are correct', async () => {
     const attachments = await Attachment.find({})
     for (const attachment of attachments) {
       expect(attachment).toHaveProperty('createdAt')

@@ -2,7 +2,7 @@ module.exports = {
   async up(db) {
     const users = await db
       .collection('users')
-      .find({}, { projection: { _id: 1 } })
+      .find({}, { projection: { _id: true } })
       .toArray()
 
     const userIds = users.map((user) => user._id.toString())

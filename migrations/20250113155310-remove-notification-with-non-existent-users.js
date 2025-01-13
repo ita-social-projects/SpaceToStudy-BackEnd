@@ -14,5 +14,7 @@ module.exports = {
         await db.collection('notifications').deleteOne({ _id: notification._id })
       }
     }
-  }
+  },
+
+  async down() {}
 }

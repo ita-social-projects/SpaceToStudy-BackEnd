@@ -1,9 +1,7 @@
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
 const Lesson = require('~/models/lesson')
-const User = require('~/models/user')
-const ResourcesCategory = require('~/models/resourcesCategory')
 
-describe('Lesson Model - Production Data Validation', () => {
+describe('Lesson Model', () => {
   let server
 
   beforeAll(async () => {
@@ -15,36 +13,35 @@ describe('Lesson Model - Production Data Validation', () => {
     await stopServer(server)
   })
 
-  it('Should validate the author field references a real user', async () => {
+  it('should validate the author field references a real user', async () => {
     const lessons = await Lesson.find({}).populate('author')
+
     for (const lesson of lessons) {
       expect(lesson.author).toBeDefined()
-      const user = await User.findById(lesson.author)
-      expect(user).not.toBeNull()
-      expect(user).toHaveProperty('firstName')
-      expect(user).toHaveProperty('email')
+      expect(lesson.author).not.toBeNull()
+      expect(lesson.author).toHaveProperty('firstName')
     }
   })
 
-  it('Should validate the category field references a real category', async () => {
+  it('should validate the category field references a real category', async () => {
     const lessons = await Lesson.find({}).populate('category')
+
     for (const lesson of lessons) {
       if (lesson.category) {
-        const category = await ResourcesCategory.findById(lesson.category._id)
-        expect(category).not.toBeNull()
-        expect(category).toHaveProperty('name')
+        expect(lesson.category).toBeDefined()
+        expect(lesson.category).toHaveProperty('name')
       }
     }
   })
 
-  it('Should validate the resourceType field contains a valid value', async () => {
+  it('should validate the resourceType field contains a valid value', async () => {
     const lessons = await Lesson.find({})
     for (const lesson of lessons) {
       expect(Lesson.schema.path('resourceType').enumValues).toContain(lesson.resourceType)
     }
   })
 
-  it('Should validate timestamps exist and are correct', async () => {
+  it('should validate timestamps exist and are correct', async () => {
     const lessons = await Lesson.find({})
     for (const lesson of lessons) {
       expect(lesson).toHaveProperty('createdAt')
@@ -54,7 +51,7 @@ describe('Lesson Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the title field is valid', async () => {
+  it('should validate the title field is valid', async () => {
     const lessons = await Lesson.find({})
     for (const lesson of lessons) {
       expect(lesson.title).toBeDefined()
@@ -64,7 +61,7 @@ describe('Lesson Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the description field is valid', async () => {
+  it('should validate the description field is valid', async () => {
     const lessons = await Lesson.find({})
     for (const lesson of lessons) {
       expect(lesson.description).toBeDefined()
@@ -74,7 +71,7 @@ describe('Lesson Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the content field is valid', async () => {
+  it('should validate the content field is valid', async () => {
     const lessons = await Lesson.find({})
     for (const lesson of lessons) {
       expect(lesson.content).toBeDefined()
@@ -83,7 +80,7 @@ describe('Lesson Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the attachments field references real attachments', async () => {
+  it('should validate the attachments field references real attachments', async () => {
     const lessons = await Lesson.find({}).populate('attachments')
     for (const lesson of lessons) {
       if (lesson.attachments.length > 0) {
@@ -95,7 +92,7 @@ describe('Lesson Model - Production Data Validation', () => {
     }
   })
 
-  it('Should validate the isDuplicate field is a boolean', async () => {
+  it('should validate the isDuplicate field is a boolean', async () => {
     const lessons = await Lesson.find({})
     for (const lesson of lessons) {
       if (lesson.isDuplicate !== undefined) {

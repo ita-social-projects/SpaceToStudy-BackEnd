@@ -79,7 +79,7 @@ describe('Offer model', () => {
   })
 
   it('should have valid items in the FAQ array', async () => {
-    const offersWithFAQItems = await Offer.find({ FAQ: { $type: 'array', $ne: [] } }).select({ FAQ: true, _id: false })
+    const offersWithFAQItems = await Offer.find({ FAQ: { $type: 'array', $ne: [] } }).select({ FAQ: true })
 
     for (const offer of offersWithFAQItems) {
       for (const FAQItem of offer.FAQ) {
@@ -94,8 +94,7 @@ describe('Offer model', () => {
 
   it('should have valid items in the languages array', async () => {
     const offersWithLanguagesItems = await Offer.find({ languages: { $type: 'array', $ne: [] } }).select({
-      languages: true,
-      _id: false
+      languages: true
     })
 
     for (const offer of offersWithLanguagesItems) {

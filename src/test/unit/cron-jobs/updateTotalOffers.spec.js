@@ -1,7 +1,6 @@
 const { recountTotalOffers } = require('~/cron-jobs/updateTotalOffers')
 const categoryService = require('~/services/category')
 const subjectService = require('~/services/subject')
-// const recountOfferAmount = require('~/src/utils/offers/recountOfferAmount')
 
 jest.mock('~/services/category', () => ({
   recountTotalOffers: jest.fn()

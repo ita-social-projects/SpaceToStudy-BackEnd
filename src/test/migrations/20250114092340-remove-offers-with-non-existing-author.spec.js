@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const Offer = require('~/models/offer')
 const Cooperation = require('~/models/cooperation')
-const migration = require('@root/migrations/20250113154034-remove-offers-with-non-existing-author')
+const migration = require('@root/migrations/20250114092340-remove-offers-with-non-existing-author')
 
 const offerData = {
   price: 500,

@@ -5,7 +5,13 @@ module.exports = {
         $set: {
           needAction: {
             role: '$needAction',
-            type: 'price',
+            type: {
+              $cond: {
+                if: { $eq: ['$status', 'request to close'] },
+                then: 'waiting for approval',
+                else: 'price'
+              }
+            },
             messages: []
           }
         }

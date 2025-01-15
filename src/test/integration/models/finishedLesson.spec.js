@@ -23,6 +23,7 @@ describe('FinishedLesson model', () => {
       expect(finishedLesson).toHaveProperty('updatedAt')
     }
   })
+
   it('should have valid fields data types', async () => {
     const finishedLessons = await FinishedLesson.find({})
 
@@ -32,6 +33,7 @@ describe('FinishedLesson model', () => {
       expect(finishedLesson.updatedAt).toBeInstanceOf(Date)
     }
   })
+
   it('should have valid lesson field references', async () => {
     const finishedLessons = await FinishedLesson.find({})
 

@@ -24,6 +24,7 @@ describe('ResourcesCategory model', () => {
       expect(resources).toHaveProperty('updatedAt')
     }
   })
+
   it('should have valid fields data types', async () => {
     const resourcesCategory = await ResourcesCategory.find({})
 
@@ -34,6 +35,7 @@ describe('ResourcesCategory model', () => {
       expect(resources.updatedAt).toBeInstanceOf(Date)
     }
   })
+
   it('should not allow empty name field', async () => {
     const resourcesCategory = await ResourcesCategory.find({})
 
@@ -42,6 +44,7 @@ describe('ResourcesCategory model', () => {
       expect(resources.name.trim()).not.toEqual('')
     }
   })
+
   it('should validate length constraints of name field', async () => {
     const resourcesCategory = await ResourcesCategory.find({})
 
@@ -52,6 +55,7 @@ describe('ResourcesCategory model', () => {
       }
     }
   })
+
   it('should not allow empty author field', async () => {
     const resourcesCategory = await ResourcesCategory.find({})
 
@@ -59,6 +63,7 @@ describe('ResourcesCategory model', () => {
       expect(resources.author).not.toBeNull()
     }
   })
+
   it('should have valid User references in author field', async () => {
     const resourcesCategory = await ResourcesCategory.find({})
 

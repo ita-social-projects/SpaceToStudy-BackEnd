@@ -36,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/resourcesCategory'
+                $ref: '#/definitions/resourcesCategories'
               example:
                 count: 2
                 items:
@@ -79,7 +79,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/resourceCategoryBody'
+              $ref: '#/definitions/resourcesCategoryBody'
             example:
               name: Chemical Category
       responses:
@@ -132,7 +132,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/resourcesCategory'
+                $ref: '#/definitions/resourcesCategoriesNames'
               example: [{ _id: 6502ec2060ec37be943353e2, name: 'New Category 1' }]
         401:
           description: Unauthorized
@@ -176,7 +176,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/resourceCategoryBody'
+              $ref: '#/definitions/resourcesCategoryBody'
             example:
               name: Computer Science
       responses:

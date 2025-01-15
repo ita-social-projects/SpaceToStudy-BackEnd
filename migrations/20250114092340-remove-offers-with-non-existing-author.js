@@ -20,7 +20,7 @@ module.exports = {
           }
         },
         { $match: { authorDetails: { $eq: [] } } },
-        { $project: { _id: 1 } }
+        { $project: { _id: true } }
       ])
       .toArray()
 

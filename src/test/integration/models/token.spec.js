@@ -24,6 +24,7 @@ describe('Token model', () => {
       expect(token).toHaveProperty('confirmToken')
     }
   })
+
   it('should have valid fields data types', async () => {
     const tokens = await Token.find({})
 
@@ -40,6 +41,7 @@ describe('Token model', () => {
       }
     }
   })
+
   it('should validate user field references to User model', async () => {
     const tokens = await Token.find({})
 
@@ -51,6 +53,7 @@ describe('Token model', () => {
       expect(user).toBeInstanceOf(User)
     }
   })
+
   it('should allow resetToken to be null', async () => {
     const tokens = await Token.find({})
 
@@ -60,6 +63,7 @@ describe('Token model', () => {
       }
     }
   })
+
   it('should handle optional fields correctly', async () => {
     const tokens = await Token.find({})
 

@@ -23,7 +23,8 @@ describe('20250114190204-enhance-need-action-in-cooperations', () => {
     await database.collection('cooperation').insertMany([{ needAction: 'tutor' }, { needAction: 'student' }])
   })
 
-  afterAll(() => {
+  afterAll(async () => {
+    await up(database)
     client.close()
   })
 

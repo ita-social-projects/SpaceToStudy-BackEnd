@@ -73,10 +73,6 @@ describe('Category model', () => {
       }
       expect(typeof cooperation.price).toBe('number')
       expect(typeof cooperation.status).toBe('string')
-      // expect(typeof cooperation.needAction).toBe('object')
-      // expect(typeof cooperation.needAction.role).toBe('string')
-      // expect(typeof cooperation.needAction.type).toBe('string')
-      // expect(Array.isArray(cooperation.needAction.messages)).toBe(true)
       expect(cooperation.createdAt).toBeInstanceOf(Date)
       expect(cooperation.updatedAt).toBeInstanceOf(Date)
       expect(Array.isArray(cooperation.sections)).toBe(true)
@@ -111,17 +107,6 @@ describe('Category model', () => {
     for (const cooperation of cooperations) {
       expect(cooperation.title.length).toBeGreaterThanOrEqual(1)
       expect(cooperation.title.length).toBeLessThanOrEqual(100)
-    }
-  })
-
-  xtest('should validate length constraints of additionalInfo field', () => {
-    //comment in after fixing incorrect length of additionalInfo in db
-
-    for (const cooperation of cooperations) {
-      if (cooperation.additionalInfo) {
-        expect(cooperation.additionalInfo.length).toBeGreaterThanOrEqual(30)
-        expect(cooperation.additionalInfo.length).toBeLessThanOrEqual(1000)
-      }
     }
   })
 
@@ -191,14 +176,6 @@ describe('Category model', () => {
     }
   })
 
-  xtest('should validate needAction field', () => {
-    for (const cooperation of cooperations) {
-      const needAction = cooperation.needAction
-      expect(MAIN_ROLE_ENUM).toContain(needAction.role)
-      expect(NEED_ACTION_ENUM).toContain(needAction.type)
-    }
-  })
-
   test('should validate receiverRole and initiatorRole field', () => {
     for (const cooperation of cooperations) {
       const receiveRole = cooperation.receiverRole
@@ -207,9 +184,40 @@ describe('Category model', () => {
       expect(MAIN_ROLE_ENUM).toContain(initiatorRole)
     }
   })
+})
 
-  xtest('should validate sections.resources field', () => {
-    //comment in after fixing incorrect spelling of resourceType in db
+xdescribe('After needAction migration', () => {
+  let server
+  let cooperations
+
+  beforeAll(async () => {
+    const setup = await setupTestServer()
+    server = setup.server
+    cooperations = await Cooperation.find({})
+  })
+
+  afterAll(async () => {
+    await stopServer(server)
+  })
+
+  test('should validate length constraints of additionalInfo field', () => {
+    for (const cooperation of cooperations) {
+      if (cooperation.additionalInfo) {
+        expect(cooperation.additionalInfo.length).toBeGreaterThanOrEqual(30)
+        expect(cooperation.additionalInfo.length).toBeLessThanOrEqual(1000)
+      }
+    }
+  })
+
+  test('should validate needAction field', () => {
+    for (const cooperation of cooperations) {
+      const needAction = cooperation.needAction
+      expect(MAIN_ROLE_ENUM).toContain(needAction.role)
+      expect(NEED_ACTION_ENUM).toContain(needAction.type)
+    }
+  })
+
+  test('should validate sections.resources field', () => {
     for (const cooperation of cooperations) {
       for (const section of cooperation.sections) {
         for (const resource of section.resources) {
@@ -223,6 +231,15 @@ describe('Category model', () => {
           expect(RESOURCE_COMPLETION_STATUS_ENUM).toContain(resourceCompletionStatus)
         }
       }
+    }
+  })
+
+  test('should have valid needAction data types', () => {
+    for (const cooperation of cooperations) {
+      expect(typeof cooperation.needAction).toBe('object')
+      expect(typeof cooperation.needAction.role).toBe('string')
+      expect(typeof cooperation.needAction.type).toBe('string')
+      expect(Array.isArray(cooperation.needAction.messages)).toBe(true)
     }
   })
 })

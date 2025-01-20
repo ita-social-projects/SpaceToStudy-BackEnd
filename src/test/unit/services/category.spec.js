@@ -14,12 +14,14 @@ describe('recountTotalOffers', () => {
   it('should call Category.aggregate', async () => {
     Category.aggregate.mockResolvedValue([{ _id: 1, totalOffers: 5 }])
     await categoryService.recountTotalOffers()
+
     expect(Category.aggregate).toHaveBeenCalled()
   })
 
   it('should call Category.bulkWrite', async () => {
     Category.aggregate.mockResolvedValue([{ _id: 1, totalOffers: 5 }])
     await categoryService.recountTotalOffers()
+
     expect(Category.bulkWrite).toHaveBeenCalledWith([
       { updateOne: { filter: { _id: 1 }, update: { $set: { totalOffers: 5 } } } }
     ])

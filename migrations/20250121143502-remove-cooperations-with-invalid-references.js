@@ -1,9 +1,7 @@
+const { mapToId } = require('~/utils/mapToId')
+
 module.exports = {
   async up(db) {
-    const mapToId = (items) => {
-      return items.map((item) => item._id)
-    }
-
     const allOffers = await db.collection('offers').find({}, { _id: true }).toArray()
     const offerIds = mapToId(allOffers)
 

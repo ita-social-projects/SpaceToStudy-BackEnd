@@ -27,7 +27,6 @@ describe('20250123142314-remove-resourcescategories-with-invalid-user-references
   afterEach(async () => await serverCleanup())
 
   afterAll(async () => {
-    await migration.up(mongoose.connection.db)
     await stopServer(server)
   })
 

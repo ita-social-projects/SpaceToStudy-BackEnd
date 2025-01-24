@@ -185,6 +185,17 @@ const cooperationService = {
         ]
       }
     )
+  },
+
+  removeResourceFromCooperations: async (resourceId, resourceType, userId) => {
+    await Cooperation.updateMany(
+      {
+        $or: [{ receiver: userId }, { initiator: userId }],
+        'sections.resources.resourceType': resourceType,
+        'sections.resources.resource': resourceId
+      },
+      { $pull: { 'sections.$[].resources': { resourceType: resourceType, resource: resourceId } } }
+    )
   }
 }
 

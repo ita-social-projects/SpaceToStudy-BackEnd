@@ -3,6 +3,9 @@ const Attachment = require('~/models/attachment')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 const uploadService = require('~/services/upload')
 const { ATTACHMENT } = require('~/consts/upload')
+const resourceType = require('~/consts/resourceType')
+
+const cooperationService = require('./cooperation')
 
 const attachmentService = {
   getAttachments: async (match, sort, skip, limit) => {
@@ -76,7 +79,9 @@ const attachmentService = {
       throw createForbiddenError()
     }
 
-    await Attachment.findByIdAndRemove(id).exec()
+    await cooperationService.removeResourceFromCooperations(id, resourceType.ATTACHMENT, currentUser)
+
+    await Attachment.findByIdAndRemove(id)
   }
 }
 

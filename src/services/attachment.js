@@ -58,7 +58,7 @@ const attachmentService = {
       attachment.link = newLink
     }
 
-    if (description) {
+    if (description !== undefined) {
       attachment.description = description
     }
 

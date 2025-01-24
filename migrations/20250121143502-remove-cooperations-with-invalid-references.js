@@ -1,4 +1,4 @@
-const { mapToId } = require('~/utils/mapToId')
+const { mapToId } = require('../src/utils/mapToId')
 
 module.exports = {
   async up(db) {

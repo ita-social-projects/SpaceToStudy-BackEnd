@@ -56,7 +56,6 @@ describe('20250121143502-remove-cooperations-with-invalid-references', () => {
   afterEach(async () => await serverCleanup())
 
   afterAll(async () => {
-    await migration.up(mongoose.connection.db)
     await stopServer(server)
   })
 

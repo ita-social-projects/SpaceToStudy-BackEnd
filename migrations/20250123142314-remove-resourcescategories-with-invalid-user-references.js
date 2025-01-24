@@ -2,7 +2,7 @@ const { mapToId } = require('../src/utils/mapToId')
 
 module.exports = {
   async up(db) {
-    const allUsers = await db.collection('users').find({}, { _id: true }).toArray()
+    const allUsers = await db.collection('users').find({}).toArray()
     const userIds = mapToId(allUsers)
     const invalidResourcesCategories = await db
       .collection('resourcescategories')

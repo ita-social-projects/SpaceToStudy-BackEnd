@@ -37,7 +37,7 @@ const cooperationFields = [
   'additionalInfo'
 ]
 
-describe('Category model', () => {
+describe('Cooperation model', () => {
   let server
   let cooperations
 
@@ -184,6 +184,23 @@ describe('Category model', () => {
       expect(MAIN_ROLE_ENUM).toContain(initiatorRole)
     }
   })
+
+  test('should validate sections.resources field', () => {
+    for (const cooperation of cooperations) {
+      for (const section of cooperation.sections) {
+        for (const resource of section.resources) {
+          const resourceAvailabilityStatus = resource.availability.status
+          expect(RESOURCE_AVAILABILITY_STATUS_ENUM).toContain(resourceAvailabilityStatus)
+
+          const resourceType = resource.resourceType
+          expect(RESOURCES_TYPES_ENUM).toContain(resourceType)
+
+          const resourceCompletionStatus = resource.completionStatus
+          expect(RESOURCE_COMPLETION_STATUS_ENUM).toContain(resourceCompletionStatus)
+        }
+      }
+    }
+  })
 })
 
 xdescribe('After needAction migration', () => {
@@ -214,23 +231,6 @@ xdescribe('After needAction migration', () => {
       const needAction = cooperation.needAction
       expect(MAIN_ROLE_ENUM).toContain(needAction.role)
       expect(NEED_ACTION_ENUM).toContain(needAction.type)
-    }
-  })
-
-  test('should validate sections.resources field', () => {
-    for (const cooperation of cooperations) {
-      for (const section of cooperation.sections) {
-        for (const resource of section.resources) {
-          const resourceAvailabilityStatus = resource.availability.status
-          expect(RESOURCE_AVAILABILITY_STATUS_ENUM).toContain(resourceAvailabilityStatus)
-
-          const resourceType = resource.resourceType
-          expect(RESOURCES_TYPES_ENUM).toContain(resourceType)
-
-          const resourceCompletionStatus = resource.completionStatus
-          expect(RESOURCE_COMPLETION_STATUS_ENUM).toContain(resourceCompletionStatus)
-        }
-      }
     }
   })
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const Cooperation = require('~/models/cooperation')
 
-const migration = require('@root/migrations/20250121143502-remove-cooperations-with-invalid-references')
+const migration = require('@root/migrations/20250124143502-remove-cooperations-with-invalid-references')
 
 const cooperation = {
   initiatorRole: 'student',
@@ -48,7 +48,7 @@ const insertTestData = async () => {
   return { initiatorId, receiverId, offerId }
 }
 
-describe('20250121143502-remove-cooperations-with-invalid-references', () => {
+describe('20250124143502-remove-cooperations-with-invalid-references', () => {
   let server
 
   beforeAll(async () => ({ server } = await serverInit()))

@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose')
-const { QUIZ, FINISHED_QUIZ } = require('~/consts/models')
+const { QUIZ, FINISHED_QUIZ, COOPERATION } = require('~/consts/models')
 const {
   FIELD_CANNOT_BE_EMPTY,
   FIELD_CANNOT_BE_SHORTER,
@@ -14,6 +14,11 @@ const finishedQuizSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: QUIZ,
       required: [true, FIELD_CANNOT_BE_EMPTY('quiz')]
+    },
+    cooperation: {
+      type: Schema.Types.ObjectId,
+      ref: COOPERATION,
+      required: [true, FIELD_CANNOT_BE_EMPTY('cooperation')]
     },
     grade: {
       type: Number,

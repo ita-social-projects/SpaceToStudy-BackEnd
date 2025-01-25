@@ -95,6 +95,7 @@ paths:
               $ref: '#/definitions/finishedQuizBody'
             example:
               quiz: 64cf82cb290732a7973f1e09
+              cooperation: 6794cc4d2ad912f4548e7dee
               grade: 30
               results:
                 - question: How are you going?
@@ -114,6 +115,7 @@ paths:
                 $ref: '#definitions/finishedQuiz'
               example:
                 quiz: 64cf82cb290732a7973f1e09
+                cooperation: 6794cc4d2ad912f4548e7dee
                 grade: 30
                 results:
                   - question: How are you going?

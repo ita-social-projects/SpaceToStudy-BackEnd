@@ -1,5 +1,6 @@
 const FinishedQuiz = require('~/models/finishedQuiz')
 const Quiz = require('~/models/quiz')
+const cooperationService = require('~/services/cooperation')
 
 const finishedQuizService = {
   getFinishedQuizzes: async (author, skip = 0, limit = 10) => {
@@ -14,18 +15,21 @@ const finishedQuizService = {
     return { items, count }
   },
 
-  createFinishedQuiz: async (data) => {
-    const { quiz, grade, results } = data
+  createFinishedQuiz: async (data, currentUser) => {
+    const { quiz, grade, results, cooperation } = data
 
-    return await FinishedQuiz.create({
+    const finishedQuiz = await FinishedQuiz.create({
       quiz,
       grade,
-      results
+      results,
+      cooperation
     })
-  },
 
-  getFinishedQuizById: async (id) => {
-    return await FinishedQuiz.findById(id).lean().exec()
+    await cooperationService.updateCooperation(cooperation, currentUser, {
+      finishedQuizzes: [finishedQuiz._id]
+    })
+
+    return finishedQuiz
   }
 }
 

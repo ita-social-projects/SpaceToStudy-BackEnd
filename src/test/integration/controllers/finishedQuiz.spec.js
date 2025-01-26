@@ -107,7 +107,7 @@ describe('Quiz controller', () => {
         const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
 
         expect(response.statusCode).toBe(200)
-        expect(Array.isArray(response.body.items)).toBeTruthy()
+        expect(Array.isArray(response.body.items)).toBe(true)
         expect(response.body).toEqual({
           items: [
             {

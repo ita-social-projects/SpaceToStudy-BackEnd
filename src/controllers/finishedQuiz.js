@@ -19,7 +19,9 @@ const createFinishedQuiz = async (req, res) => {
 
 const getFinishedQuizById = async (req, res) => {
   const { id } = req.params
+
   const quiz = await finishedQuizService.getFinishedQuizById(id)
+
   res.status(200).json(quiz)
 }
 

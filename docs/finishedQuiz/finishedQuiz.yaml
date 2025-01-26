@@ -35,10 +35,10 @@ paths:
                     results:
                       - question: Is it the best programming language?
                         answers:
-                          - text: Yes,
+                          - text: Yes
                             isCorrect: false
                             isChosen: true
-                          - text: Yes, of course,
+                          - text: Yes, of course
                             isCorrect: true
                             isChosen: false
                     createdAt: 2023-08-06T11:30:06.747Z

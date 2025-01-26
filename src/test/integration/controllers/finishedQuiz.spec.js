@@ -45,7 +45,7 @@ describe('Quiz controller', () => {
   let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -119,6 +119,28 @@ describe('Quiz controller', () => {
             }
           ],
           count: 1
+        })
+      })
+
+      it('should throw UNAUTHORIZED', async () => {
+        const response = await app.get(endpointUrl)
+
+        expectError(401, UNAUTHORIZED, response)
+      })
+    }),
+    describe(`GET ${endpointUrl}:id`, () => {
+      it('should get finished quiz', async () => {
+        const finishedQuizId = testFinishedQuiz._body._id
+
+        const response = await app.get(endpointUrl + finishedQuizId).set('Cookie', [`accessToken=${accessToken}`])
+
+        expect(response.statusCode).toBe(200)
+        expect(response.body).toEqual({
+          _id: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+          quiz: String(testQuiz._id),
+          ...testFinishedQuizData
         })
       })
 

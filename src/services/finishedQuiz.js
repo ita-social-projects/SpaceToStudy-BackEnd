@@ -25,7 +25,7 @@ const finishedQuizService = {
   },
 
   getFinishedQuizById: async (id) => {
-    return await FinishedQuiz.findById(id).populate({ path: 'quiz', select: '_id' }).lean().exec()
+    return await FinishedQuiz.findById(id).lean().exec()
   }
 }
 

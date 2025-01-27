@@ -1,5 +1,6 @@
 const resourceType = {
-  ATTACHMENT: 'attachment'
+  ATTACHMENT: 'attachment',
+  LESSON: 'lesson'
 }
 
 module.exports = resourceType

@@ -1,6 +1,8 @@
 const Lesson = require('~/models/lesson')
-
 const { createForbiddenError } = require('~/utils/errorsHelper')
+const resourceType = require('~/consts/resourceType')
+
+const cooperationService = require('./cooperation')
 
 const lessonService = {
   createLesson: async (author, data) => {
@@ -52,6 +54,8 @@ const lessonService = {
     if (lessonAuthor !== currentUserId) {
       throw createForbiddenError()
     }
+
+    await cooperationService.removeResourceFromCooperations(id, resourceType.LESSON, currentUserId)
 
     await Lesson.findByIdAndRemove(id).exec()
   },

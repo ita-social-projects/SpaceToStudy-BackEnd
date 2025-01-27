@@ -1,6 +1,9 @@
 const FinishedQuiz = require('~/models/finishedQuiz')
 const Quiz = require('~/models/quiz')
 const cooperationService = require('~/services/cooperation')
+const quizService = require('~/services/quiz')
+const { createError } = require('~/utils/errorsHelper')
+const { QUIZ_ATTEMPT_LIMIT_EXCEEDED } = require('~/consts/errors')
 
 const finishedQuizService = {
   getFinishedQuizzes: async (author, skip = 0, limit = 10) => {
@@ -18,6 +21,15 @@ const finishedQuizService = {
   createFinishedQuiz: async (data, currentUser) => {
     const { quiz, grade, results, cooperation } = data
 
+    const finishedQuizzes = await finishedQuizService.getFinishedQuizByQuizId(quiz)
+
+    const quizCollection = await quizService.getQuizById(quiz)
+    const attemptLimit = parseInt(quizCollection.settings.attemptLimit)
+
+    if (!isNaN(attemptLimit) && finishedQuizzes.length >= attemptLimit) {
+      throw createError(403, QUIZ_ATTEMPT_LIMIT_EXCEEDED)
+    }
+
     const finishedQuiz = await FinishedQuiz.create({
       quiz,
       grade,
@@ -30,6 +42,10 @@ const finishedQuizService = {
     })
 
     return finishedQuiz
+  },
+
+  getFinishedQuizByQuizId: async (quizId) => {
+    return await FinishedQuiz.find({ quiz: quizId }).lean().exec()
   }
 }
 

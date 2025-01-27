@@ -2,8 +2,11 @@ const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const resourceType = require('~/consts/resourceType')
+const { roles } = require('~/consts/auth')
 const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
+const cooperationService = require('~/services/cooperation')
 const uploadService = require('~/services/upload')
 const {
   enums: { RESOURCES_TYPES_ENUM }
@@ -305,6 +308,55 @@ describe('Attachments controller', () => {
       const response = await app.delete(endpointUrl + testAttachmentId).set('Cookie', [`accessToken=${token}`])
 
       expectError(403, FORBIDDEN, response)
+    })
+
+    it('should delete attachment and remove references from all cooperation sections', async () => {
+      const cooperationData = {
+        offer: '82a51e41de4debbccf0b3111',
+        initiator: currentUser.id,
+        initiatorRole: 'tutor',
+        receiver: '62a51e41de4debbccf0b3111',
+        receiverRole: 'student',
+        title: 'Web Development Course',
+        proficiencyLevel: 'Beginner',
+        price: 500,
+        status: 'active',
+        needAction: 'student',
+        sections: [
+          {
+            title: 'Start with HTML',
+            description: 'Learn the basics of HTML',
+            resources: [
+              {
+                resource: testAttachmentId,
+                resourceType: resourceType.ATTACHMENT
+              }
+            ]
+          },
+          {
+            title: 'Continue with CSS',
+            description: 'Learn the basics of CSS',
+            resources: [
+              {
+                resource: testAttachmentId,
+                resourceType: resourceType.ATTACHMENT
+              }
+            ]
+          }
+        ]
+      }
+
+      const cooperation = await cooperationService.createCooperation(currentUser.id, roles.TUTOR, cooperationData)
+
+      const response = await app.delete(endpointUrl + testAttachmentId).set('Cookie', [`accessToken=${accessToken}`])
+
+      const updatedCooperation = await cooperationService.getCooperationById(cooperation._id, roles.TUTOR)
+
+      expect(response.statusCode).toBe(204)
+
+      updatedCooperation.sections.forEach((section) => {
+        expect(section.resources).toHaveLength(0)
+      })
     })
   })
 })

@@ -4,8 +4,11 @@ const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 const uploadService = require('~/services/upload')
 const { ATTACHMENT } = require('~/consts/upload')
 const resourceType = require('~/consts/resourceType')
+const refs = require('~/consts/models')
+const checkIdValidity = require('~/utils/checkIdValidity')
 
 const cooperationService = require('./cooperation')
+const resourcesCategoryService = require('./resourcesCategory')
 
 const attachmentService = {
   getAttachments: async (match, sort, skip, limit) => {
@@ -46,7 +49,21 @@ const attachmentService = {
       throw createForbiddenError()
     }
 
-    attachment.category = category
+    if (category === null) {
+      attachment.category = category
+    }
+
+    if (category && typeof category === 'string') {
+      checkIdValidity(category)
+
+      const respurceCategoryEntity = await resourcesCategoryService.getById(category)
+
+      if (!respurceCategoryEntity) {
+        throw createError(404, DOCUMENT_NOT_FOUND(refs.RESOURCES_CATEGORY))
+      }
+
+      attachment.category = category
+    }
 
     if (fileName) {
       const [fileExtension] = attachment.fileName.split('.').reverse()

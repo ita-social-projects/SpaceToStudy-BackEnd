@@ -11,6 +11,10 @@ const resourcesCategoryService = {
     })
   },
 
+  getById: async (id) => {
+    return await ResourcesCategory.findById(id).lean().exec()
+  },
+
   getResourcesCategories: async (match, sort, skip, limit) => {
     const items = await ResourcesCategory.find(match)
       .collation({ locale: 'en', strength: 1 })
@@ -22,6 +26,7 @@ const resourcesCategoryService = {
 
     return { count, items }
   },
+
   getResourcesCategoriesNames: async (match) => {
     return await ResourcesCategory.find(match).select('name').exec()
   },

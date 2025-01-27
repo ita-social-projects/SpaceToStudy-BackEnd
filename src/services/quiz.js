@@ -1,5 +1,8 @@
 const Quiz = require('~/models/quiz')
 const { createForbiddenError } = require('~/utils/errorsHelper')
+const resourceType = require('~/consts/resourceType')
+
+const cooperationService = require('./cooperation')
 
 const quizService = {
   getQuiz: async (match, sort, skip = 0, limit = 10) => {
@@ -54,6 +57,7 @@ const quizService = {
 
     await quiz.save()
   },
+
   deleteQuiz: async (id, currentUserId) => {
     const quiz = await Quiz.findById(id)
 
@@ -62,6 +66,8 @@ const quizService = {
     if (quizAuthor !== currentUserId) {
       throw createForbiddenError()
     }
+
+    await cooperationService.removeResourceFromCooperations(id, resourceType.QUIZ, currentUserId)
 
     await Quiz.findByIdAndRemove(id).exec()
   }

@@ -2,9 +2,7 @@ definitions:
   notes:
     type: array
     items:
-      type: object
-      properties:
-        $ref: '#/definitions/note'
+      $ref: '#/definitions/note'
   noteBody:
     type: object
     properties:

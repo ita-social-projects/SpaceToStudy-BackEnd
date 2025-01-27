@@ -3,10 +3,11 @@ const Offer = require('~/models/offer')
 const User = require('~/models/user')
 const Subject = require('~/models/subject')
 const Category = require('~/models/category')
-const { mongooseDefaultInternalFields } = require('~/consts/mongoFields')
 const {
   enums: { SPOKEN_LANG_ENUM, PROFICIENCY_LEVEL_ENUM, MAIN_ROLE_ENUM, OFFER_STATUS_ENUM }
 } = require('~/consts/validation')
+
+const mongooseDefaultInternalFields = ['$__', '$isNew', '_doc']
 
 const offerFields = [
   'price',

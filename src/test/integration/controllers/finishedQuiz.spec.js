@@ -89,7 +89,8 @@ const testQuizData = {
 
 describe('Quiz controller', () => {
   // let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz, testCooperation
-  let app, server, accessToken, currentUser, testQuiz, testCooperation
+  // eslint-disable-next-line
+  let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz, testCooperation
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -109,10 +110,10 @@ describe('Quiz controller', () => {
       ...cooperationMockData
     })
 
-    // testFinishedQuiz = await app
-    //   .post(endpointUrl)
-    //   .send({ quiz: testQuiz._id, cooperation: testCooperation._id, ...testFinishedQuizData })
-    //   .set('Cookie', [`accessToken=${accessToken}`])
+    testFinishedQuiz = await app
+      .post(endpointUrl)
+      .send({ quiz: testQuiz._id, cooperation: testCooperation._id, ...testFinishedQuizData })
+      .set('Cookie', [`accessToken=${accessToken}`])
   })
 
   afterEach(async () => {
@@ -158,6 +159,8 @@ describe('Quiz controller', () => {
   describe(`GET ${endpointUrl}`, () => {
     it('should get all finished quizzes', async () => {
       const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
+      console.log('response', response.body.items)
+
       expect(response.statusCode).toBe(200)
       expect(Array.isArray(response.body.items)).toBeTruthy()
       expect(response.body).toEqual({

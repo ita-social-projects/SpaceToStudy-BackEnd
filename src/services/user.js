@@ -24,6 +24,8 @@ const offerService = require('./offer')
 const cooperationService = require('./cooperation')
 const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
 
+const notificationService = require('./notification')
+
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
     const count = await User.countDocuments(match)
@@ -279,7 +281,9 @@ const userService = {
   },
 
   deleteUser: async (id) => {
-    await User.findByIdAndRemove(id).exec()
+    await notificationService.clearNotifications(id)
+
+    await User.findByIdAndRemove(id)
   },
 
   toggleOfferBookmark: async (offerId, userId) => {

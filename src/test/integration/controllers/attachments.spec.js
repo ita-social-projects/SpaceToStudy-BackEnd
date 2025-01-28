@@ -11,6 +11,9 @@ const uploadService = require('~/services/upload')
 const {
   enums: { RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
+const resourcesCategoryService = require('~/services/resourcesCategory')
+const refs = require('~/consts/models')
+const { INVALID_ID } = require('~/consts/errors')
 
 jest.mock('@azure/storage-blob', () => {
   const mockBlockBlobClient = {
@@ -293,6 +296,51 @@ describe('Attachments controller', () => {
         .set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Attachment.modelName]), response)
+    })
+
+    it('should update attachment category to null', async () => {
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: null })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body.category).toBeNull()
+    })
+
+    it('should update attachment when valid existing category id is provided', async () => {
+      const category = await resourcesCategoryService.createResourcesCategory(currentUser.id, {
+        name: 'Web-development'
+      })
+
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: category._id.toString() })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body.category).toEqual({
+        _id: category._id.toString(),
+        name: category.name
+      })
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND when non-existent category id is provided', async () => {
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: '5f5f5f5f5f5f5f5f5f5f5f5f' })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(404, DOCUMENT_NOT_FOUND(refs.RESOURCES_CATEGORY), response)
+    })
+
+    it('should throw INVALID_ID when invalid category id is provided', async () => {
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: 'notAnId' })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(400, INVALID_ID, response)
     })
   })
 

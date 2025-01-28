@@ -3,6 +3,10 @@ const testUserAuthentication = require('~/utils/testUserAuth')
 const Lesson = require('~/models/lesson')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
+const cooperationService = require('~/services/cooperation')
+const TokenService = require('~/services/token')
+const { roles } = require('~/consts/auth')
+const resourceType = require('~/consts/resourceType')
 
 const endpointUrl = '/lessons/'
 const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
@@ -46,7 +50,7 @@ const studentUserData = {
 }
 
 describe('Lesson controller', () => {
-  let app, server, accessToken, studentAccessToken, testLessonResponse, testLessonId
+  let app, server, accessToken, studentAccessToken, testLessonResponse, testLessonId, currentUser
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -55,6 +59,7 @@ describe('Lesson controller', () => {
   beforeEach(async () => {
     accessToken = await testUserAuthentication(app, tutorUser)
     studentAccessToken = await testUserAuthentication(app)
+    currentUser = TokenService.validateAccessToken(accessToken)
 
     testLessonResponse = await app
       .post(endpointUrl)
@@ -154,6 +159,57 @@ describe('Lesson controller', () => {
       const response = await app.delete(endpointUrl + nonExistingLessonId).set('Cookie', [`accessToken=${accessToken}`])
 
       expectError(404, DOCUMENT_NOT_FOUND([Lesson.modelName]), response)
+    })
+
+    it('should delete lesson and remove references from all cooperation sections', async () => {
+      const cooperationData = {
+        offer: '82a51e41de4debbccf0b3111',
+        initiator: currentUser.id,
+        initiatorRole: 'tutor',
+        receiver: '62a51e41de4debbccf0b3111',
+        receiverRole: 'student',
+        title: 'Web Development Course',
+        proficiencyLevel: 'Beginner',
+        price: 500,
+        status: 'active',
+        needAction: 'student',
+        sections: [
+          {
+            title: 'Start with HTML',
+            description: 'Learn the basics of HTML',
+            resources: [
+              {
+                resource: testLessonId,
+                resourceType: resourceType.LESSON
+              }
+            ]
+          },
+          {
+            title: 'Continue with CSS',
+            description: 'Learn the basics of CSS',
+            resources: [
+              {
+                resource: testLessonId,
+                resourceType: resourceType.LESSON
+              }
+            ]
+          }
+        ]
+      }
+
+      const cooperation = await cooperationService.createCooperation(currentUser.id, roles.TUTOR, cooperationData)
+
+      const response = await app
+        .delete(endpointUrl + testLessonResponse.body._id)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      const updatedCooperation = await cooperationService.getCooperationById(cooperation._id, roles.TUTOR)
+
+      expect(response.statusCode).toBe(204)
+
+      updatedCooperation.sections.forEach((section) => {
+        expect(section.resources).toHaveLength(0)
+      })
     })
   })
 

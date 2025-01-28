@@ -1,5 +1,6 @@
 const Subject = require('~/models/subject')
 const capitalizeFirstLetter = require('~/utils/capitalizeFirstLetter')
+const recountOfferAmount = require('~/utils/offers/recountOfferAmount')
 
 const subjectService = {
   getSubjects: async ({ skip, limit, searchFilter }) => {
@@ -43,6 +44,17 @@ const subjectService = {
 
   deleteSubject: async (id) => {
     await Subject.findByIdAndRemove(id).exec()
+  },
+
+  recountTotalOffers: async () => {
+    const subjects = await Subject.aggregate(recountOfferAmount('subject'))
+    const subjectBulkOps = subjects.map(({ _id, totalOffers }) => ({
+      updateOne: {
+        filter: { _id },
+        update: { $set: { totalOffers } }
+      }
+    }))
+    await Subject.bulkWrite(subjectBulkOps)
   }
 }
 

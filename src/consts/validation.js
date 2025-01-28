@@ -41,6 +41,8 @@ const enums = {
   ],
   QUESTION_TYPE_ENUM: ['multipleChoice', 'openAnswer', 'oneAnswer'],
   QUIZ_VIEW_ENUM: ['Stepper', 'Scroll'],
+  QUIZ_TIME_LIMIT: ['No limit', '15 minutes', '30 minutes', '45 minutes', '1 hour'],
+  QUIZ_ATTEMPT_LIMIT: ['No limit', '1 attempt', '2 attempts', '3 attempts', '5 attempts', '10 attempts'],
   QUIZ_SETTINGS_ENUM: ['view', 'shuffle', 'pointValues', 'scoredResponses', 'correctAnswers'],
   RESOURCE_STATUS_ENUM: ['available', 'finished'],
   RESOURCE_AVAILABILITY_STATUS_ENUM: ['open', 'closed', 'openFrom'],

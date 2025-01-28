@@ -1,4 +1,26 @@
 definitions:
+  timeLimit:
+    type: string
+    enum:
+      - No limit
+      - 15 minutes
+      - 30 minutes
+      - 45 minutes
+      - 1 hour
+  attemptLimit:
+    type: string
+    enum:
+      - No limit
+      - 1 attempt
+      - 2 attempts
+      - 3 attempts
+      - 5 attempts
+      - 10 attempts
+  view:
+    type: string
+    enum:
+      - Stepper
+      - Scroll
   quizzes:
     type: array
     items:
@@ -22,10 +44,11 @@ definitions:
           type: object
           properties:
             view:
-              type: string
-              enum:
-                - Stepper
-                - Scroll
+              $ref: '#/definitions/view'
+            timeLimit:
+              $ref: '#/definitions/timeLimit'
+            attemptLimit:
+              $ref: '#/definitions/attemptLimit'
             shuffle:
               type: boolean
             pointValues:
@@ -61,10 +84,11 @@ definitions:
         type: object
         properties:
           view:
-            type: string
-            enum:
-              - Stepper
-              - Scroll
+            $ref: '#/definitions/view'
+          timeLimit:
+            $ref: '#/definitions/timeLimit'
+          attemptLimit:
+            $ref: '#/definitions/attemptLimit'
           shuffle:
             type: boolean
           pointValues:
@@ -94,10 +118,11 @@ definitions:
         type: object
         properties:
           view:
-            type: string
-            enum:
-              - Stepper
-              - Scroll
+            $ref: '#/definitions/view'
+          timeLimit:
+            $ref: '#/definitions/timeLimit'
+          attemptLimit:
+            $ref: '#/definitions/attemptLimit'
           shuffle:
             type: boolean
           pointValues:

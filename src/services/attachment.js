@@ -56,9 +56,9 @@ const attachmentService = {
     if (category && typeof category === 'string') {
       checkIdValidity(category)
 
-      const respurceCategoryEntity = await resourcesCategoryService.getById(category)
+      const resourceCategoryEntity = await resourcesCategoryService.getById(category)
 
-      if (!respurceCategoryEntity) {
+      if (!resourceCategoryEntity) {
         throw createError(404, DOCUMENT_NOT_FOUND(refs.RESOURCES_CATEGORY))
       }
 

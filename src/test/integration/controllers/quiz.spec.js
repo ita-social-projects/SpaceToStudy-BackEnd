@@ -9,6 +9,9 @@ const {
 const {
   enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM, QUIZ_TIME_LIMIT, QUIZ_ATTEMPT_LIMIT }
 } = require('~/consts/validation')
+const resourceType = require('~/consts/resourceType')
+const { roles } = require('~/consts/auth')
+const cooperationService = require('~/services/cooperation')
 
 const endpointUrl = '/quizzes/'
 const questionEndpointUrl = '/questions/'
@@ -251,6 +254,55 @@ describe('Quiz controller', () => {
       const response = await app.delete(endpointUrl + testQuizId).set('Cookie', [`accessToken=${studentAccessToken}`])
 
       expectError(403, FORBIDDEN, response)
+    })
+
+    it('should delete lesson and remove references from all cooperation sections', async () => {
+      const cooperationData = {
+        offer: '82a51e41de4debbccf0b3111',
+        initiator: currentUser.id,
+        initiatorRole: 'tutor',
+        receiver: '62a51e41de4debbccf0b3111',
+        receiverRole: 'student',
+        title: 'Web Development Course',
+        proficiencyLevel: 'Beginner',
+        price: 500,
+        status: 'active',
+        needAction: 'student',
+        sections: [
+          {
+            title: 'Start with HTML',
+            description: 'Learn the basics of HTML',
+            resources: [
+              {
+                resource: testQuizId,
+                resourceType: resourceType.QUIZ
+              }
+            ]
+          },
+          {
+            title: 'Continue with CSS',
+            description: 'Learn the basics of CSS',
+            resources: [
+              {
+                resource: testQuizId,
+                resourceType: resourceType.QUIZ
+              }
+            ]
+          }
+        ]
+      }
+
+      const cooperation = await cooperationService.createCooperation(currentUser.id, roles.TUTOR, cooperationData)
+
+      const response = await app.delete(endpointUrl + testQuizId).set('Cookie', [`accessToken=${accessToken}`])
+
+      const updatedCooperation = await cooperationService.getCooperationById(cooperation._id, roles.TUTOR)
+
+      expect(response.statusCode).toBe(204)
+
+      updatedCooperation.sections.forEach((section) => {
+        expect(section.resources).toHaveLength(0)
+      })
     })
   })
 })

@@ -13,24 +13,32 @@ const errors = {
   },
   BODY_IS_NOT_DEFINED: {
     code: 'BODY_IS_NOT_DEFINED',
-    message: 'request body should not be null or undefined'
+    message: 'request body should not be null or undefined.'
   },
   FIELD_CAN_BE_ONE_OF: (field, enums) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
-    message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}`
+    message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}.`
   }),
   FIELD_IS_NOT_DEFINED: (field) => ({
     code: 'FIELD_IS_NOT_DEFINED',
-    message: `${field} field should be defined`
+    message: `${field} field should be defined.`
   }),
   FIELD_IS_NOT_OF_PROPER_TYPE: (field, type) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
-    message: `${field} should be of type ${type}`
+    message: `${field} should be of type ${type}.`
   }),
-  FIELD_IS_NOT_OF_PROPER_LENGTH: (field, length) => ({
-    code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
-    message: `${field} cannot be shorter than ${length.min} and longer than ${length.max} characters.`
-  }),
+  FIELD_IS_NOT_OF_PROPER_LENGTH: (field, length) => {
+    const lengthLimitMessages = []
+    length.min && lengthLimitMessages.push(`shorter than ${length.min}`)
+    length.max && lengthLimitMessages.push(`longer than ${length.max}`)
+
+    const message = `${field} cannot be ${lengthLimitMessages.join(' and ')} characters.`
+
+    return {
+      code: 'FIELD_IS_NOT_OF_PROPER_LENGTH',
+      message
+    }
+  },
   FIELD_IS_NOT_IN_RANGE: (field, range) => ({
     code: 'FIELD_IS_NOT_IN_RANGE',
     message: `${field} should be in range from ${range.min} to ${range.max}.`
@@ -42,7 +50,7 @@ const errors = {
   FIELD_IS_NOT_OF_PROPER_FORMAT: (field) => validationErrors[field],
   FIELD_IS_NOT_OF_PROPER_ENUM_VALUE: (field, enumSet) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_ENUM_VALUE',
-    message: `${field} should be either one of the values: [${enumSet.join(', ')}]`
+    message: `${field} should be either one of the values: [${enumSet.join(', ')}].`
   }),
   ROLE_REQUIRED_FOR_ACTION: (role) => ({
     code: 'ROLE_REQUIRED_FOR_ACTION',
@@ -66,12 +74,16 @@ const errors = {
   },
   WRONG_CURRENT_PASSWORD: {
     code: 'WRONG_CURRENT_PASSWORD',
-    message: 'Wrong current password'
+    message: 'Wrong current password.'
   },
   NOT_FOUND: {
     code: 'NOT_FOUND',
     message: 'The requested URL was not found.'
   },
+  OBJECT_MUST_HAVE_PROPERTY: (field) => ({
+    code: 'OBJECT_MUST_HAVE_PROPERTY',
+    message: `${field} must have at least one property.`
+  }),
   FORBIDDEN: {
     code: 'FORBIDDEN',
     message: 'You do not have permission to perform this action.'
@@ -176,7 +188,15 @@ const validationErrors = {
     message: 'Password must contain at least one alphabetic and one numeric character.'
   },
   firstName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('firstName'),
-  lastName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('lastName')
+  lastName: errors.NAME_FIELD_IS_NOT_OF_PROPER_FORMAT('lastName'),
+  videoLink: {
+    code: 'VIDEO_LINK_NOT_VALID',
+    message: 'Video link should be a valid youtube URL.'
+  },
+  photo: {
+    code: 'PHOTO_NOT_VALID',
+    message: 'Photo must either have name and a src or be an empty string to remove it.'
+  }
 }
 
 module.exports = errors

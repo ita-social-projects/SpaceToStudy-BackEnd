@@ -1,51 +1,78 @@
 definitions:
-  updateLessonRequest:
-    type: object
-    properties:
-      title:
-        type: string
-        minLength: 1
-        maxLength: 100
-  lessonBody:
-    type: object
-    properties:
-      title:
-        type: string
-        minLength: 1
-        maxLength: 100
-      content:
-        type: string
-        minLength: 50
-      description:
-        type: string
-        minLength: 1
-        maxLength: 1000
-      attachments:
-        type: array
-        $ref: '#/definitions/attachments'
-      category:
-        type: string
-        $ref: '#/definitions/resourcesCategory'
-    required:
-      - title
-      - description
-  lesson:
+  baseLesson:
     type: object
     properties:
       _id:
         type: string
       author:
         type: string
-        $ref: '#components/user'
       title:
         type: string
       description:
         type: string
       content:
         type: string
+      category:
+        $ref: '#/definitions/lessonCategory'
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  lesson:
+    type: object
+    allOf:
+      - $ref: '#/definitions/baseLesson'
+      - type: object
+        properties:
+          attachments:
+            type: array
+            items:
+              type: string
+  lessonById:
+    type: object
+    allOf:
+      - $ref: '#/definitions/baseLesson'
+      - type: object
+        properties:
+          attachments:
+            type: array
+            items:
+              $ref: '#/definitions/attachmentInLessonById'
+  lessons:
+    type: object
+    properties:
+      count:
+        type: number
+      items:
+        $ref: '#/definitions/lesson'
+  postLessonBody:
+    type: object
+    properties:
+      title:
+        type: string
+        minLength: 1
+        maxLength: 100
+      description:
+        type: string
+        minLength: 1
+        maxLength: 1000
+      content:
+        type: string
+        minLength: 50
       attachments:
         type: array
-        $ref: '#/definitions/attachments'
+        items:
+          $ref: '#/definitions/attachmentInPostLesson'
       category:
         type: string
-        $ref: '#/definitions/resourcesCategory'
+  lessonCategory:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string

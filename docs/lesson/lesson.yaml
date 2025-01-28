@@ -35,24 +35,43 @@ paths:
           schema:
             type: boolean
           required: false
-          description: If true will include in response lessons that have isDuplicate set to true. 
+          description: If true will include in response lessons that have isDuplicate set to true.
       responses:
         200:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#definitions/lesson'
+                $ref: '#/definitions/lessons'
               example:
-                title: Colors in English
-                description: With this lesson you will learn all about colors in English.
-                content: <h1>Title</h1>
-                author: 63da8767c9ad4c9a0b0eacd3
-                attachments: [63ed1cd25e9d781cdb6a6b15]
-                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
-                _id: 63ec1cd51e9d781cdb6f4b14
-                createdAt: 2023-02-14T23:44:21.334Z
-                updatedAt: 2023-02-14T23:44:21.334Z
+                count: 2
+                items:
+                  - _id: 677c1271a1d060a32ade5ff3
+                    author: 67519181170a70623366d30c
+                    title: Lesson 1
+                    description: Description for lesson 1.
+                    content: '<h2>Heading 2</h2>\n<p style=\"line-height: 1.1;\">Some paragraph text here</p>\n<pre>A preformatted text</pre>\n<table style=\"border-collapse: collapse; width: 99.9979%;\" border=\"1\"><colgroup><col style=\"width: 49.9486%;\"><col style=\"width: 49.9486%;\"></colgroup>\n<tbody>\n<tr>\n<td>Column 1</td>\n<td>Coulmn 2</td>\n</tr>\n<tr>\n<td>Column 1 content</td>\n<td>Column 2 content</td>\n</tr>\n</tbody>\n</table>\n<pre>&nbsp;</pre>'
+                    attachments:
+                      - 677c11a0a1d060a32ade5fe5
+                      - 677c1199a1d060a32ade5fe1
+                    category:
+                      _id: 677c11c0a1d060a32ade5fed
+                      name: math
+                    resourceType: lesson
+                    createdAt: 2025-01-06T17:27:13.697Z
+                    updatedAt: 2025-01-06T17:27:13.697Z
+                  - _id: 677c1506a1d060a32ade600e
+                    author: 67519181170a70623366d30c
+                    title: Lesson 2
+                    description: Description for lesson 2.
+                    content: <h4>Very very very long lesson text and something else</h4>
+                    attachments: []
+                    category:
+                      _id: 677c11c0a1d060a32ade5fed
+                      name: math
+                    resourceType: lesson
+                    createdAt: 2025-01-06T17:38:14.016Z
+                    updatedAt: 2025-01-06T17:38:14.016Z
         401:
           description: Unauthorized
           content:
@@ -87,14 +106,29 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/lessonBody'
+              allOf:
+                - $ref: '#/definitions/postLessonBody'
+              required:
+                - title
+                - description
+                - content
             example:
               title: Colors in English
               description: With this lesson you will learn all about colors in English.
-              content: <h1>Title</h1>
-              author: 63da8767c9ad4c9a0b0eacd3
-              attachments: [63ed1cd25e9d781cdb6a6b15]
-              category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
+              content: <h1>Very very very long lesson title and something else</h1>
+              attachments:
+                - author: 67519181170a70623366d30c
+                  category:
+                    name: Math
+                    _id: 677c11c0a1d060a32ade5fed
+                  fileName: image.png
+                  link: 1736184224413-image.png
+                  resourceType: attachment
+                  size: 195123
+                  createdAt: 2023-02-14T23:44:21.334Z
+                  updatedAt: 2023-02-14T23:44:21.334Z
+                  _id: 677c11a0a1d060a32ade5fe5
+              category: 677c11c0a1d060a32ade5fed
       responses:
         201:
           description: Created
@@ -107,8 +141,10 @@ paths:
                 description: With this lesson you will learn all about colors in English.
                 content: <h1>Title</h1>
                 author: 63da8767c9ad4c9a0b0eacd3
-                attachments: [63ed1cd25e9d781cdb6a6b15]
+                attachments:
+                  - 63ed1cd25e9d781cdb6a6b15
                 category: 6477007a6fa4d05e1a800ce1
+                resourceType: lesson
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -154,22 +190,25 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#definitions/lessonBody'
+                $ref: '#/definitions/lessonById'
               example:
+                _id: 93ec1cd51e9d781cdb6f5b56
+                author: 64a33e71eea95284f397a6ee
                 title: Title of the lesson
                 description: Some information about this lesson
-                content: <h1>Title</h1>
-                author: 64a33e71eea95284f397a6ee
+                content: <h1>Lesson title</h1>\n<p>Some long description for the lesson.</p>\n<p>Another paragraph for the lesson.</p>
                 attachments:
                   - _id: 63ec1cd51e9d781cdb6f4b14
                     author: 648afee884936e09a37deaaa
                     fileName: EnglishB2Level.pdf
                     link: 3302931_EnglishB2Level.pdf
-                    size: 230
+                    size: 195123
+                    category: 677c11c0a1d060a32ade5fed
+                    resourceType: attachment
                     createdAt: 2023-02-14T23:44:21.334Z
                     updatedAt: 2023-02-14T23:44:21.334Z
-                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
-                _id: 93ec1cd51e9d781cdb6f5b56
+                category: 6477007a6fa4d05e1a800ce1
+                resourceType: lesson
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
         400:
@@ -233,9 +272,24 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/updateLessonRequest'
+              $ref: '#/definitions/postLessonBody'
             example:
-              title: Nature in english
+              title: Colors in English 2
+              description: With this lesson you will learn all about colors in English, part 2.
+              content: <h1>New very very long lesson title and something else, updated</h1>
+              attachments:
+                - author: 67519181170a70623366d30c
+                  category:
+                    name: Math
+                    _id: 677c11c0a1d060a32ade5fed
+                  fileName: colors.png
+                  link: 1736184224413-colors.png
+                  resourceType: attachment
+                  size: 195123
+                  createdAt: 2023-02-14T23:44:21.334Z
+                  updatedAt: 2023-02-14T23:44:21.334Z
+                  _id: 687c11a0a1d089a32ade5be6
+              category: 677c11c0a1d060a32ade5fed
       responses:
         204:
           description: No Content

@@ -4,9 +4,11 @@ const {
   FIELD_IS_NOT_OF_PROPER_LENGTH,
   FIELD_IS_NOT_IN_RANGE,
   FIELD_IS_NOT_OF_PROPER_FORMAT,
-  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE
+  FIELD_IS_NOT_OF_PROPER_ENUM_VALUE,
+  OBJECT_MUST_HAVE_PROPERTY
 } = require('~/consts/errors')
-const { createError } = require('./errorsHelper')
+const { createError } = require('../errorsHelper')
+const { checkAreTypesValid } = require('./typeHelpers')
 
 const validateRequired = (schemaFieldKey, required, field) => {
   if (required && !field) {
@@ -14,33 +16,23 @@ const validateRequired = (schemaFieldKey, required, field) => {
   }
 }
 
-const castValueToType = (value, type) => {
-  if (type === 'boolean' && value === 'true') {
-    return true
-  }
+const validateTypes = (schemaFieldKey, typeOrTypes, field) => {
+  const isTypeValid = checkAreTypesValid(typeOrTypes, field)
 
-  if (type === 'boolean' && value === 'false') {
-    return false
-  }
-
-  if (type === 'number') {
-    return isNaN(Number(value)) ? value : Number(value)
-  }
-
-  return value
-}
-
-const validateType = (schemaFieldKey, type, field) => {
-  const typeCastedField = castValueToType(field, type)
-
-  if (type != typeof typeCastedField) {
-    throw createError(422, FIELD_IS_NOT_OF_PROPER_TYPE(schemaFieldKey, type))
+  if (!isTypeValid) {
+    throw createError(422, FIELD_IS_NOT_OF_PROPER_TYPE(schemaFieldKey, typeOrTypes))
   }
 }
 
 const validateLength = (schemaFieldKey, length, field) => {
   if (field.length < length.min || field.length > length.max) {
     throw createError(422, FIELD_IS_NOT_OF_PROPER_LENGTH(schemaFieldKey, length))
+  }
+}
+
+const validateNonEmptyObject = (fieldName, schemaFieldKey) => {
+  if (Object.keys(fieldName).length === 0) {
+    throw createError(422, OBJECT_MUST_HAVE_PROPERTY(schemaFieldKey))
   }
 }
 
@@ -63,9 +55,8 @@ const validateEnum = (schemaFieldKey, enumSet, field) => {
   }
 }
 
-const validateFunc = {
-  required: validateRequired,
-  type: validateType,
+const fieldValidator = {
+  type: validateTypes,
   length: validateLength,
   range: validateRange,
   regex: validateRegex,
@@ -74,8 +65,9 @@ const validateFunc = {
 
 module.exports = {
   validateRequired,
-  validateType,
+  validateTypes,
   validateLength,
+  validateNonEmptyObject,
   validateRange,
-  validateFunc
+  fieldValidator
 }

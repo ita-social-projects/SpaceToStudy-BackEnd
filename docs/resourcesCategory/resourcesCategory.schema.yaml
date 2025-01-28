@@ -1,5 +1,5 @@
 definitions:
-  resourceCategoryBody:
+  resourcesCategoryBody:
     type: object
     properties:
       name:
@@ -19,3 +19,21 @@ definitions:
       updatedAt:
         type: string
         format: date-time
+  resourcesCategories:
+    type: object
+    properties:
+      count:
+        type: integer
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/resourcesCategory'
+  resourcesCategoriesNames:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        name:
+          type: string

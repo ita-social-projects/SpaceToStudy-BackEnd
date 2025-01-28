@@ -125,83 +125,6 @@ describe('User controller', () => {
 
         expectError(401, UNAUTHORIZED, response)
       })
-
-      it('should GET all users', async () => {
-        const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
-
-        expect(response.statusCode).toBe(200)
-        expect(Array.isArray(response.body.items)).toBeTruthy()
-        expect(response.body.items[response.body.items.length - 1]).toMatchObject({
-          totalReviews: expect.objectContaining({
-            student: expect.any(Number),
-            tutor: expect.any(Number)
-          }),
-          averageRating: expect.objectContaining({
-            student: expect.any(Number),
-            tutor: expect.any(Number)
-          }),
-          status: expect.objectContaining({
-            student: expect.any(String),
-            tutor: expect.any(String),
-            admin: expect.any(String)
-          }),
-          _id: expect.any(String),
-          role: expect.any(Array),
-          firstName: testUser.firstName,
-          lastName: testUser.lastName,
-          email: testUser.email,
-          mainSubjects: expect.objectContaining({
-            tutor: expect.any(Array),
-            student: expect.any(Array)
-          }),
-          lastLogin: expect.any(String),
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String)
-        })
-      })
-
-      it('should GET all users which match query', async () => {
-        const query = {
-          email: testUser.email
-        }
-
-        const response = await app
-          .get(endpointUrl)
-          .query(query)
-          .set('Cookie', [`accessToken=${accessToken}`])
-
-        expect(response.status).toBe(200)
-        expect(Array.isArray(response.body.items)).toBeTruthy()
-        expect(response.body.items.length).toBe(1)
-        expect(response.body.items[0]).toMatchObject({
-          totalReviews: expect.objectContaining({
-            student: expect.any(Number),
-            tutor: expect.any(Number)
-          }),
-          averageRating: expect.objectContaining({
-            student: expect.any(Number),
-            tutor: expect.any(Number)
-          }),
-          status: expect.objectContaining({
-            student: expect.any(String),
-            tutor: expect.any(String),
-            admin: expect.any(String)
-          }),
-          _id: expect.any(String),
-          role: expect.any(Array),
-          firstName: testUser.firstName,
-          lastName: testUser.lastName,
-          email: testUser.email,
-          mainSubjects: expect.objectContaining({
-            student: expect.any(Array),
-            tutor: expect.any(Array)
-          }),
-          lastLogin: expect.any(String),
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String)
-        })
-        expect(response.body.count).toBe(1)
-      })
     })
 
     describe(`GET ${endpointUrl}:id`, () => {
@@ -569,6 +492,91 @@ describe('User controller', () => {
 
     afterEach(async () => {
       await app.post(logoutEndpoint)
+    })
+
+    describe(`GET ${endpointUrl}: users`, () => {
+      it('should GET all users', async () => {
+        const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
+
+        expect(response.statusCode).toBe(200)
+        expect(Array.isArray(response.body.items)).toBeTruthy()
+        expect(response.body.items[response.body.items.length - 1]).toMatchObject({
+          totalReviews: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          averageRating: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          status: expect.objectContaining({
+            student: expect.any(String),
+            tutor: expect.any(String),
+            admin: expect.any(String)
+          }),
+          _id: expect.any(String),
+          role: expect.any(Array),
+          firstName: adminUser.firstName,
+          lastName: adminUser.lastName,
+          email: adminUser.email,
+          mainSubjects: expect.objectContaining({
+            tutor: expect.any(Array),
+            student: expect.any(Array)
+          }),
+          lastLogin: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+      })
+
+      it('should throw FORBIDDEN', async () => {
+        accessToken = await testUserAuthentication(app)
+        const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
+        expect(response.statusCode).toBe(403)
+      })
+
+      it('should GET all users which match query', async () => {
+        const query = {
+          email: adminUser.email
+        }
+
+        const response = await app
+          .get(endpointUrl)
+          .query(query)
+          .set('Cookie', [`accessToken=${accessToken}`])
+
+        expect(response.status).toBe(200)
+        expect(Array.isArray(response.body.items)).toBeTruthy()
+        expect(response.body.items.length).toBe(1)
+        expect(response.body.items[0]).toMatchObject({
+          totalReviews: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          averageRating: expect.objectContaining({
+            student: expect.any(Number),
+            tutor: expect.any(Number)
+          }),
+          status: expect.objectContaining({
+            student: expect.any(String),
+            tutor: expect.any(String),
+            admin: expect.any(String)
+          }),
+          _id: expect.any(String),
+          role: expect.any(Array),
+          firstName: adminUser.firstName,
+          lastName: adminUser.lastName,
+          email: adminUser.email,
+          mainSubjects: expect.objectContaining({
+            student: expect.any(Array),
+            tutor: expect.any(Array)
+          }),
+          lastLogin: expect.any(String),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+        expect(response.body.count).toBe(1)
+      })
     })
 
     describe(`UPDATE ${endpointUrl}:id/change-status`, () => {

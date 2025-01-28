@@ -35,16 +35,7 @@ definitions:
             - draft
             - closed
         FAQ:
-          type: array
-          items:
-            type: object
-            properties:
-              question:
-                type: string
-              answer:
-                type: string
-              _id:
-                type: string
+          $ref: '#/definitions/FAQ'
         createdAt:
           type: string
           format: date-time
@@ -84,14 +75,7 @@ definitions:
           - draft
           - closed
       FAQ:
-        type: array
-        items:
-          type: object
-          properties:
-            question:
-              type: string
-            answer:
-              type: string
+        $ref: '#/definitions/FAQ'
   offer:
     type: object
     properties:
@@ -126,16 +110,7 @@ definitions:
           - draft
           - closed
       FAQ:
-        type: array
-        items:
-          type: object
-          properties:
-            question:
-              type: string
-            answer:
-              type: string
-            _id:
-              type: string
+        $ref: '#/definitions/FAQ'
       createdAt:
         type: string
         format: date-time
@@ -145,7 +120,7 @@ definitions:
       chatId:
         type: string
         nullable: true
-  offerProficiencyLevelEnum:
+  proficiencyLevelEnum:
     type: string
     enum:
       - Beginner
@@ -157,7 +132,7 @@ definitions:
   offerProficiencyLevelValues:
     type: array
     items:
-      $ref: '#/definitions/offerProficiencyLevelEnum'
+      $ref: '#/definitions/proficiencyLevelEnum'
   offerLanguagesValues:
     type: array
     items:
@@ -172,19 +147,9 @@ definitions:
       lastName:
         type: string
       totalReviews:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/userTotalReviews'
       averageRating:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/userAverageRating'
       photo:
         type: string
       professionalSummary:
@@ -199,19 +164,9 @@ definitions:
       lastName:
         type: string
       totalReviews:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/userTotalReviews'
       averageRating:
-        type: object
-        properties:
-          student:
-            type: number
-          tutor:
-            type: number
+        $ref: '#/definitions/userAverageRating'
       nativeLanguage:
         $ref: '#/definitions/userSpokenLanguagesEnum'
       status:

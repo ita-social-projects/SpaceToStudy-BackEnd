@@ -42,6 +42,7 @@ const noteService = {
     if (!foundedCooperation) throw createForbiddenError()
 
     const note = await Note.findById(noteId).exec()
+    if (!note || note.author.toString() !== userId) throw createForbiddenError()
 
     for (const field in updateData) {
       note[field] = updateData[field]

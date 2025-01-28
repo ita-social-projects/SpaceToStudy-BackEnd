@@ -17,48 +17,73 @@ paths:
               schema:
                 $ref: '#/definitions/cooperations'
               example:
-                - _id: 63ebc6fbd2f34037d0aba314
-                  offer: 63ebc6fbd2f34037d0aba791
-                  initiator: 6255bc080a75adf9223df212
-                  initiatorRole: tutor
-                  receiver: 6255bc080a75adf9223df100
-                  receiverRole: student
-                  title: 'Violin lessons'
-                  proficiencyLevel: Intermediate
-                  price: 200
-                  status: active
-                  needAction: student
-                  availableQuizzes: []
-                  finishedQuizzes: []
-                  user:
-                    _id: '6255bc080a75adf9223df100'
-                    firstName: 'Emily'
-                    lastName: 'Jhonson'
-                    photo: ''
-                    role: 'student'
-                  createdAt: 2021-05-09T11:34:53.243+00:00
-                  updatedAt: 2022-07-02T11:59:53.243+00:00
-                - _id: 63ebc6fbd2f34037d0aba314
-                  offer: 63ebc6fbd2f34037d0aba791
-                  initiator: 6255bc080a75adf9223df212
-                  initiatorRole: tutor
-                  receiver: 6255bc080a75adf9223df100
-                  receiverRole: student
-                  title: 'Violin lessons'
-                  proficiencyLevel: Intermediate
-                  price: 300
-                  status: closed
-                  needAction: tutor
-                  availableQuizzes: []
-                  finishedQuizzes: []
-                  user:
-                    _id: '6255bc080a75adf9223df100'
-                    firstName: 'Emily'
-                    lastName: 'Jhonson'
-                    photo: ''
-                    role: 'student'
-                  createdAt: 2021-04-09T11:34:53.243+00:00
-                  updatedAt: 2022-09-02T11:59:53.243+00:00
+                count: 2
+                items:
+                  - _id: 63ebc6fbd2f34037d0aba314
+                    offer:
+                      _id: 6741b51f1550cb6f3fae7a6c
+                      price: 500
+                      title: Advanced English Course
+                      subject:
+                        _id: 6675874d59019cd05eb11a14
+                        name: English
+                      category:
+                        _id: 64884f4dfdc2d1a130c24ac6
+                        appearance:
+                          icon: mocked-path-to-icon
+                          color: '#F67C41'
+                    initiator: 6255bc080a75adf9223df212
+                    initiatorRole: tutor
+                    receiver: 6255bc080a75adf9223df100
+                    receiverRole: student
+                    title: Advanced English Course
+                    additionalInfo: The Advanced English Course is designed for individuals who already have a strong grasp of English and wish to refine their skills to reach professional or near-native proficiency. This course focuses on advanced grammar, vocabulary, nuanced language use, and cultural fluency.
+                    proficiencyLevel: Advanced
+                    price: 500
+                    status: active
+                    needAction: student
+                    availableQuizzes: []
+                    finishedQuizzes: []
+                    createdAt: 2021-05-09T11:34:53.243+00:00
+                    updatedAt: 2022-07-02T11:59:53.243+00:00
+                    user:
+                      _id: 6255bc080a75adf9223df100
+                      firstName: Emily
+                      lastName: Jonson
+                      photo: ''
+                      role: student
+                  - _id: 63ebc6fbd2f34037d0aba315
+                    offer:
+                      _id: 6741b51f1550cb6f3fae7a6d
+                      price: 800
+                      title: 'Biochemistry: Enzymes and Their Functions'
+                      subject:
+                        _id: 6675874d59019cd05eb11a54
+                        name: Biochemistry
+                      category:
+                        _id: 64884f4dfdc2d1a130c24ac6
+                        appearance:
+                          icon: mocked-path-to-icon
+                          color: '#F67C42'
+                    initiator: 6255bc080a75adf9223df213
+                    initiatorRole: tutor
+                    receiver: 6255bc080a75adf9223df103
+                    receiverRole: student
+                    title: 'Biochemistry: Enzymes and Their Functions'
+                    additionalInfo: This course explores the world of enzymes, the catalysts of life. It includes enzyme classification, mechanisms of action, kinetics, regulation, and real-world applications in medicine and biotechnology. Perfect for students aiming to deepen their understanding of biochemical processes.
+                    price: 800
+                    status: active
+                    needAction: student
+                    availableQuizzes: []
+                    finishedQuizzes: []
+                    createdAt: 2021-06-12T11:34:53.243+00:00
+                    updatedAt: 2022-06-13T11:59:53.243+00:00
+                    user:
+                      _id: 6255bc080a75adf9223df154
+                      firstName: Liam
+                      lastName: Brown
+                      photo: ''
+                      role: student
         401:
           description: Unauthorized
           content:
@@ -106,7 +131,7 @@ paths:
                 initiatorRole: tutor
                 receiver: 6255bc080a75adf9223df100
                 receiverRole: student
-                title: 'Violin lessons'
+                title: Violin lessons
                 proficiencyLevel: Intermediate
                 price: 300
                 status: pending
@@ -172,8 +197,8 @@ paths:
                         - Advanced
                         - Test Preparation
                         - Professional
-                      title: 'Understanding Quadratic Equations'
-                      description: "In this lesson, we will delve into the world of quadratic equations. We'll explore the standard form of a quadratic equation, learn how to identify the coefficients, and understand the significance of the discriminant. Students will also practice solving quadratic equations using various methods, including factoring, completing the square, and the quadratic formula. By the end of the lesson, students will be able to solve quadratic equations confidently and understand their graphical representations."
+                      title: Understanding Quadratic Equations
+                      description: In this lesson, we will delve into the world of quadratic equations. We'll explore the standard form of a quadratic equation, learn how to identify the coefficients, and understand the significance of the discriminant. Students will also practice solving quadratic equations using various methods, including factoring, completing the square, and the quadratic formula. By the end of the lesson, students will be able to solve quadratic equations confidently and understand their graphical representations.
                       languages:
                         - English
                       author:
@@ -184,23 +209,23 @@ paths:
                           student: 0
                           tutor: 0
                         _id: 6658f73f93885febb491e08b
-                        firstName: 'John'
-                        lastName: 'Doe'
-                        photo: '6658f73f93885-test_student.png'
-                        professionalSummary: 'I am student of the University of Cambridge. I am passionate about learning mathematics.'
+                        firstName: John
+                        lastName: Doe
+                        photo: 6658f73f93885-test_student.png
+                        professionalSummary: I am student of the University of Cambridge. I am passionate about learning mathematics.
                       subject:
                         _id: 6566133a2bccdd3e18dbe943
-                        name: 'Algebra'
+                        name: Algebra
                       category:
                         appearance:
                           color: '#E3B21C'
-                          icon: 'TagRoundedIcon'
-                        _id: '64884f33fdc2d1a130c24ac2'
-                        name: 'Mathematics'
+                          icon: TagRoundedIcon
+                        _id: 64884f33fdc2d1a130c24ac2
+                        name: Mathematics
                     initiator:
                       address:
-                        country: 'USA'
-                        city: 'California'
+                        country: USA
+                        city: California
                       mainSubjects:
                         student: []
                         tutor: []
@@ -211,16 +236,16 @@ paths:
                         student: 5
                         tutor: 4.9
                       status:
-                        student: 'active'
-                        tutor: 'active'
-                        admin: 'active'
+                        student: active
+                        tutor: active
+                        admin: active
                       videoLink:
-                        student: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe'
+                        student: https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe
                       professionalBlock:
-                        awards: 'Gold medal in mathematics competition'
-                        scientificActivities: 'Founded the Math Club at the University of Cambridge'
-                        workExperience: 'n/a'
-                        education: 'Working towards a Bachelor of Mathematics at the University of Cambridge'
+                        awards: Gold medal in mathematics competition
+                        scientificActivities: Founded the Math Club at the University of Cambridge
+                        workExperience: n/a
+                        education: Working towards a Bachelor of Mathematics at the University of Cambridge
                       notificationSettings:
                         isOfferStatusNotification: true
                         isChatNotification: true
@@ -228,36 +253,36 @@ paths:
                         isEmailNotification: true
                       _id: 6658f6b793885febb491e07c
                       role:
-                        - 'student'
-                      firstName: 'John'
-                      lastName: 'Doe'
-                      email: 'john_doe@gmail.com'
+                        - student
+                      firstName: John
+                      lastName: Doe
+                      email: john_doe@gmail.com
                       nativeLanguage: English
-                      lastLogin: '2024-08-06T13:47:50.872Z'
-                      createdAt: '2024-05-30T21:59:19.434Z'
-                      updatedAt: '2024-08-06T13:47:50.872Z'
-                      professionalSummary: 'I am a student at the University of Cambridge studying Mathematics. I am passionate about learning mathematics.'
-                    initiatorRole: 'student'
+                      lastLogin: 2024-08-06T13:47:50.872Z
+                      createdAt: 2024-05-30T21:59:19.434Z
+                      updatedAt: 2024-08-06T13:47:50.872Z
+                      professionalSummary: I am a student at the University of Cambridge studying Mathematics. I am passionate about learning mathematics.
+                    initiatorRole: student
                     receiver:
                       address:
-                        country: 'USA'
-                        city: 'Massachusetts'
+                        country: USA
+                        city: Massachusetts
                       mainSubjects:
                         student: []
                         tutor:
-                          - category: '64884f4dfdc2d1a130c24ac6'
+                          - category: 64884f4dfdc2d1a130c24ac6
                             subjects:
-                              - '6675874d59019cd05eb11a16'
-                              - '65660fbbcb972798c401a9b4'
-                            _id: '6675a09d83835d79e960087a'
-                          - category: '64884f98fdc2d1a130c24ad4'
+                              - 6675874d59019cd05eb11a16
+                              - 65660fbbcb972798c401a9b4
+                            _id: 6675a09d83835d79e960087a
+                          - category: 64884f98fdc2d1a130c24ad4
                             subjects:
-                              - '66758d6e59019cd05eb11a5d'
-                            _id: '6675a08e83835d79e9600842'
-                          - category: '64884f33fdc2d1a130c24ac2'
+                              - 66758d6e59019cd05eb11a5d
+                            _id: 6675a08e83835d79e9600842
+                          - category: 64884f33fdc2d1a130c24ac2
                             subjects:
-                              - '6566133a2bccdd3e18dbe943'
-                            _id: '6675a06f83835d79e96007fc'
+                              - 6566133a2bccdd3e18dbe943
+                            _id: 6675a06f83835d79e96007fc
                       totalReviews:
                         student: 10
                         tutor: 8
@@ -265,16 +290,16 @@ paths:
                         student: 4.5
                         tutor: 4.9
                       status:
-                        student: 'active'
-                        tutor: 'active'
-                        admin: 'active'
+                        student: active
+                        tutor: active
+                        admin: active
                       videoLink:
-                        tutor: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe'
+                        tutor: https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe
                       professionalBlock:
-                        awards: 'The best tutor of the year 2023'
-                        scientificActivities: "The author of the scientific work 'The role of mathematics in the development of society'"
-                        workExperience: 'I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals.'
-                        education: 'The University of Cambridge, Bachelor of Mathematics'
+                        awards: The best tutor of the year 2023
+                        scientificActivities: The author of the scientific work 'The role of mathematics in the development of society'
+                        workExperience: I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals.
+                        education: The University of Cambridge, Bachelor of Mathematics
                       notificationSettings:
                         isOfferStatusNotification: true
                         isChatNotification: true
@@ -282,22 +307,22 @@ paths:
                         isEmailNotification: true
                       _id: 6658f73f93885febb491e08b
                       role:
-                        - 'tutor'
-                      firstName: 'Jane'
-                      lastName: 'Roe'
-                      email: 'jane_roe@gmail.com'
+                        - tutor
+                      firstName: Jane
+                      lastName: Roe
+                      email: jane_roe@gmail.com
                       nativeLanguage: null
-                      lastLogin: '2024-09-06T21:08:58.254Z'
-                      createdAt: '2024-05-30T22:01:35.360Z'
-                      updatedAt: '2024-09-06T21:08:58.256Z'
-                      photo: '6658f73f938-test_tutor.png'
-                      professionalSummary: 'Recently graduated from the University of Cambridge with a degree in Mathematics. I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals. I am passionate about teaching and enjoy helping students understand complex mathematical concepts. I believe that every student has the potential to succeed and I am committed to helping them reach their full potential.'
-                    receiverRole: 'tutor'
-                    title: 'Understanding Quadratic Equations'
-                    proficiencyLevel: 'Intermediate'
+                      lastLogin: 2024-09-06T21:08:58.254Z
+                      createdAt: 2024-05-30T22:01:35.360Z
+                      updatedAt: 2024-09-06T21:08:58.256Z
+                      photo: 6658f73f938-test_tutor.png
+                      professionalSummary: Recently graduated from the University of Cambridge with a degree in Mathematics. I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals. I am passionate about teaching and enjoy helping students understand complex mathematical concepts. I believe that every student has the potential to succeed and I am committed to helping them reach their full potential.
+                    receiverRole: tutor
+                    title: Understanding Quadratic Equations
+                    proficiencyLevel: Intermediate
                     price: 150
-                    status: 'active'
-                    needAction: 'tutor'
+                    status: active
+                    needAction: tutor
                     availableQuizzes: []
                     finishedQuizzes: []
                     sections:
@@ -305,21 +330,21 @@ paths:
                         description: Section description
                         resources:
                           - resource:
-                                title: Colors in English
-                                description: With this lesson you will learn all about colors in English.
-                                content: <h1>Title</h1>
-                                author: 63da8767c9ad4c9a0b0eacd3
-                                attachments:
-                                  - 63ed1cd25e9d781cdb6a6b15
-                                category:
-                                  _id: 6477007a6fa4d05e1a800ce1
-                                  name: Languages
-                                _id: 63ed1cd25e9d781cdb6a6b17
+                              title: Colors in English
+                              description: With this lesson you will learn all about colors in English.
+                              content: <h1>Title</h1>
+                              author: 63da8767c9ad4c9a0b0eacd3
+                              attachments:
+                                - 63ed1cd25e9d781cdb6a6b15
+                              category:
+                                _id: 6477007a6fa4d05e1a800ce1
+                                name: Languages
+                              _id: 63ed1cd25e9d781cdb6a6b17
                             resourceType: lesson
                             availability:
                               status: open
                               date: null
-                        _id:	674cae6458b8af8857ffac8a
+                        _id: 674cae6458b8af8857ffac8a
                     createdAt: '2024-07-02T16:29:40.956Z'
                     updatedAt: '2024-09-06T15:27:29.999Z'
                 tutorView:
@@ -333,8 +358,8 @@ paths:
                         - Advanced
                         - Test Preparation
                         - Professional
-                      title: 'Understanding Quadratic Equations'
-                      description: "In this lesson, we will delve into the world of quadratic equations. We'll explore the standard form of a quadratic equation, learn how to identify the coefficients, and understand the significance of the discriminant. Students will also practice solving quadratic equations using various methods, including factoring, completing the square, and the quadratic formula. By the end of the lesson, students will be able to solve quadratic equations confidently and understand their graphical representations."
+                      title: Understanding Quadratic Equations
+                      description: In this lesson, we will delve into the world of quadratic equations. We'll explore the standard form of a quadratic equation, learn how to identify the coefficients, and understand the significance of the discriminant. Students will also practice solving quadratic equations using various methods, including factoring, completing the square, and the quadratic formula. By the end of the lesson, students will be able to solve quadratic equations confidently and understand their graphical representations.
                       languages:
                         - English
                       author:
@@ -345,23 +370,23 @@ paths:
                           student: 0
                           tutor: 0
                         _id: 6658f73f93885febb491e08b
-                        firstName: 'John'
-                        lastName: 'Doe'
-                        photo: '6658f73f93885-test_student.png'
-                        professionalSummary: 'I am student of the University of Cambridge. I am passionate about learning mathematics.'
+                        firstName: John
+                        lastName: Doe
+                        photo: 6658f73f93885-test_student.png
+                        professionalSummary: I am student of the University of Cambridge. I am passionate about learning mathematics.
                       subject:
                         _id: 6566133a2bccdd3e18dbe943
-                        name: 'Algebra'
+                        name: Algebra
                       category:
                         appearance:
                           color: '#E3B21C'
-                          icon: 'TagRoundedIcon'
-                        _id: '64884f33fdc2d1a130c24ac2'
-                        name: 'Mathematics'
+                          icon: TagRoundedIcon
+                        _id: 64884f33fdc2d1a130c24ac2
+                        name: Mathematics
                     initiator:
                       address:
-                        country: 'USA'
-                        city: 'California'
+                        country: USA
+                        city: California
                       mainSubjects:
                         student: []
                         tutor: []
@@ -372,16 +397,16 @@ paths:
                         student: 5
                         tutor: 4.9
                       status:
-                        student: 'active'
-                        tutor: 'active'
-                        admin: 'active'
+                        student: active
+                        tutor: active
+                        admin: active
                       videoLink:
-                        student: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe'
+                        student: https://www.youtube.com/watch?v=ebTnuLRnIOY-JohnDoe
                       professionalBlock:
-                        awards: 'Gold medal in mathematics competition'
-                        scientificActivities: 'Founded the Math Club at the University of Cambridge'
-                        workExperience: 'n/a'
-                        education: 'Working towards a Bachelor of Mathematics at the University of Cambridge'
+                        awards: Gold medal in mathematics competition
+                        scientificActivities: Founded the Math Club at the University of Cambridge
+                        workExperience: n/a
+                        education: Working towards a Bachelor of Mathematics at the University of Cambridge
                       notificationSettings:
                         isOfferStatusNotification: true
                         isChatNotification: true
@@ -389,36 +414,36 @@ paths:
                         isEmailNotification: true
                       _id: 6658f6b793885febb491e07c
                       role:
-                        - 'student'
-                      firstName: 'John'
-                      lastName: 'Doe'
-                      email: 'john_doe@gmail.com'
+                        - student
+                      firstName: John
+                      lastName: Doe
+                      email: john_doe@gmail.com
                       nativeLanguage: English
-                      lastLogin: '2024-08-06T13:47:50.872Z'
-                      createdAt: '2024-05-30T21:59:19.434Z'
-                      updatedAt: '2024-08-06T13:47:50.872Z'
-                      professionalSummary: 'I am a student at the University of Cambridge studying Mathematics. I am passionate about learning mathematics.'
-                    initiatorRole: 'student'
+                      lastLogin: 2024-08-06T13:47:50.872Z
+                      createdAt: 2024-05-30T21:59:19.434Z
+                      updatedAt: 2024-08-06T13:47:50.872Z
+                      professionalSummary: I am a student at the University of Cambridge studying Mathematics. I am passionate about learning mathematics.
+                    initiatorRole: student
                     receiver:
                       address:
-                        country: 'USA'
-                        city: 'Massachusetts'
+                        country: USA
+                        city: Massachusetts
                       mainSubjects:
                         student: []
                         tutor:
-                          - category: '64884f4dfdc2d1a130c24ac6'
+                          - category: 64884f4dfdc2d1a130c24ac6
                             subjects:
-                              - '6675874d59019cd05eb11a16'
-                              - '65660fbbcb972798c401a9b4'
-                            _id: '6675a09d83835d79e960087a'
-                          - category: '64884f98fdc2d1a130c24ad4'
+                              - 6675874d59019cd05eb11a16
+                              - 65660fbbcb972798c401a9b4
+                            _id: 6675a09d83835d79e960087a
+                          - category: 64884f98fdc2d1a130c24ad4
                             subjects:
-                              - '66758d6e59019cd05eb11a5d'
-                            _id: '6675a08e83835d79e9600842'
-                          - category: '64884f33fdc2d1a130c24ac2'
+                              - 66758d6e59019cd05eb11a5d
+                            _id: 6675a08e83835d79e9600842
+                          - category: 64884f33fdc2d1a130c24ac2
                             subjects:
-                              - '6566133a2bccdd3e18dbe943'
-                            _id: '6675a06f83835d79e96007fc'
+                              - 6566133a2bccdd3e18dbe943
+                            _id: 6675a06f83835d79e96007fc
                       totalReviews:
                         student: 10
                         tutor: 8
@@ -426,16 +451,16 @@ paths:
                         student: 4.5
                         tutor: 4.9
                       status:
-                        student: 'active'
-                        tutor: 'active'
-                        admin: 'active'
+                        student: active
+                        tutor: active
+                        admin: active
                       videoLink:
-                        tutor: 'https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe'
+                        tutor: https://www.youtube.com/watch?v=ebTnuLRnIOY-JaneRoe
                       professionalBlock:
-                        awards: 'The best tutor of the year 2023'
-                        scientificActivities: "The author of the scientific work 'The role of mathematics in the development of society'"
-                        workExperience: 'I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals.'
-                        education: 'The University of Cambridge, Bachelor of Mathematics'
+                        awards: The best tutor of the year 2023
+                        scientificActivities: The author of the scientific work 'The role of mathematics in the development of society'
+                        workExperience: I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals.
+                        education: The University of Cambridge, Bachelor of Mathematics
                       notificationSettings:
                         isOfferStatusNotification: true
                         isChatNotification: true
@@ -443,22 +468,22 @@ paths:
                         isEmailNotification: true
                       _id: 6658f73f93885febb491e08b
                       role:
-                        - 'tutor'
-                      firstName: 'Jane'
-                      lastName: 'Roe'
-                      email: 'jane_roe@gmail.com'
+                        - tutor
+                      firstName: Jane
+                      lastName: Roe
+                      email: jane_roe@gmail.com
                       nativeLanguage: null
-                      lastLogin: '2024-09-06T21:08:58.254Z'
-                      createdAt: '2024-05-30T22:01:35.360Z'
-                      updatedAt: '2024-09-06T21:08:58.256Z'
-                      photo: '6658f73f938-test_tutor.png'
-                      professionalSummary: 'Recently graduated from the University of Cambridge with a degree in Mathematics. I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals. I am passionate about teaching and enjoy helping students understand complex mathematical concepts. I believe that every student has the potential to succeed and I am committed to helping them reach their full potential.'
-                    receiverRole: 'tutor'
-                    title: 'Understanding Quadratic Equations'
-                    proficiencyLevel: 'Intermediate'
+                      lastLogin: 2024-09-06T21:08:58.254Z
+                      createdAt: 2024-05-30T22:01:35.360Z
+                      updatedAt: 2024-09-06T21:08:58.256Z
+                      photo: 6658f73f938-test_tutor.png
+                      professionalSummary: Recently graduated from the University of Cambridge with a degree in Mathematics. I have been tutoring students in Mathematics for over 5 years and have helped many students achieve their academic goals. I am passionate about teaching and enjoy helping students understand complex mathematical concepts. I believe that every student has the potential to succeed and I am committed to helping them reach their full potential.
+                    receiverRole: tutor
+                    title: Understanding Quadratic Equations
+                    proficiencyLevel: Intermediate
                     price: 150
-                    status: 'active'
-                    needAction: 'tutor'
+                    status: active
+                    needAction: tutor
                     availableQuizzes: []
                     finishedQuizzes: []
                     sections:
@@ -505,10 +530,10 @@ paths:
                             resourceType: attachment
                             availability:
                               status: openFrom
-                              date: '2024-09-06T15:27:29.999Z'
-                        _id:	674cae6458b8af8857ffac8a
-                    createdAt: '2024-07-02T16:29:40.956Z'
-                    updatedAt: '2024-09-06T15:27:29.999Z'
+                              date: 2024-09-06T15:27:29.999Z
+                        _id: 674cae6458b8af8857ffac8a
+                    createdAt: 2024-07-02T16:29:40.956Z
+                    updatedAt: 2024-09-06T15:27:29.999Z
         400:
           description: Bad Request
           content:

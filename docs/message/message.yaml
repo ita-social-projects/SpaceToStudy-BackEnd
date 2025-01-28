@@ -1,5 +1,5 @@
 paths:
-  /messages:
+  /chats/{id}/messages:
     post:
       security:
         - cookieAuth: []
@@ -9,6 +9,12 @@ paths:
       description: Create and save a new message to database.
       produces:
         - application/json
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the chat
+        type: string
       requestBody:
         required: true
         description: Create new message.
@@ -17,24 +23,21 @@ paths:
             schema:
               $ref: '#/definitions/messageBody'
             example:
-              text: 'Some text'
-              isRead: false
-              isNotified: false
+              text: Hi, do you want to start cooperation with me?
       responses:
         201:
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/definitions/messages'
+                $ref: '#/definitions/message'
               example:
-                - _id: 64a28e8c5d56f749c7d915d0
-                  author: { _id: 6421d9833cdf38b706756dff, photo: 1687425744398-ITA wallpapers-19.png }
-                  authorRole: 'student'
-                  text: 'Some text'
-                  isRead: false
-                  isNotified: false
+                  _id: 64a28e8c5d56f749c7d915d0
+                  author: 6421d9833cdf38b706756dff
+                  authorRole: student
+                  text: Hi, do you want to start cooperation with me?
                   chat: 6421d9833cdf38b706756dfd
+                  clearedFor: []
                   createdAt: 2023-20-01T13:25:36.292Z
                   updatedAt: 2023-20-01T13:25:36.292Z
         401:
@@ -45,38 +48,42 @@ paths:
                 $ref: '#/components/Error'
               example:
                 status: 401
-                code: 'UNAUTHORIZED'
-                message: 'The requested URL requires user authorization.'
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
     get:
       security:
         - cookieAuth: []
       tags:
         - Messages
       summary: Find your messages in chat
-      description: Finds and returns an array with a list of all your messages related to specific chat.
+      description: Finds and returns an array with a list of all your messages related to a specific chat.
       produces:
         - application/json
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the chat that needs to be fetched messages from
-          type: string
+          description: ID of the chat from which messages need to be fetched
+          schema:
+            type: string
         - in: query
           name: limit
           schema:
             type: integer
           required: false
+          description: Limit on the number of messages to fetch
         - in: query
           name: skip
           schema:
             type: integer
           required: false
+          description: Number of messages to skip
         - in: query
           name: message
           schema:
             type: string
           required: false
+          description: Filter messages containing this text
       responses:
         200:
           description: OK
@@ -87,15 +94,150 @@ paths:
               example:
                 items:
                   - _id: 64a28e8c5d56f749c7d915d0
-                    author: { _id: 6421d9833cdf38b706756dff, photo: 1687425744398-ITA wallpapers-19.png }
-                    authorRole: 'student'
-                    text: 'Some text'
-                    isRead: false
-                    isNotified: false
+                    author:
+                      _id: 666c26bd89ff51666ab119d2
+                      firstName: John
+                      lastName: Doe
+                      totalReviews:
+                        student: 0
+                        tutor: 0
+                      averageRating:
+                        student: 0
+                        tutor: 0
+                      nativeLanguage: Ukrainian
+                      status:
+                        student: active
+                        tutor: active
+                        admin: active
+                      photo: 1718364085578-What-is-landscape-photography.jpg
+                      professionalSummary: Experienced tutor with 10 years of experience in language teaching.
+                      enrolledUsers: []
+                      subject:
+                        _id: 65660fbbcb972798c401a9b4
+                        name: English
+                      category:
+                        _id: 64884f4dfdc2d1a130c24ac6
+                        appearance:
+                          icon: mocked-path-to-icon
+                          color: '#F67C41'
+                      FAQ:
+                        - question: What is the course duration?
+                          answer: The course lasts for 8 weeks.
+                          _id: 666c2ecf89ff51666ab11a4b
+                        - question: Are there any prerequisites?
+                          answer: Basic English knowledge is required.
+                          _id: 666c2ecf89ff51666ab11a4c
+                      createdAt: 2024-06-14T11:51:43.406Z
+                      updatedAt: 2024-06-14T13:45:22.406Z
+                    authorRole: student
+                    text: Hi, do you want to start cooperation with me?
                     chat: 6421d9833cdf38b706756dfd
-                    createdAt: 2023-20-01T13:25:36.292Z
-                    updatedAt: 2023-20-01T13:25:36.292Z
+                    createdAt: 2023-01-20T13:25:36.292Z
+                    updatedAt: 2023-01-20T13:25:36.292Z
                 count: 1
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Chat with the specified id was not found.
+    delete:
+      security:
+        - cookieAuth: []
+      tags:
+        - Messages
+      summary: Delete all messages from the specified chat
+      description: Deletes all messages related to specific chat.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the chat
+          type: string
+      responses:
+        204:
+          description: No Content
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: Chat with the specified id was not found.
+    patch:
+      security:
+        - cookieAuth: []
+      tags:
+        - Messages
+      summary: Clears chat history for current user
+      description: Finds Chat with the specified ID and adds `clearedFor` field to it with the current user. If `clearedFor` with the user already exists, it deletes this message from the database.
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the chat
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              example:
+                messagesMarkedAsDeleted: 27
+                messagesDeleted: 42
+        304:
+          description: Not Modified
         401:
           description: Unauthorized
           content:

@@ -2,13 +2,18 @@ const lengths = {
   MIN_PASSWORD_LENGTH: 8,
   MAX_PASSWORD_LENGTH: 25,
   MIN_NAME_LENGTH: 1,
-  MAX_NAME_LENGTH: 30
+  MAX_NAME_LENGTH: 30,
+  MIN_PROFFESSIONAL_SUMMARY_LENGTH: 1,
+  MAX_PROFFESSIONAL_SUMMARY_LENGTH: 200,
+  MAX_PROFESSIONAL_BLOCK_FIELD_LENGTH: 1000,
+  MAX_ABOUT_STUDENT_FIELD_LENGTH: 1000
 }
 
 const regex = {
   EMAIL_PATTERN: /^([a-z\d]+([._-][a-z\d]+)*)@([a-z\d]+([.-][a-z\d]+)*\.[a-z]{2,})$/i,
   PASSWORD_PATTERN: /^(?=.*\d)(?=.*[a-zа-яєії])\S+$/i,
-  NAME_PATTERN: /^[a-zа-яєії' -]+$/i
+  NAME_PATTERN: /^[a-zа-яєії' -]+$/i,
+  VIDEOLINK_PATTERN: /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be|youtube\.com)/
 }
 
 const enums = {
@@ -17,7 +22,7 @@ const enums = {
   SPOKEN_LANG_ENUM: ['English', 'Ukrainian', 'Polish', 'German', 'French', 'Spanish', 'Arabic'],
   PROFICIENCY_LEVEL_ENUM: ['Beginner', 'Intermediate', 'Advanced', 'Test Preparation', 'Professional', 'Specialized'],
   ROLE_ENUM: ['student', 'tutor', 'admin', 'superadmin'],
-  LOGIN_ROLE_ENUM: ['student', 'tutor', 'admin'],
+  LOGIN_ROLE_ENUM: ['student', 'tutor', 'admin', 'superadmin'],
   MAIN_ROLE_ENUM: ['student', 'tutor'],
   STATUS_ENUM: ['active', 'blocked', 'deactivated'],
   COOPERATION_STATUS_ENUM: ['pending', 'active', 'declined', 'closed', 'request to close'],

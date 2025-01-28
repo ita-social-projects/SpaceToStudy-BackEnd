@@ -22,7 +22,6 @@ const allowedUserFieldsForUpdate = {
 
 const allowedTutorFieldsForUpdate = {
   professionalBlock: {
-    categories: true,
     awards: true,
     scientificActivities: true,
     workExperience: true,

@@ -1,6 +1,6 @@
 const { createError } = require('~/utils/errorsHelper')
 const { BODY_IS_NOT_DEFINED } = require('~/consts/errors')
-const { validateRequired, validateFunc } = require('~/utils/validationHelper')
+const { validateSchema } = require('~/utils/validation/schemaValidators')
 const requestDataSource = require('~/consts/requestDataSource')
 
 const validationMiddleware = (schema, source = requestDataSource.BODY) => {
@@ -10,16 +10,7 @@ const validationMiddleware = (schema, source = requestDataSource.BODY) => {
     }
 
     const data = req[source]
-
-    Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
-      const reqSourceField = data?.[schemaFieldKey]
-      validateRequired(schemaFieldKey, schemaFieldValue?.required, reqSourceField)
-      if (reqSourceField) {
-        Object.entries(schemaFieldValue).forEach(([validationType, validationValue]) => {
-          validateFunc[validationType](schemaFieldKey, validationValue, reqSourceField)
-        })
-      }
-    })
+    validateSchema(schema, data)
 
     next()
   }

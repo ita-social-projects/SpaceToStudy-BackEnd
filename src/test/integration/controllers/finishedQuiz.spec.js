@@ -3,6 +3,7 @@ const { expectError } = require('~/test/helpers')
 
 const Quiz = require('~/models/quiz')
 const Cooperation = require('~/models/cooperation')
+const FinishedQuiz = require('~/models/finishedQuiz')
 
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { UNAUTHORIZED } = require('~/consts/errors')
@@ -87,9 +88,10 @@ const testQuizData = {
   items: ['6527ed6c14c6b72f36962364']
 }
 
+// const nonExistingQuiz = '000000000000000000000000'
+// const DOCUMENT_NOT_FOUND = (modelNames) => `DOCUMENT_NOT_FOUND: ${modelNames.join(', ')}`
+
 describe('Quiz controller', () => {
-  // let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz, testCooperation
-  // eslint-disable-next-line
   let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz, testCooperation
 
   beforeAll(async () => {
@@ -110,10 +112,18 @@ describe('Quiz controller', () => {
       ...cooperationMockData
     })
 
-    testFinishedQuiz = await app
-      .post(endpointUrl)
-      .send({ quiz: testQuiz._id, cooperation: testCooperation._id, ...testFinishedQuizData })
-      .set('Cookie', [`accessToken=${accessToken}`])
+    console.log(testCooperation._id)
+
+    testFinishedQuiz = await FinishedQuiz.create({
+      quiz: testQuiz._id,
+      cooperation: testCooperation._id,
+      ...testFinishedQuizData
+    })
+
+    // testFinishedQuiz = await app
+    // .post(endpointUrl)
+    // .send({ quiz: testQuiz._id, cooperation: testCooperation._id, ...testFinishedQuizData })
+    // .set('Cookie', [`accessToken=${accessToken}`])
   })
 
   afterEach(async () => {
@@ -139,7 +149,6 @@ describe('Quiz controller', () => {
 
   //   it('should throw UNAUTHORIZED', async () => {
   //     const response = await app.post(endpointUrl)
-
   //     expectError(401, UNAUTHORIZED, response)
   //   })
 
@@ -154,15 +163,14 @@ describe('Quiz controller', () => {
 
   //     expectError(404, DOCUMENT_NOT_FOUND([Quiz.modelName]), response)
   //   })
-  // }),
+  // })
 
   describe(`GET ${endpointUrl}`, () => {
     it('should get all finished quizzes', async () => {
       const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
-      console.log('response', response.body.items)
 
       expect(response.statusCode).toBe(200)
-      expect(Array.isArray(response.body.items)).toBeTruthy()
+      expect(Array.isArray(response.body.items)).toBe(true)
       expect(response.body).toEqual({
         items: [
           {
@@ -177,6 +185,7 @@ describe('Quiz controller', () => {
         count: 1
       })
     })
+
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl)
       expectError(401, UNAUTHORIZED, response)

@@ -11,7 +11,7 @@ const resourcesCategoryService = {
     })
   },
 
-  getById: async (id) => {
+  getResourcesCategoryById: async (id) => {
     return await ResourcesCategory.findById(id).lean().exec()
   },
 

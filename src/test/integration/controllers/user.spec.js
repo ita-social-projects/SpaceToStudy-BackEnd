@@ -20,6 +20,8 @@ const userService = require('~/services/user')
 const uploadService = require('~/services/upload')
 const { default: mongoose } = require('mongoose')
 
+const notificationService = require('~/services/notification')
+
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'
 
@@ -482,6 +484,7 @@ describe('User controller', () => {
       })
     })
   })
+
   describe('Restricted endpoints only by admin access rights', () => {
     let accessToken, currentUser
 
@@ -865,6 +868,37 @@ describe('User controller', () => {
       expect(updatedUser.photo).toBe('http://example.com/newPhoto.jpg')
 
       mockUploadFile.mockRestore()
+    })
+  })
+
+  describe('User deletion cascade effects', () => {
+    let accessToken, currentUser
+
+    beforeEach(async () => {
+      accessToken = await testUserAuthentication(app, adminUser)
+      currentUser = TokenService.validateAccessToken(accessToken)
+    })
+
+    afterEach(async () => {
+      await app.post(logoutEndpoint)
+    })
+
+    it('should remove all notifications related to the user', async () => {
+      const notificationData = {
+        user: currentUser.id,
+        userRole: 'tutor',
+        type: 'active',
+        reference: '6736199d6b214652201af5d1',
+        referenceModel: 'Cooperation'
+      }
+
+      await notificationService.createNotification(notificationData)
+
+      await userService.deleteUser(currentUser.id)
+
+      const notificationsWithUser = await notificationService.getNotifications({ user: currentUser.id })
+      console.log(notificationsWithUser)
+      expect(notificationsWithUser.count).toBe(0)
     })
   })
 })

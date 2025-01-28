@@ -25,6 +25,7 @@ const cooperationService = require('./cooperation')
 const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
 
 const notificationService = require('./notification')
+const attachmentService = require('./attachment')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -282,6 +283,7 @@ const userService = {
 
   deleteUser: async (id) => {
     await notificationService.clearNotifications(id)
+    await attachmentService.deleteAttachementsByAuthor(id)
 
     await User.findByIdAndRemove(id)
   },

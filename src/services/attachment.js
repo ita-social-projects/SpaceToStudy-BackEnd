@@ -87,7 +87,7 @@ const attachmentService = {
     return attachment.populate({ path: 'category', select: '_id name' })
   },
 
-  deleteAttachment: async (id, currentUser) => {
+  deleteAttachmentById: async (id, currentUser) => {
     const item = await Attachment.findById(id).exec()
 
     const attachmentAuthor = item.author.toString()
@@ -99,6 +99,10 @@ const attachmentService = {
     await cooperationService.removeResourceFromCooperations(id, resourceType.ATTACHMENT, currentUser)
 
     await Attachment.findByIdAndRemove(id)
+  },
+
+  deleteAttachementsByAuthor: async (author) => {
+    return Attachment.deleteMany({ author })
   }
 }
 

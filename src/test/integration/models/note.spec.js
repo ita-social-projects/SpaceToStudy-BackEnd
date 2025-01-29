@@ -1,5 +1,5 @@
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
-const Note = require('~/models/Note')
+const Note = require('~/models/note')
 const User = require('~/models/user')
 const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
 

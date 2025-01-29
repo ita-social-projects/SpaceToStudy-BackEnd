@@ -21,7 +21,6 @@ const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
 const { allowedStudentFieldsForUpdate } = require('~/validation/services/user')
 const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
 const offerService = require('./offer')
-const cooperationService = require('./cooperation')
 const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
 
 const notificationService = require('./notification')
@@ -34,6 +33,7 @@ const noteService = require('./note')
 const courseService = require('./course')
 const tokenService = require('./token')
 const reviewService = require('./review')
+const cooperationService = require('./cooperation')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -300,6 +300,9 @@ const userService = {
     courseService.deleteCoursesByAuthor(id)
 
     reviewService.deleteReviewsByAuthorOrTarget(id)
+
+    cooperationService.deleteCooperationsByUser(id)
+    offerService.deleteOffersByAuthor(id)
 
     tokenService.deleteTokensByUser(id)
 

@@ -9,6 +9,7 @@ const { roles } = require('~/consts/auth')
 const {
   enums: { COOPERATION_STATUS_ENUM }
 } = require('~/consts/validation')
+const offerService = require('./offer')
 
 const cooperationService = {
   _validateCooperationUser: (cooperation, userId) => {
@@ -209,6 +210,19 @@ const cooperationService = {
       },
       { $pull: { 'sections.$[].resources': { resourceType: resourceType, resource: resourceId } } }
     )
+  },
+
+  deleteCooperationsByUser: async (userId) => {
+    const cooperationsWithUser = await Cooperation.find({
+      $or: [{ receiver: userId }, { initiator: userId }]
+    })
+      .select('offer')
+      .lean()
+    const offerIdsWithUserAsReceiver = cooperationsWithUser.map((cooperation) => cooperation.offer)
+
+    await offerService.removeEnrolledUser(offerIdsWithUserAsReceiver, userId)
+
+    await Cooperation.deleteMany({ $or: [{ receiver: userId }, { initiator: userId }] })
   }
 }
 

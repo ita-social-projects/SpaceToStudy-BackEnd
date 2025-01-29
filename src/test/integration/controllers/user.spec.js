@@ -23,6 +23,8 @@ const lessonService = require('~/services/lesson')
 const questionService = require('~/services/question')
 const resourcesCategoryService = require('~/services/resourcesCategory')
 const reviewService = require('~/services/review')
+const offerService = require('~/services/offer')
+const cooperationService = require('~/services/cooperation')
 
 const userService = require('~/services/user')
 const { deleteUser } = require('~/controllers/user')
@@ -1005,6 +1007,50 @@ describe('User controller', () => {
 
       const reviewsWithUser = await reviewService.getReviews({ author: currentUser.id })
       expect(reviewsWithUser.count).toBe(0)
+    })
+
+    it('should remove user from enrolled user in offers if user identified as receiver in cooperation', async () => {
+      const offerData = {
+        price: 600,
+        proficiencyLevel: ['Beginner'],
+        title: 'Learn how to play guitar',
+        description: 'The most beginner-friendly guitar lessons',
+        languages: ['English'],
+        subject: '6502ec2060ec37be943353e2',
+        category: '6502ec2060ec37be943353e2',
+        enrolledUsers: [currentUser.id]
+      }
+
+      const offerAuthorId = '65afa47f3d67b51996a67b92'
+      const offerAuthorRole = 'tutor'
+      const offerEnrolledUserRole = 'student'
+
+      const offer = await offerService.createOffer(offerAuthorId, offerAuthorRole, offerData)
+
+      const cooperationData = {
+        user: currentUser.id,
+        offer: offer._id,
+        status: 'active',
+        receiverRole: offerAuthorRole,
+        receiver: offerAuthorId,
+        title: 'Learn how to play guitar',
+        proficiencyLevel: 'Beginner',
+        price: 600,
+        needAction: {
+          role: 'tutor'
+        }
+      }
+
+      await cooperationService.createCooperation(currentUser.id, offerEnrolledUserRole, cooperationData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const updatedOffer = await offerService.getOffers([{ $match: { _id: offer._id } }])
+
+      console.log(updatedOffer)
+      expect(updatedOffer.enrolledUsers).not.toContain(currentUser.id)
     })
   })
 })

@@ -10,7 +10,11 @@ const cooperation = {
   title: 'Hawking radiation from supermassive black holes',
   price: 300,
   status: 'active',
-  needAction: 'student',
+  needAction: {
+    role: 'student',
+    type: 'price',
+    messages: []
+  },
   availableQuizzes: [],
   finishedQuizzes: [],
   sections: [],

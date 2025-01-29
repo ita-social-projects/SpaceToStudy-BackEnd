@@ -97,7 +97,15 @@ const chatService = {
 
     await Chat.deleteMany({
       _id: { $in: chatIds }
-    }).exec()
+    })
+
+    await Chat.updateMany(
+      {
+        'members.user': currentUser,
+        $expr: { $gt: [{ $size: '$members' }, 2] }
+      },
+      { $pull: { members: { user: currentUser } } }
+    )
   }
 }
 

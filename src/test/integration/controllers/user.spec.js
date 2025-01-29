@@ -21,6 +21,7 @@ const uploadService = require('~/services/upload')
 const { default: mongoose } = require('mongoose')
 
 const notificationService = require('~/services/notification')
+const lessonService = require('~/services/lesson')
 
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'
@@ -897,8 +898,24 @@ describe('User controller', () => {
       await userService.deleteUser(currentUser.id)
 
       const notificationsWithUser = await notificationService.getNotifications({ user: currentUser.id })
-      console.log(notificationsWithUser)
       expect(notificationsWithUser.count).toBe(0)
+    })
+
+    it('should remove all lessons related to the user', async () => {
+      const lessonData = {
+        title: 'Basics of css',
+        description: 'Learn the basics of css',
+        category: '6502ec2060ec37be943353e2',
+        content: '<h1>Basics of css</h1> <p>Css is a language used to style web pages</p>'
+      }
+
+      await lessonService.createLesson(currentUser.id, lessonData)
+
+      await userService.deleteUser(currentUser.id)
+
+      const attachmentsWithUser = await lessonService.getLessons({ author: currentUser.id })
+
+      expect(attachmentsWithUser.count).toBe(0)
     })
   })
 })

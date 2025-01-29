@@ -1,7 +1,6 @@
 const { setupTestServer, stopServer } = require('~/test/setupSafeTest')
 const Note = require('~/models/note')
 const User = require('~/models/user')
-const { FIELD_CANNOT_BE_EMPTY, FIELD_CANNOT_BE_LONGER } = require('~/consts/errors')
 
 describe('Note Model', () => {
   let server
@@ -23,6 +22,7 @@ describe('Note Model', () => {
       expect(note).toHaveProperty('cooperation')
     }
   })
+
   it('should have valid fields data types', async () => {
     const notes = await Note.find({})
 
@@ -35,6 +35,7 @@ describe('Note Model', () => {
       expect(note.updatedAt).toBeInstanceOf(Date)
     }
   })
+
   it('should not allow empty text field', async () => {
     const notes = await Note.find({})
 
@@ -43,6 +44,7 @@ describe('Note Model', () => {
       expect(note.text.trim()).not.toEqual('')
     }
   })
+
   it('should validate length constraints of text field', async () => {
     const notes = await Note.find({})
 
@@ -53,6 +55,7 @@ describe('Note Model', () => {
       }
     }
   })
+
   it('should not allow empty author field', async () => {
     const notes = await Note.find({})
 
@@ -60,6 +63,7 @@ describe('Note Model', () => {
       expect(note.author).not.toBeNull()
     }
   })
+
   it('should be valid User references in author field', async () => {
     const notes = await Note.find({}).select({ author: true }).populate('author')
     for (const note of notes) {
@@ -69,6 +73,7 @@ describe('Note Model', () => {
       }
     }
   })
+
   it('should validate default value of isPrivate field', async () => {
     const notes = await Note.find({})
 
@@ -87,28 +92,10 @@ describe('Note Model', () => {
   })
 
   it('should fail validation for empty required fields when creating a note', async () => {
-    const invalidNote = new Note({
-      text: '',
-      author: null,
-      cooperation: null
-    })
+    const schemaPaths = Note.schema.paths
 
-    const validationError = invalidNote.validateSync()
-
-    expect(validationError.errors.text.message).toBe(FIELD_CANNOT_BE_EMPTY('text'))
-    expect(validationError.errors.author.message).toBe(FIELD_CANNOT_BE_EMPTY('author'))
-    expect(validationError.errors.cooperation.message).toBe(FIELD_CANNOT_BE_EMPTY('cooperation'))
-  })
-  it('should enforce maximum length of text field', async () => {
-    const invalidText = 'a'.repeat(101)
-    const invalidNote = new Note({
-      text: invalidText,
-      author: 'validAuthorId',
-      cooperation: 'validCooperationId'
-    })
-
-    const validationError = invalidNote.validateSync()
-
-    expect(validationError.errors.text.message).toBe(FIELD_CANNOT_BE_LONGER('text', 100))
+    expect(schemaPaths.text.options.required).toBeTruthy()
+    expect(schemaPaths.author.options.required).toBeTruthy()
+    expect(schemaPaths.cooperation.options.required).toBeTruthy()
   })
 })

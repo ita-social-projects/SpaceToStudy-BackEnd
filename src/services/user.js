@@ -28,6 +28,7 @@ const notificationService = require('./notification')
 const attachmentService = require('./attachment')
 const lessonService = require('./lesson')
 const quizService = require('./quiz')
+const questionService = require('./question')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -288,6 +289,7 @@ const userService = {
     await attachmentService.deleteAttachementsByAuthor(id)
     await lessonService.deleteLessonsByAuthor(id)
     await quizService.deleteQuizzesByAuthor(id)
+    await questionService.deleteQuestionsByAuthor(id)
 
     await User.findByIdAndRemove(id)
   },

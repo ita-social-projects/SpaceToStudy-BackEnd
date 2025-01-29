@@ -12,16 +12,18 @@ const {
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
+const { default: mongoose } = require('mongoose')
 
 const testUserAuthentication = require('~/utils/testUserAuth')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const TokenService = require('~/services/token')
-const userService = require('~/services/user')
 const uploadService = require('~/services/upload')
-const { default: mongoose } = require('mongoose')
-
 const notificationService = require('~/services/notification')
 const lessonService = require('~/services/lesson')
+const questionService = require('~/services/question')
+
+const userService = require('~/services/user')
+const { deleteUser } = require('~/controllers/user')
 
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'
@@ -872,12 +874,18 @@ describe('User controller', () => {
     })
   })
 
-  describe('User deletion cascade effects', () => {
-    let accessToken, currentUser
+  describe.only('User deletion cascade effects', () => {
+    let accessToken, currentUser, req, res
 
     beforeEach(async () => {
       accessToken = await testUserAuthentication(app, adminUser)
       currentUser = TokenService.validateAccessToken(accessToken)
+
+      req = { params: { id: currentUser.id } }
+      res = {
+        status: jest.fn().mockReturnThis(),
+        end: jest.fn()
+      }
     })
 
     afterEach(async () => {
@@ -895,7 +903,9 @@ describe('User controller', () => {
 
       await notificationService.createNotification(notificationData)
 
-      await userService.deleteUser(currentUser.id)
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
 
       const notificationsWithUser = await notificationService.getNotifications({ user: currentUser.id })
       expect(notificationsWithUser.count).toBe(0)
@@ -911,11 +921,37 @@ describe('User controller', () => {
 
       await lessonService.createLesson(currentUser.id, lessonData)
 
-      await userService.deleteUser(currentUser.id)
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
 
       const attachmentsWithUser = await lessonService.getLessons({ author: currentUser.id })
 
       expect(attachmentsWithUser.count).toBe(0)
+    })
+
+    it('should remove all questions related to the user', async () => {
+      const questionData = {
+        title: 'What is the capital of France?',
+        text: 'What is the capital of France?',
+        answers: [
+          { text: 'Paris', isCorrect: true },
+          { text: 'London', isCorrect: false },
+          { text: 'Berlin', isCorrect: false },
+          { text: 'Madrid', isCorrect: false }
+        ],
+        type: 'oneAnswer',
+        category: '6502ec2060ec37be943353e2'
+      }
+      await questionService.createQuestion(currentUser.id, questionData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const questionsWithUser = await questionService.getQuestions({ author: currentUser.id })
+
+      expect(questionsWithUser.count).toBe(0)
     })
   })
 })

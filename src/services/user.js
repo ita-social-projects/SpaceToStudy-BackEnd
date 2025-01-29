@@ -27,6 +27,7 @@ const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
 const notificationService = require('./notification')
 const attachmentService = require('./attachment')
 const lessonService = require('./lesson')
+const quizService = require('./quiz')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -286,6 +287,7 @@ const userService = {
     await notificationService.clearNotifications(id)
     await attachmentService.deleteAttachementsByAuthor(id)
     await lessonService.deleteLessonsByAuthor(id)
+    await quizService.deleteQuizzesByAuthor(id)
 
     await User.findByIdAndRemove(id)
   },

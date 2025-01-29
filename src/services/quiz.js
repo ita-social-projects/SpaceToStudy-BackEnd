@@ -70,6 +70,10 @@ const quizService = {
     await cooperationService.removeResourceFromCooperations(id, resourceType.QUIZ, currentUserId)
 
     await Quiz.findByIdAndRemove(id).exec()
+  },
+
+  deleteQuizzesByAuthor: async (author) => {
+    return Quiz.deleteMany({ author })
   }
 }
 

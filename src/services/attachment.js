@@ -102,7 +102,7 @@ const attachmentService = {
   },
 
   deleteAttachementsByAuthor: async (author) => {
-    return Attachment.deleteMany({ author })
+    await Attachment.deleteMany({ author })
   }
 }
 

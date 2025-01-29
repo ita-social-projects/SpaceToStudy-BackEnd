@@ -65,7 +65,7 @@ const lessonService = {
   },
 
   deleteLessonsByAuthor: async (author) => {
-    return Lesson.deleteMany({ author })
+    await Lesson.deleteMany({ author })
   }
 }
 

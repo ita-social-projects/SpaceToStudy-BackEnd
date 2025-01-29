@@ -73,7 +73,7 @@ const quizService = {
   },
 
   deleteQuizzesByAuthor: async (author) => {
-    return Quiz.deleteMany({ author })
+    await Quiz.deleteMany({ author })
   }
 }
 

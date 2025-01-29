@@ -65,7 +65,7 @@ const questionService = {
   },
 
   deleteQuestionsByAuthor: async (author) => {
-    return Question.deleteMany({ author })
+    await Question.deleteMany({ author })
   }
 }
 

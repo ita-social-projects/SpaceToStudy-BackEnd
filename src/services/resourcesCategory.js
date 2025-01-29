@@ -56,6 +56,10 @@ const resourcesCategoryService = {
     }
 
     await ResourcesCategory.findByIdAndRemove(id).exec()
+  },
+
+  deleteResourceCategoriesByAuthor: async (author) => {
+    await ResourcesCategory.deleteMany({ author })
   }
 }
 

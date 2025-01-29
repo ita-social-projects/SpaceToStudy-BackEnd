@@ -21,6 +21,7 @@ const uploadService = require('~/services/upload')
 const notificationService = require('~/services/notification')
 const lessonService = require('~/services/lesson')
 const questionService = require('~/services/question')
+const resourcesCategoryService = require('~/services/resourcesCategory')
 
 const userService = require('~/services/user')
 const { deleteUser } = require('~/controllers/user')
@@ -874,7 +875,7 @@ describe('User controller', () => {
     })
   })
 
-  describe.only('User deletion cascade effects', () => {
+  describe('User deletion cascade effects', () => {
     let accessToken, currentUser, req, res
 
     beforeEach(async () => {
@@ -952,6 +953,24 @@ describe('User controller', () => {
       const questionsWithUser = await questionService.getQuestions({ author: currentUser.id })
 
       expect(questionsWithUser.count).toBe(0)
+    })
+
+    it('should remove all resources categories related to the user', async () => {
+      const categoryData = {
+        name: 'Basics of web development'
+      }
+
+      await resourcesCategoryService.createResourcesCategory(currentUser.id, categoryData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const updatedResourcesCategories = await resourcesCategoryService.getResourcesCategories({
+        author: currentUser.id
+      })
+
+      expect(updatedResourcesCategories.count).toBe(0)
     })
   })
 })

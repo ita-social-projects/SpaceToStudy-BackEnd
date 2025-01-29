@@ -33,6 +33,7 @@ const resourcesCategoryService = require('./resourcesCategory')
 const noteService = require('./note')
 const courseService = require('./course')
 const tokenService = require('./token')
+const reviewService = require('./review')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -297,6 +298,9 @@ const userService = {
     resourcesCategoryService.deleteResourceCategoriesByAuthor(id)
     noteService.deleteNotesByAuthor(id)
     courseService.deleteCoursesByAuthor(id)
+
+    reviewService.deleteReviewsByAuthorOrTarget(id)
+
     tokenService.deleteTokensByUser(id)
 
     await User.findByIdAndRemove(id)

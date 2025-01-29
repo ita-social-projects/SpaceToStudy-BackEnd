@@ -100,6 +100,12 @@ const reviewService = {
 
     await Review.findByIdAndRemove(id).exec()
     await calculateReviewStats(targetUserId, targetUserRole)
+  },
+
+  deleteReviewsByAuthorOrTarget: async (userId) => {
+    await Review.deleteMany({
+      $or: [{ author: userId }, { targetUserId: userId }]
+    })
   }
 }
 

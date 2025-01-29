@@ -22,6 +22,7 @@ const notificationService = require('~/services/notification')
 const lessonService = require('~/services/lesson')
 const questionService = require('~/services/question')
 const resourcesCategoryService = require('~/services/resourcesCategory')
+const reviewService = require('~/services/review')
 
 const userService = require('~/services/user')
 const { deleteUser } = require('~/controllers/user')
@@ -878,6 +879,13 @@ describe('User controller', () => {
   describe('User deletion cascade effects', () => {
     let accessToken, currentUser, req, res
 
+    const reviewData = {
+      comment: 'Good mentor and learning program',
+      rating: 5,
+      targetUserRole: 'student',
+      offer: '6502ec2060ec37be943353e2'
+    }
+
     beforeEach(async () => {
       accessToken = await testUserAuthentication(app, adminUser)
       currentUser = TokenService.validateAccessToken(accessToken)
@@ -971,6 +979,32 @@ describe('User controller', () => {
       })
 
       expect(updatedResourcesCategories.count).toBe(0)
+    })
+
+    it('should remove all reviews where deleted user is target user', async () => {
+      const authorId = '65afa47f3d67b51996a67b92'
+
+      await reviewService.addReview(authorId, { ...reviewData, targetUserId: currentUser.id })
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const reviewsWithUser = await reviewService.getReviews({ targetUserId: currentUser.id })
+      expect(reviewsWithUser.count).toBe(0)
+    })
+
+    it('should remove all reviews where deleted user is the author', async () => {
+      const authorId = currentUser.id
+
+      await reviewService.addReview(authorId, { ...reviewData, targetUserId: '65afa47f3d67b51996a67b92' })
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const reviewsWithUser = await reviewService.getReviews({ author: currentUser.id })
+      expect(reviewsWithUser.count).toBe(0)
     })
   })
 })

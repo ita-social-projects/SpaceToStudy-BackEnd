@@ -34,6 +34,8 @@ const courseService = require('./course')
 const tokenService = require('./token')
 const reviewService = require('./review')
 const cooperationService = require('./cooperation')
+const chatService = require('./chat')
+const messageService = require('./message')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -303,6 +305,9 @@ const userService = {
 
     cooperationService.deleteCooperationsByUser(id)
     offerService.deleteOffersByAuthor(id)
+
+    chatService.deleteChatsbyUser(id)
+    messageService.deleteAllMessagesByUser(id)
 
     tokenService.deleteTokensByUser(id)
 

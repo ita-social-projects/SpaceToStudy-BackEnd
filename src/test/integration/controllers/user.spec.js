@@ -1049,7 +1049,6 @@ describe('User controller', () => {
 
       const updatedOffer = await offerService.getOffers([{ $match: { _id: offer._id } }])
 
-      console.log(updatedOffer)
       expect(updatedOffer.enrolledUsers).not.toContain(currentUser.id)
     })
   })

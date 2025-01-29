@@ -3,6 +3,7 @@ const { CHAT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const Chat = require('~/models/chat')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
+const messageService = require('./message')
 
 const chatService = {
   createChat: async (currentUser, data) => {
@@ -82,6 +83,21 @@ const chatService = {
     await chat.validate()
     await chat.save()
     return chat
+  },
+
+  deleteChatsbyUser: async (currentUser) => {
+    const chatsToDelete = await Chat.find({
+      'members.user': currentUser,
+      $expr: { $lte: [{ $size: '$members' }, 2] }
+    }).lean()
+
+    const chatIds = chatsToDelete.map((chat) => chat._id)
+
+    messageService.deleteAllMessagesByChatIds(chatIds)
+
+    await Chat.deleteMany({
+      _id: { $in: chatIds }
+    }).exec()
   }
 }
 

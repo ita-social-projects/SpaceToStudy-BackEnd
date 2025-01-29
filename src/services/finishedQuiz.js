@@ -24,6 +24,11 @@ const finishedQuizService = {
     })
   },
 
+  getFinishedQuizByQuizId: async (quizId) => {
+    console.log('quizId', quizId)
+    return await FinishedQuiz.find({ quiz: quizId }).lean().exec()
+  },
+
   getFinishedQuizById: async (id) => {
     return await FinishedQuiz.findById(id).lean().exec()
   }

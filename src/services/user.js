@@ -31,6 +31,7 @@ const quizService = require('./quiz')
 const questionService = require('./question')
 const resourcesCategoryService = require('./resourcesCategory')
 const noteService = require('./note')
+const courseService = require('./course')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -294,6 +295,7 @@ const userService = {
     questionService.deleteQuestionsByAuthor(id)
     resourcesCategoryService.deleteResourceCategoriesByAuthor(id)
     noteService.deleteNotesByAuthor(id)
+    courseService.deleteCoursesByAuthor(id)
 
     await User.findByIdAndRemove(id)
   },

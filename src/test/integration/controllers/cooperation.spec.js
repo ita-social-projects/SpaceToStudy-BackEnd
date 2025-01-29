@@ -123,6 +123,12 @@ const testActiveQuizData = {
   items: []
 }
 
+const testNeedAction = {
+  role: tutorUserData.role[0],
+  type: 'price',
+  messages: []
+}
+
 const updateStatus = {
   status: 'active'
 }
@@ -376,7 +382,7 @@ describe('Cooperation controller', () => {
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
-        needAction: tutorUserData.role[0],
+        needAction: testNeedAction,
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
@@ -421,7 +427,7 @@ describe('Cooperation controller', () => {
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
-        needAction: tutorUserData.role[0],
+        needAction: testNeedAction,
         sections: [
           {
             _id: expect.any(String),
@@ -483,7 +489,7 @@ describe('Cooperation controller', () => {
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
-        needAction: tutorUserData.role[0],
+        needAction: testNeedAction,
         sections: [
           {
             _id: expect.any(String),
@@ -545,7 +551,7 @@ describe('Cooperation controller', () => {
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
-        needAction: tutorUserData.role[0],
+        needAction: testNeedAction,
         sections: testCooperationData.sections.map((section) => {
           return {
             _id: expect.any(String),
@@ -604,7 +610,7 @@ describe('Cooperation controller', () => {
         price: testCooperationData.price,
         title: testCooperationData.title,
         status: 'pending',
-        needAction: tutorUserData.role[0],
+        needAction: testNeedAction,
         sections: testCooperationData.sections.map((section) => ({
           _id: expect.any(String),
           title: section.title,
@@ -677,7 +683,7 @@ describe('Cooperation controller', () => {
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(requestToCloseStatus.status)
-      expect(response.body.needAction).toBe('tutor')
+      expect(response.body.needAction.role).toBe('tutor')
     })
 
     it('should change needAction to "student" after closing request from tutor', async () => {
@@ -692,7 +698,7 @@ describe('Cooperation controller', () => {
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(requestToCloseStatus.status)
-      expect(response.body.needAction).toBe('student')
+      expect(response.body.needAction.role).toBe('student')
     })
 
     it('should update the sections of a cooperation', async () => {

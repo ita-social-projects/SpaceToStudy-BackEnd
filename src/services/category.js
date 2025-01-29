@@ -2,6 +2,7 @@ const Category = require('~/models/category')
 const Offer = require('~/models/offer')
 const conditionCreator = require('~/utils/categories/conditionCreator')
 const capitalizeFirstLetter = require('~/utils/capitalizeFirstLetter')
+const recountOfferAmount = require('~/utils/offers/recountOfferAmount')
 
 const categoryService = {
   getCategories: async (pipeline) => {
@@ -42,6 +43,17 @@ const categoryService = {
     if (!minMaxPrices.length) minMaxPrices[0] = { min: 0, max: 0 }
 
     return { minPrice: minMaxPrices[0].min, maxPrice: minMaxPrices[0].max }
+  },
+
+  recountTotalOffers: async () => {
+    const categories = await Category.aggregate(recountOfferAmount('category'))
+    const categoryBulkOps = categories.map(({ _id, totalOffers }) => ({
+      updateOne: {
+        filter: { _id },
+        update: { $set: { totalOffers } }
+      }
+    }))
+    await Category.bulkWrite(categoryBulkOps)
   }
 }
 

@@ -7,7 +7,7 @@ const {
   ENUM_CAN_BE_ONE_OF
 } = require('~/consts/errors')
 const {
-  enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM }
+  enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM, QUIZ_TIME_LIMIT, QUIZ_ATTEMPT_LIMIT }
 } = require('~/consts/validation')
 
 const quizSchema = new Schema(
@@ -57,6 +57,22 @@ const quizSchema = new Schema(
           message: ENUM_CAN_BE_ONE_OF('quiz view', QUIZ_VIEW_ENUM)
         },
         default: QUIZ_VIEW_ENUM[1]
+      },
+      timeLimit: {
+        type: String,
+        enum: {
+          values: QUIZ_TIME_LIMIT,
+          message: ENUM_CAN_BE_ONE_OF('quiz time limit', QUIZ_TIME_LIMIT)
+        },
+        default: QUIZ_TIME_LIMIT[0]
+      },
+      attemptLimit: {
+        type: String,
+        enum: {
+          values: QUIZ_ATTEMPT_LIMIT,
+          message: ENUM_CAN_BE_ONE_OF('quiz attempt limit', QUIZ_ATTEMPT_LIMIT)
+        },
+        default: QUIZ_ATTEMPT_LIMIT[0]
       },
       shuffle: {
         type: Boolean,

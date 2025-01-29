@@ -12,6 +12,7 @@ const body = [{ model: Quiz, idName: 'quiz' }]
 router.use(authMiddleware)
 
 router.get('/', asyncWrapper(finishedQuizController.getFinishedQuizzes))
+router.get('/:id', asyncWrapper(finishedQuizController.getFinishedQuizById))
 router.post('/', isEntityValid({ body }), asyncWrapper(finishedQuizController.createFinishedQuiz))
 
 module.exports = router

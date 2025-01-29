@@ -38,6 +38,12 @@ const cooperationService = {
   createCooperation: async (initiator, initiatorRole, data) => {
     const { offer, proficiencyLevel, additionalInfo, receiver, receiverRole, price, title, sections } = data
 
+    const initialNeedAction = {
+      role: receiverRole,
+      type: 'price',
+      messages: []
+    }
+
     return await Cooperation.create({
       initiator,
       initiatorRole,
@@ -49,7 +55,7 @@ const cooperationService = {
       price,
       proficiencyLevel,
       additionalInfo,
-      needAction: receiverRole
+      needAction: initialNeedAction
     })
   },
 
@@ -65,17 +71,24 @@ const cooperationService = {
     cooperationService._validateCooperationUser(cooperation, currentUserId)
 
     if (price) {
-      if (currentUserRole !== cooperation.needAction.toString()) {
+      if (currentUserRole !== cooperation.needAction.role.toString()) {
         throw createForbiddenError()
       }
-      const updatedNeedAction = cooperation.needAction.toString() === 'student' ? 'tutor' : 'student'
-
+      const updatedNeedAction = {
+        role: cooperation.needAction.role.toString() === 'student' ? 'tutor' : 'student',
+        type: 'price',
+        messages: []
+      }
       await Cooperation.findByIdAndUpdate(id, { price, needAction: updatedNeedAction }).exec()
     }
     if (status) {
       const isRequestToClose = status === COOPERATION_STATUS_ENUM[4]
       const otherRole = currentUserRole === roles.STUDENT ? roles.TUTOR : roles.STUDENT
-      const updatedNeedAction = isRequestToClose ? otherRole : undefined
+      const updatedNeedAction = {
+        role: isRequestToClose ? otherRole : currentUserRole,
+        type: 'price',
+        messages: []
+      }
 
       await Cooperation.findByIdAndUpdate(id, { status, needAction: updatedNeedAction }, { runValidators: true })
     }

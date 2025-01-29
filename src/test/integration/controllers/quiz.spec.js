@@ -7,7 +7,7 @@ const {
   roles: { TUTOR }
 } = require('~/consts/auth')
 const {
-  enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM }
+  enums: { QUIZ_VIEW_ENUM, RESOURCES_TYPES_ENUM, QUIZ_TIME_LIMIT, QUIZ_ATTEMPT_LIMIT }
 } = require('~/consts/validation')
 
 const endpointUrl = '/quizzes/'
@@ -22,7 +22,9 @@ const testQuizData = {
     pointValues: false,
     scoredResponses: false,
     shuffle: false,
-    view: QUIZ_VIEW_ENUM[1]
+    view: QUIZ_VIEW_ENUM[1],
+    timeLimit: QUIZ_TIME_LIMIT[0],
+    attemptLimit: QUIZ_ATTEMPT_LIMIT[0]
   }
 }
 
@@ -208,7 +210,9 @@ describe('Quiz controller', () => {
         pointValues: true,
         scoredResponses: true,
         shuffle: true,
-        view: QUIZ_VIEW_ENUM[0]
+        view: QUIZ_VIEW_ENUM[0],
+        timeLimit: QUIZ_TIME_LIMIT[0],
+        attemptLimit: QUIZ_ATTEMPT_LIMIT[0]
       }
 
       await app

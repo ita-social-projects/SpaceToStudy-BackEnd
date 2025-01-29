@@ -22,6 +22,10 @@ const finishedQuizService = {
       grade,
       results
     })
+  },
+
+  getFinishedQuizById: async (id) => {
+    return await FinishedQuiz.findById(id).lean().exec()
   }
 }
 

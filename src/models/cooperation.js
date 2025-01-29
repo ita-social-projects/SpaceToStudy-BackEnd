@@ -15,7 +15,8 @@ const {
     MAIN_ROLE_ENUM,
     RESOURCES_TYPES_ENUM,
     RESOURCE_AVAILABILITY_STATUS_ENUM,
-    RESOURCE_COMPLETION_STATUS_ENUM
+    RESOURCE_COMPLETION_STATUS_ENUM,
+    NEED_ACTION_ENUM
   }
 } = require('~/consts/validation')
 const { REQUESTED, UPDATED } = require('~/consts/notificationTypes')
@@ -88,12 +89,26 @@ const cooperationSchema = new Schema(
       default: COOPERATION_STATUS_ENUM[0]
     },
     needAction: {
-      type: String,
-      enum: {
-        values: MAIN_ROLE_ENUM,
-        message: ENUM_CAN_BE_ONE_OF('need action', MAIN_ROLE_ENUM)
+      role: {
+        type: String,
+        enum: {
+          values: MAIN_ROLE_ENUM,
+          message: ENUM_CAN_BE_ONE_OF('need action', MAIN_ROLE_ENUM)
+        },
+        required: true
       },
-      required: true
+      type: {
+        type: String,
+        enum: {
+          values: NEED_ACTION_ENUM,
+          message: ENUM_CAN_BE_ONE_OF('need action', NEED_ACTION_ENUM)
+        },
+        required: true
+      },
+      messages: {
+        type: [String],
+        required: true
+      }
     },
     availableQuizzes: {
       type: [Schema.Types.ObjectId],
@@ -194,9 +209,9 @@ cooperationSchema.pre('findOneAndUpdate', function (next) {
 cooperationSchema.post('findOneAndUpdate', async function (doc) {
   let user
   if (this.type === UPDATED) {
-    user = doc.needAction === doc.initiatorRole ? doc.receiver : doc.initiator
+    user = doc.needAction.role === doc.initiatorRole ? doc.receiver : doc.initiator
   } else {
-    user = doc.needAction === doc.initiatorRole ? doc.initiator : doc.receiver
+    user = doc.needAction.role === doc.initiatorRole ? doc.initiator : doc.receiver
   }
 
   const notificationData = {

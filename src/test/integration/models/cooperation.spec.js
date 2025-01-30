@@ -26,9 +26,9 @@ const cooperationFields = [
   'price',
   'status',
   'needAction',
-  //   'needAction.role',
-  //   'needAction.type',
-  //   'needAction.messages',
+  'needAction.role',
+  'needAction.type',
+  'needAction.messages',
   'createdAt',
   'updatedAt',
   'sections',
@@ -185,38 +185,6 @@ describe('Cooperation model', () => {
     }
   })
 
-  test('should validate sections.resources field', () => {
-    for (const cooperation of cooperations) {
-      for (const section of cooperation.sections) {
-        for (const resource of section.resources) {
-          const resourceAvailabilityStatus = resource.availability.status
-          expect(RESOURCE_AVAILABILITY_STATUS_ENUM).toContain(resourceAvailabilityStatus)
-
-          const resourceType = resource.resourceType
-          expect(RESOURCES_TYPES_ENUM).toContain(resourceType)
-
-          const resourceCompletionStatus = resource.completionStatus
-          expect(RESOURCE_COMPLETION_STATUS_ENUM).toContain(resourceCompletionStatus)
-        }
-      }
-    }
-  })
-})
-
-xdescribe('After needAction migration', () => {
-  let server
-  let cooperations
-
-  beforeAll(async () => {
-    const setup = await setupTestServer()
-    server = setup.server
-    cooperations = await Cooperation.find({})
-  })
-
-  afterAll(async () => {
-    await stopServer(server)
-  })
-
   test('should validate length constraints of additionalInfo field', () => {
     for (const cooperation of cooperations) {
       if (cooperation.additionalInfo) {
@@ -240,6 +208,23 @@ xdescribe('After needAction migration', () => {
       expect(typeof cooperation.needAction.role).toBe('string')
       expect(typeof cooperation.needAction.type).toBe('string')
       expect(Array.isArray(cooperation.needAction.messages)).toBe(true)
+    }
+  })
+
+  test('should validate sections.resources field', () => {
+    for (const cooperation of cooperations) {
+      for (const section of cooperation.sections) {
+        for (const resource of section.resources) {
+          const resourceAvailabilityStatus = resource.availability.status
+          expect(RESOURCE_AVAILABILITY_STATUS_ENUM).toContain(resourceAvailabilityStatus)
+
+          const resourceType = resource.resourceType
+          expect(RESOURCES_TYPES_ENUM).toContain(resourceType)
+
+          const resourceCompletionStatus = resource.completionStatus
+          expect(RESOURCE_COMPLETION_STATUS_ENUM).toContain(resourceCompletionStatus)
+        }
+      }
     }
   })
 })

@@ -26,9 +26,9 @@ const getFinishedQuizById = async (req, res) => {
 }
 
 const getFinishedQuizByQuizId = async (req, res) => {
-  const { id } = req.params
+  const { quizId, cooperationId } = req.params
 
-  const finishedQuizzes = await finishedQuizService.getFinishedQuizByQuizId(id)
+  const finishedQuizzes = await finishedQuizService.getFinishedQuizByQuizId(quizId, cooperationId)
 
   res.status(200).json(finishedQuizzes)
 }

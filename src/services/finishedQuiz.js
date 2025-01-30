@@ -24,9 +24,8 @@ const finishedQuizService = {
     })
   },
 
-  getFinishedQuizByQuizId: async (quizId) => {
-    console.log('quizId', quizId)
-    return await FinishedQuiz.find({ quiz: quizId }).lean().exec()
+  getFinishedQuizByQuizId: async (quizId, cooperationId) => {
+    return await FinishedQuiz.find({ quiz: quizId, cooperation: cooperationId }).lean().exec()
   },
 
   getFinishedQuizById: async (id) => {

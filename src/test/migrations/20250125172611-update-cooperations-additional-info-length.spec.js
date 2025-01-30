@@ -13,7 +13,11 @@ const cooperationData = {
   proficiencyLevel: 'Beginner',
   price: 500,
   status: 'active',
-  needAction: 'tutor',
+  needAction: {
+    role: 'student',
+    type: 'price',
+    messages: []
+  },
   availableQuizzes: [],
   finishedQuizzes: [],
   sections: []

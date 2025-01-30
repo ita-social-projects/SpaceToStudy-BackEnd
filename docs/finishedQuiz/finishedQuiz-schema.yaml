@@ -1,97 +1,157 @@
-definitions:
-  finishedQuizzes:
-    type: array
-    items:
-      type: object
-      properties:
-        _id:
-          type: string
-        quiz:
-          type: string
-          ref: '#/definitions/quiz'
-        grade:
-          type: number
-        results:
-          type: array
-          items:
-            type: object
-            properties:
-              question:
-                type: string
-              answers:
-                type: array
+paths:
+  /finished-quizzes:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Finished quizzes
+      summary: Find all finished quizzes.
+      description: Finds and returns an array with a list of all user finishedQuizzes.
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: skip
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: string
+          required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/finishedQuizzes'
+              example:
                 items:
-                  type: object
-                  properties:
-                    text:
-                      type: string
-                    isCorrect:
-                      type: boolean
-                    isChosen:
-                      type: boolean
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-  finishedQuizBody:
-    type: object
-    properties:
-      quiz:
-        type: string
-        ref: '#/definitions/quiz'
-      grade:
-        type: number
-      results:
-        type: array
-        items:
-          type: object
-          properties:
-            question:
-              type: string
-            answers:
-              type: array
-              items:
-                type: object
-                properties:
-                  text:
-                    type: string
-                  isCorrect:
-                    type: boolean
-                  isChosen:
-                    type: boolean
-  finishedQuiz:
-    type: object
-    properties:
-      _id:
-        type: string
-      quiz:
-        type: string
-        ref: '#/definitions/quiz'
-      grade:
-        type: number
-      results:
-        type: array
-        items:
-          type: object
-          properties:
-            question:
-              type: string
-            answers:
-              type: array
-              items:
-                type: object
-                properties:
-                  text:
-                    type: string
-                  isCorrect:
-                    type: boolean
-                  isChosen:
-                    type: boolean
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
+                  - _id: 64ca5914b57f2442403394a5
+                    quiz: 64cf82cb290732a7973f1e09
+                    grade: 100
+                    results:
+                      - question: Is it the best programming language?
+                        answers:
+                          - text: Yes
+                            isCorrect: false
+                            isChosen: true
+                          - text: Yes, of course
+                            isCorrect: true
+                            isChosen: false
+                    createdAt: 2023-08-06T11:30:06.747Z
+                    updatedAt: 2023-08-06T11:30:06.747Z
+                  - _id: 64ca5932b57f2442403394a9
+                    quiz: 64cf82cb290732a7973f1e06
+                    grade: 100
+                    results:
+                      - question: How are you going?
+                        answers:
+                          - text: Fine,
+                            isCorrect: false
+                            isChosen: false
+                          - text: Bad,
+                            isCorrect: true
+                            isChosen: true
+                    createdAt: 2023-08-06T11:30:06.747Z
+                    updatedAt: 2023-08-06T11:30:06.747Z
+                count: 2
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+  /finished-quizzes/by-quiz-id/{cooperationId}/{quizId}:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Finished quizzes
+      summary: Find finished quizzes by cooperation and quiz ID.
+      description: Finds and returns a list of finished quizzes for a given cooperation and quiz.
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: cooperationId
+          required: true
+          schema:
+            type: string
+          description: The ID of the cooperation.
+        - in: path
+          name: quizId
+          required: true
+          schema:
+            type: string
+          description: The ID of the quiz.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/definitions/finishedQuizzes'
+              example:
+                items:
+                  - _id: 64ca5914b57f2442403394a5
+                    quiz: 64cf82cb290732a7973f1e09
+                    grade: 100
+                    results:
+                      - question: Is it the best programming language?
+                        answers:
+                          - text: Yes
+                            isCorrect: false
+                            isChosen: true
+                          - text: Yes, of course
+                            isCorrect: true
+                            isChosen: false
+                    createdAt: 2023-08-06T11:30:06.747Z
+                    updatedAt: 2023-08-06T11:30:06.747Z
+                count: 1
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 401
+                code: UNAUTHORIZED
+                message: The requested URL requires user authorization.
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 403
+                code: FORBIDDEN
+                message: You do not have permission to perform this action.
+        404:
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/Error'
+              example:
+                status: 404
+                code: DOCUMENT_NOT_FOUND
+                message: No finished quizzes found for the given cooperation and quiz ID.

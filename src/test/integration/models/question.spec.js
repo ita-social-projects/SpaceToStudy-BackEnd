@@ -9,6 +9,7 @@ describe('Question Model', () => {
     const setup = await setupTestServer()
     server = setup.server
   })
+
   afterAll(async () => {
     await stopServer(server)
   })

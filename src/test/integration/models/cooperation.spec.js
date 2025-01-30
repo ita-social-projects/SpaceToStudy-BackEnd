@@ -78,6 +78,10 @@ describe('Cooperation model', () => {
       expect(Array.isArray(cooperation.sections)).toBe(true)
       expect(Array.isArray(cooperation.availableQuizzes)).toBe(true)
       expect(Array.isArray(cooperation.finishedQuizzes)).toBe(true)
+      expect(typeof cooperation.needAction).toBe('object')
+      expect(typeof cooperation.needAction.role).toBe('string')
+      expect(typeof cooperation.needAction.type).toBe('string')
+      expect(Array.isArray(cooperation.needAction.messages)).toBe(true)
       if (cooperation.additionalInfo) {
         expect(typeof cooperation.additionalInfo).toBe('string')
       }
@@ -118,7 +122,9 @@ describe('Cooperation model', () => {
 
   test('should validate the structure and constraints of sections and their resources', () => {
     for (const cooperation of cooperations) {
-      if (cooperation.sections.length < 0) continue
+      if (cooperation.sections.length < 0) {
+        continue
+      }
       for (const section of cooperation.sections) {
         expect(section.title.length).toBeGreaterThanOrEqual(1)
         expect(section.title.length).toBeLessThanOrEqual(100)
@@ -127,7 +133,9 @@ describe('Cooperation model', () => {
 
         expect(Array.isArray(section.resources)).toBe(true)
 
-        if (section.resources.length < 0) continue
+        if (section.resources.length < 0) {
+          continue
+        }
         for (const resource of section.resources) {
           expect(typeof resource.resource).toBe('object')
           expect(typeof resource.resourceType).toBe('string')
@@ -144,7 +152,9 @@ describe('Cooperation model', () => {
 
   test('verifies the type of available quizzes', () => {
     for (const cooperation of cooperations) {
-      if (cooperation.availableQuizzes.length < 1) continue
+      if (cooperation.availableQuizzes.length < 1) {
+        continue
+      }
       for (const quiz of cooperation.availableQuizzes) {
         expect(typeof quiz).toBe('object')
       }
@@ -153,7 +163,9 @@ describe('Cooperation model', () => {
 
   test('verifies the type of finished quizzes', () => {
     for (const cooperation of cooperations) {
-      if (cooperation.finishedQuizzes.length < 1) continue
+      if (cooperation.finishedQuizzes.length < 1) {
+        continue
+      }
       for (const quiz of cooperation.finishedQuizzes) {
         expect(typeof quiz).toBe('object')
       }
@@ -199,15 +211,6 @@ describe('Cooperation model', () => {
       const needAction = cooperation.needAction
       expect(MAIN_ROLE_ENUM).toContain(needAction.role)
       expect(NEED_ACTION_ENUM).toContain(needAction.type)
-    }
-  })
-
-  test('should have valid needAction data types', () => {
-    for (const cooperation of cooperations) {
-      expect(typeof cooperation.needAction).toBe('object')
-      expect(typeof cooperation.needAction.role).toBe('string')
-      expect(typeof cooperation.needAction.type).toBe('string')
-      expect(Array.isArray(cooperation.needAction.messages)).toBe(true)
     }
   })
 

@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const { CHAT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const Chat = require('~/models/chat')
+const { mapToId } = require('~/utils/mapToId')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 const messageService = require('./message')
 
@@ -91,7 +92,7 @@ const chatService = {
       $expr: { $lte: [{ $size: '$members' }, 2] }
     }).lean()
 
-    const chatIds = chatsToDelete.map((chat) => chat._id)
+    const chatIds = mapToId(chatsToDelete)
 
     messageService.deleteAllMessagesByChatIds(chatIds)
 

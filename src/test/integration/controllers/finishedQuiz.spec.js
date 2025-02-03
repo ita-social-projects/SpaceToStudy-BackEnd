@@ -79,7 +79,8 @@ const cooperationMockData = {
   price: 300,
   needAction: {
     role: 'student',
-    message: 'some need action message'
+    message: 'some need action message',
+    type: 'price'
   },
   initiator: testInitiator
 }

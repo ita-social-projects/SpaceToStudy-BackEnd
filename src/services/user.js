@@ -292,24 +292,22 @@ const userService = {
   },
 
   deleteUser: async (id) => {
-    notificationService.clearNotifications(id)
-    attachmentService.deleteAttachementsByAuthor(id)
-    lessonService.deleteLessonsByAuthor(id)
-    quizService.deleteQuizzesByAuthor(id)
-    questionService.deleteQuestionsByAuthor(id)
-    resourcesCategoryService.deleteResourceCategoriesByAuthor(id)
-    noteService.deleteNotesByAuthor(id)
-    courseService.deleteCoursesByAuthor(id)
-
-    reviewService.deleteReviewsByAuthorOrTarget(id)
-
-    cooperationService.deleteCooperationsByUser(id)
-    offerService.deleteOffersByAuthor(id)
-
-    chatService.deleteChatsbyUser(id)
-    messageService.deleteAllMessagesByUser(id)
-
-    tokenService.deleteTokensByUser(id)
+    await Promise.all([
+      notificationService.clearNotifications(id),
+      attachmentService.deleteAttachementsByAuthor(id),
+      lessonService.deleteLessonsByAuthor(id),
+      quizService.deleteQuizzesByAuthor(id),
+      questionService.deleteQuestionsByAuthor(id),
+      resourcesCategoryService.deleteResourceCategoriesByAuthor(id),
+      noteService.deleteNotesByAuthor(id),
+      courseService.deleteCoursesByAuthor(id),
+      reviewService.deleteReviewsByAuthorOrTarget(id),
+      cooperationService.deleteCooperationsByUser(id),
+      offerService.deleteOffersByAuthor(id),
+      chatService.deleteChatsbyUser(id),
+      messageService.deleteAllMessagesByUser(id),
+      tokenService.deleteTokensByUser(id)
+    ])
 
     await User.findByIdAndRemove(id)
   },

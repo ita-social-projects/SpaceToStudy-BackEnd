@@ -77,7 +77,10 @@ const cooperationMockData = {
   receiver: '6255bc080a75adf9223df100',
   receiverRole: 'student',
   price: 300,
-  needAction: 'student',
+  needAction: {
+    role: 'student',
+    message: 'some need action message'
+  },
   initiator: testInitiator
 }
 

@@ -68,6 +68,10 @@ const noteService = {
 
   deleteNotesByAuthor: async (author) => {
     await Note.deleteMany({ author })
+  },
+
+  deleteNotesByCooperations: async (cooperations) => {
+    await Note.deleteMany({ cooperation: { $in: cooperations } })
   }
 }
 

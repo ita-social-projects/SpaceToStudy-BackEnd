@@ -112,13 +112,11 @@ const reviewService = {
       $or: [{ author: userId }, { targetUserId: userId }]
     })
 
-    for (const role of MAIN_ROLE_ENUM) {
-      await calculateReviewStats(userId, role)
-    }
+    await Promise.all(MAIN_ROLE_ENUM.map((role) => calculateReviewStats(userId, role)))
 
-    for (const review of reviewsCreatedByUser) {
-      await calculateReviewStats(review.targetUserId, review.targetUserRole)
-    }
+    await Promise.all(
+      reviewsCreatedByUser.map((review) => calculateReviewStats(review.targetUserId, review.targetUserRole))
+    )
   }
 }
 

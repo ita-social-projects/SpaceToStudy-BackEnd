@@ -94,7 +94,7 @@ const chatService = {
 
     const chatIds = mapToId(chatsToDelete)
 
-    messageService.deleteAllMessagesByChatIds(chatIds)
+    await messageService.deleteAllMessagesByChatIds(chatIds)
 
     await Chat.deleteMany({
       _id: { $in: chatIds }

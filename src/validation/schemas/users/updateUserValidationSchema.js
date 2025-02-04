@@ -79,6 +79,7 @@ const updateUserValidationSchema = {
     }
   },
   nativeLanguage: {
+    canBeNull: true,
     enum: SPOKEN_LANG_ENUM,
     required: false
   },

@@ -25,8 +25,19 @@ const getFinishedQuizById = async (req, res) => {
   res.status(200).json(quiz)
 }
 
+const updateFinishedQuiz = async (req, res) => {
+  const { id } = req.params
+  const { id: currentUserId } = req.user
+  const updateData = req.body
+
+  await finishedQuizService.updateFinishedQuiz(id, currentUserId, updateData)
+
+  res.status(204).end()
+}
+
 module.exports = {
   getFinishedQuizzes,
   createFinishedQuiz,
-  getFinishedQuizById
+  getFinishedQuizById,
+  updateFinishedQuiz
 }

@@ -71,6 +71,7 @@ const updateUserValidationSchema = {
   },
   professionalSummary: {
     type: 'string',
+    canBeNull: false,
     required: false,
     length: {
       min: MIN_PROFFESSIONAL_SUMMARY_LENGTH,

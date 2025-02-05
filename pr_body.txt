@@ -1,0 +1,8 @@
+## Test Summary
+```
+Test Suites: 5 passed, 5 total
+Tests:       51 passed, 51 total
+Snapshots:   0 total
+Time:        2.632 s
+Ran all test suites matching /src\/test\/unit\/services/i.
+```

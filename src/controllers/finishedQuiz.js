@@ -27,10 +27,10 @@ const getFinishedQuizById = async (req, res) => {
 
 const updateFinishedQuiz = async (req, res) => {
   const { id } = req.params
-  const { id: currentUserId } = req.user
+
   const updateData = req.body
 
-  await finishedQuizService.updateFinishedQuiz(id, currentUserId, updateData)
+  await finishedQuizService.updateFinishedQuiz(id, updateData)
 
   res.status(204).end()
 }

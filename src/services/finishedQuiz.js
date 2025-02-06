@@ -1,6 +1,10 @@
 const FinishedQuiz = require('~/models/finishedQuiz')
 const Quiz = require('~/models/quiz')
 
+const { createError } = require('~/utils/errorsHelper')
+
+const { QUIZ_TIME_LIMIT_EXCEEDED } = require('~/consts/errors')
+
 const finishedQuizService = {
   getFinishedQuizzes: async (author, skip = 0, limit = 10) => {
     const authorQuizzes = await Quiz.distinct('_id', { author })
@@ -28,8 +32,21 @@ const finishedQuizService = {
     return await FinishedQuiz.findById(id).lean().exec()
   },
 
-  updateFinishedQuiz: async (id, updateData) => {
+  updateFinishedQuiz: async (id, updateData, role) => {
     const finishedQuiz = await FinishedQuiz.findById(id).exec()
+    const quiz = await Quiz.findById(finishedQuiz.quiz).exec()
+
+    const timeLimitRaw = quiz.settings.timeLimit
+    let timeLimit = parseInt(timeLimitRaw)
+
+    if (!isNaN(timeLimit)) {
+      timeLimit = timeLimit === 1 ? 60 * 60 * 1000 : timeLimit * 60 * 1000
+    }
+
+    const createdAt = new Date(finishedQuiz.createdAt).getTime()
+    if (role === 'student' && !isNaN(timeLimit) && createdAt + timeLimit < Date.now()) {
+      throw createError(403, QUIZ_TIME_LIMIT_EXCEEDED)
+    }
 
     for (let field in updateData) {
       finishedQuiz[field] = updateData[field]

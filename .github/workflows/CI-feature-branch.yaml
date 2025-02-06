@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches: ['feature/**']
+  pull_request:
+    branches: ['develop']
 
 jobs:
   check-branch-name:

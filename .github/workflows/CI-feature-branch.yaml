@@ -18,17 +18,17 @@ jobs:
             exit 1
           fi
           echo "✅ Branch name is valid"
-        
+
   test:
     needs: check-branch-name
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.x]         # Different Node.js versions
-        mongodb-version: ['8.0']     # Different MongoDB versions
+        node-version: [22.x]
+        mongodb-version: ['8.0']
       max-parallel: 1
     steps:
-      - name: Git checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install Node.js ${{ matrix.node-version }}
@@ -40,68 +40,28 @@ jobs:
         uses: supercharge/mongodb-github-action@1.12.0
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
-          mongodb-db: ${{secrets.MONGODB_DB}}
-          mongodb-username: ${{secrets.MONGODB_USER}}
-          mongodb-password: ${{secrets.MONGODB_PASS}}
+          mongodb-db: ${{ secrets.MONGODB_DB }}
+          mongodb-username: ${{ secrets.MONGODB_USER }}
+          mongodb-password: ${{ secrets.MONGODB_PASS }}
           mongodb-port: 27017
 
-      - name: Install MongoDB Shell (mongosh)
-        run: |
-          sudo apt-get install -y gnupg curl
-          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
-          --dearmor
-          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
-          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-          sudo apt-get update
-          sudo apt-get install -y mongodb-mongosh
-    
-      - name: Check MongoDB
-        run: |
-          for i in {1..30}; do
-            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not start in time!" && exit 1
-      - name : 'Install dependencies'
+      - name: Install dependencies
         run: npm install
+
+      - name: Run Linter
+        run: npm run lint
 
       - name: Run Tests
         run: |
-          npm test -- src/test/unit/services 2>&1 | tee full-test-results.txt
-        env:        
-          NODE_OPTIONS: --max_old_space_size=4096
-          MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
-          MONGODB_URL_READONLY_TEST: ${{ secrets.MONGODB_URL_READONLY_TEST }}
-          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
-          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
-          JWT_RESET_SECRET: ${{ secrets.JWT_RESET_SECRET }}
-          JWT_CONFIRM_SECRET: ${{ secrets.JWT_CONFIRM_SECRET }}
-          JWT_ACCESS_EXPIRES_IN: ${{ secrets.JWT_ACCESS_EXPIRES_IN }}
-          JWT_REFRESH_EXPIRES_IN: ${{ secrets.JWT_REFRESH_EXPIRES_IN }}
-          JWT_REFRESH_LONG_TERM_EXPIRES_IN: ${{ secrets.JWT_REFRESH_LONG_TERM_EXPIRES_IN }}
-          JWT_RESET_EXPIRES_IN: ${{ secrets.JWT_RESET_EXPIRES_IN }}
-          JWT_CONFIRM_EXPIRES_IN: ${{ secrets.JWT_CONFIRM_EXPIRES_IN }}
-          CLIENT_URL: ${{ secrets.CLIENT_URL }}
-          SERVER_URL: ${{ secrets.SERVER_URL }}
-          SERVER_PORT: ${{ secrets.SERVER_PORT }}
-          MAIL_USER: ${{ secrets.MAIL_USER }}
-          MAIL_PASS: ${{ secrets.MAIL_PASS }}
-          MAIL_FIRSTNAME: ${{ secrets.MAIL_FIRSTNAME }}
-          MAIL_LASTNAME: ${{ secrets.MAIL_LASTNAME }}
-          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
-          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
-          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
-          GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
-          COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
+          npm test -- src/test/unit/services --verbose --coverage=false 2>&1 | tee full-test-results.txt
 
-      - name: Show Test Results
-        run: cat full-test-results.txt || echo "⚠ No test results found in full-test-results.txt"
-  
       - name: Extract Summary from Test Results
         run: |
-          grep -E "Test Suites:|Tests:|Snapshots:|Time:|Ran all test suites." full-test-results.txt > test-summary.txt
+          grep -E "Test Suites:|Tests:|Snapshots:|Time:|Ran all test suites." full-test-results.txt > test-summary.txt || true
+          if [ ! -s test-summary.txt ]; then
+            echo "⚠ No test results found!" > test-summary.txt
+          fi
+
       - name: Upload Test Summary
         uses: actions/upload-artifact@v4
         with:
@@ -110,11 +70,10 @@ jobs:
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0
-        if: success() || failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  
+
   create-pull-request:
     needs: test
     runs-on: ubuntu-latest
@@ -129,13 +88,14 @@ jobs:
           path: ./
 
       - name: Format Test Summary for PR
-        id: format_test_results
         run: |
           echo "## Test Summary" > pr_body.txt
           echo '```' >> pr_body.txt
           cat test-summary.txt >> pr_body.txt
           echo '```' >> pr_body.txt
- 
+          echo "" >> pr_body.txt
+          echo "Closes #${{ github.event.issue.number }}" >> pr_body.txt
+
       - name: Create Pull Request
         id: create_pr
         uses: peter-evans/create-pull-request@v6
@@ -147,4 +107,14 @@ jobs:
           body-path: pr_body.txt
           labels: "DevOps"
           assignees: ${{ github.actor }}
-          project: "Space2Studymvp"
+
+#  notify:
+#    needs: create-pull-request
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Send Telegram Notification
+#        run: |
+#          MESSAGE="✅ CI PASSED: ${{ github.ref_name }}%0APR was created: https://github.com/repo/pull/${{ steps.create_pr.outputs.pull-request-number }}"
+#          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+#          -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
+#          -d "text=${MESSAGE}"

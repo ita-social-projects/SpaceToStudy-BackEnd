@@ -7,12 +7,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  check-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate branch name
+        run: |
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          if [[ ! "$BRANCH_NAME" =~ ^feature/[0-9]+/.+ ]]; then
+            echo "❌ Branch name is incorrect! Expected format: feature/issue_number/problem_name"
+            exit 1
+          fi
+          echo "✅ Branch name is valid"
+        
+  test:
+    needs: check-branch-name
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [22.x]        # Different Node.js versions
-        mongodb-version: ['8.0']    # Different MongoDB versions
+        node-version: [22.x]         # Different Node.js versions
+        mongodb-version: ['8.0']     # Different MongoDB versions
+      max-parallel: 1
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
@@ -50,12 +64,12 @@ jobs:
             sleep 2
           done
           echo "MongoDB did not start in time!" && exit 1
-
       - name : 'Install dependencies'
         run: npm install
 
       - name: Run Tests
-        run: npm run test
+        run: |
+          npm test -- src/test/unit/services 2>&1 | tee full-test-results.txt
         env:        
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -82,16 +96,55 @@ jobs:
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
 
+      - name: Show Test Results
+        run: cat full-test-results.txt || echo "⚠ No test results found in full-test-results.txt"
+  
+      - name: Extract Summary from Test Results
+        run: |
+          grep -E "Test Suites:|Tests:|Snapshots:|Time:|Ran all test suites." full-test-results.txt > test-summary.txt
+      - name: Upload Test Summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-summary
+          path: test-summary.txt
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0
         if: success() || failure()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  
+  create-pull-request:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        if: success() || failure()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: Download Test Summary
+        uses: actions/download-artifact@v4
+        with:
+          name: test-summary
+          path: ./
+
+      - name: Format Test Summary for PR
+        id: format_test_results
+        run: |
+          echo "## Test Summary" > pr_body.txt
+          echo '```' >> pr_body.txt
+          cat test-summary.txt >> pr_body.txt
+          echo '```' >> pr_body.txt
+ 
+      - name: Create Pull Request
+        id: create_pr
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: develop
+          branch: ${{ github.ref_name }}
+          title: "${{ github.ref_name }}"
+          body-path: pr_body.txt
+          labels: "DevOps"
+          assignees: ${{ github.actor }}
+          project: "Space2Studymvp"

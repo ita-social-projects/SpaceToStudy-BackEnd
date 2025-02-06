@@ -195,15 +195,13 @@ cooperationSchema.post('save', async function () {
 cooperationSchema.pre('findOneAndUpdate', function (next) {
   if (this._update.price) {
     this.type = UPDATED
-
-    next()
   }
 
   if (this._update.status) {
     this.type = this._update.status
-
-    next()
   }
+
+  next()
 })
 
 cooperationSchema.post('findOneAndUpdate', async function (doc) {

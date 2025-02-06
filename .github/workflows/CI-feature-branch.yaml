@@ -8,23 +8,7 @@ on:
     branches: ['develop']
 
 jobs:
-  check-branch-name:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Validate branch name
-        shell: bash
-        run: |
-          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
-          echo "Branch name: $BRANCH_NAME"
-          
-          if [[ ! "$BRANCH_NAME" =~ ^feature/[0-9]+/.+ ]]; then
-            echo "❌ Branch name is incorrect! Expected format: feature/issue_number/problem_name"
-            exit 1
-          fi
-          echo "✅ Branch name is valid"
-
   run-tests:
-    needs: check-branch-name
     runs-on: ubuntu-latest
     strategy:
       matrix:

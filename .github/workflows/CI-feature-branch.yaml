@@ -48,8 +48,33 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Tests
+      - name : 'Run Tests'
         run: npm run test
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          MONGODB_URL: mongodb://${{secrets.MONGODB_USER}}:${{secrets.MONGODB_PASS}}@localhost:27017/${{secrets.MONGODB_DB}}?authSource=admin
+          MONGODB_URL_READONLY_TEST: ${{secrets.MONGODB_URL_READONLY_TEST}}
+          JWT_ACCESS_SECRET: ${{secrets.JWT_ACCESS_SECRET}}
+          JWT_REFRESH_SECRET: ${{secrets.JWT_REFRESH_SECRET}}
+          JWT_RESET_SECRET: ${{secrets.JWT_RESET_SECRET}}
+          JWT_CONFIRM_SECRET: ${{secrets.JWT_CONFIRM_SECRET}}
+          JWT_ACCESS_EXPIRES_IN: ${{secrets.JWT_ACCESS_EXPIRES_IN}}
+          JWT_REFRESH_EXPIRES_IN: ${{secrets.JWT_REFRESH_EXPIRES_IN}}
+          JWT_REFRESH_LONG_TERM_EXPIRES_IN: ${{secrets.JWT_REFRESH_LONG_TERM_EXPIRES_IN}}
+          JWT_RESET_EXPIRES_IN: ${{secrets.JWT_RESET_EXPIRES_IN}}
+          JWT_CONFIRM_EXPIRES_IN: ${{secrets.JWT_CONFIRM_EXPIRES_IN}}
+          CLIENT_URL: ${{secrets.CLIENT_URL}}
+          SERVER_URL: ${{secrets.SERVER_URL}}
+          SERVER_PORT: ${{secrets.SERVER_PORT}}
+          MAIL_USER: ${{secrets.MAIL_USER}}
+          MAIL_PASS: ${{secrets.MAIL_PASS}}
+          MAIL_FIRSTNAME: ${{secrets.MAIL_FIRSTNAME}}
+          MAIL_LASTNAME: ${{secrets.MAIL_LASTNAME}}
+          GMAIL_CLIENT_ID: ${{secrets.GMAIL_CLIENT_ID}}
+          GMAIL_CLIENT_SECRET: ${{secrets.GMAIL_CLIENT_SECRET}}
+          GMAIL_REFRESH_TOKEN: ${{secrets.GMAIL_REFRESH_TOKEN}}
+          GMAIL_REDIRECT_URI: ${{secrets.GMAIL_REDIRECT_URI}}
+          COOKIE_DOMAIN: ${{secrets.COOKIE_DOMAIN}}
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0

@@ -5,6 +5,10 @@ const { createError } = require('~/utils/errorsHelper')
 
 const { QUIZ_TIME_LIMIT_EXCEEDED } = require('~/consts/errors')
 
+const {
+  roles: { STUDENT }
+} = require('~/consts/auth')
+
 const finishedQuizService = {
   getFinishedQuizzes: async (author, skip = 0, limit = 10) => {
     const authorQuizzes = await Quiz.distinct('_id', { author })
@@ -44,7 +48,8 @@ const finishedQuizService = {
     }
 
     const createdAt = new Date(finishedQuiz.createdAt).getTime()
-    if (role === 'student' && !isNaN(timeLimit) && createdAt + timeLimit < Date.now()) {
+    if (role === STUDENT && !isNaN(timeLimit) && createdAt + timeLimit < Date.now()) {
+      console.log('Time limit exceeded')
       throw createError(403, QUIZ_TIME_LIMIT_EXCEEDED)
     }
 

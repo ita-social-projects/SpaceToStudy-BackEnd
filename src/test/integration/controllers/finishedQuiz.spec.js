@@ -145,7 +145,9 @@ describe('Quiz controller', () => {
       })
 
       it('should throw UNAUTHORIZED', async () => {
-        const response = await app.get(endpointUrl)
+        const finishedQuizId = testFinishedQuiz._body._id
+
+        const response = await app.get(endpointUrl + finishedQuizId)
 
         expectError(401, UNAUTHORIZED, response)
       })
@@ -168,7 +170,7 @@ describe('Quiz controller', () => {
       })
 
       it('should throw UNAUTHORIZED', async () => {
-        const response = await app.get(endpointUrl)
+        const response = await app.patch(endpointUrl)
 
         expectError(401, UNAUTHORIZED, response)
       })

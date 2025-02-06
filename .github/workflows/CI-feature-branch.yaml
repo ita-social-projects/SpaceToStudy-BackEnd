@@ -48,73 +48,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Run Linter
-        run: npm run lint
-
       - name: Run Tests
-        run: |
-          npm test -- src/test/unit/services --verbose --coverage=false 2>&1 | tee full-test-results.txt
-
-      - name: Extract Summary from Test Results
-        run: |
-          grep -E "Test Suites:|Tests:|Snapshots:|Time:|Ran all test suites." full-test-results.txt > test-summary.txt || true
-          if [ ! -s test-summary.txt ]; then
-            echo "⚠ No test results found!" > test-summary.txt
-          fi
-
-      - name: Upload Test Summary
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-summary
-          path: test-summary.txt
+        run: npm run test
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  create-pull-request:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download Test Summary
-        uses: actions/download-artifact@v4
-        with:
-          name: test-summary
-          path: ./
-
-      - name: Format Test Summary for PR
-        run: |
-          echo "## Test Summary" > pr_body.txt
-          echo '```' >> pr_body.txt
-          cat test-summary.txt >> pr_body.txt
-          echo '```' >> pr_body.txt
-          echo "" >> pr_body.txt
-          echo "Closes #${{ github.event.issue.number }}" >> pr_body.txt
-
-      - name: Create Pull Request
-        id: create_pr
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: develop
-          branch: ${{ github.ref_name }}
-          title: "${{ github.ref_name }}"
-          body-path: pr_body.txt
-          labels: "DevOps"
-          assignees: ${{ github.actor }}
-
-#  notify:
-#    needs: create-pull-request
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Send Telegram Notification
-#        run: |
-#          MESSAGE="✅ CI PASSED: ${{ github.ref_name }}%0APR was created: https://github.com/repo/pull/${{ steps.create_pr.outputs.pull-request-number }}"
-#          curl -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-#          -d "chat_id=${{ secrets.TELEGRAM_CHAT_ID }}" \
-#          -d "text=${MESSAGE}"

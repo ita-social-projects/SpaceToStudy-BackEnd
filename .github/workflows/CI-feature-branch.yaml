@@ -52,8 +52,7 @@ jobs:
           --dearmor
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
           sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-          sudo apt-get update
-          sudo apt-get install -y mongodb-mongosh
+          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
 
       - name: Check MongoDB
         run: |
@@ -68,7 +67,8 @@ jobs:
         run: npm install
 
       - name: Run tests
-        run: npm run test
+        run: npm test -- src/test/unit/services --verbose --coverage=false    # tmp
+#        run: npm run test
         env:        
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

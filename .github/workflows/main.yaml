@@ -1,10 +1,11 @@
 name: CI
 
 on:
-  push:
-    branches: [main, develop, devops]
-  pull_request:
-    branches: [main, develop, devops, 'feature/**']
+  workflow_dispatch:
+#  push:
+#    branches: [main, develop, devops]
+#  pull_request:
+#    branches: [main, develop, devops, 'feature/**']
 
 jobs:
   Test_DEV:
@@ -13,9 +14,6 @@ jobs:
 
       - name: 'Checkout the Repo'
         uses: actions/checkout@v3
-
-      # - name: Run DB
-      #  run: docker-compose -f docker-compose.yaml up -d
 
       - name: 'Start MongoDB'
         uses: supercharge/mongodb-github-action@1.8.0
@@ -79,11 +77,7 @@ jobs:
   Test_Docker:
     runs-on: ubuntu-latest
     steps:
-
-      #Checkout Repository
       - uses: actions/checkout@v3
-      
-      # Docker Build
       - uses: docker/build-push-action@v3
         with:
           push: false

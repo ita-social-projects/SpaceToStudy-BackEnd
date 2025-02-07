@@ -49,7 +49,6 @@ const finishedQuizService = {
 
     const createdAt = new Date(finishedQuiz.createdAt).getTime()
     if (role === STUDENT && !isNaN(timeLimit) && createdAt + timeLimit < Date.now()) {
-      console.log('Time limit exceeded')
       throw createError(403, QUIZ_TIME_LIMIT_EXCEEDED)
     }
 

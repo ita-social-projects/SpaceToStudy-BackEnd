@@ -680,7 +680,7 @@ describe('Cooperation controller', () => {
         .patch(endpointUrl + testCooperation._body._id)
         .set('Cookie', [`accessToken=${tutorAccessToken}`])
         .send(sendMessage)
-      console.log(updateResponse)
+
       const response = await app
         .get(endpointUrl + testCooperation._body._id)
         .set('Cookie', [`accessToken=${tutorAccessToken}`])

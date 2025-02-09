@@ -105,11 +105,12 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
 
-          SONAR_RESULT=$(grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" sonarcloud.log || echo "❌ SonarCloud analysis failed")
+          SONAR_RESULT=$(bash -c 'echo "${{ steps.sonarcloud.outputs.logs }}" | grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" || echo "❌ SonarCloud analysis failed"')
+          echo "$SONAR_RESULT"
+          echo "SONAR_RESULT=$SONAR_RESULT" >> $GITHUB_ENV
           
           echo '### 🔍 SonarCloud Analysis' >> $GITHUB_STEP_SUMMARY
-          echo "$SONAR_RESULT"
-          echo "SONAR_RESULT=$SONAR_RESULT" >> $GITHUB_ENV      
+          echo "**📊 Sonar Report:** $SONAR_RESULT" >> $GITHUB_STEP_SUMMARY
                 
       - name: Upload Test Logs
         uses: actions/upload-artifact@v4

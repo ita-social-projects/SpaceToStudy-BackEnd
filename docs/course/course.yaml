@@ -26,7 +26,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/course'
+                $ref: '#/definitions/courses'
               example:
                 - _id: 64045f98b131dd04d7896af6
                   title: Advanced English

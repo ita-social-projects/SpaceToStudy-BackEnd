@@ -113,3 +113,10 @@ definitions:
             type: string
           color:
             type: string
+  categoryWithName:
+    type: object
+    properties:
+      _id:
+        type: string
+      name:
+        type: string

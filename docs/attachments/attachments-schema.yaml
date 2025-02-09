@@ -90,7 +90,7 @@ definitions:
       link:
         type: string
       category:
-        $ref: '#/definitions/lessonCategory'
+        $ref: '#/definitions/categoryWithName'
       resourceType:
         $ref: '#/definitions/resourceType'
       size:

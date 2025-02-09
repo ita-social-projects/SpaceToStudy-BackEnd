@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [ '22.x' ]      # NodeJS version   | Use this to test new NodeJS versions
-        mongodb-version: [ '8.0']     # MongoDB version  | Use this to test new MongoDB versions
+        mongodb-version: ['7.0', '8.0']     # MongoDB version  | Use this to test new MongoDB versions
       max-parallel: 1                 # The maximum number of jobs run in parallel
     steps:
       - name: Checkout repository

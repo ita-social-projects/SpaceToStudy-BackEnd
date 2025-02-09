@@ -15,14 +15,13 @@ jobs:
 
       - name: Create Pull Request
         run: |
-          gh pr create \
-            --title "${{ github.ref_name }}" \
+            gh pr create \
             --base develop \
             --head "${{ github.ref_name }}" \
-            --reviewer "ita-social-projects/DevOps-Space2Study" \
-            --label "DevOps" \ 
-            --project "Space2Studymvp" \
-            --body "Auto-generated PR from branch **${{ github.ref_name }}**"
+            --title "${{ github.ref_name }}" \
+            --body "Auto-generated PR from branch **${{ github.ref_name }}**" \
+            --label "DevOps" \
+            --project "Space2Studymvp"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

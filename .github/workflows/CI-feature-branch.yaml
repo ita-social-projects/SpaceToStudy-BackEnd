@@ -145,3 +145,12 @@ jobs:
           cat tests-results.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment Test Results on PR
+        if: env.PR_EXISTS == 'true'
+        run: |
+          PR_NUMBER=$(gh pr list --state open --head "${{ github.ref_name }}" --json number --jq '.[0].number')
+          echo "Adding test results to PR #$PR_NUMBER"
+          gh pr comment $PR_NUMBER --body "**🧪 Test Results**\n\n\`\`\`\n$(cat tests-results.txt)\n\`\`\`"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

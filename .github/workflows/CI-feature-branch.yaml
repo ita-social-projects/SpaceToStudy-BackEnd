@@ -111,15 +111,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         continue-on-error: true
-        id: sonar_scan
-        run: |
-          sonar-scanner 2>&1 | tee sonarcloud-full.log | tee >(grep -E "ANALYSIS SUCCESSFUL, you can find the results at: |EXECUTION SUCCESS|Total time: " > sonarcloud-results.txt) || true
 
       - name: Extract SonarCloud Results
         run: |
-          SONAR_URL=$(grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" sonarcloud-results.txt | awk -F'at: ' '{print $2}')
-          SONAR_STATUS=$(grep -oE "EXECUTION SUCCESS|EXECUTION FAILURE" sonarcloud-results.txt || echo "EXECUTION FAILURE")
-          SONAR_TIME=$(grep -oE "Total time: [0-9]+(\.[0-9]+)?s" sonarcloud-results.txt | awk '{print $3}')
+          SONAR_LOG=$(cat $GITHUB_WORKSPACE/_temp/_runner_file_commands/*.log | grep -E "ANALYSIS SUCCESSFUL, you can find the results at: |EXECUTION SUCCESS|Total time: ")
+          
+          SONAR_URL=$(echo "$SONAR_LOG" | grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" | awk -F'at: ' '{print $2}')
+          SONAR_STATUS=$(echo "$SONAR_LOG" | grep -oE "EXECUTION SUCCESS|EXECUTION FAILURE" || echo "EXECUTION FAILURE")
+          SONAR_TIME=$(echo "$SONAR_LOG" | grep -oE "Total time: [0-9]+(\.[0-9]+)?s" | awk '{print $3}')
 
           echo '### 🔍 SonarCloud Analysis' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY

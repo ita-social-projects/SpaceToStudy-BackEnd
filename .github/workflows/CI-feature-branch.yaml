@@ -1,29 +1,29 @@
 name: CI feature/** branch
 
 on:
+  workflow_dispatch:
   push:
-    workflow_dispatch:
     branches: ['feature/**']
+  pull_request:
+    branches: ['develop']
 
 jobs:
   run-tests:
-    name: Run Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ '22.x' ]      # NodeJS version   | Use this to test new NodeJS versions
-        mongodb-version: [ '8.0']     # MongoDB version  | Use this to test new MongoDB versions
-      max-parallel: 1                 # The maximum number of jobs run in parallel
+        node-version: ['22.x']
+        mongodb-version: ['8.0']
+      max-parallel: 1
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
+        
       - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-
+          
       - name: Install MongoDB ${{ matrix.mongodb-version }}
         uses: supercharge/mongodb-github-action@1.12.0
         with:
@@ -42,7 +42,6 @@ jobs:
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
           sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
           sudo apt-get update && sudo apt-get install -y mongodb-mongosh
-      
       - name: Check MongoDB
         run: |
           for i in {1..30}; do
@@ -51,18 +50,14 @@ jobs:
             sleep 2
           done
           echo "MongoDB did not start in time!" && exit 1
-      
+          
       - name: Install dependencies
         run: npm install
-#        run: npm ci 				# Install dependencies from package-lock.json
-
-      - name: Run Linter
-        run: npm run lint | tee lint-results.txt || true
 
       - name: Run tests
-		npm test -- src/test/unit/services --verbose --coverage=false 2>&1 | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true
-#		npm run test
-        env:
+        run: npm test -- src/test/unit/services --verbose --coverage=false    # tmp
+#        run: npm run test
+        env:        
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
           MONGODB_URL_READONLY_TEST: ${{ secrets.MONGODB_URL_READONLY_TEST }}
@@ -93,23 +88,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Generate Report
-        run: |
-          echo '### ✅ CI Report' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          echo '**🔹 Node.js Version:** ${{ matrix.node-version }}' >> $GITHUB_STEP_SUMMARY
-          echo '**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          
-          echo '### 📌 Linter Results' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat lint-results.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          
-          echo '### 🧪 Test Results' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat tests-results.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY

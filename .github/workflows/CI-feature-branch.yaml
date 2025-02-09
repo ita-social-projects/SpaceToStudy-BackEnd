@@ -125,4 +125,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-logs
-          path: tests-full.log
+          path: full-tests.log

@@ -86,7 +86,19 @@ jobs:
           GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
-
+      
+      - name: Comment Test Results on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: test-results
+          message: |
+            ## 🧪 Test Results
+            ```
+            $(cat tests-results.txt)
+            ```
+            ✅ CI Run ID: ${{ github.run_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0
         env:

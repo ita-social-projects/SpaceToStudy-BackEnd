@@ -60,8 +60,7 @@ jobs:
         run: npm run lint | tee lint-results.txt || true
 
       - name: Run tests
-		npm test -- src/test/unit/services --verbose --coverage=false 2>&1 | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true
-#		npm run test
+        run: npm test -- src/test/unit/services --verbose --coverage=false 2>&1 | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

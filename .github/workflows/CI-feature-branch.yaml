@@ -20,8 +20,7 @@ jobs:
             --head "${{ github.ref_name }}" \
             --title "${{ github.ref_name }}" \
             --body "Auto-generated PR from branch **${{ github.ref_name }}**" \
-            --label "DevOps" \
-            --project "Space2Studymvp"
+            --label "DevOps"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

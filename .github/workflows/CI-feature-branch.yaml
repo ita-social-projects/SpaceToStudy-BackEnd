@@ -1,7 +1,7 @@
 name: CI feature/** branch
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
   push:
     branches: ['feature/**']
 
@@ -24,41 +24,41 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-#      - name: Install MongoDB ${{ matrix.mongodb-version }}
-#        uses: supercharge/mongodb-github-action@1.12.0
-#        with:
-#          mongodb-version: ${{ matrix.mongodb-version }}
-#          mongodb-db: ${{ secrets.MONGODB_DB }}
-#          mongodb-username: ${{ secrets.MONGODB_USER }}
-#          mongodb-password: ${{ secrets.MONGODB_PASS }}
-#          mongodb-port: 27017
-#
-#      - name: Install MongoDB shell
-#        run: |
-#          sudo apt-get install -y gnupg curl
-#          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-#          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
-#          --dearmor
-#          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
-#          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-#          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
-#      
-#      - name: Check MongoDB
-#        run: |
-#          for i in {1..30}; do
-#            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-#            echo "Waiting for MongoDB..."
-#            sleep 2
-#          done
-#          echo "MongoDB did not start in time!" && exit 1
+      - name: Install MongoDB ${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.12.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+          mongodb-db: ${{ secrets.MONGODB_DB }}
+          mongodb-username: ${{ secrets.MONGODB_USER }}
+          mongodb-password: ${{ secrets.MONGODB_PASS }}
+          mongodb-port: 27017
+      
+      - name: Install MongoDB shell
+        run: |
+          sudo apt-get install -y gnupg curl
+          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+          --dearmor
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+       
+      - name: Check MongoDB
+        run: |
+          for i in {1..30}; do
+            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+            echo "Waiting for MongoDB..."
+            sleep 2
+          done
+          echo "MongoDB did not start in time!" && exit 1
       
       - name: Install dependencies
         run: npm install
 #        run: npm ci 				# Install dependencies from package-lock.json
 
       - name: Run tests
-        run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
-#        run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
+        # run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
+        run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -84,12 +84,6 @@ jobs:
           GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v4.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Generate Report
         run: |

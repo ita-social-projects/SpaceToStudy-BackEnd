@@ -88,14 +88,6 @@ jobs:
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
 
-  sonarcloud-scan:
-    name: SonarCloud Scan
-    runs-on: ubuntu-latest
-    needs: run-tests
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0
         env:

@@ -21,7 +21,7 @@ jobs:
             --title "${{ github.ref_name }}" \
             --body "Auto-generated PR from branch **${{ github.ref_name }}**" \
             --label "DevOps" \
-            --reviewer ita-social-projects/devops-space2study
+            --reviewer "@ita-social-projects/devops-space2study"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

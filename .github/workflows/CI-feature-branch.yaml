@@ -85,11 +85,11 @@ jobs:
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
 
-#      - name: SonarCloud Scan
-#        uses: SonarSource/sonarqube-scan-action@v4.1.0
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarqube-scan-action@v4.1.0
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       # - name: Generate Report
       #   run: |
@@ -106,32 +106,15 @@ jobs:
       #     echo '' >> $GITHUB_STEP_SUMMARY
 
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v4.1.0
+        run: sonar-scanner 2>&1 | tee sonarcloud.log
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        continue-on-error: true
 
-      - name: Extract SonarCloud Results
+      - name: Extract SonarCloud URL
         run: |
-          SONAR_LOG=$(cat $GITHUB_WORKSPACE/_temp/_runner_file_commands/*.log | grep -E "ANALYSIS SUCCESSFUL, you can find the results at: |EXECUTION SUCCESS|Total time: ")
-          
-          SONAR_URL=$(echo "$SONAR_LOG" | grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" | awk -F'at: ' '{print $2}')
-          SONAR_STATUS=$(echo "$SONAR_LOG" | grep -oE "EXECUTION SUCCESS|EXECUTION FAILURE" || echo "EXECUTION FAILURE")
-          SONAR_TIME=$(echo "$SONAR_LOG" | grep -oE "Total time: [0-9]+(\.[0-9]+)?s" | awk '{print $3}')
-
-          echo '### 🔍 SonarCloud Analysis' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-
-          if [[ "$SONAR_STATUS" == "EXECUTION SUCCESS" ]]; then
-            echo '**✅ SonarCloud Status:** Success' >> $GITHUB_STEP_SUMMARY
-            echo "**🕒 Analysis Time:** ${SONAR_TIME}" >> $GITHUB_STEP_SUMMARY
-            echo "**🔗 Report:** [View SonarCloud Dashboard](${SONAR_URL})" >> $GITHUB_STEP_SUMMARY
-          else
-            echo '**❌ SonarCloud Status:** Failure' >> $GITHUB_STEP_SUMMARY
-            echo "**🕒 Analysis Time:** ${SONAR_TIME}" >> $GITHUB_STEP_SUMMARY
-            echo "**🔗 Report:** ${SONAR_URL}" >> $GITHUB_STEP_SUMMARY
-          fi
+          SONAR_URL=$(grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" sonarcloud.log | awk -F'at: ' '{print $2}')
+          echo "**🔗 SonarCloud Report:** [View Analysis](${SONAR_URL})" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Test Logs
         uses: actions/upload-artifact@v4

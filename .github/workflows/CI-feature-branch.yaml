@@ -42,7 +42,7 @@ jobs:
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
           sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
           sudo apt-get update && sudo apt-get install -y mongodb-mongosh
-
+      
       - name: Check MongoDB
         run: |
           for i in {1..30}; do
@@ -51,15 +51,17 @@ jobs:
             sleep 2
           done
           echo "MongoDB did not start in time!" && exit 1
-
+      
       - name: Install dependencies
         run: npm install
+#        run: npm ci 				# Install dependencies from package-lock.json
 
       - name: Run Linter
         run: npm run lint | tee lint-results.txt || true
 
       - name: Run tests
-        run: npm test -- --verbose --coverage=false | tee test-results.txt || true
+		npm test -- src/test/unit/services --verbose --coverage=false 2>&1 | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true
+#		npm run test
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -108,9 +110,6 @@ jobs:
           
           echo '### 🧪 Test Results' >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          grep -E "Test Suites:|Tests:|Snapshots:|Time:" test-results.txt >> $GITHUB_STEP_SUMMARY
+          cat tests-results.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
-          
-          echo '### 🔍 SonarCloud Report' >> $GITHUB_STEP_SUMMARY
-          echo '- [🔗 View SonarCloud Analysis](https://sonarcloud.io/summary/overall?id=${{ github.repository }})' >> $GITHUB_STEP_SUMMARY

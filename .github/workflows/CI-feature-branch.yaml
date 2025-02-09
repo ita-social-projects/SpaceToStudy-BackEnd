@@ -27,6 +27,7 @@ jobs:
 
       - name: Create Pull Request
         if: env.PR_NOT_FOUND == 'true'
+        id: create-pr
         run: |
           PR_URL=$(gh pr create --title "${{ github.ref_name }}" \
             --body "Auto-generated PR for ${{ github.ref_name }}" \
@@ -34,7 +35,6 @@ jobs:
             --head "${{ github.ref_name }}" \
             --assignee "${{ github.actor }}" \
             --label "backend" \
-            --project "Space2Studymvp" \
             --json url --jq '.url')
           echo "PR_URL=$PR_URL" >> $GITHUB_ENV
         env:
@@ -43,6 +43,7 @@ jobs:
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
+    needs: create-pr
     strategy:
       matrix:
         node-version: [ '22.x' ]       # NodeJS version   | Use this to test new NodeJS versions
@@ -123,6 +124,7 @@ jobs:
       
       - name: Comment Test Results on PR
         uses: marocchino/sticky-pull-request-comment@v2
+        if: github.event.pull_request
         with:
           header: test-results
           message: |
@@ -132,7 +134,21 @@ jobs:
             ```
             ✅ CI Run ID: ${{ github.run_id }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
+      - name: Comment Initial Test Results on PR
+        if: env.PR_URL
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: test-results
+          number: ${{ env.PR_URL }}
+          message: |
+            ## 🧪 Initial Test Results
+            ```
+            $(cat tests-results.txt)
+            ```
+            ✅ CI Run ID: ${{ github.run_id }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0
         env:

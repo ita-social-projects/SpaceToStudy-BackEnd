@@ -57,7 +57,7 @@ jobs:
 #        run: npm ci 				# Install dependencies from package-lock.json
 
       - name: Run tests
-        run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true
+        run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
 #        run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true    # Full test
         env:
           NODE_OPTIONS: --max_old_space_size=4096
@@ -120,3 +120,9 @@ jobs:
             echo "**🕒 Analysis Time:** ${SONAR_TIME}" >> $GITHUB_STEP_SUMMARY
             echo "**🔗 Report:** ${SONAR_URL}" >> $GITHUB_STEP_SUMMARY
           fi
+      
+      - name: Upload Test Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: tests-full.log

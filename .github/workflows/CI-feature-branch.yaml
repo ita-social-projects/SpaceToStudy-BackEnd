@@ -85,37 +85,25 @@ jobs:
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
 
-      # - name: SonarCloud Scan
-      #   uses: SonarSource/sonarqube-scan-action@v4.1.0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      # - name: Generate Report
-      #   run: |
-      #     echo '### ✅ CI Report' >> $GITHUB_STEP_SUMMARY
-      #     echo '' >> $GITHUB_STEP_SUMMARY
-      #     echo '**🔹 Node.js Version:** ${{ matrix.node-version }}' >> $GITHUB_STEP_SUMMARY
-      #     echo '**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}' >> $GITHUB_STEP_SUMMARY
-      #     echo '' >> $GITHUB_STEP_SUMMARY
-          
-      #     echo '### 🧪 Test Results' >> $GITHUB_STEP_SUMMARY
-      #     echo '```' >> $GITHUB_STEP_SUMMARY
-      #     cat tests-results.txt >> $GITHUB_STEP_SUMMARY
-      #     echo '```' >> $GITHUB_STEP_SUMMARY
-      #     echo '' >> $GITHUB_STEP_SUMMARY
-
       - name: SonarCloud Scan
-        id: sonar_scan
         uses: SonarSource/sonarqube-scan-action@v4.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Extract SonarCloud URL
+      - name: Generate Report
         run: |
-          SONAR_URL=$(echo "${{ steps.sonar_scan.outputs.logs }}" | grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" | awk -F'at: ' '{print $2}')
-          echo "**🔗 SonarCloud Report:** [View Analysis](${SONAR_URL})" >> $GITHUB_STEP_SUMMARY
+          echo '### ✅ CI Report' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '**🔹 Node.js Version:** ${{ matrix.node-version }}' >> $GITHUB_STEP_SUMMARY
+          echo '**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          
+          echo '### 🧪 Test Results' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat tests-results.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Test Logs
         uses: actions/upload-artifact@v4

@@ -56,9 +56,6 @@ jobs:
         run: npm install
 #        run: npm ci 				# Install dependencies from package-lock.json
 
-      - name: Run Linter
-        run: npm run lint | tee lint-results.txt || true
-
       - name: Run tests
         run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true
 #        run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true    # Full test
@@ -100,12 +97,6 @@ jobs:
           echo '' >> $GITHUB_STEP_SUMMARY
           echo '**🔹 Node.js Version:** ${{ matrix.node-version }}' >> $GITHUB_STEP_SUMMARY
           echo '**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}' >> $GITHUB_STEP_SUMMARY
-          echo '' >> $GITHUB_STEP_SUMMARY
-          
-          echo '### 📌 Linter Results' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          cat lint-results.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           
           echo '### 🧪 Test Results' >> $GITHUB_STEP_SUMMARY

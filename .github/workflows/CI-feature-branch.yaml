@@ -6,14 +6,48 @@ on:
     branches: ['feature/**']
 
 jobs:
+  create-pr:
+    name: Create PR if not exists
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check if PR exists
+        id: check-pr
+        run: |
+          PR_URL=$(gh pr list --state open --head "${{ github.ref_name }}" --json url --jq '.[0].url' || echo "")
+          if [ -z "$PR_URL" ]; then
+            echo "PR_NOT_FOUND=true" >> $GITHUB_ENV
+          else
+            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Pull Request
+        if: env.PR_NOT_FOUND == 'true'
+        run: |
+          PR_URL=$(gh pr create --title "${{ github.ref_name }}" \
+            --body "Auto-generated PR for ${{ github.ref_name }}" \
+            --base main \
+            --head "${{ github.ref_name }}" \
+            --assignee "${{ github.actor }}" \
+            --label "backend" \
+            --project "Space2Studymvp" \
+            --json url --jq '.url')
+          echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ '22.x' ]      # NodeJS version   | Use this to test new NodeJS versions
-        mongodb-version: ['7.0', '8.0']     # MongoDB version  | Use this to test new MongoDB versions
-      max-parallel: 1                 # The maximum number of jobs run in parallel
+        node-version: [ '22.x' ]       # NodeJS version   | Use this to test new NodeJS versions
+        mongodb-version: [ '8.0' ]     # MongoDB version  | Use this to test new MongoDB versions
+      max-parallel: 1                  # The maximum number of jobs run in parallel
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

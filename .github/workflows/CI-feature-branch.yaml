@@ -6,42 +6,9 @@ on:
     branches: ['feature/**']
 
 jobs:
-  create-pull-request:
-    name: Create PR
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      - name: Check if PR Exists
-        id: check_pr
-        run: |
-          PR_EXISTS=$(gh pr list --state open --head "${{ github.ref_name }}" --json number --jq '.[0].number' || echo "")
-          if [ -n "$PR_EXISTS" ]; then
-            echo "PR already exists: $PR_EXISTS"
-            echo "PR_EXISTS=true" >> $GITHUB_ENV
-          else
-            echo "PR_EXISTS=false" >> $GITHUB_ENV
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Pull Request
-        if: env.PR_EXISTS == 'false'
-        run: |
-            gh pr create \
-            --base develop \
-            --head "${{ github.ref_name }}" \
-            --title "${{ github.ref_name }}" \
-            --body "Auto-generated PR from branch **${{ github.ref_name }}**" \
-            --label "DevOps"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
-    needs: create-pull-request
     strategy:
       matrix:
         node-version: [ '22.x' ]      # NodeJS version   | Use this to test new NodeJS versions
@@ -145,12 +112,3 @@ jobs:
           cat tests-results.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
-
-      - name: Comment Test Results on PR
-        if: env.PR_EXISTS == 'true'
-        run: |
-          PR_NUMBER=$(gh pr list --state open --head "${{ github.ref_name }}" --json number --jq '.[0].number')
-          echo "Adding test results to PR #$PR_NUMBER"
-          gh pr comment $PR_NUMBER --body "**🧪 Test Results**\n\n\`\`\`\n$(cat tests-results.txt)\n\`\`\`"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

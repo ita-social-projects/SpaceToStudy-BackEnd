@@ -106,14 +106,15 @@ jobs:
       #     echo '' >> $GITHUB_STEP_SUMMARY
 
       - name: SonarCloud Scan
-        run: sonar-scanner 2>&1 | tee sonarcloud.log
+        id: sonar_scan
+        uses: SonarSource/sonarqube-scan-action@v4.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Extract SonarCloud URL
         run: |
-          SONAR_URL=$(grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" sonarcloud.log | awk -F'at: ' '{print $2}')
+          SONAR_URL=$(echo "${{ steps.sonar_scan.outputs.logs }}" | grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" | awk -F'at: ' '{print $2}')
           echo "**🔗 SonarCloud Report:** [View Analysis](${SONAR_URL})" >> $GITHUB_STEP_SUMMARY
 
       - name: Upload Test Logs

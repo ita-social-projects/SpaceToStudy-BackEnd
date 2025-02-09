@@ -4,17 +4,15 @@ on:
   workflow_dispatch:
   push:
     branches: ['feature/**']
-  pull_request:
-    branches: ['develop']
 
 jobs:
   run-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: ['22.x']
-        mongodb-version: ['8.0']
-      max-parallel: 1
+        node-version: ['22.x']      # NodeJS version   | Use this to test new NodeJS versions
+        mongodb-version: ['8.0']    # MongoDB version  | Use this to test new MongoDB versions
+      max-parallel: 1               # The maximum number of jobs run in parallel
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

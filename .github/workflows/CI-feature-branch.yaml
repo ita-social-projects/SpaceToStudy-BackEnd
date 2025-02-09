@@ -13,7 +13,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Check if PR Exists
+        id: check_pr
+        run: |
+          PR_EXISTS=$(gh pr list --state open --head "${{ github.ref_name }}" --json number --jq '.[0].number' || echo "")
+          if [ -n "$PR_EXISTS" ]; then
+            echo "PR already exists: $PR_EXISTS"
+            echo "PR_EXISTS=true" >> $GITHUB_ENV
+          else
+            echo "PR_EXISTS=false" >> $GITHUB_ENV
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Pull Request
+        if: env.PR_EXISTS == 'false'
         run: |
             gh pr create \
             --base develop \

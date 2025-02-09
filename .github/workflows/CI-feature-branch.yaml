@@ -19,9 +19,10 @@ jobs:
             --title "${{ github.ref_name }}" \
             --base develop \
             --head "${{ github.ref_name }}" \
-            --reviewer "ita-social-projects/DevOps-Space2Study"
-            --label "DevOps"
-            --project "Space2Studymvp"
+            --reviewer "ita-social-projects/DevOps-Space2Study" \
+            --label "DevOps" \ 
+            --project "Space2Studymvp" \
+            --body "Auto-generated PR from branch **${{ github.ref_name }}**"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

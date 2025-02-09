@@ -58,7 +58,7 @@ jobs:
 
       - name: Run tests
         run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
-#        run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt || true    # Full test
+#        run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -105,24 +105,14 @@ jobs:
           echo '```' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
 
-          echo '### 🔍 SonarCloud Analysis' >> $GITHUB_STEP_SUMMARY          
+          SONAR_RESULT=$(grep -oE "ANALYSIS SUCCESSFUL, you can find the results at: .*" sonarcloud.log || echo "❌ SonarCloud analysis failed")
           
-          SONAR_STATUS=$(grep -oE "EXECUTION SUCCESS|EXECUTION FAILURE" sonarcloud.log || echo "EXECUTION FAILURE")
-          SONAR_TIME=$(grep -oE "Total time: [0-9]+(\.[0-9]+)?s" sonarcloud.log | awk '{print $3}')
-          SONAR_URL=$(grep -oE "https://sonarcloud.io/dashboard\?id=[^ ]+" sonarcloud.log || echo "No URL found")
-
-          if [[ "$SONAR_STATUS" == "EXECUTION SUCCESS" ]]; then
-            echo '**✅ SonarCloud Status:** Success' >> $GITHUB_STEP_SUMMARY
-            echo "**🕒 Analysis Time:** ${SONAR_TIME}" >> $GITHUB_STEP_SUMMARY
-            echo "**🔗 Report:** [View SonarCloud Dashboard](${SONAR_URL})" >> $GITHUB_STEP_SUMMARY
-          else
-            echo '**❌ SonarCloud Status:** Failure' >> $GITHUB_STEP_SUMMARY
-            echo "**🕒 Analysis Time:** ${SONAR_TIME}" >> $GITHUB_STEP_SUMMARY
-            echo "**🔗 Report:** ${SONAR_URL}" >> $GITHUB_STEP_SUMMARY
-          fi
-      
+          echo '### 🔍 SonarCloud Analysis' >> $GITHUB_STEP_SUMMARY
+          echo "$SONAR_RESULT"
+          echo "SONAR_RESULT=$SONAR_RESULT" >> $GITHUB_ENV      
+                
       - name: Upload Test Logs
         uses: actions/upload-artifact@v4
         with:
-          name: test-logs
+          name: tests-log
           path: full-tests.log

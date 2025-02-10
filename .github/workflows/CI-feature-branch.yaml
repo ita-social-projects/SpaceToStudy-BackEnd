@@ -1,4 +1,4 @@
-name: CI feature/** branch
+name: CI feature/** branch - test
 
 on:
   # workflow_dispatch:

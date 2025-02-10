@@ -1,6 +1,5 @@
 const FinishedQuiz = require('~/models/finishedQuiz')
 const Quiz = require('~/models/quiz')
-
 const { createError } = require('~/utils/errorsHelper')
 
 const { QUIZ_TIME_LIMIT_EXCEEDED } = require('~/consts/errors')
@@ -30,6 +29,10 @@ const finishedQuizService = {
       grade,
       results
     })
+  },
+
+  getFinishedQuizByQuizId: async (quizId) => {
+    return await FinishedQuiz.find({ quiz: quizId }).lean().exec()
   },
 
   getFinishedQuizById: async (id) => {

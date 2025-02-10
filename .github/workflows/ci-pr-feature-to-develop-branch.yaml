@@ -2,6 +2,8 @@ name: CI PR Feature to Main
 
 on:
   workflow_dispatch:
+  push:
+    branches: ['chore/**']
   pull_request:
     branches:
       - develop

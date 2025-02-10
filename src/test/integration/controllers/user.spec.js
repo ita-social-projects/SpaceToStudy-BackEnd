@@ -12,13 +12,22 @@ const {
 const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
+const { default: mongoose } = require('mongoose')
 
 const testUserAuthentication = require('~/utils/testUserAuth')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')
 const TokenService = require('~/services/token')
-const userService = require('~/services/user')
 const uploadService = require('~/services/upload')
-const { default: mongoose } = require('mongoose')
+const notificationService = require('~/services/notification')
+const lessonService = require('~/services/lesson')
+const questionService = require('~/services/question')
+const resourcesCategoryService = require('~/services/resourcesCategory')
+const reviewService = require('~/services/review')
+const offerService = require('~/services/offer')
+const cooperationService = require('~/services/cooperation')
+
+const userService = require('~/services/user')
+const { deleteUser } = require('~/controllers/user')
 
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'
@@ -482,6 +491,7 @@ describe('User controller', () => {
       })
     })
   })
+
   describe('Restricted endpoints only by admin access rights', () => {
     let accessToken, currentUser
 
@@ -865,6 +875,181 @@ describe('User controller', () => {
       expect(updatedUser.photo).toBe('http://example.com/newPhoto.jpg')
 
       mockUploadFile.mockRestore()
+    })
+  })
+
+  describe('User deletion cascade effects', () => {
+    let accessToken, currentUser, req, res
+
+    const reviewData = {
+      comment: 'Good mentor and learning program',
+      rating: 5,
+      targetUserRole: 'student',
+      offer: '6502ec2060ec37be943353e2'
+    }
+
+    beforeEach(async () => {
+      accessToken = await testUserAuthentication(app, adminUser)
+      currentUser = TokenService.validateAccessToken(accessToken)
+
+      req = { params: { id: currentUser.id } }
+      res = {
+        status: jest.fn().mockReturnThis(),
+        end: jest.fn()
+      }
+    })
+
+    afterEach(async () => {
+      await app.post(logoutEndpoint)
+    })
+
+    it('should remove all notifications related to the user', async () => {
+      const notificationData = {
+        user: currentUser.id,
+        userRole: 'tutor',
+        type: 'active',
+        reference: '6736199d6b214652201af5d1',
+        referenceModel: 'Cooperation'
+      }
+
+      await notificationService.createNotification(notificationData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const notificationsWithUser = await notificationService.getNotifications({ user: currentUser.id })
+      expect(notificationsWithUser.count).toBe(0)
+    })
+
+    it('should remove all lessons related to the user', async () => {
+      const lessonData = {
+        title: 'Basics of css',
+        description: 'Learn the basics of css',
+        category: '6502ec2060ec37be943353e2',
+        content: '<h1>Basics of css</h1> <p>Css is a language used to style web pages</p>'
+      }
+
+      await lessonService.createLesson(currentUser.id, lessonData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const attachmentsWithUser = await lessonService.getLessons({ author: currentUser.id })
+
+      expect(attachmentsWithUser.count).toBe(0)
+    })
+
+    it('should remove all questions related to the user', async () => {
+      const questionData = {
+        title: 'What is the capital of France?',
+        text: 'What is the capital of France?',
+        answers: [
+          { text: 'Paris', isCorrect: true },
+          { text: 'London', isCorrect: false },
+          { text: 'Berlin', isCorrect: false },
+          { text: 'Madrid', isCorrect: false }
+        ],
+        type: 'oneAnswer',
+        category: '6502ec2060ec37be943353e2'
+      }
+      await questionService.createQuestion(currentUser.id, questionData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const questionsWithUser = await questionService.getQuestions({ author: currentUser.id })
+
+      expect(questionsWithUser.count).toBe(0)
+    })
+
+    it('should remove all resources categories related to the user', async () => {
+      const categoryData = {
+        name: 'Basics of web development'
+      }
+
+      await resourcesCategoryService.createResourcesCategory(currentUser.id, categoryData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const updatedResourcesCategories = await resourcesCategoryService.getResourcesCategories({
+        author: currentUser.id
+      })
+
+      expect(updatedResourcesCategories.count).toBe(0)
+    })
+
+    it('should remove all reviews where deleted user is target user', async () => {
+      const authorId = '65afa47f3d67b51996a67b92'
+
+      await reviewService.addReview(authorId, { ...reviewData, targetUserId: currentUser.id })
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const reviewsWithUser = await reviewService.getReviews({ targetUserId: currentUser.id })
+      expect(reviewsWithUser.count).toBe(0)
+    })
+
+    it('should remove all reviews where deleted user is the author', async () => {
+      const authorId = currentUser.id
+
+      await reviewService.addReview(authorId, { ...reviewData, targetUserId: '65afa47f3d67b51996a67b92' })
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const reviewsWithUser = await reviewService.getReviews({ author: currentUser.id })
+      expect(reviewsWithUser.count).toBe(0)
+    })
+
+    it('should remove user from enrolled user in offers if user identified as receiver in cooperation', async () => {
+      const offerData = {
+        price: 600,
+        proficiencyLevel: ['Beginner'],
+        title: 'Learn how to play guitar',
+        description: 'The most beginner-friendly guitar lessons',
+        languages: ['English'],
+        subject: '6502ec2060ec37be943353e2',
+        category: '6502ec2060ec37be943353e2',
+        enrolledUsers: [currentUser.id]
+      }
+
+      const offerAuthorId = '65afa47f3d67b51996a67b92'
+      const offerAuthorRole = 'tutor'
+      const offerEnrolledUserRole = 'student'
+
+      const offer = await offerService.createOffer(offerAuthorId, offerAuthorRole, offerData)
+
+      const cooperationData = {
+        user: currentUser.id,
+        offer: offer._id,
+        status: 'active',
+        receiverRole: offerAuthorRole,
+        receiver: offerAuthorId,
+        title: 'Learn how to play guitar',
+        proficiencyLevel: 'Beginner',
+        price: 600,
+        needAction: {
+          role: 'tutor'
+        }
+      }
+
+      await cooperationService.createCooperation(currentUser.id, offerEnrolledUserRole, cooperationData)
+
+      await deleteUser(req, res)
+
+      expect(res.end).toHaveBeenCalled()
+
+      const updatedOffer = await offerService.getOffers([{ $match: { _id: offer._id } }])
+
+      expect(updatedOffer.enrolledUsers).not.toContain(currentUser.id)
     })
   })
 })

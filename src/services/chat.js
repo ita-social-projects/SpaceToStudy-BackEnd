@@ -2,7 +2,9 @@ const mongoose = require('mongoose')
 const { CHAT_ALREADY_EXISTS } = require('~/consts/errors')
 
 const Chat = require('~/models/chat')
+const { mapToId } = require('~/utils/mapToId')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
+const messageService = require('./message')
 
 const chatService = {
   createChat: async (currentUser, data) => {
@@ -82,6 +84,29 @@ const chatService = {
     await chat.validate()
     await chat.save()
     return chat
+  },
+
+  deleteChatsbyUser: async (currentUser) => {
+    const chatsToDelete = await Chat.find({
+      'members.user': currentUser,
+      $expr: { $lte: [{ $size: '$members' }, 2] }
+    }).lean()
+
+    const chatIds = mapToId(chatsToDelete)
+
+    await messageService.deleteAllMessagesByChatIds(chatIds)
+
+    await Chat.deleteMany({
+      _id: { $in: chatIds }
+    })
+
+    await Chat.updateMany(
+      {
+        'members.user': currentUser,
+        $expr: { $gt: [{ $size: '$members' }, 2] }
+      },
+      { $pull: { members: { user: currentUser } } }
+    )
   }
 }
 

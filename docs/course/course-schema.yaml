@@ -91,16 +91,19 @@ definitions:
         items:
           type: object
           properties:
-            title: string
-            description: string
+            _id:
+              type: string
+            title:
+              type: string
+            description: 
+              type: string
             resources:
               type: array
               items:
                 type: object
                 properties:
                   resource:
-                    type: object
-                    additionalProperties: true
+                    type: string
                   resourceType:
                     type: string
                     enum:
@@ -120,9 +123,6 @@ definitions:
         type: string
       description:
         type: string
-      author:
-        type: string
-        ref: '#components/user'
       category:
         type: string
         ref: '#components/category'
@@ -145,22 +145,58 @@ definitions:
         items:
           type: object
           properties:
-          title: string
-          description: string
-          resources:
-            type: array
-            items:
-              type: object
-              properties:
-                resource:
-                  type: object
-                  additionalProperties: true
-                resourceType:
-                  type: string
-                  enum:
-                    - lesson
-                    - quiz
-                    - attachment
+            title:
+              type: string
+            description:
+              type: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    properties:
+                      title:
+                        type: string
+                      description:
+                        type: string
+                      content:
+                        type: string
+                      author:
+                        type: string
+                      attachments:
+                        type: array
+                        items:
+                          type: string
+                      category:
+                        type: object
+                        properties:
+                          _id:
+                            type: string
+                          name:
+                            type: string
+                        required:
+                          - _id
+                          - name
+                      _id:
+                        type: string
+                    required:
+                      - title
+                      - description
+                      - content
+                      - author
+                      - _id
+                  resourceType:
+                    type: string
+                    enum:
+                      - lesson
+                      - quiz
+                      - attachment
+          required:
+            - title
+            - description
+            - resources
     required:
       - title
       - description

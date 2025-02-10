@@ -1,0 +1,106 @@
+name: CI feature/** branch
+
+on:
+  # workflow_dispatch:
+  push:
+    branches: ['feature/**']
+
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ '22.x' ]      # NodeJS version   | Use this to test new NodeJS versions
+        mongodb-version: [ '8.0' ]    # MongoDB version  | Use this to test new MongoDB versions
+      max-parallel: 1                 # The maximum number of jobs run in parallel
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install MongoDB ${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.12.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+          mongodb-db: ${{ secrets.MONGODB_DB }}
+          mongodb-username: ${{ secrets.MONGODB_USER }}
+          mongodb-password: ${{ secrets.MONGODB_PASS }}
+          mongodb-port: 27017
+      
+      - name: Install MongoDB shell
+        run: |
+          sudo apt-get install -y gnupg curl
+          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+          --dearmor
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+       
+      - name: Check MongoDB
+        run: |
+          for i in {1..30}; do
+            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+            echo "Waiting for MongoDB..."
+            sleep 2
+          done
+          echo "MongoDB did not start in time!" && exit 1
+      
+      - name: Install dependencies
+        run: npm install
+#        run: npm ci 				# Install dependencies from package-lock.json
+
+      - name: Run tests
+        # run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
+        run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
+          MONGODB_URL_READONLY_TEST: ${{ secrets.MONGODB_URL_READONLY_TEST }}
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_RESET_SECRET: ${{ secrets.JWT_RESET_SECRET }}
+          JWT_CONFIRM_SECRET: ${{ secrets.JWT_CONFIRM_SECRET }}
+          JWT_ACCESS_EXPIRES_IN: ${{ secrets.JWT_ACCESS_EXPIRES_IN }}
+          JWT_REFRESH_EXPIRES_IN: ${{ secrets.JWT_REFRESH_EXPIRES_IN }}
+          JWT_REFRESH_LONG_TERM_EXPIRES_IN: ${{ secrets.JWT_REFRESH_LONG_TERM_EXPIRES_IN }}
+          JWT_RESET_EXPIRES_IN: ${{ secrets.JWT_RESET_EXPIRES_IN }}
+          JWT_CONFIRM_EXPIRES_IN: ${{ secrets.JWT_CONFIRM_EXPIRES_IN }}
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_FIRSTNAME: ${{ secrets.MAIL_FIRSTNAME }}
+          MAIL_LASTNAME: ${{ secrets.MAIL_LASTNAME }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
+          COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
+
+      - name: Generate Report
+        run: |
+          echo '### ✅ CI Report' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '**🔹 Node.js Version:** ${{ matrix.node-version }}' >> $GITHUB_STEP_SUMMARY
+          echo '**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          
+          echo '### 🧪 Test Results' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat tests-results.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+
+      - name: Upload Test Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-log
+          path: full-tests.log

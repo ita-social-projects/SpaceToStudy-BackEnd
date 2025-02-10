@@ -62,6 +62,10 @@ const questionService = {
 
     await question.save()
     return question.populate({ path: 'category', select: '_id name' })
+  },
+
+  deleteQuestionsByAuthor: async (author) => {
+    await Question.deleteMany({ author })
   }
 }
 

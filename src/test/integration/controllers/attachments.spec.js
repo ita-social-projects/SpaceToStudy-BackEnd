@@ -2,12 +2,18 @@ const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const { expectError } = require('~/test/helpers')
 const { UNAUTHORIZED, FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const resourceType = require('~/consts/resourceType')
+const { roles } = require('~/consts/auth')
 const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
+const cooperationService = require('~/services/cooperation')
 const uploadService = require('~/services/upload')
 const {
   enums: { RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
+const resourcesCategoryService = require('~/services/resourcesCategory')
+const refs = require('~/consts/models')
+const { INVALID_ID } = require('~/consts/errors')
 
 jest.mock('@azure/storage-blob', () => {
   const mockBlockBlobClient = {
@@ -291,6 +297,51 @@ describe('Attachments controller', () => {
 
       expectError(404, DOCUMENT_NOT_FOUND([Attachment.modelName]), response)
     })
+
+    it('should update attachment category to null', async () => {
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: null })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body.category).toBeNull()
+    })
+
+    it('should update attachment when valid existing category id is provided', async () => {
+      const category = await resourcesCategoryService.createResourcesCategory(currentUser.id, {
+        name: 'Web-development'
+      })
+
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: category._id.toString() })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body.category).toEqual({
+        _id: category._id.toString(),
+        name: category.name
+      })
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND when non-existent category id is provided', async () => {
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: '5f5f5f5f5f5f5f5f5f5f5f5f' })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(404, DOCUMENT_NOT_FOUND(refs.RESOURCES_CATEGORY), response)
+    })
+
+    it('should throw INVALID_ID when invalid category id is provided', async () => {
+      const response = await app
+        .patch(endpointUrl + testAttachmentId)
+        .send({ category: 'notAnId' })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(400, INVALID_ID, response)
+    })
   })
 
   describe(`DELETE ${endpointUrl}:id`, () => {
@@ -305,6 +356,55 @@ describe('Attachments controller', () => {
       const response = await app.delete(endpointUrl + testAttachmentId).set('Cookie', [`accessToken=${token}`])
 
       expectError(403, FORBIDDEN, response)
+    })
+
+    it('should delete attachment and remove references from all cooperation sections', async () => {
+      const cooperationData = {
+        offer: '82a51e41de4debbccf0b3111',
+        initiator: currentUser.id,
+        initiatorRole: 'tutor',
+        receiver: '62a51e41de4debbccf0b3111',
+        receiverRole: 'student',
+        title: 'Web Development Course',
+        proficiencyLevel: 'Beginner',
+        price: 500,
+        status: 'active',
+        needAction: 'student',
+        sections: [
+          {
+            title: 'Start with HTML',
+            description: 'Learn the basics of HTML',
+            resources: [
+              {
+                resource: testAttachmentId,
+                resourceType: resourceType.ATTACHMENT
+              }
+            ]
+          },
+          {
+            title: 'Continue with CSS',
+            description: 'Learn the basics of CSS',
+            resources: [
+              {
+                resource: testAttachmentId,
+                resourceType: resourceType.ATTACHMENT
+              }
+            ]
+          }
+        ]
+      }
+
+      const cooperation = await cooperationService.createCooperation(currentUser.id, roles.TUTOR, cooperationData)
+
+      const response = await app.delete(endpointUrl + testAttachmentId).set('Cookie', [`accessToken=${accessToken}`])
+
+      const updatedCooperation = await cooperationService.getCooperationById(cooperation._id, roles.TUTOR)
+
+      expect(response.statusCode).toBe(204)
+
+      updatedCooperation.sections.forEach((section) => {
+        expect(section.resources).toHaveLength(0)
+      })
     })
   })
 })

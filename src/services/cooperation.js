@@ -3,12 +3,15 @@ const mergeArraysUniqueValues = require('~/utils/mergeArraysUniqueValues')
 const removeArraysUniqueValues = require('~/utils/removeArraysUniqueValues')
 const getCooperationByIdQueryPipeline = require('~/utils/cooperations/getCooperationByIdQueryPipeline')
 const handleResources = require('~/utils/handleResources')
+const { mapToId } = require('~/utils/mapToId')
 const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND, ROLE_REQUIRED_FOR_ACTION } = require('~/consts/errors')
 const { roles } = require('~/consts/auth')
 const {
   enums: { COOPERATION_STATUS_ENUM }
 } = require('~/consts/validation')
+const offerService = require('./offer')
+const noteService = require('./note')
 
 const cooperationService = {
   _validateCooperationUser: (cooperation, userId) => {
@@ -198,6 +201,33 @@ const cooperationService = {
         ]
       }
     )
+  },
+
+  removeResourceFromCooperations: async (resourceId, resourceType, userId) => {
+    await Cooperation.updateMany(
+      {
+        $or: [{ receiver: userId }, { initiator: userId }],
+        'sections.resources.resourceType': resourceType,
+        'sections.resources.resource': resourceId
+      },
+      { $pull: { 'sections.$[].resources': { resourceType: resourceType, resource: resourceId } } }
+    )
+  },
+
+  deleteCooperationsByUser: async (userId) => {
+    const cooperationsWithUser = await Cooperation.find({
+      $or: [{ receiver: userId }, { initiator: userId }]
+    })
+      .select('offer')
+      .lean()
+
+    const offerIdsWithUser = cooperationsWithUser.map((cooperation) => cooperation.offer)
+    await offerService.removeEnrolledUser(offerIdsWithUser, userId)
+
+    const cooperationsWithUserIds = mapToId(cooperationsWithUser)
+    await noteService.deleteNotesByCooperations(cooperationsWithUserIds)
+
+    await Cooperation.deleteMany({ $or: [{ receiver: userId }, { initiator: userId }] })
   }
 }
 

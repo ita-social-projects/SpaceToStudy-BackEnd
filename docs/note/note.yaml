@@ -29,6 +29,7 @@ paths:
                     _id: 64ebc6fbd2f34037d0aba294
                     firstName: Harry
                     lastName: Potter
+                    photo: img.jpg
                   isPrivate: false
                   cooperation: 63ebc6fbd2f34037d0aba699
                   createdAt: 2023-02-14T23:44:21.334Z
@@ -102,6 +103,7 @@ paths:
                   _id: 64ebc6fbd2f34037d0aba294
                   firstName: Harry
                   lastName: Potter
+                  photo: img.jpg
                 isPrivate: true
                 cooperation: 63ebc6fbd2f34037d0aba699
                 createdAt: 2023-02-14T23:44:21.334Z

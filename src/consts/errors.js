@@ -15,6 +15,10 @@ const errors = {
     code: 'BODY_IS_NOT_DEFINED',
     message: 'request body should not be null or undefined.'
   },
+  QUIZ_TIME_LIMIT_EXCEEDED: {
+    code: 'QUIZ_TIME_LIMIT_EXCEEDED',
+    message: 'The time limit for the quiz has been exceeded.'
+  },
   FIELD_CAN_BE_ONE_OF: (field, enums) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
     message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}.`

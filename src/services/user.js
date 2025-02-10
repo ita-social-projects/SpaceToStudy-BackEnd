@@ -21,8 +21,21 @@ const { allowedTutorFieldsForUpdate } = require('~/validation/services/user')
 const { allowedStudentFieldsForUpdate } = require('~/validation/services/user')
 const { shouldDeletePreviousPhoto } = require('~/utils/users/photoCheck')
 const offerService = require('./offer')
-const cooperationService = require('./cooperation')
 const offerAggregateOptions = require('~/utils/offers/offerAggregateOptions')
+
+const notificationService = require('./notification')
+const attachmentService = require('./attachment')
+const lessonService = require('./lesson')
+const quizService = require('./quiz')
+const questionService = require('./question')
+const resourcesCategoryService = require('./resourcesCategory')
+const noteService = require('./note')
+const courseService = require('./course')
+const tokenService = require('./token')
+const reviewService = require('./review')
+const cooperationService = require('./cooperation')
+const chatService = require('./chat')
+const messageService = require('./message')
 
 const userService = {
   getUsers: async ({ match, sort, skip, limit }) => {
@@ -279,7 +292,24 @@ const userService = {
   },
 
   deleteUser: async (id) => {
-    await User.findByIdAndRemove(id).exec()
+    await Promise.all([
+      notificationService.clearNotifications(id),
+      attachmentService.deleteAttachementsByAuthor(id),
+      lessonService.deleteLessonsByAuthor(id),
+      quizService.deleteQuizzesByAuthor(id),
+      questionService.deleteQuestionsByAuthor(id),
+      resourcesCategoryService.deleteResourceCategoriesByAuthor(id),
+      noteService.deleteNotesByAuthor(id),
+      courseService.deleteCoursesByAuthor(id),
+      reviewService.deleteReviewsByAuthorOrTarget(id),
+      cooperationService.deleteCooperationsByUser(id),
+      offerService.deleteOffersByAuthor(id),
+      chatService.deleteChatsbyUser(id),
+      messageService.deleteAllMessagesByUser(id),
+      tokenService.deleteTokensByUser(id)
+    ])
+
+    await User.findByIdAndRemove(id)
   },
 
   toggleOfferBookmark: async (offerId, userId) => {

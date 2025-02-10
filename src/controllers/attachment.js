@@ -51,7 +51,7 @@ const deleteAttachment = async (req, res) => {
   const { id } = req.params
   const { id: currentUser } = req.user
 
-  await attachmentService.deleteAttachment(id, currentUser)
+  await attachmentService.deleteAttachmentById(id, currentUser)
 
   res.status(204).end()
 }

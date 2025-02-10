@@ -104,6 +104,10 @@ const courseService = {
     await deleteDuplicateResources(course)
 
     await Course.findByIdAndRemove(id).exec()
+  },
+
+  deleteCoursesByAuthor: async (author) => {
+    await Course.deleteMany({ author })
   }
 }
 

@@ -2,23 +2,7 @@ definitions:
   notes:
     type: array
     items:
-      type: object
-      properties:
-        _id:
-          type: string
-        text:
-          type: string
-        author:
-          type: string
-          ref: '#components/user'
-        isPrivate:
-          type: boolean
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+      $ref: '#/definitions/note'
   noteBody:
     type: object
     properties:
@@ -34,13 +18,25 @@ definitions:
       text:
         type: string
       author:
-        type: string
-        ref: '#components/user'
+        $ref: '#/definitions/userInNote'
       isPrivate:
         type: boolean
+      cooperation:
+        type: string
       createdAt:
         type: string
         format: date-time
       updatedAt:
         type: string
         format: date-time
+  userInNote:
+    type: object
+    properties:
+      _id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      photo:
+        type: string

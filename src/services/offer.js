@@ -113,6 +113,14 @@ const offerService = {
 
   deleteOffer: async (id) => {
     await Offer.findByIdAndRemove(id).exec()
+  },
+
+  deleteOffersByAuthor: async (author) => {
+    await Offer.deleteMany({ author })
+  },
+
+  removeEnrolledUser: async (offerIds, userId) => {
+    await Offer.updateMany({ _id: { $in: offerIds } }, { $pull: { enrolledUsers: userId } })
   }
 }
 

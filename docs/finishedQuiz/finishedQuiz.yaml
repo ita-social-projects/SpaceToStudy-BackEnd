@@ -170,7 +170,7 @@ paths:
       produces:
         - application/json
       parameters:
-        - in: id
+        - in: path
           name: id
           required: true
           description: ID of the finished quiz that needs to be fetched

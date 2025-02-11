@@ -125,6 +125,45 @@ jobs:
             name: tests-log
             path: full-tests.log
 
+        # - name: Comment Test Report on PR
+        #   env:
+        #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #     PR_NUMBER: ${{ github.event.pull_request.number }}
+        #   run: |
+        #     if [[ -z "$PR_NUMBER" ]]; then
+        #       echo "No PR associated, skipping comment."
+        #       exit 0
+        #     fi
+  
+        #     COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | .id')
+  
+        #     if [[ -n "$COMMENT_ID" ]]; then
+        #       echo "Deleting previous comment: $COMMENT_ID"
+        #       gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
+        #     fi
+  
+        #     {
+        #       echo "### ✅ CI Report"
+        #       echo ""
+        #       echo "**🔹 Node.js Version:** ${{ matrix.node-version }}"
+        #       echo "**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}"
+        #       echo ""
+        #       echo "### 🧪 Test Results"
+        #       echo '```'
+        #       cat tests-results.txt
+        #       echo '```'
+        #       echo ""
+  
+        #       if [[ -s test-errors.log ]]; then
+        #         echo "### ❌ Test Errors"
+        #         echo '```'
+        #         cat test-errors.log
+        #         echo '```'
+        #       fi
+        #     } > pr-comment.txt
+  
+        #     gh pr comment $PR_NUMBER --body-file pr-comment.txt
+
         - name: Comment Test Report on PR
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -135,15 +174,25 @@ jobs:
               exit 0
             fi
   
-            COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | .id')
+            CI_MARKER="### ✅ CI Report"
   
-            if [[ -n "$COMMENT_ID" ]]; then
-              echo "Deleting previous comment: $COMMENT_ID"
-              gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
+            COMMENT_IDS=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | "\(.id) \(.body)"')
+  
+            if [[ -n "$COMMENT_IDS" ]]; then
+              echo "Checking existing comments for deletion..."
+              while IFS= read -r line; do
+                COMMENT_ID=$(echo "$line" | awk '{print $1}')
+                COMMENT_BODY=$(echo "$line" | cut -d' ' -f2-)
+  
+                if [[ "$COMMENT_BODY" == *"$CI_MARKER"* ]]; then
+                  echo "Deleting previous CI report comment ID: $COMMENT_ID"
+                  gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
+                fi
+              done <<< "$COMMENT_IDS"
             fi
   
             {
-              echo "### ✅ CI Report"
+              echo "$CI_MARKER"
               echo ""
               echo "**🔹 Node.js Version:** ${{ matrix.node-version }}"
               echo "**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}"
@@ -163,7 +212,6 @@ jobs:
             } > pr-comment.txt
   
             gh pr comment $PR_NUMBER --body-file pr-comment.txt
-  
   # container:
   #   name: Check Docker Build
   #   runs-on: ubuntu-latest

@@ -126,7 +126,7 @@ jobs:
 
       - name: Generate Test Report
         run: |
-          CI_MARKER="### ✅ CI Report - $(date +"%Y-%m-%d %H:%M:%S")"
+          CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
           echo "$CI_MARKER" > test-report.txt
           echo "" >> test-report.txt
           for folder in test-reports/tests-results-*; do
@@ -152,6 +152,9 @@ jobs:
             echo "" >> test-report.txt
           done
 
+      - name: Publish Report in GitHub Actions Summary
+        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
+        
       - name: Update CI Report in PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

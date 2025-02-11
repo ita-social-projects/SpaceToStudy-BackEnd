@@ -128,26 +128,30 @@ jobs:
           echo "$CI_MARKER" > pr-comment.txt
           echo "" >> pr-comment.txt
 
-          for file in test-reports/tests-results-*.txt; do
-            TEST_VERSION=$(basename "$file" | sed 's/tests-results-//; s/.txt//')
-            NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f1)
-            MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f2)
+          for folder in test-reports/tests-results-*; do
+            TEST_VERSION=$(basename "$folder")
+            NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
+            MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
 
-            echo "**🔹 Node.js Version:** $NODE_VERSION" >> pr-comment.txt
-            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> pr-comment.txt
-            echo "" >> pr-comment.txt
-            echo "### 🧪 Test Results" >> pr-comment.txt
-            echo '```' >> pr-comment.txt
-            cat "$file" >> pr-comment.txt
-            echo '```' >> pr-comment.txt
-            echo "" >> pr-comment.txt
+            TEST_FILE="$folder/tests-results-$NODE_VERSION-$MONGO_VERSION.txt"
+            ERRORS_FILE="$folder/test-errors-$NODE_VERSION-$MONGO_VERSION.log"
 
-            ERRORS_FILE="test-reports/test-errors-$TEST_VERSION.log"
+            if [[ -f "$TEST_FILE" ]]; then
+              echo "**🔹 Node.js Version:** $NODE_VERSION" >> pr-comment.txt
+              echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> pr-comment.txt
+              echo "" >> pr-comment.txt
+              echo "### 🧪 Test Results" >> pr-comment.txt
+              echo '```' >> pr-comment.txt
+              cat "$TEST_FILE" >> pr-comment.txt
+              echo '```' >> pr-comment.txt
+              echo "" >> pr-comment.txt
+            fi
+
             if [[ -s "$ERRORS_FILE" ]]; then
               echo "### ❌ Test Errors" >> pr-comment.txt
               echo '```' >> pr-comment.txt
               cat "$ERRORS_FILE" >> pr-comment.txt
-              echo '```'
+              echo '```' >> pr-comment.txt
             fi
 
             echo "" >> pr-comment.txt

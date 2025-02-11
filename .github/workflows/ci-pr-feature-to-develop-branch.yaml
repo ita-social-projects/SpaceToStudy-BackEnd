@@ -122,7 +122,7 @@ jobs:
         - name: Upload Test Logs
           uses: actions/upload-artifact@v4
           with:
-            name: tests-log
+            name: tests-logs(${{ matrix.node-version }}, ${{ matrix.mongodb-version }})
             path: full-tests.log
 
         - name: Comment Test Report on PR

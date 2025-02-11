@@ -137,22 +137,29 @@ jobs:
             HEAD_SHA=$(git rev-parse HEAD)
   
             if [ "$RESULT" -eq 0 ]; then
-              gh api repos/:owner/:repo/check-runs -X POST \
-                -F name="Unit Tests" \
-                -F head_sha="$HEAD_SHA" \
-                -F status="completed" \
-                -F conclusion="success" \
-                -F output.title="✅ All Tests Passed" \
-                -F output.summary="$(cat tests-results.txt)"
+              CONCLUSION="success"
+              TITLE="✅ All Tests Passed"
             else
-              gh api repos/:owner/:repo/check-runs -X POST \
-                -F name="Unit Tests" \
-                -F head_sha="$HEAD_SHA" \
-                -F status="completed" \
-                -F conclusion="failure" \
-                -F output.title="❌ Some Tests Failed" \
-                -F output.summary="$(cat test-errors.log)"
+              CONCLUSION="failure"
+              TITLE="❌ Some Tests Failed"
             fi
+  
+            SUMMARY=$(cat tests-results.txt | sed 's/"/\\"/g')
+            DETAILS=$(cat test-errors.log | sed 's/"/\\"/g')
+  
+            gh api repos/:owner/:repo/check-runs -X POST --input - <<EOF
+            {
+              "name": "Unit Tests",
+              "head_sha": "$HEAD_SHA",
+              "status": "completed",
+              "conclusion": "$CONCLUSION",
+              "output": {
+                "title": "$TITLE",
+                "summary": "$SUMMARY",
+                "text": "$DETAILS"
+              }
+            }
+            EOF
 
   
   # container:

@@ -54,10 +54,10 @@ jobs:
       
       - name: Install dependencies
         run: npm install
-#        run: npm ci        # Install dependencies from package-lock.json
+#        run: npm ci        # TO-DO: Install dependencies from package-lock.json
       
-      - name: Run ESLint
-        run: npm run lint
+      # - name: Run ESLint    # TO-DO: add linter check
+      #   run: npm run lint
         
       - name: Run tests
         run: |

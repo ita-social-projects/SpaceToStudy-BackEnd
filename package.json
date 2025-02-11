@@ -10,7 +10,7 @@
     "migrate:up": "migrate-mongo up",
     "migrate:rollback": "migrate-mongo down",
     "migrate:create": "migrate-mongo create",
-    "lint": "eslint . --fix",
+    "lint": "eslint .",
     "prepare": "husky install",
     "pre-commit": "lint-staged"
   },

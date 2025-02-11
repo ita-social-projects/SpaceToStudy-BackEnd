@@ -55,7 +55,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 #        run: npm ci        # Install dependencies from package-lock.json
-
+      
+      - name: Run ESLint
+        run: npm run lint
+        
       - name: Run tests
         run: |
           npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \

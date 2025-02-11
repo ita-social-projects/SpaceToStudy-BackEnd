@@ -15,7 +15,7 @@ jobs:
       strategy:
         matrix:
           node-version: [ '22.x' ]      # NodeJS version   | Use this to test new NodeJS versions
-          mongodb-version: [ '8.0' ]    # MongoDB version  | Use this to test new MongoDB versions
+          mongodb-version: [ '7.0', '8.0' ]    # MongoDB version  | Use this to test new MongoDB versions
         max-parallel: 1                 # The maximum number of jobs run in parallel
       steps:
         - name: Checkout repository
@@ -27,41 +27,41 @@ jobs:
             node-version: ${{ matrix.node-version }}
             cache: 'npm'
   
-        # - name: Install MongoDB ${{ matrix.mongodb-version }}
-        #   uses: supercharge/mongodb-github-action@1.12.0
-        #   with:
-        #     mongodb-version: ${{ matrix.mongodb-version }}
-        #     mongodb-db: ${{ secrets.MONGODB_DB }}
-        #     mongodb-username: ${{ secrets.MONGODB_USER }}
-        #     mongodb-password: ${{ secrets.MONGODB_PASS }}
-        #     mongodb-port: 27017
+        - name: Install MongoDB ${{ matrix.mongodb-version }}
+          uses: supercharge/mongodb-github-action@1.12.0
+          with:
+            mongodb-version: ${{ matrix.mongodb-version }}
+            mongodb-db: ${{ secrets.MONGODB_DB }}
+            mongodb-username: ${{ secrets.MONGODB_USER }}
+            mongodb-password: ${{ secrets.MONGODB_PASS }}
+            mongodb-port: 27017
         
-        # - name: Install MongoDB shell
-        #   run: |
-        #     sudo apt-get install -y gnupg curl
-        #     curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-        #     sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
-        #     --dearmor
-        #     echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
-        #     sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-        #     sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+        - name: Install MongoDB shell
+          run: |
+            sudo apt-get install -y gnupg curl
+            curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+            sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+            --dearmor
+            echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+            sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+            sudo apt-get update && sudo apt-get install -y mongodb-mongosh
          
-        # - name: Check MongoDB
-        #   run: |
-        #     for i in {1..30}; do
-        #       mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-        #       echo "Waiting for MongoDB..."
-        #       sleep 2
-        #     done
-        #     echo "MongoDB did not start in time!" && exit 1
+        - name: Check MongoDB
+          run: |
+            for i in {1..30}; do
+              mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+              echo "Waiting for MongoDB..."
+              sleep 2
+            done
+            echo "MongoDB did not start in time!" && exit 1
         
         - name: Install dependencies
           run: npm install
   #        run: npm ci 				# Install dependencies from package-lock.json
   
         - name: Run tests
-          run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
-          # run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
+          # run: npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
+          run: npm test --verbose --coverage=false 2>&1 | tee full-tests.log | tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > tests-results.txt) || true
           env:
             NODE_OPTIONS: --max_old_space_size=4096
             MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -125,45 +125,6 @@ jobs:
             name: tests-log
             path: full-tests.log
 
-        # - name: Comment Test Report on PR
-        #   env:
-        #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        #     PR_NUMBER: ${{ github.event.pull_request.number }}
-        #   run: |
-        #     if [[ -z "$PR_NUMBER" ]]; then
-        #       echo "No PR associated, skipping comment."
-        #       exit 0
-        #     fi
-  
-        #     COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | .id')
-  
-        #     if [[ -n "$COMMENT_ID" ]]; then
-        #       echo "Deleting previous comment: $COMMENT_ID"
-        #       gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
-        #     fi
-  
-        #     {
-        #       echo "### ✅ CI Report"
-        #       echo ""
-        #       echo "**🔹 Node.js Version:** ${{ matrix.node-version }}"
-        #       echo "**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}"
-        #       echo ""
-        #       echo "### 🧪 Test Results"
-        #       echo '```'
-        #       cat tests-results.txt
-        #       echo '```'
-        #       echo ""
-  
-        #       if [[ -s test-errors.log ]]; then
-        #         echo "### ❌ Test Errors"
-        #         echo '```'
-        #         cat test-errors.log
-        #         echo '```'
-        #       fi
-        #     } > pr-comment.txt
-  
-        #     gh pr comment $PR_NUMBER --body-file pr-comment.txt
-
         - name: Comment Test Report on PR
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -212,6 +173,8 @@ jobs:
             } > pr-comment.txt
   
             gh pr comment $PR_NUMBER --body-file pr-comment.txt
+
+
   # container:
   #   name: Check Docker Build
   #   runs-on: ubuntu-latest

@@ -4,7 +4,6 @@ on:
   pull_request:
     branches: ['develop']
 
-
 jobs:
   run-tests:
     name: Run Tests
@@ -60,9 +59,8 @@ jobs:
       #   run: npm run lint
         
       - name: Run tests
-          # npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \
         run: |
-          npm run test --verbose --coverage=false 2>&1 | \
+          npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \       # change to npm run test --verbose --coverage=false 2>&1 | \
           tee "full-tests-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
           tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > \
           "tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.txt") || true
@@ -154,34 +152,22 @@ jobs:
             echo "" >> test-report.txt
           done
 
-      - name: Publish Report in GitHub Actions Summary
-        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
-
-      - name: Remove Previous CI Report in PR
+      - name: Update CI Report in PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           if [[ -z "$PR_NUMBER" ]]; then
-            echo "No PR associated, skipping deletion."
+            echo "No PR associated, skipping update."
             exit 0
           fi
+          
           COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
-          if [[ -n "$COMMENT_ID" ]]; then
-            echo "Deleting previous CI report comment: $COMMENT_ID"
-            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
-          else
-            echo "No previous CI report found."
-          fi
 
-      - name: Post New Test Report to PR
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: |
-          if [[ -z "$PR_NUMBER" ]]; then
-            echo "No PR associated, skipping comment."
-            exit 0
+          if [[ -n "$COMMENT_ID" ]]; then
+            echo "Updating existing CI report comment: $COMMENT_ID"
+            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X PATCH -f body="$(cat test-report.txt)"
+          else
+            echo "No previous CI report found, creating a new one..."
+            gh pr comment $PR_NUMBER --body-file test-report.txt
           fi
-          echo "Creating new PR comment..."
-          gh pr comment $PR_NUMBER --body-file test-report.txt

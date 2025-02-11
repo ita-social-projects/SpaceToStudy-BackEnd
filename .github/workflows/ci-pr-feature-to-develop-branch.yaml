@@ -122,11 +122,11 @@ jobs:
         with:
           path: test-reports
 
-      - name: Combine All Reports
+      - name: Generate Test Report
         run: |
           CI_MARKER="### ✅ CI Report"
-          echo "$CI_MARKER" > pr-comment.txt
-          echo "" >> pr-comment.txt
+          echo "$CI_MARKER" > test-report.txt
+          echo "" >> test-report.txt
 
           for folder in test-reports/tests-results-*; do
             TEST_VERSION=$(basename "$folder")
@@ -136,28 +136,47 @@ jobs:
             TEST_FILE="$folder/tests-results-$NODE_VERSION-$MONGO_VERSION.txt"
             ERRORS_FILE="$folder/test-errors-$NODE_VERSION-$MONGO_VERSION.log"
 
-            if [[ -f "$TEST_FILE" ]]; then
-              echo "**🔹 Node.js Version:** $NODE_VERSION" >> pr-comment.txt
-              echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> pr-comment.txt
-              echo "" >> pr-comment.txt
-              echo "### 🧪 Test Results" >> pr-comment.txt
-              echo '```' >> pr-comment.txt
-              cat "$TEST_FILE" >> pr-comment.txt
-              echo '```' >> pr-comment.txt
-              echo "" >> pr-comment.txt
-            fi
+            echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
+            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
+            echo "" >> test-report.txt
+            echo "### 🧪 Test Results" >> test-report.txt
+            echo '```' >> test-report.txt
+            cat "$TEST_FILE" >> test-report.txt
+            echo '```' >> test-report.txt
+            echo "" >> test-report.txt
 
             if [[ -s "$ERRORS_FILE" ]]; then
-              echo "### ❌ Test Errors" >> pr-comment.txt
-              echo '```' >> pr-comment.txt
-              cat "$ERRORS_FILE" >> pr-comment.txt
-              echo '```' >> pr-comment.txt
+              echo "### ❌ Test Errors" >> test-report.txt
+              echo '```' >> test-report.txt
+              cat "$ERRORS_FILE" >> test-report.txt
+              echo '```' >> test-report.txt
             fi
-
-            echo "" >> pr-comment.txt
+            echo "" >> test-report.txt
           done
 
-      - name: Post Test Report to PR
+      - name: Publish Report in GitHub Actions Summary
+        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
+
+      - name: Remove Previous CI Report in PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "No PR associated, skipping deletion."
+            exit 0
+          fi
+
+          COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
+
+          if [[ -n "$COMMENT_ID" ]]; then
+            echo "Deleting previous CI report comment: $COMMENT_ID"
+            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
+          else
+            echo "No previous CI report found."
+          fi
+
+      - name: Post New Test Report to PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -167,12 +186,5 @@ jobs:
             exit 0
           fi
 
-          COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
-
-          if [[ -n "$COMMENT_ID" ]]; then
-            echo "Updating existing PR comment..."
-            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X PATCH -F body="$(cat pr-comment.txt)"
-          else
-            echo "Creating new PR comment..."
-            gh pr comment $PR_NUMBER --body-file pr-comment.txt
-          fi
+          echo "Creating new PR comment..."
+          gh pr comment $PR_NUMBER --body-file test-report.txt

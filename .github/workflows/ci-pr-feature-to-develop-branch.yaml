@@ -2,8 +2,8 @@ name: CI PR Feature to Main
 
 on:
   pull_request:
-    branches:
-      - develop
+    branches: ['develop']
+
 
 jobs:
   run-tests:
@@ -54,14 +54,15 @@ jobs:
       
       - name: Install dependencies
         run: npm install
-#        run: npm ci        # TO-DO: Install dependencies from package-lock.json
+       # run: npm ci        # TO-DO: Install dependencies from package-lock.json
       
       # - name: Run ESLint    # TO-DO: add linter check
       #   run: npm run lint
         
       - name: Run tests
+          # npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \
         run: |
-          npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \
+          npm run test --verbose --coverage=false 2>&1 | \
           tee "full-tests-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
           tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > \
           "tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.txt") || true
@@ -111,7 +112,7 @@ jobs:
           path: |
             tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.txt
             test-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
-
+  
   generate-report:
     name: Generate Test Report
     runs-on: ubuntu-latest
@@ -130,15 +131,12 @@ jobs:
           CI_MARKER="### ✅ CI Report"
           echo "$CI_MARKER" > test-report.txt
           echo "" >> test-report.txt
-
           for folder in test-reports/tests-results-*; do
             TEST_VERSION=$(basename "$folder")
             NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
             MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
-
             TEST_FILE="$folder/tests-results-$NODE_VERSION-$MONGO_VERSION.txt"
             ERRORS_FILE="$folder/test-errors-$NODE_VERSION-$MONGO_VERSION.log"
-
             echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
             echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
             echo "" >> test-report.txt
@@ -147,7 +145,6 @@ jobs:
             cat "$TEST_FILE" >> test-report.txt
             echo '```' >> test-report.txt
             echo "" >> test-report.txt
-
             if [[ -s "$ERRORS_FILE" ]]; then
               echo "### ❌ Test Errors" >> test-report.txt
               echo '```' >> test-report.txt
@@ -169,9 +166,7 @@ jobs:
             echo "No PR associated, skipping deletion."
             exit 0
           fi
-
           COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
-
           if [[ -n "$COMMENT_ID" ]]; then
             echo "Deleting previous CI report comment: $COMMENT_ID"
             gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
@@ -188,6 +183,5 @@ jobs:
             echo "No PR associated, skipping comment."
             exit 0
           fi
-
           echo "Creating new PR comment..."
           gh pr comment $PR_NUMBER --body-file test-report.txt

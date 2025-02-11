@@ -125,41 +125,29 @@ jobs:
             name: tests-log
             path: full-tests.log
 
-        - name: Create GitHub Check for Test Results
+        - name: Comment Test Report on PR
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            PR_NUMBER: ${{ github.event.pull_request.number }}
           run: |
-            RESULT=$(grep -Eo '[0-9]+ failed' tests-results.txt | awk '{print $1}')
-            if [ -z "$RESULT" ]; then
-              RESULT=0
-            fi
-            
-            HEAD_SHA=$(git rev-parse HEAD)
-  
-            if [ "$RESULT" -eq 0 ]; then
-              CONCLUSION="success"
-              TITLE="✅ All Tests Passed"
-            else
-              CONCLUSION="failure"
-              TITLE="❌ Some Tests Failed"
+            if [[ -z "$PR_NUMBER" ]]; then
+              echo "No PR associated, skipping comment."
+              exit 0
             fi
   
-            SUMMARY=$(cat tests-results.txt | sed 's/"/\\"/g')
-            DETAILS=$(cat test-errors.log | sed 's/"/\\"/g')
+            REPORT="### ✅ CI Report\n\n"
+            REPORT+="**🔹 Node.js Version:** ${{ matrix.node-version }}\n"
+            REPORT+="**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}\n\n"
   
-            gh api repos/:owner/:repo/check-runs -X POST --input - <<EOF
-            {
-              "name": "Unit Tests",
-              "head_sha": "$HEAD_SHA",
-              "status": "completed",
-              "conclusion": "$CONCLUSION",
-              "output": {
-                "title": "$TITLE",
-                "summary": "$SUMMARY",
-                "text": "$DETAILS"
-              }
-            }
-            EOF
+            REPORT+="### 🧪 Test Results\n"
+            REPORT+="\`\`\`\n$(cat tests-results.txt)\n\`\`\`\n\n"
+  
+            if [[ -s test-errors.log ]]; then
+              REPORT+="### ❌ Test Errors\n"
+              REPORT+="\`\`\`\n$(cat test-errors.log)\n\`\`\`\n"
+            fi
+  
+            gh pr comment $PR_NUMBER --body "$REPORT"
 
   
   # container:

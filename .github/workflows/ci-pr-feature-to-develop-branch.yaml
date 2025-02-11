@@ -88,6 +88,10 @@ jobs:
             GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
             COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
   
+        - name: Extract Errors
+          run: |
+            awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' full-tests.log > test-errors.log || true
+            
         - name: Generate Report
           run: |
             echo '### ✅ CI Report' >> $GITHUB_STEP_SUMMARY
@@ -101,6 +105,12 @@ jobs:
             cat tests-results.txt >> $GITHUB_STEP_SUMMARY
             echo '```' >> $GITHUB_STEP_SUMMARY
             echo '' >> $GITHUB_STEP_SUMMARY
+            if [[ -s test-errors.log ]]; then
+              echo '### ❌ Test Errors' >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+              cat test-errors.log >> $GITHUB_STEP_SUMMARY
+              echo '```' >> $GITHUB_STEP_SUMMARY
+            fi
   
         - name: Upload Test Logs
           uses: actions/upload-artifact@v4
@@ -114,6 +124,8 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+
   
   # container:
   #   name: Check Docker Build

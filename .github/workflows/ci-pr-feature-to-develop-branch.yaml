@@ -125,6 +125,21 @@ jobs:
             name: tests-log
             path: full-tests.log
 
+        - name: Create GitHub Check for Test Results
+          env:
+            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            RESULT=$(cat tests-results.txt | grep -Eo '[0-9]+ failed' | awk '{print $1}')
+            if [ -z "$RESULT" ]; then
+              RESULT=0
+            fi
+            
+            if [ "$RESULT" -eq 0 ]; then
+              gh api repos/:owner/:repo/check-runs -X POST -F name="Unit Tests" -F status="completed" -F conclusion="success" -F output.title="✅ All Tests Passed" -F output.summary="$(cat tests-results.txt)"
+            else
+              gh api repos/:owner/:repo/check-runs -X POST -F name="Unit Tests" -F status="completed" -F conclusion="failure" -F output.title="❌ Some Tests Failed" -F output.summary="$(cat test-errors.log)"
+            fi
+
   
   # container:
   #   name: Check Docker Build

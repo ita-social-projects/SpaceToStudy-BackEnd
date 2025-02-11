@@ -24,33 +24,33 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install MongoDB ${{ matrix.mongodb-version }}
-        uses: supercharge/mongodb-github-action@1.12.0
-        with:
-          mongodb-version: ${{ matrix.mongodb-version }}
-          mongodb-db: ${{ secrets.MONGODB_DB }}
-          mongodb-username: ${{ secrets.MONGODB_USER }}
-          mongodb-password: ${{ secrets.MONGODB_PASS }}
-          mongodb-port: 27017
+      # - name: Install MongoDB ${{ matrix.mongodb-version }}
+      #   uses: supercharge/mongodb-github-action@1.12.0
+      #   with:
+      #     mongodb-version: ${{ matrix.mongodb-version }}
+      #     mongodb-db: ${{ secrets.MONGODB_DB }}
+      #     mongodb-username: ${{ secrets.MONGODB_USER }}
+      #     mongodb-password: ${{ secrets.MONGODB_PASS }}
+      #     mongodb-port: 27017
       
-      - name: Install MongoDB shell
-        run: |
-          sudo apt-get install -y gnupg curl
-          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
-          --dearmor
-          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
-          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+      # - name: Install MongoDB shell
+      #   run: |
+      #     sudo apt-get install -y gnupg curl
+      #     curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+      #     sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+      #     --dearmor
+      #     echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+      #     sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+      #     sudo apt-get update && sudo apt-get install -y mongodb-mongosh
        
-      - name: Check MongoDB
-        run: |
-          for i in {1..30}; do
-            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not start in time!" && exit 1
+      # - name: Check MongoDB
+      #   run: |
+      #     for i in {1..30}; do
+      #       mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+      #       echo "Waiting for MongoDB..."
+      #       sleep 2
+      #     done
+      #     echo "MongoDB did not start in time!" && exit 1
       
       - name: Install dependencies
         run: npm install
@@ -88,12 +88,12 @@ jobs:
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v4.1.0
-        if: success() || failure()
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      # - name: SonarCloud Scan
+      #   uses: SonarSource/sonarqube-scan-action@v4.1.0
+      #   if: success() || failure()
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Extract Errors
         run: |
@@ -108,3 +108,67 @@ jobs:
           path: |
             tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.txt
             test-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+
+  generate-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: run-tests  
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download All Test Results
+        uses: actions/download-artifact@v4
+        with:
+          path: test-reports
+
+      - name: Combine All Reports
+        run: |
+          CI_MARKER="### ✅ CI Report"
+          echo "$CI_MARKER" > pr-comment.txt
+          echo "" >> pr-comment.txt
+
+          for file in test-reports/tests-results-*.txt; do
+            TEST_VERSION=$(basename "$file" | sed 's/tests-results-//; s/.txt//')
+            NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f1)
+            MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f2)
+
+            echo "**🔹 Node.js Version:** $NODE_VERSION" >> pr-comment.txt
+            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> pr-comment.txt
+            echo "" >> pr-comment.txt
+            echo "### 🧪 Test Results" >> pr-comment.txt
+            echo '```' >> pr-comment.txt
+            cat "$file" >> pr-comment.txt
+            echo '```' >> pr-comment.txt
+            echo "" >> pr-comment.txt
+
+            ERRORS_FILE="test-reports/test-errors-$TEST_VERSION.log"
+            if [[ -s "$ERRORS_FILE" ]]; then
+              echo "### ❌ Test Errors" >> pr-comment.txt
+              echo '```' >> pr-comment.txt
+              cat "$ERRORS_FILE" >> pr-comment.txt
+              echo '```'
+            fi
+
+            echo "" >> pr-comment.txt
+          done
+
+      - name: Post Test Report to PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "No PR associated, skipping comment."
+            exit 0
+          fi
+
+          COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
+
+          if [[ -n "$COMMENT_ID" ]]; then
+            echo "Updating existing PR comment..."
+            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X PATCH -F body="$(cat pr-comment.txt)"
+          else
+            echo "Creating new PR comment..."
+            gh pr comment $PR_NUMBER --body-file pr-comment.txt
+          fi

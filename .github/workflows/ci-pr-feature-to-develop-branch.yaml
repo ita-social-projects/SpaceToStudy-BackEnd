@@ -129,15 +129,29 @@ jobs:
           env:
             GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
-            RESULT=$(cat tests-results.txt | grep -Eo '[0-9]+ failed' | awk '{print $1}')
+            RESULT=$(grep -Eo '[0-9]+ failed' tests-results.txt | awk '{print $1}')
             if [ -z "$RESULT" ]; then
               RESULT=0
             fi
             
+            HEAD_SHA=$(git rev-parse HEAD)
+  
             if [ "$RESULT" -eq 0 ]; then
-              gh api repos/:owner/:repo/check-runs -X POST -F name="Unit Tests" -F status="completed" -F conclusion="success" -F output.title="✅ All Tests Passed" -F output.summary="$(cat tests-results.txt)"
+              gh api repos/:owner/:repo/check-runs -X POST \
+                -F name="Unit Tests" \
+                -F head_sha="$HEAD_SHA" \
+                -F status="completed" \
+                -F conclusion="success" \
+                -F output.title="✅ All Tests Passed" \
+                -F output.summary="$(cat tests-results.txt)"
             else
-              gh api repos/:owner/:repo/check-runs -X POST -F name="Unit Tests" -F status="completed" -F conclusion="failure" -F output.title="❌ Some Tests Failed" -F output.summary="$(cat test-errors.log)"
+              gh api repos/:owner/:repo/check-runs -X POST \
+                -F name="Unit Tests" \
+                -F head_sha="$HEAD_SHA" \
+                -F status="completed" \
+                -F conclusion="failure" \
+                -F output.title="❌ Some Tests Failed" \
+                -F output.summary="$(cat test-errors.log)"
             fi
 
   

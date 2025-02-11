@@ -135,6 +135,13 @@ jobs:
               exit 0
             fi
   
+            COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | .id')
+  
+            if [[ -n "$COMMENT_ID" ]]; then
+              echo "Deleting previous comment: $COMMENT_ID"
+              gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X DELETE
+            fi
+  
             {
               echo "### ✅ CI Report"
               echo ""
@@ -156,7 +163,6 @@ jobs:
             } > pr-comment.txt
   
             gh pr comment $PR_NUMBER --body-file pr-comment.txt
-
   
   # container:
   #   name: Check Docker Build

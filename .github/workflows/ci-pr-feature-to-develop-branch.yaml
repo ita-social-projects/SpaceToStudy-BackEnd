@@ -135,19 +135,27 @@ jobs:
               exit 0
             fi
   
-            REPORT="### ✅ CI Report\n\n"
-            REPORT+="**🔹 Node.js Version:** ${{ matrix.node-version }}\n"
-            REPORT+="**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}\n\n"
+            {
+              echo "### ✅ CI Report"
+              echo ""
+              echo "**🔹 Node.js Version:** ${{ matrix.node-version }}"
+              echo "**🔹 MongoDB Version:** ${{ matrix.mongodb-version }}"
+              echo ""
+              echo "### 🧪 Test Results"
+              echo '```'
+              cat tests-results.txt
+              echo '```'
+              echo ""
   
-            REPORT+="### 🧪 Test Results\n"
-            REPORT+="\`\`\`\n$(cat tests-results.txt)\n\`\`\`\n\n"
+              if [[ -s test-errors.log ]]; then
+                echo "### ❌ Test Errors"
+                echo '```'
+                cat test-errors.log
+                echo '```'
+              fi
+            } > pr-comment.txt
   
-            if [[ -s test-errors.log ]]; then
-              REPORT+="### ❌ Test Errors\n"
-              REPORT+="\`\`\`\n$(cat test-errors.log)\n\`\`\`\n"
-            fi
-  
-            gh pr comment $PR_NUMBER --body "$REPORT"
+            gh pr comment $PR_NUMBER --body-file pr-comment.txt
 
   
   # container:

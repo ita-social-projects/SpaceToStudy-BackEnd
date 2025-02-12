@@ -112,58 +112,69 @@ jobs:
             test-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
   
   docker-build-test:
-      name: Build & Test Docker Container
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-
-        - name: Build Docker Image
-          run: docker build -t be-app:test -f ./Dockerfile .
-
-        - name: Run Docker Container
-          run: |
-            docker run -d --name be-app -p 8080:8080 be-app:test
-            sleep 5
-
-        - name: Check Docker Health Status
-          run: |
-            for i in {1..10}; do
-              STATUS=$(docker inspect --format='{{.State.Health.Status}}' be-app)
-              if [[ "$STATUS" == "healthy" ]]; then
-                echo "✅ Container is healthy!"
-                exit 0
-              fi
-              echo "⏳ Waiting for container to become healthy..."
-              sleep 3
-            done
-            echo "❌ Container did not become healthy in time!"
+    name: Build & Test Docker Container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  
+      - name: Build Docker Image
+        run: docker build -t be-app:test -f ./Dockerfile .
+  
+      - name: Run Docker Container
+        run: |
+          docker run -d --name be-app -p 8080:8080 be-app:test
+          sleep 5
+      
+      - name: Check Docker Health Status
+        run: |
+          for i in {1..10}; do
+            STATUS=$(docker inspect --format='{{.State.Health.Status}}' be-app)
+            if [[ "$STATUS" == "healthy" ]]; then
+              echo "✅ Container is healthy!"
+              exit 0
+            fi
+            echo "⏳ Waiting for container to become healthy..."
+            sleep 3
+          done
+          echo "❌ Container did not become healthy in time!"
+          docker logs be-app
+          exit 1
+  
+      - name: Check Logs for Errors
+        run: |
+          docker logs be-app | tee container-logs.txt
+          if grep -iE "error|fatal|exception" container-logs.txt; then
+            echo "❌ Errors found in container logs!"
+            exit 1
+          fi
+  
+      - name: Test API Unauthorized Response
+        run: |
+          RESPONSE=$(curl --silent --request GET \
+            --url 'http://localhost:8080/users/673753cfc333d2e67f3712e2?=&role=student' \
+            --write-out "\n%{http_code}")
+          BODY=$(echo "$RESPONSE" | head -n 1)
+          STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
+  
+          EXPECTED_BODY='{"status":401,"code":"UNAUTHORIZED","message":"The requested URL requires user authorization."}'
+          EXPECTED_STATUS=401
+          
+          if [[ "$BODY" == "$EXPECTED_BODY" && "$STATUS_CODE" == "$EXPECTED_STATUS" ]]; then
+            echo "✅ API returned expected unauthorized response!"
+          else
+            echo "❌ API response mismatch!"
+            echo "Expected: $EXPECTED_BODY ($EXPECTED_STATUS)"
+            echo "Got: $BODY ($STATUS_CODE)"
             docker logs be-app
             exit 1
-
-        - name: Check Logs for Errors
-          run: |
-            docker logs be-app | tee container-logs.txt
-            if grep -iE "error|fatal|exception" container-logs.txt; then
-              echo "❌ Errors found in container logs!"
-              exit 1
-            fi
-
-        - name: Test API Response
-          run: |
-            if curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/health | grep "200"; then
-              echo "✅ API responded successfully!"
-            else
-              echo "❌ API did not respond correctly!"
-              docker logs be-app
-              exit 1
-            fi
-
-        - name: Cleanup Docker Container & Image
-          run: |
-            docker stop be-app
-            docker rm be-app
-            docker rmi be-app:test
+          fi
+      
+      - name: Cleanup Docker Container & Image
+        run: |
+          docker stop be-app
+          docker rm be-app
+          docker rmi be-app:test
   
   generate-report:
     name: Generate Test Report

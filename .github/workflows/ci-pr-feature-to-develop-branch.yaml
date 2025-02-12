@@ -133,7 +133,7 @@ jobs:
       - name: Test API Unauthorized Response
         run: |
           RESPONSE=$(curl --silent --request GET \
-            --url 'http://be-app:8080/users/' \
+            --url 'http://localhost:8080/users/' \
             --write-out "\n%{http_code}")
           BODY=$(echo "$RESPONSE" | head -n 1)
           STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)

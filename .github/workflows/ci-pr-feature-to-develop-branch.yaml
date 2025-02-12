@@ -129,7 +129,10 @@ jobs:
       - name: Check if container is running
         run: |
           docker ps -a
-        
+      
+      - name: Check Container Logs
+        run: docker logs be-app
+  
       - name: Test API Unauthorized Response
         run: |
           RESPONSE=$(curl --silent --request GET \

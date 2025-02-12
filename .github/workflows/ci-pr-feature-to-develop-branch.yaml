@@ -124,12 +124,16 @@ jobs:
       - name: Run Docker Container
         run: |
           docker run -d --name be-app -p 8080:8080 be-app:test
-          sleep 5
-  
+          sleep 10
+
+      - name: Check if container is running
+        run: |
+          docker ps -a
+        
       - name: Test API Unauthorized Response
         run: |
           RESPONSE=$(curl --silent --request GET \
-            --url 'http://localhost:8080/users/673753cfc333d2e67f3712e2?=&role=student' \
+            --url 'http://be-app:8080/users/' \
             --write-out "\n%{http_code}")
           BODY=$(echo "$RESPONSE" | head -n 1)
           STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)

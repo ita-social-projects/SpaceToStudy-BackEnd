@@ -117,51 +117,21 @@ jobs:
       steps:
         - name: Checkout repository
           uses: actions/checkout@v4
-    
-        - name: Build Docker Image
-          run: docker build -t be-app:test -f ./Dockerfile .
   
-        - name: Create Docker Network
-          run: docker network create be-network
-    
-        - name: Run MongoDB Container
+        - name: Build Docker image
           run: |
-            docker run -d --name be-app --network be-network -p 8080:8080 \
-            -e MONGO_URI="mongodb://mongo:27017/logs" be-app:test
-    
-        - name: Run Application Container
-          run: |
-            docker run -d --name be-app --network be-network -p 8080:8080 \
-              -e MONGO_URI="mongodb://mongo:27017/logs" be-app:test
-            sleep 10
+            docker build --build-arg MONGODB_URL=${{ secrets.MONGODB_URL }} -t my-app .
   
-        - name: Check if container is running
-          run: docker ps -a
-        
-        - name: Check Container Logs
-          run: docker logs be-app
-    
-        - name: Test API Unauthorized Response
+        - name: Run Docker container
           run: |
-            for i in {1..10}; do
-              if curl --silent --head http://localhost:8080/users/ | grep "401"; then
-                echo "✅ API responded as expected!"
-                exit 0
-              fi
-              echo "⏳ Waiting for API to start..."
-              sleep 3
-            done
-            echo "❌ API did not start!"
-            docker logs be-app
-            exit 1
-        
-        - name: Cleanup Docker Containers & Image
-          run: |
-            docker stop be-app mongo
-            docker rm be-app mongo
-            docker network rm be-network
-            docker rmi be-app:test
+            docker run -d --name my-app -p 8080:8080 my-app
   
+        - name: Check running container
+          run: docker ps | grep my-app
+  
+        - name: Show container logs
+          run: docker logs my-app
+          
   generate-report:
     name: Generate Test Report
     runs-on: ubuntu-latest

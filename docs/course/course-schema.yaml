@@ -92,6 +92,9 @@ definitions:
                       - $ref: '#/definitions/question'
                   resourceType:
                     $ref: '#/definitions/resourceType'
+                required:
+                  - resource
+                  - resourceType
           required:
             - title
             - description
@@ -99,6 +102,8 @@ definitions:
     required:
       - title
       - description
+      - subject
+      - proficiencyLevel
   courseSections:
     type: array
     items:
@@ -171,7 +176,7 @@ definitions:
         description: 'Only present when the resource is a copy'
   lessonInCourse:
     allOf:
-      - $ref: '#/definitions/baseLesson'
+      - $ref: '#/definitions/lesson'
       - type: object
         properties:
           isDuplicate:

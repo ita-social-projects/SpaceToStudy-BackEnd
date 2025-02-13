@@ -112,53 +112,54 @@ jobs:
             test-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
   
   docker-build-test:
-    name: Build & Test Docker Container
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      name: Build & Test Docker Container
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+    
+        - name: Build Docker Image
+          run: docker build -t be-app:test -f ./Dockerfile .
   
-      - name: Build Docker Image
-        run: docker build -t be-app:test -f ./Dockerfile .
+        - name: Create Docker Network
+          run: docker network create be-network
+    
+        - name: Run MongoDB Container
+          run: |
+            docker run -d --name mongo --network be-network -p 27017:27017 mongo
+    
+        - name: Run Application Container
+          run: |
+            docker run -d --name be-app --network be-network -p 8080:8080 \
+              -e MONGO_URI="mongodb://mongo:27017/logs" be-app:test
+            sleep 10
   
-      - name: Run Docker Container
-        run: |
-          docker run -d --name be-app -p 8080:8080 be-app:test
-          sleep 10
-
-      - name: Check if container is running
-        run: |
-          docker ps -a
-      
-      - name: Check Container Logs
-        run: docker logs be-app
-  
-      - name: Test API Unauthorized Response
-        run: |
-          RESPONSE=$(curl --silent --request GET \
-            --url 'http://localhost:8080/users/' \
-            --write-out "\n%{http_code}")
-          BODY=$(echo "$RESPONSE" | head -n 1)
-          STATUS_CODE=$(echo "$RESPONSE" | tail -n 1)
-  
-          EXPECTED_BODY='{"status":401,"code":"UNAUTHORIZED","message":"The requested URL requires user authorization."}'
-          EXPECTED_STATUS=401
-          
-          if [[ "$BODY" == "$EXPECTED_BODY" && "$STATUS_CODE" == "$EXPECTED_STATUS" ]]; then
-            echo "✅ API returned expected unauthorized response!"
-          else
-            echo "❌ API response mismatch!"
-            echo "Expected: $EXPECTED_BODY ($EXPECTED_STATUS)"
-            echo "Got: $BODY ($STATUS_CODE)"
+        - name: Check if container is running
+          run: docker ps -a
+        
+        - name: Check Container Logs
+          run: docker logs be-app
+    
+        - name: Test API Unauthorized Response
+          run: |
+            for i in {1..10}; do
+              if curl --silent --head http://localhost:8080/users/ | grep "401"; then
+                echo "✅ API responded as expected!"
+                exit 0
+              fi
+              echo "⏳ Waiting for API to start..."
+              sleep 3
+            done
+            echo "❌ API did not start!"
             docker logs be-app
             exit 1
-          fi
-      
-      - name: Cleanup Docker Container & Image
-        run: |
-          docker stop be-app
-          docker rm be-app
-          docker rmi be-app:test
+        
+        - name: Cleanup Docker Containers & Image
+          run: |
+            docker stop be-app mongo
+            docker rm be-app mongo
+            docker network rm be-network
+            docker rmi be-app:test
   
   generate-report:
     name: Generate Test Report

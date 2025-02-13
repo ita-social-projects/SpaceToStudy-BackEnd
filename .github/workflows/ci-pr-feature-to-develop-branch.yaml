@@ -128,8 +128,20 @@ jobs:
   
         - name: Check running container
           run: docker ps | grep my-app
-  
-        - name: Show container logs
+
+        - name: Test API response
+          run: |
+            RESPONSE=$(curl --silent --request GET --url 'http://localhost:8080/users/')
+            EXPECTED='{"status":401,"code":"UNAUTHORIZED","message":"The requested URL requires user authorization."}'
+            if [[ "$RESPONSE" == "$EXPECTED" ]]; then
+              echo "API response is correct"
+            else
+              echo "Unexpected API response: $RESPONSE"
+              exit 1
+            fi
+
+        - name: Show container logs (on failure)
+          if: failure()
           run: docker logs my-app
           
   generate-report:

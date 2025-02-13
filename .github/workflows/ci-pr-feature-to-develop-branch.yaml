@@ -126,7 +126,8 @@ jobs:
     
         - name: Run MongoDB Container
           run: |
-            docker run -d --name mongo --network be-network -p 27017:27017 mongo
+            docker run -d --name be-app --network be-network -p 8080:8080 \
+            -e MONGO_URI="mongodb://mongo:27017/logs" be-app:test
     
         - name: Run Application Container
           run: |

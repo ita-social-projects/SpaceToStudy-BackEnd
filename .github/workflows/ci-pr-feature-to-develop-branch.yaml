@@ -126,20 +126,38 @@ jobs:
           run: |
             docker run -d --name my-app -p 8080:8080 my-app
   
-        - name: Check running container
-          run: docker ps | grep my-app
-
+        - name: Wait for service to be ready
+          run: |
+            echo "Waiting for service to be available..."
+            for i in {1..20}; do
+              if curl --silent --head http://localhost:8080/ >/dev/null; then
+                echo "Service is up!"
+                exit 0
+              fi
+              echo "Retrying in 2 seconds..."
+              sleep 2
+            done
+            echo "Service did not start in time"
+            docker logs my-app
+            exit 1
+  
         - name: Test API response
           run: |
-            RESPONSE=$(curl --silent --request GET --url 'http://localhost:8080/users/')
+            RESPONSE=$(curl --silent --show-error --request GET --url 'http://localhost:8080/users/' --write-out "\n%{http_code}" --output response_body)
+            HTTP_CODE=$(tail -n1 <<< "$RESPONSE")
+            BODY=$(head -n -1 <<< "$RESPONSE")
+  
+            echo "Response Body: $BODY"
+            echo "HTTP Code: $HTTP_CODE"
+  
             EXPECTED='{"status":401,"code":"UNAUTHORIZED","message":"The requested URL requires user authorization."}'
-            if [[ "$RESPONSE" == "$EXPECTED" ]]; then
+            if [[ "$BODY" == "$EXPECTED" && "$HTTP_CODE" == "401" ]]; then
               echo "API response is correct"
             else
-              echo "Unexpected API response: $RESPONSE"
+              echo "Unexpected API response: $BODY"
               exit 1
             fi
-
+  
         - name: Show container logs (on failure)
           if: failure()
           run: docker logs my-app

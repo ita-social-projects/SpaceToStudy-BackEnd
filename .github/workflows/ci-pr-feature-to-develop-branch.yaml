@@ -121,10 +121,10 @@ jobs:
         - name: Build Docker image
           run: |
             docker build --build-arg MONGODB_URL=${{ secrets.MONGODB_URL }} -t my-app .
-  
+        
         - name: Run Docker container
           run: |
-            docker run -d --name my-app -p 8080:8080 my-app
+            docker run -d --name my-app -p 8080:8080 -e MONGODB_URL=${{ secrets.MONGODB_URL }} my-app
   
         - name: Wait for service to be ready
           run: |

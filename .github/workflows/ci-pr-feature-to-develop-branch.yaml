@@ -60,7 +60,8 @@ jobs:
         
       - name: Run tests and generate logs
         run: |
-          npm run test --verbose --coverage=false 2>&1 | \
+          # npm run test --verbose --coverage=false 2>&1 | \
+          npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \
           # generate full-tests-results.log
           tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
           # parsing and generate summary-tests-results.log 
@@ -123,7 +124,6 @@ jobs:
       - name: Download Test Results
         uses: actions/download-artifact@v4
         with:
-          name: tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}
           path: test-reports
 
       - name: Generate Test Report

@@ -60,8 +60,7 @@ jobs:
         
       - name: Run tests and generate logs
         run: |
-          npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \
-          # npm run test --verbose --coverage=false 2>&1 | \
+          npm run test --verbose --coverage=false 2>&1 | \
           # generate full-tests-results.log
           tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
           # parsing and generate summary-tests-results.log 

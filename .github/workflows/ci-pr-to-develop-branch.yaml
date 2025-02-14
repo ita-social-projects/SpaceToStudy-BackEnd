@@ -1,0 +1,271 @@
+name: PR (develop)
+
+on:
+  pull_request:
+    branches: ['develop']
+
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ '22.x' ]          # NodeJS version   | Use this to test new NodeJS versions
+        mongodb-version: [ '8.0' ]        # MongoDB version  | Use this to test new MongoDB versions   
+      max-parallel: 1                     # The maximum number of jobs run in parallel
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install MongoDB ${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.12.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+          mongodb-db: ${{ secrets.MONGODB_DB }}
+          mongodb-username: ${{ secrets.MONGODB_USER }}
+          mongodb-password: ${{ secrets.MONGODB_PASS }}
+          mongodb-port: 27017
+      
+      - name: Install MongoDB shell
+        run: |
+          sudo apt-get install -y gnupg curl
+          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+          --dearmor
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+       
+      - name: Check MongoDB
+        run: |
+          for i in {1..30}; do
+            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+            echo "Waiting for MongoDB..."
+            sleep 2
+          done
+          echo "MongoDB did not start in time!" && exit 1
+        
+      - name: Install dependencies
+        run: npm install
+      #  run: npm ci          # TO-DO: Install dependencies from package-lock.json
+      
+      # - name: Run ESLint    # TO-DO: add linter check
+      #   run: npm run lint
+        
+      - name: Run tests and generate logs
+        run: |
+          npm run test --verbose --coverage=false 2>&1 | \
+          # generate full-tests-results.log
+          tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
+          # parsing and generate summary-tests-results.log 
+          tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") | \
+          # parsing and generate summary-tests-errors.log
+          tee >(awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' > "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") || true
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
+          MONGODB_URL_READONLY_TEST: ${{ secrets.MONGODB_URL_READONLY_TEST }}
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_RESET_SECRET: ${{ secrets.JWT_RESET_SECRET }}
+          JWT_CONFIRM_SECRET: ${{ secrets.JWT_CONFIRM_SECRET }}
+          JWT_ACCESS_EXPIRES_IN: ${{ secrets.JWT_ACCESS_EXPIRES_IN }}
+          JWT_REFRESH_EXPIRES_IN: ${{ secrets.JWT_REFRESH_EXPIRES_IN }}
+          JWT_REFRESH_LONG_TERM_EXPIRES_IN: ${{ secrets.JWT_REFRESH_LONG_TERM_EXPIRES_IN }}
+          JWT_RESET_EXPIRES_IN: ${{ secrets.JWT_RESET_EXPIRES_IN }}
+          JWT_CONFIRM_EXPIRES_IN: ${{ secrets.JWT_CONFIRM_EXPIRES_IN }}
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_FIRSTNAME: ${{ secrets.MAIL_FIRSTNAME }}
+          MAIL_LASTNAME: ${{ secrets.MAIL_LASTNAME }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
+          COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v4.1.0
+        if: success() || failure()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: Upload Test Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}
+          path: |
+            # full-tests-results.log
+            full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+            # summary-tests-results.log
+            summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+            # summary-tests-errors.log
+            summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+  
+  
+  docker-build-test:
+    name: Build & Test Docker Container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+  
+      - name: Build Docker image
+        run: |
+          docker build -t be-app .
+      
+      - name: Run MongoDB container
+        run: |
+          docker run -d --name mongodb -p 27017:27017 \
+            -e MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGODB_USER }} \
+            -e MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGODB_PASS }} \
+            -e MONGO_INITDB_DATABASE=${{ secrets.MONGODB_DB }} \
+            mongo:8.0.3-noble
+  
+      - name: Run Application Container
+        run: |
+          docker run -d --name be-app -p 8080:8080 \
+            -e MONGODB_USER=${{ secrets.MONGODB_USER }} \
+            -e MONGODB_PASS=${{ secrets.MONGODB_PASS }} \
+            -e MONGODB_DB=${{ secrets.MONGODB_DB }} \
+            -e MONGODB_URL=${{ secrets.MONGODB_URL_DOCKER }} \
+            -e JWT_ACCESS_SECRET=${{ secrets.JWT_ACCESS_SECRET }} \
+            -e JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }} \
+            -e JWT_RESET_SECRET=${{ secrets.JWT_RESET_SECRET }} \
+            -e JWT_CONFIRM_SECRET=${{ secrets.JWT_CONFIRM_SECRET }} \
+            -e JWT_ACCESS_EXPIRES_IN=${{ secrets.JWT_ACCESS_EXPIRES_IN }} \
+            -e JWT_REFRESH_EXPIRES_IN=${{ secrets.JWT_REFRESH_EXPIRES_IN }} \
+            -e JWT_RESET_EXPIRES_IN=${{ secrets.JWT_RESET_EXPIRES_IN }} \
+            -e JWT_CONFIRM_EXPIRES_IN=${{ secrets.JWT_CONFIRM_EXPIRES_IN }} \
+            -e CLIENT_URL=${{ secrets.CLIENT_URL }} \
+            -e SERVER_URL=${{ secrets.SERVER_URL }} \
+            -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
+            -e MAIL_USER=${{ secrets.MAIL_USER }} \
+            -e MAIL_PASS=${{ secrets.MAIL_PASS }} \
+            -e MAIL_FIRSTNAME=${{ secrets.MAIL_FIRSTNAME }} \
+            -e MAIL_LASTNAME=${{ secrets.MAIL_LASTNAME }} \
+            -e GMAIL_CLIENT_ID=${{ secrets.GMAIL_CLIENT_ID }} \
+            -e GMAIL_CLIENT_SECRET=${{ secrets.GMAIL_CLIENT_SECRET }} \
+            -e GMAIL_REFRESH_TOKEN=${{ secrets.GMAIL_REFRESH_TOKEN }} \
+            -e GMAIL_REDIRECT_URI=${{ secrets.GMAIL_REDIRECT_URI }} \
+            -e COOKIE_DOMAIN=${{ secrets.COOKIE_DOMAIN }} \
+            --link mongodb be-app
+      
+      - name: Retrieve Application Logs
+        run: docker logs be-app
+      
+      - name: API Health Check and Report
+        run: |
+          sleep 10
+          RESPONSE=$(curl --insecure --silent --request GET --url 'http://localhost:8080/users/')
+          EXPECTED='{"status":401,"code":"UNAUTHORIZED","message":"The requested URL requires user authorization."}'
+    
+          if [[ "$RESPONSE" == "$EXPECTED" ]]; then
+            echo "✅ No containerization issues detected." | tee -a docker-results.log
+          else
+            echo "❌ Potential containerization issue detected!" | tee -a docker-results.log
+            echo "::error ::Potential containerization issue detected!"
+          fi
+
+      - name: Upload Docker Health Check Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-health-check
+          path: docker-results.log
+
+  generate-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: [run-tests, docker-build-test]
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Test Results
+        uses: actions/download-artifact@v4
+        with:
+          path: test-reports
+
+      - name: Download Docker Health Check Results
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-health-check
+          path: test-reports
+
+      - name: Generate Test Report
+        run: |
+          CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
+          echo "$CI_MARKER" > test-report.txt
+          echo "" >> test-report.txt
+          
+          for folder in test-reports/tests-results-*; do
+            TEST_VERSION=$(basename "$folder")
+            NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
+            MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
+            
+            SUMMARY_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
+            ERRORS_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+            
+            echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
+            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
+            echo "" >> test-report.txt
+            
+            echo "### 🧪 Test Results" >> test-report.txt
+            echo '```' >> test-report.txt
+            cat "$SUMMARY_FILE" >> test-report.txt
+            echo '```' >> test-report.txt
+            echo "" >> test-report.txt
+            
+            if [[ -s "$ERRORS_FILE" ]]; then
+              echo "### ❌ Test Errors" >> test-report.txt
+              echo '```' >> test-report.txt
+              cat "$ERRORS_FILE" >> test-report.txt
+              echo '```' >> test-report.txt
+            fi
+            echo "" >> test-report.txt
+          done
+          
+          DOCKER_LOG="test-reports/docker-results.log"
+          if [[ -f "$DOCKER_LOG" ]]; then
+            echo "### 🐳 Docker Health Check Results" >> test-report.txt
+            echo '```' >> test-report.txt
+            cat "$DOCKER_LOG" >> test-report.txt
+            echo '```' >> test-report.txt
+          else
+            echo "### 🐳 Docker Health Check Results" >> test-report.txt
+            echo "**No Docker health check results found.**" >> test-report.txt
+          fi
+      
+      - name: Publish Report in GitHub Actions Summary
+        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
+        
+      - name: Update CI Report in PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "No PR associated, skipping update."
+            exit 0
+          fi
+          
+          COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
+
+          if [[ -n "$COMMENT_ID" ]]; then
+            echo "Updating existing CI report comment: $COMMENT_ID"
+            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X PATCH -f body="$(cat test-report.txt)"
+          else
+            echo "No previous CI report found, creating a new one..."
+            gh pr comment $PR_NUMBER --body-file test-report.txt
+          fi

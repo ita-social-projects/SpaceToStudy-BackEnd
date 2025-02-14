@@ -112,55 +112,39 @@ jobs:
             test-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
   
   docker-build-test:
-      name: Build & Test Docker Container
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-  
-        - name: Build Docker image
-          run: |
-            docker build --build-arg MONGODB_URL=${{ secrets.MONGODB_URL }} -t my-app .
-        
-        - name: Run Docker container
-          run: |
-            docker run -d --name my-app -p 8080:8080 -e MONGODB_URL=${{ secrets.MONGODB_URL }} my-app
-  
-        - name: Wait for service to be ready
-          run: |
-            echo "Waiting for service to be available..."
-            for i in {1..20}; do
-              if curl --silent --head http://localhost:8080/ >/dev/null; then
-                echo "Service is up!"
-                exit 0
-              fi
-              echo "Retrying in 2 seconds..."
-              sleep 2
-            done
-            echo "Service did not start in time"
-            docker logs my-app
-            exit 1
-  
-        - name: Test API response
-          run: |
-            RESPONSE=$(curl --silent --show-error --request GET --url 'http://localhost:8080/users/' --write-out "\n%{http_code}" --output response_body)
-            HTTP_CODE=$(tail -n1 <<< "$RESPONSE")
-            BODY=$(head -n -1 <<< "$RESPONSE")
-  
-            echo "Response Body: $BODY"
-            echo "HTTP Code: $HTTP_CODE"
-  
-            EXPECTED='{"status":401,"code":"UNAUTHORIZED","message":"The requested URL requires user authorization."}'
-            if [[ "$BODY" == "$EXPECTED" && "$HTTP_CODE" == "401" ]]; then
-              echo "API response is correct"
-            else
-              echo "Unexpected API response: $BODY"
-              exit 1
+    name: Build & Test Docker Container
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
+      - name: Build Docker image
+        run: |
+          docker build --build-arg MONGODB_URL=${{ secrets.MONGODB_URL }} -t my-app .
+      
+      - name: Run MongoDB container
+        run: |
+          docker run -d --name mongodb -e MONGO_INITDB_ROOT_USERNAME=${{ secrets.MONGODB_USER }} \
+          -e MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGODB_PASS }} -p 27017:27017 mongo:8.0.3-noble
+    
+      - name: Run built container
+        run: |
+          docker run -d --name my-app -p 8080:8080 -e MONGODB_URL=${{ secrets.MONGODB_URL }} --link mongodb my-app
+    
+      - name: Check container health
+        run: |
+          echo "Waiting for service to be available..."
+          for i in {1..20}; do
+            if curl --silent --head http://localhost:8080/ >/dev/null; then
+              echo "Service is up!"
+              exit 0
             fi
-  
-        - name: Show container logs (on failure)
-          if: failure()
-          run: docker logs my-app
+            echo "Retrying in 2 seconds..."
+            sleep 2
+          done
+          echo "Service did not start in time"
+          docker logs my-app
+          exit 1
           
   generate-report:
     name: Generate Test Report

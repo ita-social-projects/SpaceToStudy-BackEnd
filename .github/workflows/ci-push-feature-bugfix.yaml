@@ -1,0 +1,155 @@
+name: Push (feature & bugfix)
+
+on:
+  push:
+    branches: ['feature/**', 'bugfix/**']
+
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ '22.x' ]          # NodeJS version   | Use this to test new NodeJS versions
+        mongodb-version: [ '8.0' ]        # MongoDB version  | Use this to test new MongoDB versions   
+      max-parallel: 1                     # The maximum number of jobs run in parallel
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install MongoDB ${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.12.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+          mongodb-db: ${{ secrets.MONGODB_DB }}
+          mongodb-username: ${{ secrets.MONGODB_USER }}
+          mongodb-password: ${{ secrets.MONGODB_PASS }}
+          mongodb-port: 27017
+      
+      - name: Install MongoDB shell
+        run: |
+          sudo apt-get install -y gnupg curl
+          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+          --dearmor
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+       
+      - name: Check MongoDB
+        run: |
+          for i in {1..30}; do
+            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+            echo "Waiting for MongoDB..."
+            sleep 2
+          done
+          echo "MongoDB did not start in time!" && exit 1
+      
+      - name: Install dependencies
+        run: npm install
+      #  run: npm ci          # TO-DO: Install dependencies from package-lock.json
+      
+      # - name: Run ESLint    # TO-DO: add linter check
+      #   run: npm run lint
+        
+      - name: Run tests and generate logs
+        run: |
+          npm run test --verbose --coverage=false 2>&1 | \
+          # generate full-tests-results.log
+          tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
+          # parsing and generate summary-tests-results.log 
+          tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") | \
+          # parsing and generate summary-tests-errors.log
+          tee >(awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' > "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") || true
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
+          MONGODB_URL_READONLY_TEST: ${{ secrets.MONGODB_URL_READONLY_TEST }}
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_RESET_SECRET: ${{ secrets.JWT_RESET_SECRET }}
+          JWT_CONFIRM_SECRET: ${{ secrets.JWT_CONFIRM_SECRET }}
+          JWT_ACCESS_EXPIRES_IN: ${{ secrets.JWT_ACCESS_EXPIRES_IN }}
+          JWT_REFRESH_EXPIRES_IN: ${{ secrets.JWT_REFRESH_EXPIRES_IN }}
+          JWT_REFRESH_LONG_TERM_EXPIRES_IN: ${{ secrets.JWT_REFRESH_LONG_TERM_EXPIRES_IN }}
+          JWT_RESET_EXPIRES_IN: ${{ secrets.JWT_RESET_EXPIRES_IN }}
+          JWT_CONFIRM_EXPIRES_IN: ${{ secrets.JWT_CONFIRM_EXPIRES_IN }}
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_FIRSTNAME: ${{ secrets.MAIL_FIRSTNAME }}
+          MAIL_LASTNAME: ${{ secrets.MAIL_LASTNAME }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
+          COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
+      
+      - name: Upload Test Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}
+          path: |
+            # full-tests-results.log
+            full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+            # summary-tests-results.log
+            summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+            # summary-tests-errors.log
+            summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+  
+  generate-report:
+    name: Generate Test Report
+    runs-on: ubuntu-latest
+    needs: run-tests  
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Test Results
+        uses: actions/download-artifact@v4
+        with:
+          path: test-reports
+
+      - name: Generate Test Report
+        run: |
+          CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
+          echo "$CI_MARKER" > test-report.txt
+          echo "" >> test-report.txt
+          
+          for folder in test-reports/tests-results-*; do
+            TEST_VERSION=$(basename "$folder")
+            NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
+            MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
+            
+            SUMMARY_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
+            ERRORS_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+            
+            echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
+            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
+            echo "" >> test-report.txt
+            
+            echo "### 🧪 Test Results" >> test-report.txt
+            echo '```' >> test-report.txt
+            cat "$SUMMARY_FILE" >> test-report.txt
+            echo '```' >> test-report.txt
+            echo "" >> test-report.txt
+            
+            if [[ -s "$ERRORS_FILE" ]]; then
+              echo "### ❌ Test Errors" >> test-report.txt
+              echo '```' >> test-report.txt
+              cat "$ERRORS_FILE" >> test-report.txt
+              echo '```' >> test-report.txt
+            fi
+            echo "" >> test-report.txt
+          done
+      
+      - name: Publish Report in GitHub Actions Summary
+        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY

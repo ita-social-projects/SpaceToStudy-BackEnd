@@ -145,12 +145,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download Test Results
-        uses: actions/download-artifact@v4
-        with:
-          path: test-reports
-        continue-on-error: true  # Prevent failure if no artifacts exist
-
       - name: Check if Tests Were Skipped
         id: check-tests
         run: |
@@ -158,65 +152,71 @@ jobs:
           SKIP_TESTS="${{ needs.check-skip-tests.outputs.skip-tests }}"
           echo "Received skip-tests: $SKIP_TESTS"
 
-          # Ensure the variable is not empty
+          # If the variable is empty, assume tests were not skipped
           if [[ -z "$SKIP_TESTS" ]]; then
             echo "⚠️ WARNING: skip-tests output is empty, assuming false"
             SKIP_TESTS="false"
           fi
 
-          # Save the skip-tests value to the GitHub environment for use in later steps
+          # Save the skip-tests value to GitHub environment for later steps
           echo "tests-skipped=$SKIP_TESTS" >> $GITHUB_ENV
           echo "Final tests-skipped value: $SKIP_TESTS"
 
       - name: Generate Test Report
         run: |
-          # Load environment variables to ensure tests-skipped is available
+          # Load environment variables
           source $GITHUB_ENV  
-          
+
           CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
           echo "$CI_MARKER" > test-report.txt
           echo "" >> test-report.txt
           
-          # If tests were skipped, explicitly mention it instead of "No test results found"
+          # If tests were skipped, generate a simple report and exit
           if [[ "$tests-skipped" == "true" ]]; then
-            echo "🚀 **Tests were skipped** due to `[devops]` or `[docs]` flags." >> test-report.txt
-          
-          # If test results exist, process and display them
-          elif ls test-reports/tests-results-* 1> /dev/null 2>&1; then
-            for folder in test-reports/tests-results-*; do
-              TEST_VERSION=$(basename "$folder")
-              NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
-              MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
-              SUMMARY_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
-              ERRORS_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
-              
-              echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
-              echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
-              echo "" >> test-report.txt
-              
-              # Include test summary if available
-              if [ -f "$SUMMARY_FILE" ]; then
-                echo "### 🧪 Test Results" >> test-report.txt
-                echo '```' >> test-report.txt
-                cat "$SUMMARY_FILE" >> test-report.txt
-                echo '```' >> test-report.txt
-                echo "" >> test-report.txt
-              fi
-              
-              # Include errors if any are present
-              if [ -s "$ERRORS_FILE" ]; then
-                echo "### ❌ Test Errors" >> test-report.txt
-                echo '```' >> test-report.txt
-                cat "$ERRORS_FILE" >> test-report.txt
-                echo '```' >> test-report.txt
-              fi
-              echo "" >> test-report.txt
-            done
-          
-          # If no test results were found and tests were not skipped, log a warning
-          else
-            echo "⚠️ **No test results found.** Tests might have failed before generating logs, or artifacts were not uploaded." >> test-report.txt
+            echo "🚀 **Tests weren’t started** due to `[devops]` or `[docs]` flags." >> test-report.txt
+            cat test-report.txt >> $GITHUB_STEP_SUMMARY
+            exit 0
           fi
+
+          # Download test artifacts
+          echo "📥 Downloading test results..."
+          mkdir -p test-reports
+          if ! ls test-reports/tests-results-* 1> /dev/null 2>&1; then
+            echo "⚠️ **No test results found. Tests might have failed before generating logs.**" >> test-report.txt
+            cat test-report.txt >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+
+          # Process test results
+          for folder in test-reports/tests-results-*; do
+            TEST_VERSION=$(basename "$folder")
+            NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
+            MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
+            SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
+            ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+            
+            echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
+            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
+            echo "" >> test-report.txt
+            
+            # If a summary file exists, include it in the report
+            if [ -f "$SUMMARY_FILE" ]; then
+              echo "### 🧪 Test Results" >> test-report.txt
+              echo '```' >> test-report.txt
+              cat "$SUMMARY_FILE" >> test-report.txt
+              echo '```' >> test-report.txt
+              echo "" >> test-report.txt
+            fi
+            
+            # If error logs exist, include them in the report
+            if [ -s "$ERRORS_FILE" ]; then
+              echo "### ❌ Test Errors" >> test-report.txt
+              echo '```' >> test-report.txt
+              cat "$ERRORS_FILE" >> test-report.txt
+              echo '```' >> test-report.txt
+            fi
+            echo "" >> test-report.txt
+          done
 
       - name: Publish Report in GitHub Actions Summary
         run: cat test-report.txt >> $GITHUB_STEP_SUMMARY

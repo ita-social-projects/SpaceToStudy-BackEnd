@@ -24,10 +24,13 @@ jobs:
 
           if echo "$COMMIT_MSG" | grep -iqE '\[devops\]|\[docs\]'; then
             echo "skip-tests=true" >> $GITHUB_OUTPUT
+            echo "✅ Tests will be skipped due to commit message"
           elif echo "$CHANGED_FILES" | grep -E '(\.md|\.yml|\.yaml|Dockerfile)$'; then
             echo "skip-tests=true" >> $GITHUB_OUTPUT
+            echo "✅ Tests will be skipped due to changed files"
           else
             echo "skip-tests=false" >> $GITHUB_OUTPUT
+            echo "❌ Tests will run"
           fi
           
   run-tests:
@@ -151,10 +154,20 @@ jobs:
       - name: Check if Tests Were Skipped
         id: check-tests
         run: |
-          if [ "${{ needs.check-skip-tests.outputs.skip-tests }}" == "true" ]; then
+          SKIP_TESTS="${{ needs.check-skip-tests.outputs.skip-tests }}"
+          echo "Received skip-tests: $SKIP_TESTS"
+
+          if [[ -z "$SKIP_TESTS" ]]; then
+            echo "⚠️ WARNING: skip-tests output is empty, assuming false"
+            SKIP_TESTS="false"
+          fi
+
+          if [[ "$SKIP_TESTS" == "true" ]]; then
             echo "tests-skipped=true" >> $GITHUB_ENV
+            echo "✅ Tests were skipped"
           else
             echo "tests-skipped=false" >> $GITHUB_ENV
+            echo "❌ Tests were NOT skipped"
           fi
 
       - name: Generate Test Report

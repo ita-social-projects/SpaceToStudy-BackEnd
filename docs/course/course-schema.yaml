@@ -61,10 +61,15 @@ definitions:
     properties:
       title:
         type: string
+        minLength: 1
+        maxLength: 100
       description:
         type: string
+        minLength: 1
+        maxLength: 1000
       category:
         type: string
+        nullable: true
       subject:
         type: string
       proficiencyLevel:
@@ -76,8 +81,12 @@ definitions:
           properties:
             title:
               type: string
+              minLength: 1
+              maxLength: 100
             description:
               type: string
+              minLength: 1
+              maxLength: 150
             resources:
               type: array
               items:

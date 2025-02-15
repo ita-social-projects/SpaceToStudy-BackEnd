@@ -160,7 +160,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/courseBody'
+              $ref: '#/definitions/courseBody'
             example:
               title: Advanced English
               description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.

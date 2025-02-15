@@ -1,5 +1,5 @@
 name: Push (chore)
-
+# small changes
 on:
   push:
     branches: ['chore/**']

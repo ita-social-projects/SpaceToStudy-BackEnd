@@ -177,9 +177,9 @@ jobs:
           echo "$CI_MARKER" > test-report.txt
           echo "" >> test-report.txt
           
-          # If tests were skipped, log it in the report
+          # If tests were skipped, explicitly mention it instead of "No test results found"
           if [[ "$tests-skipped" == "true" ]]; then
-            echo "🚀 **Tests were skipped** due to `[devops]` or `[docs]` flags" >> test-report.txt
+            echo "🚀 **Tests were skipped** due to `[devops]` or `[docs]` flags." >> test-report.txt
           
           # If test results exist, process and display them
           elif ls test-reports/tests-results-* 1> /dev/null 2>&1; then
@@ -215,7 +215,7 @@ jobs:
           
           # If no test results were found and tests were not skipped, log a warning
           else
-            echo "⚠️ **No test results found. Tests might have failed before generating logs.**" >> test-report.txt
+            echo "⚠️ **No test results found.** Tests might have failed before generating logs, or artifacts were not uploaded." >> test-report.txt
           fi
 
       - name: Publish Report in GitHub Actions Summary

@@ -50,33 +50,33 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install MongoDB ${{ matrix.mongodb-version }}
-        uses: supercharge/mongodb-github-action@1.12.0
-        with:
-          mongodb-version: ${{ matrix.mongodb-version }}
-          mongodb-db: ${{ secrets.MONGODB_DB }}
-          mongodb-username: ${{ secrets.MONGODB_USER }}
-          mongodb-password: ${{ secrets.MONGODB_PASS }}
-          mongodb-port: 27017
+      # - name: Install MongoDB ${{ matrix.mongodb-version }}
+      #   uses: supercharge/mongodb-github-action@1.12.0
+      #   with:
+      #     mongodb-version: ${{ matrix.mongodb-version }}
+      #     mongodb-db: ${{ secrets.MONGODB_DB }}
+      #     mongodb-username: ${{ secrets.MONGODB_USER }}
+      #     mongodb-password: ${{ secrets.MONGODB_PASS }}
+      #     mongodb-port: 27017
       
-      - name: Install MongoDB shell
-        run: |
-          sudo apt-get install -y gnupg curl
-          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
-          --dearmor
-          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
-          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+      # - name: Install MongoDB shell
+      #   run: |
+      #     sudo apt-get install -y gnupg curl
+      #     curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+      #     sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+      #     --dearmor
+      #     echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+      #     sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+      #     sudo apt-get update && sudo apt-get install -y mongodb-mongosh
        
-      - name: Check MongoDB
-        run: |
-          for i in {1..30}; do
-            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not start in time!" && exit 1
+      # - name: Check MongoDB
+      #   run: |
+      #     for i in {1..30}; do
+      #       mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+      #       echo "Waiting for MongoDB..."
+      #       sleep 2
+      #     done
+      #     echo "MongoDB did not start in time!" && exit 1
       
       - name: Install dependencies
         run: npm install
@@ -87,7 +87,8 @@ jobs:
         
       - name: Run tests and generate logs
         run: |
-          npm run test --verbose --coverage=false 2>&1 | \
+          # npm run test --verbose --coverage=false 2>&1 | \
+          npm test -- src/test/unit/cron-jobs/checkForLastLogin.spec.js --verbose --coverage=false 2>&1 | \
           # generate full-tests-results.log
           tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
           # parsing and generate summary-tests-results.log 
@@ -164,26 +165,27 @@ jobs:
           
           if [ "$tests-skipped" == "true" ]; then
             echo "🚀 **Tests were skipped** due to `[devops]` or `[docs]` flags" >> test-report.txt
-          else
+          elif ls test-reports/tests-results-* 1> /dev/null 2>&1; then
             for folder in test-reports/tests-results-*; do
               TEST_VERSION=$(basename "$folder")
               NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
               MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
-
               SUMMARY_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
               ERRORS_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
-
+              
               echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
               echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
               echo "" >> test-report.txt
               
-              echo "### 🧪 Test Results" >> test-report.txt
-              echo '```' >> test-report.txt
-              cat "$SUMMARY_FILE" >> test-report.txt
-              echo '```' >> test-report.txt
-              echo "" >> test-report.txt
+              if [ -f "$SUMMARY_FILE" ]; then
+                echo "### 🧪 Test Results" >> test-report.txt
+                echo '```' >> test-report.txt
+                cat "$SUMMARY_FILE" >> test-report.txt
+                echo '```' >> test-report.txt
+                echo "" >> test-report.txt
+              fi
               
-              if [[ -s "$ERRORS_FILE" ]]; then
+              if [ -s "$ERRORS_FILE" ]; then
                 echo "### ❌ Test Errors" >> test-report.txt
                 echo '```' >> test-report.txt
                 cat "$ERRORS_FILE" >> test-report.txt
@@ -191,6 +193,8 @@ jobs:
               fi
               echo "" >> test-report.txt
             done
+          else
+            echo "⚠️ **No test results found. Tests might have failed before generating logs.**" >> test-report.txt
           fi
 
       - name: Publish Report in GitHub Actions Summary

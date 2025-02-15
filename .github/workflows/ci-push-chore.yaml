@@ -154,30 +154,34 @@ jobs:
       - name: Check if Tests Were Skipped
         id: check-tests
         run: |
+          # Retrieve the skip-tests output from check-skip-tests
           SKIP_TESTS="${{ needs.check-skip-tests.outputs.skip-tests }}"
           echo "Received skip-tests: $SKIP_TESTS"
 
+          # Ensure the variable is not empty
           if [[ -z "$SKIP_TESTS" ]]; then
             echo "⚠️ WARNING: skip-tests output is empty, assuming false"
             SKIP_TESTS="false"
           fi
 
-          if [[ "$SKIP_TESTS" == "true" ]]; then
-            echo "tests-skipped=true" >> $GITHUB_ENV
-            echo "✅ Tests were skipped"
-          else
-            echo "tests-skipped=false" >> $GITHUB_ENV
-            echo "❌ Tests were NOT skipped"
-          fi
+          # Save the skip-tests value to the GitHub environment for use in later steps
+          echo "tests-skipped=$SKIP_TESTS" >> $GITHUB_ENV
+          echo "Final tests-skipped value: $SKIP_TESTS"
 
       - name: Generate Test Report
         run: |
+          # Load environment variables to ensure tests-skipped is available
+          source $GITHUB_ENV  
+          
           CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
           echo "$CI_MARKER" > test-report.txt
           echo "" >> test-report.txt
           
-          if [ "$tests-skipped" == "true" ]; then
+          # If tests were skipped, log it in the report
+          if [[ "$tests-skipped" == "true" ]]; then
             echo "🚀 **Tests were skipped** due to `[devops]` or `[docs]` flags" >> test-report.txt
+          
+          # If test results exist, process and display them
           elif ls test-reports/tests-results-* 1> /dev/null 2>&1; then
             for folder in test-reports/tests-results-*; do
               TEST_VERSION=$(basename "$folder")
@@ -190,6 +194,7 @@ jobs:
               echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
               echo "" >> test-report.txt
               
+              # Include test summary if available
               if [ -f "$SUMMARY_FILE" ]; then
                 echo "### 🧪 Test Results" >> test-report.txt
                 echo '```' >> test-report.txt
@@ -198,6 +203,7 @@ jobs:
                 echo "" >> test-report.txt
               fi
               
+              # Include errors if any are present
               if [ -s "$ERRORS_FILE" ]; then
                 echo "### ❌ Test Errors" >> test-report.txt
                 echo '```' >> test-report.txt
@@ -206,6 +212,8 @@ jobs:
               fi
               echo "" >> test-report.txt
             done
+          
+          # If no test results were found and tests were not skipped, log a warning
           else
             echo "⚠️ **No test results found. Tests might have failed before generating logs.**" >> test-report.txt
           fi

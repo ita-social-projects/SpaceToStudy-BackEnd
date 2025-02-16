@@ -35,7 +35,7 @@ paths:
           schema:
             type: boolean
           required: false
-          description: If true will include in response questions that have isDuplicate set to true. 
+          description: If true will include in response questions that have isDuplicate set to true.
       responses:
         200:
           description: OK

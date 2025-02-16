@@ -36,7 +36,7 @@ definitions:
           type: object
           properties:
             user:
-              type: string  
+              type: string
       createdAt:
         type: string
         format: date-time

@@ -61,7 +61,7 @@ describe('Question controller', () => {
   let app, server, accessToken, tutorAccessToken, currentUser, studentAccessToken, testQuestion, testQuestionId
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

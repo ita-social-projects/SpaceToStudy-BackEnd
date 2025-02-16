@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ '22.x' ]          # NodeJS version   | Use this to test new NodeJS versions
-        mongodb-version: [ '8.0' ]        # MongoDB version  | Use this to test new MongoDB versions   
-      max-parallel: 1                     # The maximum number of jobs run in parallel
+        node-version: ['22.x'] # NodeJS version   | Use this to test new NodeJS versions
+        mongodb-version: ['8.0'] # MongoDB version  | Use this to test new MongoDB versions
+      max-parallel: 1 # The maximum number of jobs run in parallel
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
           mongodb-username: ${{ secrets.MONGODB_USER }}
           mongodb-password: ${{ secrets.MONGODB_PASS }}
           mongodb-port: 27017
-      
+
       - name: Install MongoDB shell
         run: |
           sudo apt-get install -y gnupg curl
@@ -41,7 +41,7 @@ jobs:
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
           sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
           sudo apt-get update && sudo apt-get install -y mongodb-mongosh
-       
+
       - name: Check MongoDB
         run: |
           for i in {1..30}; do
@@ -50,14 +50,14 @@ jobs:
             sleep 2
           done
           echo "MongoDB did not start in time!" && exit 1
-        
+
       - name: Install dependencies
         run: npm install
       #  run: npm ci          # TO-DO: Install dependencies from package-lock.json
-      
+
       # - name: Run ESLint    # TO-DO: add linter check
       #   run: npm run lint
-        
+
       - name: Run tests and generate logs
         run: |
           npm run test --verbose --coverage=false 2>&1 | \
@@ -111,19 +111,18 @@ jobs:
             summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
             # summary-tests-errors.log
             summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
-  
-  
+
   docker-build-test:
     name: Build & Test Docker Container
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-  
+
       - name: Build Docker image
         run: |
           docker build -t be-app .
-      
+
       - name: Run MongoDB container
         run: |
           docker run -d --name mongodb -p 27017:27017 \
@@ -131,7 +130,7 @@ jobs:
             -e MONGO_INITDB_ROOT_PASSWORD=${{ secrets.MONGODB_PASS }} \
             -e MONGO_INITDB_DATABASE=${{ secrets.MONGODB_DB }} \
             mongo:8.0.3-noble
-  
+
       - name: Run Application Container
         run: |
           docker run -d --name be-app -p 8080:8080 \
@@ -160,13 +159,16 @@ jobs:
             -e GMAIL_REDIRECT_URI=${{ secrets.GMAIL_REDIRECT_URI }} \
             -e COOKIE_DOMAIN=${{ secrets.COOKIE_DOMAIN }} \
             --link mongodb be-app
-      
+
+      - name: Retrieve Application Logs
+        run: docker logs be-app
+
       - name: API Health Check and Report
         run: |
           sleep 10
           RESPONSE=$(curl --insecure --silent --request GET --url 'http://localhost:8080/users/')
           EXPECTED='{"status":401,"code":"UNAUTHORIZED","message":"The requested URL requires user authorization."}'
-    
+
           if [[ "$RESPONSE" == "$EXPECTED" ]]; then
             echo "✅ No containerization issues detected." | tee -a docker-results.log
           else
@@ -205,7 +207,7 @@ jobs:
           CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
           echo "$CI_MARKER" > test-report.txt
           echo "" >> test-report.txt
-          
+
           for folder in test-reports/tests-results-*; do
             TEST_VERSION=$(basename "$folder")
             NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
@@ -232,7 +234,7 @@ jobs:
             fi
             echo "" >> test-report.txt
           done
-          
+
           DOCKER_LOG="test-reports/docker-results.log"
           if [[ -f "$DOCKER_LOG" ]]; then
             echo "### 🐳 Docker Health Check Results" >> test-report.txt
@@ -243,10 +245,10 @@ jobs:
             echo "### 🐳 Docker Health Check Results" >> test-report.txt
             echo "**No Docker health check results found.**" >> test-report.txt
           fi
-      
+
       - name: Publish Report in GitHub Actions Summary
         run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
-        
+
       - name: Update CI Report in PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -256,7 +258,7 @@ jobs:
             echo "No PR associated, skipping update."
             exit 0
           fi
-          
+
           COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
 
           if [[ -n "$COMMENT_ID" ]]; then

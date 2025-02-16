@@ -55,7 +55,7 @@ describe('ResourceCategory controller', () => {
   let app, server, accessToken, currentUser, studentAccessToken, tutorAccessToken, testResourceCategory
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

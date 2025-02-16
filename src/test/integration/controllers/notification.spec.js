@@ -21,7 +21,7 @@ describe('Notification controller', () => {
   let app, server, accessToken, currentUser, testNotification
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

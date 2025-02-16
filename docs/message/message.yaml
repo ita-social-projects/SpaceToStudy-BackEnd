@@ -10,11 +10,11 @@ paths:
       produces:
         - application/json
       parameters:
-      - name: id
-        in: path
-        required: true
-        description: ID of the chat
-        type: string
+        - name: id
+          in: path
+          required: true
+          description: ID of the chat
+          type: string
       requestBody:
         required: true
         description: Create new message.
@@ -32,14 +32,14 @@ paths:
               schema:
                 $ref: '#/definitions/message'
               example:
-                  _id: 64a28e8c5d56f749c7d915d0
-                  author: 6421d9833cdf38b706756dff
-                  authorRole: student
-                  text: Hi, do you want to start cooperation with me?
-                  chat: 6421d9833cdf38b706756dfd
-                  clearedFor: []
-                  createdAt: 2023-20-01T13:25:36.292Z
-                  updatedAt: 2023-20-01T13:25:36.292Z
+                _id: 64a28e8c5d56f749c7d915d0
+                author: 6421d9833cdf38b706756dff
+                authorRole: student
+                text: Hi, do you want to start cooperation with me?
+                chat: 6421d9833cdf38b706756dfd
+                clearedFor: []
+                createdAt: 2023-20-01T13:25:36.292Z
+                updatedAt: 2023-20-01T13:25:36.292Z
         401:
           description: Unauthorized
           content:

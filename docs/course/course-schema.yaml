@@ -95,7 +95,7 @@ definitions:
               type: string
             title:
               type: string
-            description: 
+            description:
               type: string
             resources:
               type: array

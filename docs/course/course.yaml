@@ -181,13 +181,7 @@ paths:
                   - _id: 6781349b8c7432471f221116
                     title: Section First
                     description: some description
-                    resources:
-                      [
-                        {
-                          resource: 63ed1cd25e9d781cdb6a6b17,
-                          resourceType: lesson
-                        }
-                      ]
+                    resources: [{ resource: 63ed1cd25e9d781cdb6a6b17, resourceType: lesson }]
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

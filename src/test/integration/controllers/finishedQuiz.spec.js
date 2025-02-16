@@ -104,80 +104,83 @@ describe('Quiz controller', () => {
 
       expectError(404, DOCUMENT_NOT_FOUND([Quiz.modelName]), response)
     })
-  }),
-    describe(`GET ${endpointUrl}`, () => {
-      it('should get all finished quizzes', async () => {
-        const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
+  })
 
-        expect(response.statusCode).toBe(200)
-        expect(Array.isArray(response.body.items)).toBe(true)
-        expect(response.body).toEqual({
-          items: [
-            {
-              _id: expect.any(String),
-              createdAt: expect.any(String),
-              updatedAt: expect.any(String),
-              quiz: String(testQuiz._id),
-              ...testFinishedQuizData
-            }
-          ],
-          count: 1
-        })
-      })
+  describe(`GET ${endpointUrl}`, () => {
+    it('should get all finished quizzes', async () => {
+      const response = await app.get(`${endpointUrl}`).set('Cookie', [`accessToken=${accessToken}`])
 
-      it('should throw UNAUTHORIZED', async () => {
-        const response = await app.get(endpointUrl)
-
-        expectError(401, UNAUTHORIZED, response)
-      })
-    }),
-    describe(`GET ${endpointUrl}:id`, () => {
-      it('should get finished quiz', async () => {
-        const finishedQuizId = testFinishedQuiz._body._id
-
-        const response = await app.get(endpointUrl + finishedQuizId).set('Cookie', [`accessToken=${accessToken}`])
-
-        expect(response.statusCode).toBe(200)
-        expect(response.body).toEqual({
-          _id: expect.any(String),
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          quiz: String(testQuiz._id),
-          ...testFinishedQuizData
-        })
-      })
-
-      it('should throw UNAUTHORIZED', async () => {
-        const finishedQuizId = testFinishedQuiz._body._id
-
-        const response = await app.get(endpointUrl + finishedQuizId)
-
-        expectError(401, UNAUTHORIZED, response)
-      })
-    }),
-    describe(`PATCH ${endpointUrl}:id`, () => {
-      it('should update finished quiz', async () => {
-        const finishedQuizId = testFinishedQuiz._body._id
-
-        const response = await app
-          .patch(endpointUrl + finishedQuizId)
-          .send({ grade: 88 })
-          .set('Cookie', [`accessToken=${accessToken}`])
-
-        const updatedFinishedQuiz = await app
-          .get(endpointUrl + finishedQuizId)
-          .set('Cookie', [`accessToken=${accessToken}`])
-
-        expect(response.statusCode).toBe(204)
-        expect(updatedFinishedQuiz._body.grade).toEqual(88)
-      })
-
-      it('should throw UNAUTHORIZED', async () => {
-        const response = await app.patch(endpointUrl)
-
-        expectError(401, UNAUTHORIZED, response)
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body.items)).toBe(true)
+      expect(response.body).toEqual({
+        items: [
+          {
+            _id: expect.any(String),
+            createdAt: expect.any(String),
+            updatedAt: expect.any(String),
+            quiz: String(testQuiz._id),
+            ...testFinishedQuizData
+          }
+        ],
+        count: 1
       })
     })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}:id`, () => {
+    it('should get finished quiz', async () => {
+      const finishedQuizId = testFinishedQuiz._body._id
+
+      const response = await app.get(endpointUrl + finishedQuizId).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual({
+        _id: expect.any(String),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        quiz: String(testQuiz._id),
+        ...testFinishedQuizData
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const finishedQuizId = testFinishedQuiz._body._id
+
+      const response = await app.get(endpointUrl + finishedQuizId)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`PATCH ${endpointUrl}:id`, () => {
+    it('should update finished quiz', async () => {
+      const finishedQuizId = testFinishedQuiz._body._id
+
+      const response = await app
+        .patch(endpointUrl + finishedQuizId)
+        .send({ grade: 88 })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      const updatedFinishedQuiz = await app
+        .get(endpointUrl + finishedQuizId)
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(204)
+      expect(updatedFinishedQuiz._body.grade).toEqual(88)
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const response = await app.patch(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
 })
 
 describe('Finished quiz controller for student', () => {

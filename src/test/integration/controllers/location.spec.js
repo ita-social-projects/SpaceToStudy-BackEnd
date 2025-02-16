@@ -20,7 +20,7 @@ describe('Location controller', () => {
   let app, server, accessToken
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

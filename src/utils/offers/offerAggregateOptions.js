@@ -11,12 +11,13 @@ const getSearchMatch = (search, isSearchFromOwnRequests) => {
   const firstNameRegex = getRegex(firstName)
   const lastNameRegex = getRegex(lastName)
 
-  const additionalFields = isSearchFromOwnRequests
-    ? [{ 'subject.name': getRegex(search) }]
-    : [
-        { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
-        { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
-      ]
+  const subjectFilter = [{ 'subject.name': getRegex(search) }]
+  const authorNameFilter = [
+    { 'author.firstName': firstNameRegex, 'author.lastName': lastNameRegex },
+    { 'author.firstName': lastNameRegex, 'author.lastName': firstNameRegex }
+  ]
+
+  const additionalFields = isSearchFromOwnRequests ? subjectFilter : authorNameFilter
 
   return { $or: [{ title: getRegex(search) }, ...additionalFields] }
 }

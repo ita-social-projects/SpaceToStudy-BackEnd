@@ -3,6 +3,7 @@ name: PR (develop)
 on:
   pull_request:
     branches: ['develop']
+    branches-ignore: ['chore/**']
 
 jobs:
   run-tests:

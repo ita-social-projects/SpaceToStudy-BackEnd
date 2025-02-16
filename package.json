@@ -10,7 +10,8 @@
     "migrate:up": "migrate-mongo up",
     "migrate:rollback": "migrate-mongo down",
     "migrate:create": "migrate-mongo create",
-    "lint": "eslint . --fix",
+    "lint:check": "eslint . && prettier . --check",
+    "lint:fix": "eslint . --fix && prettier . --write",
     "prepare": "husky install",
     "pre-commit": "lint-staged"
   },
@@ -54,9 +55,10 @@
     "winston-mongodb": "^5.0.7"
   },
   "lint-staged": {
-    "*.{js}": [
+    "*.js": [
       "eslint --fix",
       "prettier --write"
-    ]
+    ],
+    "*.{css,json,yaml}": "prettier --write"
   }
 }

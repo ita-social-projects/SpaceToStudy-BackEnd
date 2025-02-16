@@ -16,15 +16,22 @@ jobs:
         with:
           fetch-depth: 2
     
-      - name: Check Commit Message for Skip Flags
-        id: check-commit
+      - name: Check Commit Message and Changed Files for Skip Flags
+        id: check-skip-tests
         run: |
           COMMIT_MSG=$(git log -1 --pretty=%B)
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+      
           echo "Commit message: $COMMIT_MSG"
-    
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+      
           if echo "$COMMIT_MSG" | grep -iqE '\[devops\]|\[docs\]'; then
             echo "skip-tests=true" >> $GITHUB_OUTPUT
             echo "✅ Tests will be skipped due to commit message"
+          elif echo "$CHANGED_FILES" | grep -iqE '^docs/|\.md$|\.yaml$|\.yml$|\.github/workflows/'; then
+            echo "skip-tests=true" >> $GITHUB_OUTPUT
+            echo "✅ Tests will be skipped due to changed files"
           else
             echo "skip-tests=false" >> $GITHUB_OUTPUT
             echo "❌ Tests will run"

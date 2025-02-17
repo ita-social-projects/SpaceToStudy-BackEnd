@@ -196,7 +196,7 @@ jobs:
           
           echo "### 🧪 Test Results" >> test-report.md
           echo '```' >> test-report.md
-          echo "Tests were skipped because the commit message contained a skip flag ([devops] or [docs])." >> test-report.md
+          echo "Tests were skipped because the commit message contained a skip flag **[devops]** or **[docs]**." >> test-report.md
           echo '```' >> test-report.md
           echo "" >> test-report.md
 

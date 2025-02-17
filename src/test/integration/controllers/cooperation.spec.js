@@ -686,7 +686,8 @@ describe('Cooperation controller', () => {
         .set('Cookie', [`accessToken=${tutorAccessToken}`])
 
       expect(updateResponse.status).toBe(204)
-      expect(response.body.needAction.messages).toContain(sendMessage.newMessage)
+      expect(response.body.needAction.messages.at(-1)).toEqual(sendMessage.newMessage)
+      expect(response.body.needAction.role).toEqual('student')
     })
 
     it('should change needAction to "tutor" after closing request from student', async () => {

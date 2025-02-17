@@ -66,7 +66,8 @@ const cooperationService = {
     const { id: currentUserId, role: currentUserRole } = currentUser
     const { price, status, availableQuizzes, finishedQuizzes, sections, newMessage } = updateData
 
-    const [, ACTIVE, , , REQUEST_TO_CLOSE] = COOPERATION_STATUS_ENUM
+    const ACTIVE = COOPERATION_STATUS_ENUM[1]
+    const REQUEST_TO_CLOSE = COOPERATION_STATUS_ENUM[4]
     const [WAITING_FOR_APPROVAL, WAITING_FOR_ANSWER, PRICE] = NEED_ACTION_ENUM
 
     if (price && status) {

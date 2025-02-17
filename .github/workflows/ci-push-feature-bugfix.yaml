@@ -178,7 +178,10 @@ jobs:
             fi
             echo "" >> test-report.txt
           done
-  
+      
+      - name: Publish Report in GitHub Actions Summary
+        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
+        
   generate-report:
     name: Generate Report without tests results
     runs-on: ubuntu-latest
@@ -199,5 +202,6 @@ jobs:
           echo "Tests were skipped because the commit message contained a skip flag ([devops] or [docs])." >> test-report.txt
           echo '```' >> test-report.txt
           echo "" >> test-report.txt
+      
       - name: Publish Report in GitHub Actions Summary
         run: cat test-report.txt >> $GITHUB_STEP_SUMMARY

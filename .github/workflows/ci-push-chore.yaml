@@ -1,8 +1,9 @@
 name: Push (chore)
 
 on:
-  push:
-    branches: ['chore/**']
+  workflow_dispatch:
+  # push:
+  #   branches: ['chore/**']
 
 jobs:
   check-skip-tests:

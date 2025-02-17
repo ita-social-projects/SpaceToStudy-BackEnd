@@ -149,8 +149,8 @@ jobs:
       - name: Generate Test Report
         run: |
           CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
-          echo "$CI_MARKER" > test-report.txt
-          echo "" >> test-report.txt
+          echo "$CI_MARKER" > test-report.md
+          echo "" >> test-report.md
           
           for folder in test-reports/tests-results-*; do
             TEST_VERSION=$(basename "$folder")
@@ -160,23 +160,23 @@ jobs:
             SUMMARY_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
             ERRORS_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
             
-            echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
-            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
-            echo "" >> test-report.txt
+            echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.md
+            echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.md
+            echo "" >> test-report.md
             
-            echo "### 🧪 Test Results" >> test-report.txt
-            echo '```' >> test-report.txt
-            cat "$SUMMARY_FILE" >> test-report.txt
-            echo '```' >> test-report.txt
-            echo "" >> test-report.txt
+            echo "### 🧪 Test Results" >> test-report.md
+            echo '```' >> test-report.md
+            cat "$SUMMARY_FILE" >> test-report.md
+            echo '```' >> test-report.md
+            echo "" >> test-report.md
             
             if [[ -s "$ERRORS_FILE" ]]; then
-              echo "### ❌ Test Errors" >> test-report.txt
-              echo '```' >> test-report.txt
-              cat "$ERRORS_FILE" >> test-report.txt
-              echo '```' >> test-report.txt
+              echo "### ❌ Test Errors" >> test-report.md
+              echo '```' >> test-report.md
+              cat "$ERRORS_FILE" >> test-report.md
+              echo '```' >> test-report.md
             fi
-            echo "" >> test-report.txt
+            echo "" >> test-report.md
           done
   
   generate-report:
@@ -191,14 +191,14 @@ jobs:
       - name: Generate report
         run: |
           CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
-          echo "$CI_MARKER" > test-report.txt
-          echo "" >> test-report.txt
+          echo "$CI_MARKER" > test-report.md
+          echo "" >> test-report.md
           
-          echo "### 🧪 Test Results" >> test-report.txt
-          echo '```' >> test-report.txt
-          echo "Tests were skipped because the commit message contained a skip flag (<b>[devops]</b> or <b>[docs]</b>)." >> test-report.txt
-          echo '```' >> test-report.txt
-          echo "" >> test-report.txt
+          echo "### 🧪 Test Results" >> test-report.md
+          echo '```' >> test-report.md
+          echo "Tests were skipped because the commit message contained a skip flag ([devops] or [docs])." >> test-report.md
+          echo '```' >> test-report.md
+          echo "" >> test-report.md
 
       - name: Publish Report in GitHub Actions Summary
-        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
+        run: cat test-report.md >> $GITHUB_STEP_SUMMARY

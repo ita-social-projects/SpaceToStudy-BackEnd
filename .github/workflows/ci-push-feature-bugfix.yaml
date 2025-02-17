@@ -196,7 +196,13 @@ jobs:
           
           echo "### 🧪 Test Results" >> test-report.txt
           echo '```' >> test-report.txt
-          echo "Tests were skipped due to a condition." >> test-report.txt
+          
+          if echo "$COMMIT_MSG" | grep -iqE '$begin:math:display$devops$end:math:display$|$begin:math:display$docs$end:math:display$'; then
+            echo "Tests were skipped due to commit message: $COMMIT_MSG" >> test-report.txt
+          else
+            echo "Tests were skipped due to an unspecified condition." >> test-report.txt
+          fi
+          
           echo '```' >> test-report.txt
           echo "" >> test-report.txt
 

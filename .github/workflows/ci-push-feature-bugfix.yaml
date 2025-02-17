@@ -1,13 +1,40 @@
-name: Push (feature & bugfix)
+name: Push (feature, bugfix, chore)
 
 on:
   push:
-    branches: ['feature/**', 'bugfix/**']
+    branches: ['feature/**', 'bugfix/**', 'chore/**']
 
 jobs:
+  check-skip-tests:
+    name: Check Skip Tests Condition
+    runs-on: ubuntu-latest
+    outputs:
+      skip-tests: ${{ steps.check-commit.outputs.skip-tests }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+    
+      - name: Check Commit Message for Skip Flags
+        id: check-commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MSG"
+          
+          if echo "$COMMIT_MSG" | grep -iqE '\[devops\]|\[docs\]'; then
+            echo "skip-tests=true" >> $GITHUB_OUTPUT
+            echo "✅ Tests will be skipped due to commit message"
+          else
+            echo "skip-tests=false" >> $GITHUB_OUTPUT
+            echo "❌ Tests will run"
+          fi
+          
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
+    needs: check-skip-tests
+    if: needs.check-skip-tests.outputs.skip-tests == 'false'
     strategy:
       matrix:
         node-version: [ '22.x' ]          # NodeJS version   | Use this to test new NodeJS versions
@@ -105,10 +132,11 @@ jobs:
             # summary-tests-errors.log
             summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
   
-  generate-report:
+  generate-testsreport:
     name: Generate Test Report
     runs-on: ubuntu-latest
-    needs: run-tests  
+    needs: ['run-tests', 'check-skip-tests']
+    if: needs.check-skip-tests.outputs.skip-tests == 'false' 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -150,6 +178,30 @@ jobs:
             fi
             echo "" >> test-report.txt
           done
+  
+  generate-report:
+    name: Generate Report
+    runs-on: ubuntu-latest
+    needs: ['check-skip-tests']
+    if: needs.check-skip-tests.outputs.skip-tests == 'true'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate report
+        run: |
+          CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
+          echo "$CI_MARKER" > test-report.txt
+          echo "" >> test-report.txt
+          
+          echo "### 🧪 Test Results" >> test-report.txt
+          echo '```' >> test-report.txt
+          echo "Tests were skipped due to a condition." >> test-report.txt
+          echo '```' >> test-report.txt
+          echo "" >> test-report.txt
+
+      - name: Publish Report in GitHub Actions Summary
+        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
       
       - name: Publish Report in GitHub Actions Summary
         run: cat test-report.txt >> $GITHUB_STEP_SUMMARY

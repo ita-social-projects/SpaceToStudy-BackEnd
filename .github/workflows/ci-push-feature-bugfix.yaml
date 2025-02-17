@@ -133,7 +133,7 @@ jobs:
             summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
   
   generate-tests-report:
-    name: Generate Test Report
+    name: Generate Report with tests results
     runs-on: ubuntu-latest
     needs: ['run-tests', 'check-skip-tests']
     if: needs.check-skip-tests.outputs.skip-tests == 'false' 
@@ -180,7 +180,7 @@ jobs:
           done
   
   generate-report:
-    name: Generate Report
+    name: Generate Report without tests results
     runs-on: ubuntu-latest
     needs: ['check-skip-tests']
     if: needs.check-skip-tests.outputs.skip-tests == 'true'

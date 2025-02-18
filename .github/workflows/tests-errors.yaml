@@ -53,7 +53,7 @@ jobs:
       - name: Run tests
         continue-on-error: true
         run: |
-          npm test -- src/test/integration/controllers/coursesCooperations.spec.js --verbose --coverage=false 2>&1 | tee test-results.log
+          npm test -- src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --verbose --coverage=false 2>&1 | tee test-results.log
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

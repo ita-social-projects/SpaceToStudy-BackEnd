@@ -51,13 +51,9 @@ jobs:
         run: npm install
 
       - name: Run tests
+        continue-on-error: true
         run: |
-          set -o pipefail
           npm test -- src/test/integration/controllers/coursesCooperations.spec.js --verbose --coverage=false 2>&1 | tee test-results.log
-          exit_code=${PIPESTATUS[0]}
-
-          echo "Tests finished with exit code: $exit_code"
-          exit 0
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -85,10 +81,13 @@ jobs:
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
 
       - name: Fail if tests failed
+        if: always()
         run: |
           if grep -q "FAIL" test-results.log; then
-            echo "❌ Tests failed!"
+            echo "::error ::❌ Tests failed! Check test-results.log for details."
             exit 1
+          else
+            echo "✅ All tests passed!"
           fi
 
       - name: Upload test logs

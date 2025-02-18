@@ -19,6 +19,34 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
 
+      - name: Install MongoDB
+        uses: supercharge/mongodb-github-action@1.12.0
+        with:
+          mongodb-version: '8.0'
+          mongodb-db: ${{ secrets.MONGODB_DB }}
+          mongodb-username: ${{ secrets.MONGODB_USER }}
+          mongodb-password: ${{ secrets.MONGODB_PASS }}
+          mongodb-port: 27017
+      
+      - name: Install MongoDB shell
+        run: |
+          sudo apt-get install -y gnupg curl
+          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+          --dearmor
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+       
+      - name: Check MongoDB
+        run: |
+          for i in {1..30}; do
+            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+            echo "Waiting for MongoDB..."
+            sleep 2
+          done
+          echo "MongoDB did not start in time!" && exit 1
+
       - name: Install dependencies
         run: npm install
 
@@ -30,10 +58,34 @@ jobs:
 
           echo "Tests finished with exit code: $exit_code"
           exit 0
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+          MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
+          MONGODB_URL_READONLY_TEST: ${{ secrets.MONGODB_URL_READONLY_TEST }}
+          JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+          JWT_RESET_SECRET: ${{ secrets.JWT_RESET_SECRET }}
+          JWT_CONFIRM_SECRET: ${{ secrets.JWT_CONFIRM_SECRET }}
+          JWT_ACCESS_EXPIRES_IN: ${{ secrets.JWT_ACCESS_EXPIRES_IN }}
+          JWT_REFRESH_EXPIRES_IN: ${{ secrets.JWT_REFRESH_EXPIRES_IN }}
+          JWT_REFRESH_LONG_TERM_EXPIRES_IN: ${{ secrets.JWT_REFRESH_LONG_TERM_EXPIRES_IN }}
+          JWT_RESET_EXPIRES_IN: ${{ secrets.JWT_RESET_EXPIRES_IN }}
+          JWT_CONFIRM_EXPIRES_IN: ${{ secrets.JWT_CONFIRM_EXPIRES_IN }}
+          CLIENT_URL: ${{ secrets.CLIENT_URL }}
+          SERVER_URL: ${{ secrets.SERVER_URL }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_FIRSTNAME: ${{ secrets.MAIL_FIRSTNAME }}
+          MAIL_LASTNAME: ${{ secrets.MAIL_LASTNAME }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
+          COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
 
       - name: Fail if tests failed
         run: |
-          # Если тесты упали, job завершится с ошибкой
           if grep -q "FAIL" test-results.log; then
             echo "❌ Tests failed!"
             exit 1

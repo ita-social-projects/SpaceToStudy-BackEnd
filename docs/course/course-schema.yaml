@@ -182,7 +182,7 @@ definitions:
         format: date-time
       isDuplicate:
         type: boolean
-        description: 'Only present when the resource is a copy'
+        description: Only present when the resource is a copy
   lessonInCourse:
     allOf:
       - $ref: '#/definitions/lesson'
@@ -190,7 +190,7 @@ definitions:
         properties:
           isDuplicate:
             type: boolean
-            description: 'Only present when the resource is a copy'
+            description: Only present when the resource is a copy
   attachmentInCourse:
     allOf:
       - $ref: '#/definitions/attachmentInPostLesson'

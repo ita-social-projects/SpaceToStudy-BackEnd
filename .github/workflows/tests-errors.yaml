@@ -50,33 +50,33 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install MongoDB ${{ matrix.mongodb-version }}
-        uses: supercharge/mongodb-github-action@1.12.0
-        with:
-          mongodb-version: ${{ matrix.mongodb-version }}
-          mongodb-db: ${{ secrets.MONGODB_DB }}
-          mongodb-username: ${{ secrets.MONGODB_USER }}
-          mongodb-password: ${{ secrets.MONGODB_PASS }}
-          mongodb-port: 27017
+      # - name: Install MongoDB ${{ matrix.mongodb-version }}
+      #   uses: supercharge/mongodb-github-action@1.12.0
+      #   with:
+      #     mongodb-version: ${{ matrix.mongodb-version }}
+      #     mongodb-db: ${{ secrets.MONGODB_DB }}
+      #     mongodb-username: ${{ secrets.MONGODB_USER }}
+      #     mongodb-password: ${{ secrets.MONGODB_PASS }}
+      #     mongodb-port: 27017
       
-      - name: Install MongoDB shell
-        run: |
-          sudo apt-get install -y gnupg curl
-          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
-          --dearmor
-          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
-          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+      # - name: Install MongoDB shell
+      #   run: |
+      #     sudo apt-get install -y gnupg curl
+      #     curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+      #     sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+      #     --dearmor
+      #     echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+      #     sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+      #     sudo apt-get update && sudo apt-get install -y mongodb-mongosh
        
-      - name: Check MongoDB
-        run: |
-          for i in {1..30}; do
-            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-            echo "Waiting for MongoDB..."
-            sleep 2
-          done
-          echo "MongoDB did not start in time!" && exit 1
+      # - name: Check MongoDB
+      #   run: |
+      #     for i in {1..30}; do
+      #       mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+      #       echo "Waiting for MongoDB..."
+      #       sleep 2
+      #     done
+      #     echo "MongoDB did not start in time!" && exit 1
       
       - name: Install dependencies
         run: npm install
@@ -85,15 +85,26 @@ jobs:
       # - name: Run ESLint    # TO-DO: add linter check
       #   run: npm run lint
         
+      # - name: Run tests and generate logs
+      #   run: |
+      #     npm run test --verbose --coverage=false 2>&1 | \
+      #     # generate full-tests-results.log
+      #     tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
+      #     # parsing and generate summary-tests-results.log 
+      #     tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") | \
+      #     # parsing and generate summary-tests-errors.log
+      #     tee >(awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' > "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log")
+
+
       - name: Run tests and generate logs
         run: |
-          npm run test --verbose --coverage=false 2>&1 | \
-          # generate full-tests-results.log
-          tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
-          # parsing and generate summary-tests-results.log 
-          tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") | \
-          # parsing and generate summary-tests-errors.log
-          tee >(awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' > "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log")
+          npm run test -- src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --verbose --coverage=false --ci --silent=false 2>&1 | tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          TEST_EXIT_CODE=${PIPESTATUS[0]}
+          
+          grep -E "Test Suites:|Tests:|Snapshots:|Time:" > "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log")
+          awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' > "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          
+          exit $TEST_EXIT_CODE
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

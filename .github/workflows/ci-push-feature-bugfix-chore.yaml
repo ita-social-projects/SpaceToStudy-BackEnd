@@ -2,7 +2,7 @@ name: Push (feature, bugfix, chore)
 
 on:
   push:
-    branches: ['feature/**', 'bugfix/**', 'chore/**']
+    branches: ['feature/**', 'bugfix/**']
 
 jobs:
   check-skip-tests:

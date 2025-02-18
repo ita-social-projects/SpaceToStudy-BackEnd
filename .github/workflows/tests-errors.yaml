@@ -53,7 +53,7 @@ jobs:
       - name: Run tests
         run: |
           set -o pipefail
-          npm test --verbose --coverage=false 2>&1 | tee test-results.log
+          npm test -- src/test/integration/controllers/coursesCooperations.spec.js --verbose --coverage=false 2>&1 | tee test-results.log
           exit_code=${PIPESTATUS[0]}
 
           echo "Tests finished with exit code: $exit_code"

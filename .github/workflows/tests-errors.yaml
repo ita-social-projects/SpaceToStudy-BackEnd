@@ -1,0 +1,40 @@
+name: Push (chore/**)
+
+on:
+  push:
+    branches: ['chore/**']
+
+jobs:
+  run-tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: |
+          set -o pipefail
+          npm test | tee test-results.log
+          exit_code=${PIPESTATUS[0]}
+
+          if [[ $exit_code -ne 0 ]]; then
+            echo "❌ Tests failed!"
+            exit $exit_code
+          fi
+
+      - name: Upload test logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results.log

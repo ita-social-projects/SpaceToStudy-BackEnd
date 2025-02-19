@@ -93,12 +93,7 @@ definitions:
                 type: object
                 properties:
                   resource:
-                    type: object
-                    oneOf:
-                      - $ref: '#/definitions/lessonInCourse'
-                      - $ref: '#/definitions/quizInCourse'
-                      - $ref: '#/definitions/attachmentInCourse'
-                      - $ref: '#/definitions/question'
+                    $ref: '#/definitions/resourcesInLesson'
                   resourceType:
                     $ref: '#/definitions/resourceType'
                 required:
@@ -128,12 +123,7 @@ definitions:
             type: object
             properties:
               resource:
-                type: object
-                oneOf:
-                  - $ref: '#/definitions/lessonInCourse'
-                  - $ref: '#/definitions/quizInCourse'
-                  - $ref: '#/definitions/attachmentInCourse'
-                  - $ref: '#/definitions/question'
+                $ref: '#/definitions/resourcesInLesson'
               resourceType:
                 $ref: '#/definitions/resourceType'
         _id:
@@ -199,3 +189,9 @@ definitions:
           isDuplicate:
             type: boolean
             description: 'Only present when the resource is a copy'
+  resourcesInLesson:
+    oneOf:
+      - $ref: '#/definitions/lessonInCourse'
+      - $ref: '#/definitions/quizInCourse'
+      - $ref: '#/definitions/attachmentInCourse'
+      - $ref: '#/definitions/question'

@@ -2,7 +2,7 @@ name: Push (feature, bugfix, chore)
 
 on:
   push:
-    branches: ['feature/**', 'bugfix/**']
+    branches: ['feature/**', 'bugfix/**', 'chore/**']
 
 jobs:
   check-skip-tests:
@@ -68,7 +68,7 @@ jobs:
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
           sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
           sudo apt-get update && sudo apt-get install -y mongodb-mongosh
-       
+
       - name: Check MongoDB
         run: |
           for i in {1..30}; do
@@ -87,13 +87,22 @@ jobs:
         
       - name: Run tests and generate logs
         run: |
-          npm run test --verbose --coverage=false 2>&1 | \
+          npm run test -- --ci --verbose --coverage=false 2>&1 | \
           # generate full-tests-results.log
-          tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
+          tee full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+          
+          # save exit code
+          exit_code=${PIPESTATUS[0]}
+
           # parsing and generate summary-tests-results.log 
-          tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") | \
+          grep -E "Test Suites:|Tests:|Snapshots:|Time:" full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log > \
+          summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+          
           # parsing and generate summary-tests-errors.log
-          tee >(awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' > "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") || true
+          awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log > \
+          summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+
+          exit $exit_code
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

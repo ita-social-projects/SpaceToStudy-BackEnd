@@ -56,7 +56,7 @@ jobs:
 
       - name: Run tests and generate logs
         run: |
-          npm run test -- src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --ci
+          npm run test -- --ci --json --outputFile=./test-results/test-results.json 
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -83,3 +83,9 @@ jobs:
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
             summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: ./test-results/test-results.json

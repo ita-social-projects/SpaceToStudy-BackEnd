@@ -76,7 +76,7 @@ jobs:
       
       - name: Run tests and generate logs
         run: |
-          npm run test -- --ci src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --reporters=default --reporters=jest-html-reporter
+          npm run test -- --ci src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --coverage=false --reporters=default --reporters=jest-html-reporter
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -107,8 +107,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results
-          path: ./test-results.json
+          name: test-report
+          path: ./test-report.html
   
       - name: Add report to GitHub Actions Summary
         run: echo "### Jest Test Report\n[Download HTML Report](./test-report.html)" >> $GITHUB_STEP_SUMMARY

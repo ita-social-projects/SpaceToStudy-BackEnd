@@ -79,6 +79,8 @@ jobs:
           # npm run test -- --ci --reporters=default --reporters=jest-html-reporter
           npm run test -- src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --ci --coverage=false 2>&1 | \
           tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          test ${PIPESTATUS[0]} -eq 0
+          
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

@@ -50,13 +50,33 @@ jobs:
       #       sleep 2
       #     done
       #     echo "MongoDB did not start in time!" && exit 1
-      
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+          
       - name: Install dependencies
         run: npm install
 
+      - name: Install jest-html-reporter
+        run: npm install jest-html-reporter
+
+      - name: Create Jest HTML Reporter Config
+        run: |
+          echo '{
+            "pageTitle": "Jest Test Report",
+            "outputPath": "./test-report.html",
+            "includeFailureMsg": true,
+            "includeConsoleLog": true
+          }' > jest-html-reporter.config.json
+      
       - name: Run tests and generate logs
         run: |
-          npm run test -- src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --ci --json --outputFile=./test-results.json 
+          npm run test -- --ci src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --reporters=default --reporters=jest-html-reporter
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -89,3 +109,6 @@ jobs:
         with:
           name: test-results
           path: ./test-results.json
+  
+      - name: Add report to GitHub Actions Summary
+        run: echo "### Jest Test Report\n[Download HTML Report](./test-report.html)" >> $GITHUB_STEP_SUMMARY

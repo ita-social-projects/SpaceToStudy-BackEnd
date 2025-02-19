@@ -56,8 +56,7 @@ jobs:
 
       - name: Run tests and generate logs
         run: |
-          npm run test -- src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --verbose --coverage=false --ci --silent=false 2>&1 | \
-          tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          npm run test -- src/test/integration/controllers/coursesCooperations.spec.js src/test/integration/controllers/auth.spec.js --ci
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -83,16 +82,4 @@ jobs:
           GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
           GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
           COOKIE_DOMAIN: ${{ secrets.COOKIE_DOMAIN }}
-      
-      - name: Upload Test Logs
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}
-          path: |
-            # full-tests-results.log
-            full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
-            # summary-tests-results.log
-            summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
-            # summary-tests-errors.log
             summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log

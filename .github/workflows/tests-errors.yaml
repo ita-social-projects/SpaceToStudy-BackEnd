@@ -111,4 +111,5 @@ jobs:
           path: ./test-report.html
   
       - name: Add report to GitHub Actions Summary
+        if: always()
         run: echo "### Jest Test Report\n[Download HTML Report](./test-report.html)" >> $GITHUB_STEP_SUMMARY

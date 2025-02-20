@@ -89,26 +89,21 @@ jobs:
       - name: Run tests and generate logs
         run: |
           npm run test -- --ci --coverage=false 2>&1 | \
+          # generate full-tests-results.log
           tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          
+          # save exit code
           exit_code=${PIPESTATUS[0]}
+          
+          # parsing and generate summary-tests-results.log 
+          grep -E "Test Suites:|Tests:|Snapshots:|Time:" "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" > \
+          "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          
+          # parsing and generate summary-tests-errors.log
+          awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" > \
+          "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+
           exit $exit_code
-          
-          # npm run test -- --ci --verbose --coverage=false 2>&1 | \
-          # # generate full-tests-results.log
-          # tee full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
-          
-          # # save exit code
-          # exit_code=${PIPESTATUS[0]}
-
-          # # parsing and generate summary-tests-results.log 
-          # grep -E "Test Suites:|Tests:|Snapshots:|Time:" full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log > \
-          # summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
-          
-          # # parsing and generate summary-tests-errors.log
-          # awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log > \
-          # summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
-
-          # exit $exit_code
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

@@ -1,0 +1,31 @@
+name: Push (chore/**)
+
+on:
+  push:
+    branches: ['chore/**']
+
+jobs:
+  check-skip-tests:
+    name: Check Skip Tests Condition
+    runs-on: ubuntu-latest
+    outputs:
+      skip-tests: ${{ steps.check-commit.outputs.skip-tests }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+    
+      - name: Check Commit Message for Skip Flags
+        id: check-commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Commit message: $COMMIT_MSG"
+          
+          if echo "$COMMIT_MSG" | grep -iqE '\[devops\]|\[docs\]'; then
+            echo "skip-tests=true" >> $GITHUB_OUTPUT
+            echo "✅ Tests will be skipped due to commit message"
+          else
+            echo "skip-tests=false" >> $GITHUB_OUTPUT
+            echo "❌ Tests will run"
+          fi

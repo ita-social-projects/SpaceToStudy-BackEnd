@@ -37,7 +37,7 @@ jobs:
     name: Run Tests
     runs-on: ubuntu-latest
     needs: check-skip-tests
-    if: github.event_name == 'pull_request' || needs.check-skip-tests.outputs.skip-tests == 'false'
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && needs.check-skip-tests.outputs.skip-tests == 'false')
     strategy:
       matrix:
         node-version: [ '22.x' ]          # NodeJS version   | Use this to test new NodeJS versions

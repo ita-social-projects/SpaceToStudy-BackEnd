@@ -138,7 +138,7 @@ jobs:
             -e MONGO_INITDB_DATABASE=${{ secrets.MONGODB_DB }} \
             mongo:8.0.3-noble
   
-      - name: Run Application Container
+      - name: Run Application container
         run: |
           docker run -d --name be-app -p 8080:8080 \
             -e MONGODB_USER=${{ secrets.MONGODB_USER }} \
@@ -255,6 +255,7 @@ jobs:
           else
             echo -e "### 🐳 Docker Health Check Results\n**No Docker health check results found.**" >> test-report.txt
           fi
+          
       - name: Publish Report in GitHub Actions Summary
         run: cat test-report.txt >> "$GITHUB_STEP_SUMMARY"
 

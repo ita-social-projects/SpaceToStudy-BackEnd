@@ -41,7 +41,7 @@ jobs:
           echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
           sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
           sudo apt-get update && sudo apt-get install -y mongodb-mongosh
-       
+
       - name: Check MongoDB
         run: |
           for i in {1..30}; do
@@ -60,13 +60,19 @@ jobs:
         
       - name: Run tests and generate logs
         run: |
-          npm run test --verbose --coverage=false 2>&1 | \
+          npm run test -- --ci --coverage=false 2>&1 | \
           # generate full-tests-results.log
-          tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" | \
+          tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          # save exit code
+          exit_code=${PIPESTATUS[0]}
           # parsing and generate summary-tests-results.log 
-          tee >(grep -E "Test Suites:|Tests:|Snapshots:|Time:" > "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") | \
+          grep -E "Test Suites:|Tests:|Snapshots:|Time:" "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" > \
+          "summary-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
           # parsing and generate summary-tests-errors.log
-          tee >(awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' > "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log") || true
+          awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log" > \
+          "summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
+          # enter exit code
+          exit $exit_code
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin
@@ -102,6 +108,7 @@ jobs:
 
       - name: Upload Test Logs
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}
           path: |
@@ -161,9 +168,6 @@ jobs:
             -e COOKIE_DOMAIN=${{ secrets.COOKIE_DOMAIN }} \
             --link mongodb be-app
       
-      - name: Retrieve Application Logs
-        run: docker logs be-app
-      
       - name: API Health Check and Report
         run: |
           sleep 10
@@ -175,16 +179,18 @@ jobs:
           else
             echo "❌ Potential containerization issue detected!" | tee -a docker-results.log
             echo "::error ::Potential containerization issue detected!"
+            exit 1
           fi
 
       - name: Upload Docker Health Check Results
         uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: docker-health-check
           path: docker-results.log
 
   generate-report:
-    name: Generate Test Report
+    name: Generate Report
     runs-on: ubuntu-latest
     needs: [run-tests, docker-build-test]
     if: always()

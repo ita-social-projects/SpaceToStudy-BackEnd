@@ -35,7 +35,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-skip-tests
     if: needs.check-skip-tests.outputs.skip-tests == 'false'
-    continue-on-error: true
     strategy:
       matrix:
         node-version: [ '22.x' ]          # NodeJS version   | Use this to test new NodeJS versions

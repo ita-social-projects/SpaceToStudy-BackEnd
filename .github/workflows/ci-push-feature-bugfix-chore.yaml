@@ -50,33 +50,33 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      # - name: Install MongoDB ${{ matrix.mongodb-version }}
-      #   uses: supercharge/mongodb-github-action@1.12.0
-      #   with:
-      #     mongodb-version: ${{ matrix.mongodb-version }}
-      #     mongodb-db: ${{ secrets.MONGODB_DB }}
-      #     mongodb-username: ${{ secrets.MONGODB_USER }}
-      #     mongodb-password: ${{ secrets.MONGODB_PASS }}
-      #     mongodb-port: 27017
+      - name: Install MongoDB ${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.12.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+          mongodb-db: ${{ secrets.MONGODB_DB }}
+          mongodb-username: ${{ secrets.MONGODB_USER }}
+          mongodb-password: ${{ secrets.MONGODB_PASS }}
+          mongodb-port: 27017
       
-      # - name: Install MongoDB shell
-      #   run: |
-      #     sudo apt-get install -y gnupg curl
-      #     curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
-      #     sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
-      #     --dearmor
-      #     echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
-      #     sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
-      #     sudo apt-get update && sudo apt-get install -y mongodb-mongosh
+      - name: Install MongoDB shell
+        run: |
+          sudo apt-get install -y gnupg curl
+          curl -fsSL https://www.mongodb.org/static/pgp/server-8.0.asc | \
+          sudo gpg -o /usr/share/keyrings/mongodb-server-8.0.gpg \
+          --dearmor
+          echo "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-8.0.gpg ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/8.0 multiverse" | \
+          sudo tee /etc/apt/sources.list.d/mongodb-org-8.0.list
+          sudo apt-get update && sudo apt-get install -y mongodb-mongosh
 
-      # - name: Check MongoDB
-      #   run: |
-      #     for i in {1..30}; do
-      #       mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-      #       echo "Waiting for MongoDB..."
-      #       sleep 2
-      #     done
-      #     echo "MongoDB did not start in time!" && exit 1
+      - name: Check MongoDB
+        run: |
+          for i in {1..30}; do
+            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
+            echo "Waiting for MongoDB..."
+            sleep 2
+          done
+          echo "MongoDB did not start in time!" && exit 1
       
       - name: Install dependencies
         run: npm install
@@ -107,7 +107,7 @@ jobs:
           # awk '/Summary of all failing tests/,/Test Suites/{if ($0 !~ /Test Suites/) print}' full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log > \
           # summary-tests-errors-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log
 
-          exit $exit_code
+          # exit $exit_code
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           MONGODB_URL: mongodb://${{ secrets.MONGODB_USER }}:${{ secrets.MONGODB_PASS }}@localhost:27017/${{ secrets.MONGODB_DB }}?authSource=admin

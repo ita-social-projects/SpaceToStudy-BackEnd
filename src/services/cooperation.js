@@ -8,7 +8,7 @@ const { createError, createForbiddenError } = require('~/utils/errorsHelper')
 const { VALIDATION_ERROR, DOCUMENT_NOT_FOUND, ROLE_REQUIRED_FOR_ACTION } = require('~/consts/errors')
 const { roles } = require('~/consts/auth')
 const {
-  enums: { COOPERATION_STATUS_ENUM }
+  enums: { COOPERATION_STATUS_ENUM, NEED_ACTION_ENUM }
 } = require('~/consts/validation')
 const offerService = require('./offer')
 const noteService = require('./note')
@@ -64,7 +64,11 @@ const cooperationService = {
 
   updateCooperation: async (id, currentUser, updateData) => {
     const { id: currentUserId, role: currentUserRole } = currentUser
-    const { price, status, availableQuizzes, finishedQuizzes, sections } = updateData
+    const { price, status, availableQuizzes, finishedQuizzes, sections, newMessage } = updateData
+
+    const ACTIVE = COOPERATION_STATUS_ENUM[1]
+    const REQUEST_TO_CLOSE = COOPERATION_STATUS_ENUM[4]
+    const [WAITING_FOR_APPROVAL, WAITING_FOR_ANSWER, PRICE] = NEED_ACTION_ENUM
 
     if (price && status) {
       throw createError(409, VALIDATION_ERROR('You can change only either the status or the price in one operation'))
@@ -85,15 +89,34 @@ const cooperationService = {
       await Cooperation.findByIdAndUpdate(id, { price, needAction: updatedNeedAction }).exec()
     }
     if (status) {
-      const isRequestToClose = status === COOPERATION_STATUS_ENUM[4]
+      const isRequestToClose = status === REQUEST_TO_CLOSE
       const otherRole = currentUserRole === roles.STUDENT ? roles.TUTOR : roles.STUDENT
+      const needActionType = status === ACTIVE ? PRICE : WAITING_FOR_APPROVAL
+
       const updatedNeedAction = {
         role: isRequestToClose ? otherRole : currentUserRole,
-        type: 'price',
-        messages: []
+        type: needActionType,
+        messages: cooperation.needAction.messages
       }
 
       await Cooperation.findByIdAndUpdate(id, { status, needAction: updatedNeedAction }, { runValidators: true })
+    }
+    if (newMessage) {
+      if (cooperation.needAction.messages.length > 0 && currentUser === cooperation.needAction.role) {
+        throw createForbiddenError()
+      }
+
+      const otherRole = currentUserRole === roles.STUDENT ? roles.TUTOR : roles.STUDENT
+      cooperation.needAction.messages.push(newMessage)
+      const needActionType = cooperation.needAction.messages.length % 2 == 0 ? WAITING_FOR_APPROVAL : WAITING_FOR_ANSWER
+
+      const updatedNeedAction = {
+        role: otherRole,
+        type: needActionType,
+        messages: cooperation.needAction.messages
+      }
+
+      await Cooperation.findByIdAndUpdate(id, { needAction: updatedNeedAction }, { runValidators: true })
     }
     if (sections) {
       cooperation.sections = await Promise.all(

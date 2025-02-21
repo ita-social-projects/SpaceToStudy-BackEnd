@@ -133,6 +133,10 @@ const updateStatus = {
   status: 'active'
 }
 
+const sendMessage = {
+  newMessage: 'reason for declining'
+}
+
 const updatePrice = {
   price: 150
 }
@@ -669,6 +673,21 @@ describe('Cooperation controller', () => {
 
       expect(updateResponse.status).toBe(204)
       expect(response.body.status).toBe(updateStatus.status)
+    })
+
+    it('should update messages of a cooperation', async () => {
+      const updateResponse = await app
+        .patch(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+        .send(sendMessage)
+
+      const response = await app
+        .get(endpointUrl + testCooperation._body._id)
+        .set('Cookie', [`accessToken=${tutorAccessToken}`])
+
+      expect(updateResponse.status).toBe(204)
+      expect(response.body.needAction.messages.at(-1)).toEqual(sendMessage.newMessage)
+      expect(response.body.needAction.role).toEqual('student')
     })
 
     it('should change needAction to "tutor" after closing request from student', async () => {

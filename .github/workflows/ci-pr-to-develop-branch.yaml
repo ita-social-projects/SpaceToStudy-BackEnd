@@ -45,8 +45,8 @@ jobs:
       - name: Check MongoDB
         run: |
           for i in {1..30}; do
-            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up" && exit 0
-            echo "Waiting for MongoDB..."
+            mongosh --eval "db.runCommand({ ping: 1 })" localhost:27017 && echo "MongoDB is up (attempt $i)" && exit 0
+            echo "Waiting for MongoDB... (attempt $i)"
             sleep 2
           done
           echo "MongoDB did not start in time!" && exit 1
@@ -257,7 +257,7 @@ jobs:
           fi
 
       - name: Publish Report in GitHub Actions Summary
-        run: cat test-report.txt >> $GITHUB_STEP_SUMMARY
+        run: cat test-report.txt >> "$GITHUB_STEP_SUMMARY"
 
       - name: Update CI Report in PR
         env:
@@ -269,12 +269,12 @@ jobs:
             exit 0
           fi
 
-          COMMENT_ID=$(gh api repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
+          COMMENT_ID=$(gh api "repos/:owner/:repo/issues/$PR_NUMBER/comments --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
 
           if [[ -n "$COMMENT_ID" ]]; then
             echo "Updating existing CI report comment: $COMMENT_ID"
-            gh api repos/:owner/:repo/issues/comments/$COMMENT_ID -X PATCH -f body="$(cat test-report.txt)"
+            gh api "repos/:owner/:repo/issues/comments/$COMMENT_ID" -X PATCH -f body="$(cat test-report.txt)"
           else
             echo "No previous CI report found, creating a new one..."
-            gh pr comment $PR_NUMBER --body-file test-report.txt
+            gh pr comment "$PR_NUMBER" --body-file "test-report.txt"
           fi

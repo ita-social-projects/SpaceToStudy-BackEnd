@@ -55,12 +55,12 @@ jobs:
         run: npm install
       #  run: npm ci # TO-DO: Install dependencies from package-lock.json
 
-      # - name: Run ESLint
-      #   run: npm run lint:check
+      - name: Run ESLint
+        run: npm run lint:check
 
       - name: Run tests and generate logs
         run: |
-          npm run test -- --ci --coverage=false 2>&1 | \
+          npm run test --ci --coverage=false 2>&1 | \
           # generate full-tests-results.log
           tee "full-tests-results-${{ matrix.node-version }}-${{ matrix.mongodb-version }}.log"
           # save exit code

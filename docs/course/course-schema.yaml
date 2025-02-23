@@ -123,7 +123,7 @@ definitions:
             type: object
             properties:
               resource:
-                $ref: '#/definitions/resourcesInLesson'
+                $ref: '#/definitions/resourcesInCourse'
               resourceType:
                 $ref: '#/definitions/resourceType'
         _id:
@@ -189,7 +189,7 @@ definitions:
           isDuplicate:
             type: boolean
             description: 'Only present when the resource is a copy'
-  resourcesInLesson:
+  resourcesInCourse:
     oneOf:
       - $ref: '#/definitions/lessonInCourse'
       - $ref: '#/definitions/quizInCourse'

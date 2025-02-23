@@ -77,7 +77,7 @@ const cooperationService = {
     const cooperation = await Cooperation.findById(id)
     cooperationService._validateCooperationUser(cooperation, currentUserId)
 
-    if (price) {
+    const handlePriceUpdate = async (id, currentUserRole, cooperation, price) => {
       if (currentUserRole !== cooperation.needAction.role.toString()) {
         throw createForbiddenError()
       }
@@ -88,7 +88,8 @@ const cooperationService = {
       }
       await Cooperation.findByIdAndUpdate(id, { price, needAction: updatedNeedAction }).exec()
     }
-    if (status) {
+
+    const handleStatusUpdate = async (id, cooperation, status, currentUserRole) => {
       const isRequestToClose = status === REQUEST_TO_CLOSE
       const otherRole = currentUserRole === roles.STUDENT ? roles.TUTOR : roles.STUDENT
       const needActionType = status === ACTIVE ? PRICE : WAITING_FOR_APPROVAL
@@ -101,7 +102,8 @@ const cooperationService = {
 
       await Cooperation.findByIdAndUpdate(id, { status, needAction: updatedNeedAction }, { runValidators: true })
     }
-    if (newMessage) {
+
+    const handleMessagesUpdate = async (id, cooperation, currentUser, newMessage) => {
       if (cooperation.needAction.messages.length > 0 && currentUser === cooperation.needAction.role) {
         throw createForbiddenError()
       }
@@ -118,6 +120,19 @@ const cooperationService = {
 
       await Cooperation.findByIdAndUpdate(id, { needAction: updatedNeedAction }, { runValidators: true })
     }
+
+    if (price) {
+      await handlePriceUpdate(id, currentUserRole, cooperation, price)
+    }
+
+    if (status) {
+      await handleStatusUpdate(id, cooperation, status, currentUserRole)
+    }
+
+    if (newMessage) {
+      await handleMessagesUpdate(id, cooperation, currentUser, newMessage)
+    }
+
     if (sections) {
       cooperation.sections = await Promise.all(
         sections.map(async (section) => ({
@@ -131,10 +146,12 @@ const cooperationService = {
       await cooperation.validate()
       await cooperation.save()
     }
+
     if (availableQuizzes) {
       cooperation.availableQuizzes = mergeArraysUniqueValues(cooperation.availableQuizzes, availableQuizzes)
       await cooperation.save()
     }
+
     if (finishedQuizzes) {
       cooperation.finishedQuizzes = mergeArraysUniqueValues(cooperation.finishedQuizzes, finishedQuizzes)
       cooperation.availableQuizzes = removeArraysUniqueValues(cooperation.availableQuizzes, cooperation.finishedQuizzes)

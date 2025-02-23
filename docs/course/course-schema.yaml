@@ -93,7 +93,7 @@ definitions:
                 type: object
                 properties:
                   resource:
-                    $ref: '#/definitions/resourcesInLesson'
+                    $ref: '#/definitions/resourcesInCourse'
                   resourceType:
                     $ref: '#/definitions/resourceType'
                 required:

@@ -47,6 +47,7 @@ jobs:
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
+    needs: ['run-lint']
     strategy:
       matrix:
         node-version: ['22.x'] # NodeJS version   | Use this to test new NodeJS versions
@@ -158,6 +159,7 @@ jobs:
   docker-build-test:
     name: Build & Test Docker Container
     runs-on: ubuntu-latest
+    needs: ['run-lint']
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -227,28 +229,16 @@ jobs:
   generate-report:
     name: Generate Test Report
     runs-on: ubuntu-latest
-    needs: [run-tests, docker-build-test]
-    if: success() || failure()
+    needs: ['run-lint', 'run-tests', 'docker-build-test']
+    if: always()
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Download Lint Results
+      - name: Download All Artifacts
         uses: actions/download-artifact@v4
         with:
-          name: lint-results
-          path: lint-reports
-
-      - name: Download Test Results
-        uses: actions/download-artifact@v4
-        with:
-          path: test-reports
-
-      - name: Download Docker Health Check Results
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-health-check
-          path: docker-reports
+          path: all-artifacts
 
       - name: Generate Test Report
         run: |
@@ -258,45 +248,58 @@ jobs:
             echo ""
           } > report.txt
 
+          # 📌 Lint Report
           {
             echo "### 📝 Lint Report"
             echo ""
             
-            SUMMARY_FILE="lint-reports/summary-lint-errors.log"
+            SUMMARY_FILE="all-artifacts/summary-lint-errors.log"
 
-            echo "#### 📋 Summary"
-            echo '```'
-            cat "$SUMMARY_FILE"
-            echo '```'
-
-            if grep -q -E '^\[warn\]|^Error:' "$SUMMARY_FILE"; then
-              echo "### ❌ Lint Errors Found"
+            if [[ -f "$SUMMARY_FILE" ]]; then
+              echo "#### 📋 Summary"
               echo '```'
               cat "$SUMMARY_FILE"
               echo '```'
+
+              if grep -q -E '^\[warn\]|^Error:' "$SUMMARY_FILE"; then
+                echo "### ❌ Lint Errors Found"
+                echo '```'
+                cat "$SUMMARY_FILE"
+                echo '```'
+              else
+                echo "✅ No lint issues found."
+              fi
             else
-              echo "✅ No lint issues found."
+              echo "⚠️ Lint report not found."
             fi
 
             printf "\n"
           } >> report.txt
 
-          for folder in test-reports/tests-results-*; do
+          # 📌 Test Reports
+          TEST_REPORTS_FOUND=false
+          for folder in $(find all-artifacts -type d -name "tests-results-*"); do
+            TEST_REPORTS_FOUND=true
             TEST_VERSION=$(basename "$folder")
             NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
             MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
 
-            SUMMARY_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
-            ERRORS_FILE="test-reports/tests-results-${NODE_VERSION}-${MONGO_VERSION}/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+            SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
+            ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
 
             {
               echo "**🔹 Node.js Version:** $NODE_VERSION"
               echo "**🔹 MongoDB Version:** $MONGO_VERSION"
               echo ""
               echo "### 🧪 Test Results"
-              echo '```'
-              cat "$SUMMARY_FILE"
-              echo '```'
+              
+              if [[ -f "$SUMMARY_FILE" ]]; then
+                echo '```'
+                cat "$SUMMARY_FILE"
+                echo '```'
+              else
+                echo "⚠️ Test summary not found."
+              fi
 
               if [[ -s "$ERRORS_FILE" ]]; then
                 echo "### ❌ Test Errors"
@@ -309,7 +312,12 @@ jobs:
             } >> report.txt
           done
 
-          DOCKER_LOG="docker-reports/docker-results.log"
+          if [[ "$TEST_REPORTS_FOUND" == false ]]; then
+            echo "⚠️ No test results found." >> report.txt
+          fi
+
+          # 📌 Docker Health Check
+          DOCKER_LOG="all-artifacts/docker-results.log"
           if [[ -f "$DOCKER_LOG" ]]; then
             {
               echo "### 🐳 Docker Health Check Results"
@@ -318,7 +326,7 @@ jobs:
               echo '```'
             } >> report.txt
           else
-            echo -e "### 🐳 Docker Health Check Results\n**No Docker health check results found.**" >> report.txt
+            echo "⚠️ No Docker health check results found." >> report.txt
           fi
 
       - name: Publish Report in GitHub Actions Summary

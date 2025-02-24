@@ -1,16 +1,15 @@
 name: Push (feature, bugfix, chore)
 
 on:
-  workflow_dispatch:
   push:
-    branches: ['feature/**', 'bugfix/**', 'chore/**']      
+    branches: ['feature/**', 'bugfix/**', 'chore/**']
 
 jobs:
   lint:
     name: Run ESLint
-    runs-on: ubuntu-latest      
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository      
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Node.js
@@ -174,51 +173,70 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download Lint Results
+        uses: actions/download-artifact@v4
+        with:
+          name: lint-results
+          path: lint-reports
+
       - name: Download Test Results (if tests were run)
         if: needs.check-skip-tests.outputs.skip-tests == 'false'
         uses: actions/download-artifact@v4
         with:
+          name: test-results
           path: test-reports
 
       - name: Generate Report
         run: |
-          CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
-          echo "$CI_MARKER" > test-report.txt
-          echo "" >> test-report.txt
+          {
+            echo "### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
+            echo ""
 
-          if [[ "${{ needs.check-skip-tests.outputs.skip-tests }}" == "false" ]]; then
-            for folder in test-reports/tests-results-*; do
-              NODE_VERSION=$(echo "$folder" | awk -F'-' '{print $3}')
-              MONGO_VERSION=$(echo "$folder" | awk -F'-' '{print $4}')
-              
-              SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
-              ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+            # Lint Results
+            LINT_FILE="lint-reports/lint.log"
+            if [[ -f "$LINT_FILE" ]]; then
+              echo "### 🔍 Lint Results"
+              echo '```'
+              cat "$LINT_FILE"
+              echo '```'
+              echo ""
+            fi
 
-              echo "**🔹 Node.js Version:** $NODE_VERSION" >> test-report.txt
-              echo "**🔹 MongoDB Version:** $MONGO_VERSION" >> test-report.txt
-              echo "" >> test-report.txt
+            # Test Results
+            if [[ "${{ needs.check-skip-tests.outputs.skip-tests }}" == "false" ]]; then
+              for folder in test-reports/tests-results-*; do
+                NODE_VERSION=$(echo "$folder" | awk -F'-' '{print $3}')
+                MONGO_VERSION=$(echo "$folder" | awk -F'-' '{print $4}')
+                
+                SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
+                ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
 
-              echo "### 🧪 Test Results" >> test-report.txt
-              echo '```' >> test-report.txt
-              cat "$SUMMARY_FILE" >> test-report.txt
-              echo '```' >> test-report.txt
-              echo "" >> test-report.txt
+                echo "**🔹 Node.js Version:** $NODE_VERSION"
+                echo "**🔹 MongoDB Version:** $MONGO_VERSION"
+                echo ""
 
-              if [[ -s "$ERRORS_FILE" ]]; then
-                echo "### ❌ Test Errors" >> test-report.txt
-                echo '```' >> test-report.txt
-                cat "$ERRORS_FILE" >> test-report.txt
-                echo '```' >> test-report.txt
-              fi
-              echo "" >> test-report.txt
-            done
-          else
-            echo "### 🧪 Test Results" >> test-report.txt
-            echo '```' >> test-report.txt
-            echo "Tests were skipped due to [devops] or [docs] commit flag." >> test-report.txt
-            echo '```' >> test-report.txt
-            echo "" >> test-report.txt
-          fi
+                echo "### 🧪 Test Results"
+                echo '```'
+                cat "$SUMMARY_FILE"
+                echo '```'
+                echo ""
+
+                if [[ -s "$ERRORS_FILE" ]]; then
+                  echo "### ❌ Test Errors"
+                  echo '```'
+                  cat "$ERRORS_FILE"
+                  echo '```'
+                fi
+                echo ""
+              done
+            else
+              echo "### 🧪 Test Results"
+              echo '```'
+              echo "Tests were skipped due to [devops] or [docs] commit flag."
+              echo '```'
+              echo ""
+            fi
+          } >> test-report.txt
 
       - name: Publish Report in GitHub Actions Summary
         run: cat test-report.txt >> $GITHUB_STEP_SUMMARY

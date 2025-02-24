@@ -26,6 +26,8 @@ jobs:
           npm run lint:check 2>&1 | \
           # generate lint.log
           tee "lint.log"
+          exit_code="${PIPESTATUS[0]}"
+          exit "$exit_code"
 
       - name: Upload Lint.log
         uses: actions/upload-artifact@v4

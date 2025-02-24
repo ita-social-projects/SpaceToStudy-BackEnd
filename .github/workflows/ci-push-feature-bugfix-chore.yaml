@@ -1,6 +1,7 @@
 name: Push (feature, bugfix, chore)
 
 on:
+  workflow_dispatch:
   push:
     branches: ['feature/**', 'bugfix/**', 'chore/**']
 
@@ -21,7 +22,18 @@ jobs:
         run: npm install
 
       - name: Run ESLint
-        run: npm run lint:check
+        run: |
+          npm run lint:check 2>&1 | \
+          # generate lint.log
+          tee "lint.log"
+
+      - name: Upload Lint.log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint.log
+          path: |
+            # lint.log
+            lint.log
 
   check-skip-tests:
     name: Check Skip Tests Condition

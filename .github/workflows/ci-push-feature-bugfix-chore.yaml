@@ -71,18 +71,18 @@ jobs:
       matrix:
         node-version: ['22.x'] # NodeJS version   | Use this to test new NodeJS versions
         mongodb-version: ['8.0'] # MongoDB version  | Use this to test new MongoDB versions
-      max-parallel: 1 # The maximum number of jobs run in parallel  
-    steps:     
-      - name: Checkout repository      
-        uses: actions/checkout@v4 
+      max-parallel: 1 # The maximum number of jobs run in parallel
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Install Node.js ${{ matrix.node-version }}      
+      - name: Install Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install MongoDB ${{ matrix.mongodb-version }}    
+      - name: Install MongoDB ${{ matrix.mongodb-version }}
         uses: supercharge/mongodb-github-action@1.12.0
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
@@ -190,7 +190,7 @@ jobs:
           {
             echo "### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
             echo ""
-      
+
             # Lint Results
             LINT_FILE="lint-reports/lint.log"
             if [[ -f "$LINT_FILE" ]]; then
@@ -200,7 +200,7 @@ jobs:
               echo '```'
               echo ""
             fi
-      
+
             # Test Results
             if [[ "${{ needs.check-skip-tests.outputs.skip-tests }}" == "false" ]]; then
               if ls test-reports/tests-results-* >/dev/null 2>&1; then
@@ -210,11 +210,11 @@ jobs:
                   
                   SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
                   ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
-      
+
                   echo "**🔹 Node.js Version:** $NODE_VERSION"
                   echo "**🔹 MongoDB Version:** $MONGO_VERSION"
                   echo ""
-      
+
                   if [[ -f "$SUMMARY_FILE" ]]; then
                     echo "### 🧪 Test Results"
                     echo '```'
@@ -222,7 +222,7 @@ jobs:
                     echo '```'
                     echo ""
                   fi
-      
+
                   if [[ -s "$ERRORS_FILE" ]]; then
                     echo "### ❌ Test Errors"
                     echo '```'

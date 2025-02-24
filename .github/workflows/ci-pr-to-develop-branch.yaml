@@ -5,6 +5,45 @@ on:
     branches: ['develop']
 
 jobs:
+  run-lint:
+    name: Run ESLint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: |
+          npm run lint:check 2>&1 | \
+          # generate full-lint.log
+          tee "full-lint.log"
+          # save exit code
+          exit_code="${PIPESTATUS[0]}"
+          # parsing and generate summary-lint-errors.log
+          grep -E '^\[warn\]|^Error:' "full-lint.log" > "summary-lint-errors.log" || \
+          echo "No lint errors found." > "summary-lint-errors.log"
+          # execute exit code
+          exit "$exit_code"
+
+      - name: Upload full-lint.log
+        uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: lint-results
+          path: |
+            # full-lint.log
+            full-lint.log
+            # summary-lint-errors.log
+            summary-lint-errors.log
+
   run-tests:
     name: Run Tests
     runs-on: ubuntu-latest
@@ -54,9 +93,6 @@ jobs:
       - name: Install dependencies
         run: npm install
       #  run: npm ci # TO-DO: Install dependencies from package-lock.json
-
-      - name: Run ESLint
-        run: npm run lint:check
 
       - name: Run tests and generate logs
         run: |
@@ -197,6 +233,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Download Lint Results
+        uses: actions/download-artifact@v4
+        with:
+          name: lint-results
+          path: lint-reports
+
       - name: Download Test Results
         uses: actions/download-artifact@v4
         with:
@@ -206,7 +248,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: docker-health-check
-          path: test-reports
+          path: docker-reports
 
       - name: Generate Test Report
         run: |
@@ -214,7 +256,30 @@ jobs:
           {
             echo "$CI_MARKER"
             echo ""
-          } > test-report.txt
+          } > report.txt
+
+          {
+            echo "### 📝 Lint Report"
+            echo ""
+            
+            SUMMARY_FILE="lint-reports/summary-lint-errors.log"
+
+            echo "#### 📋 Summary"
+            echo '```'
+            cat "$SUMMARY_FILE"
+            echo '```'
+
+            if grep -q -E '^\[warn\]|^Error:' "$SUMMARY_FILE"; then
+              echo "### ❌ Lint Errors Found"
+              echo '```'
+              cat "$SUMMARY_FILE"
+              echo '```'
+            else
+              echo "✅ No lint issues found."
+            fi
+
+            printf "\n"
+          } >> report.txt
 
           for folder in test-reports/tests-results-*; do
             TEST_VERSION=$(basename "$folder")
@@ -241,23 +306,23 @@ jobs:
               fi
 
               printf "\n"
-            } >> test-report.txt
+            } >> report.txt
           done
 
-          DOCKER_LOG="test-reports/docker-results.log"
+          DOCKER_LOG="docker-reports/docker-results.log"
           if [[ -f "$DOCKER_LOG" ]]; then
             {
               echo "### 🐳 Docker Health Check Results"
               echo '```'
               cat "$DOCKER_LOG"
               echo '```'
-            } >> test-report.txt
+            } >> report.txt
           else
-            echo -e "### 🐳 Docker Health Check Results\n**No Docker health check results found.**" >> test-report.txt
+            echo -e "### 🐳 Docker Health Check Results\n**No Docker health check results found.**" >> report.txt
           fi
 
       - name: Publish Report in GitHub Actions Summary
-        run: cat test-report.txt >> "$GITHUB_STEP_SUMMARY"
+        run: cat report.txt >> "$GITHUB_STEP_SUMMARY"
 
       - name: Update CI Report in PR
         env:
@@ -273,8 +338,8 @@ jobs:
 
           if [[ -n "$COMMENT_ID" ]]; then
             echo "Updating existing CI report comment: $COMMENT_ID"
-            gh api "repos/:owner/:repo/issues/comments/$COMMENT_ID" -X PATCH -f body="$(cat test-report.txt)"
+            gh api "repos/:owner/:repo/issues/comments/$COMMENT_ID" -X PATCH -f body="$(cat report.txt)"
           else
             echo "No previous CI report found, creating a new one..."
-            gh pr comment "$PR_NUMBER" --body-file "test-report.txt"
+            gh pr comment "$PR_NUMBER" --body-file "report.txt"
           fi

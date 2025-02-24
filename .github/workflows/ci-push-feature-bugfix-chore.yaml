@@ -168,6 +168,7 @@ jobs:
   generate-report:
     name: Generate CI Report
     runs-on: ubuntu-latest
+    if: always()
     needs: ['check-skip-tests', 'run-tests']
     steps:
       - name: Checkout repository

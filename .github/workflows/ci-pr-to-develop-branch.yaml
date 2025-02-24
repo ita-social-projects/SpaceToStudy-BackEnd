@@ -349,7 +349,7 @@ jobs:
             exit 0
           fi
 
-          COMMENT_ID=$(gh api "repos/:owner/:repo/issues/$PR_NUMBER/comments" --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("### ✅ CI Report")) | .id')
+          COMMENT_ID=$(gh api "repos/:owner/:repo/issues/$PR_NUMBER/comments" --jq '.[] | select(.user.login=="github-actions[bot]") | select(.body | contains("# ✅ CI Report")) | .id')
 
           if [[ -n "$COMMENT_ID" ]]; then
             echo "Updating existing CI report comment: $COMMENT_ID"

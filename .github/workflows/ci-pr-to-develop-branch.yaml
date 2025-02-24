@@ -242,7 +242,7 @@ jobs:
 
       - name: Generate Test Report
         run: |
-          CI_MARKER="### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
+          CI_MARKER="# ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
           {
             echo "$CI_MARKER"
             echo ""
@@ -250,7 +250,7 @@ jobs:
 
           # 📝 Lint Report
           {
-            echo "### 📝 Lint Report"
+            echo "## 📝 Lint Report"
             echo ""
 
             SUMMARY_FILE="all-artifacts/lint-results/summary-lint-errors.log"

@@ -3,14 +3,14 @@ name: Push (feature, bugfix, chore)
 on:
   workflow_dispatch:
   push:
-    branches: ['feature/**', 'bugfix/**', 'chore/**']
+    branches: ['feature/**', 'bugfix/**', 'chore/**']      
 
 jobs:
   lint:
     name: Run ESLint
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest      
     steps:
-      - name: Checkout repository
+      - name: Checkout repository      
         uses: actions/checkout@v4
 
       - name: Set up Node.js

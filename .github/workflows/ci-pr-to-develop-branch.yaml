@@ -262,7 +262,9 @@ jobs:
                 cat "$SUMMARY_FILE"
                 echo '```'
               else
+                echo '```'
                 echo "✅ No lint issues found."
+                echo '```'
               fi
             else
               echo "⚠️ Lint report not found."

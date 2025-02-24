@@ -7,15 +7,15 @@ on:
 jobs:
   run-lint:
     name: Run ESLint
-    runs-on: ubuntu-latest        
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4   
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
-        with:          
-          node-version: '22'        
+        with:
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
@@ -252,7 +252,7 @@ jobs:
           {
             echo "## 🔍 Lint Report"
             echo ""
-            SUMMARY_FILE="all-artifacts/summary-lint-errors.log"
+            SUMMARY_FILE="all-artifacts/lint-results/summary-lint-errors.log"
 
             if [[ -f "$SUMMARY_FILE" ]]; then
               echo "**Lint Summary:**"
@@ -324,7 +324,7 @@ jobs:
             echo "## 🐳 Docker Health Check"
             echo ""
 
-            DOCKER_LOG="all-artifacts/docker-results.log"
+            DOCKER_LOG="all-artifacts/docker-health-check/docker-results.log"
             if [[ -f "$DOCKER_LOG" ]]; then
               echo "**Health Check Results:**"
               echo '```'

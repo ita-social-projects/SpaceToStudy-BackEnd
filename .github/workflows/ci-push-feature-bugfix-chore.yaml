@@ -176,14 +176,14 @@ jobs:
       - name: Download Lint Results
         uses: actions/download-artifact@v4
         with:
-          name: lint-results
+          name: lint.log
           path: lint-reports
 
       - name: Download Test Results (if tests were run)
         if: needs.check-skip-tests.outputs.skip-tests == 'false'
         uses: actions/download-artifact@v4
         with:
-          name: lint.log
+          name: test-results
           path: test-reports
 
       - name: Generate Report

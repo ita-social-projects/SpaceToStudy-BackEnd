@@ -248,21 +248,19 @@ jobs:
             echo ""
           } > report.txt
 
-          # 📌 Lint Report
+          # 📝 Lint Report
           {
-            echo "### 📝 Lint Report"
+            echo "## 🔍 Lint Report"
             echo ""
-            
             SUMMARY_FILE="all-artifacts/summary-lint-errors.log"
 
             if [[ -f "$SUMMARY_FILE" ]]; then
-              echo "#### 📋 Summary"
+              echo "**Lint Summary:**"
               echo '```'
               cat "$SUMMARY_FILE"
               echo '```'
-
               if grep -q -E '^\[warn\]|^Error:' "$SUMMARY_FILE"; then
-                echo "### ❌ Lint Errors Found"
+                echo "**❌ Lint Errors Found:**"
                 echo '```'
                 cat "$SUMMARY_FILE"
                 echo '```'
@@ -270,64 +268,74 @@ jobs:
                 echo "✅ No lint issues found."
               fi
             else
-              echo "⚠️ Lint report not found."
+              echo "⚠️ No lint report available."
             fi
 
-            printf "\n"
+            echo ""
           } >> report.txt
 
-          # 📌 Test Reports
+          # 🧪 Test Reports
           TEST_REPORTS_FOUND=false
-          for folder in $(find all-artifacts -type d -name "tests-results-*"); do
-            TEST_REPORTS_FOUND=true
-            TEST_VERSION=$(basename "$folder")
-            NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
-            MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
+          {
+            echo "## 🧪 Test Results"
+            echo ""
 
-            SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
-            ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+            for folder in $(find all-artifacts -type d -name "tests-results-*"); do
+              TEST_REPORTS_FOUND=true
+              TEST_VERSION=$(basename "$folder")
+              NODE_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f3)
+              MONGO_VERSION=$(echo "$TEST_VERSION" | cut -d'-' -f4)
 
-            {
+              SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
+              ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+
               echo "**🔹 Node.js Version:** $NODE_VERSION"
               echo "**🔹 MongoDB Version:** $MONGO_VERSION"
               echo ""
-              echo "### 🧪 Test Results"
-              
+
               if [[ -f "$SUMMARY_FILE" ]]; then
+                echo "**Test Summary:**"
                 echo '```'
                 cat "$SUMMARY_FILE"
                 echo '```'
               else
-                echo "⚠️ Test summary not found."
+                echo "⚠️ No test summary available."
               fi
 
               if [[ -s "$ERRORS_FILE" ]]; then
-                echo "### ❌ Test Errors"
+                echo "**❌ Test Errors:**"
                 echo '```'
                 cat "$ERRORS_FILE"
                 echo '```'
               fi
 
-              printf "\n"
-            } >> report.txt
-          done
+              echo ""
+            done
 
-          if [[ "$TEST_REPORTS_FOUND" == false ]]; then
-            echo "⚠️ No test results found." >> report.txt
-          fi
+            if [[ "$TEST_REPORTS_FOUND" == false ]]; then
+              echo "⚠️ No test results available."
+            fi
 
-          # 📌 Docker Health Check
-          DOCKER_LOG="all-artifacts/docker-results.log"
-          if [[ -f "$DOCKER_LOG" ]]; then
-            {
-              echo "### 🐳 Docker Health Check Results"
+            echo ""
+          } >> report.txt
+
+          # 🐳 Docker Health Check
+          {
+            echo "## 🐳 Docker Health Check"
+            echo ""
+
+            DOCKER_LOG="all-artifacts/docker-results.log"
+            if [[ -f "$DOCKER_LOG" ]]; then
+              echo "**Health Check Results:**"
               echo '```'
               cat "$DOCKER_LOG"
               echo '```'
-            } >> report.txt
-          else
-            echo "⚠️ No Docker health check results found." >> report.txt
-          fi
+            else
+              echo "⚠️ No Docker health check results available."
+            fi
+
+            echo ""
+          } >> report.txt
 
       - name: Publish Report in GitHub Actions Summary
         run: cat report.txt >> "$GITHUB_STEP_SUMMARY"

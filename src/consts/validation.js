@@ -46,7 +46,7 @@ const enums = {
   QUIZ_SETTINGS_ENUM: ['view', 'shuffle', 'pointValues', 'scoredResponses', 'correctAnswers'],
   RESOURCE_STATUS_ENUM: ['available', 'finished'],
   RESOURCE_AVAILABILITY_STATUS_ENUM: ['open', 'closed', 'openFrom'],
-  RESOURCE_COMPLETION_STATUS_ENUM: ['active', 'completed'],
+  RESOURCE_COMPLETION_STATUS_ENUM: ['in progress', 'completed'],
   RESOURCES_TYPES_ENUM: ['lesson', 'quiz', 'attachment', 'question']
 }
 

@@ -183,7 +183,7 @@ jobs:
         if: needs.check-skip-tests.outputs.skip-tests == 'false'
         uses: actions/download-artifact@v4
         with:
-          name: test-results
+          name: lint.log
           path: test-reports
 
       - name: Generate Report

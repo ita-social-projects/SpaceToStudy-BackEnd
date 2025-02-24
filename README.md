@@ -2,10 +2,6 @@
 
 [![Build Status](https://dev.azure.com/ProjectApproach/Space2Study/_apis/build/status/ita-social-projects.SpaceToStudy-BackEnd?branchName=develop)](https://dev.azure.com/ProjectApproach/Space2Study/_build/latest?definitionId=32&branchName=develop)
 
-# SpaceToStudy-BackEnd
-
-![Build Status](https://github.com/ita-social-projects/SpaceToStudy-BackEnd/actions/workflows/ci.yml/badge.svg)
-
 ## About the Project
 
 **SpaceToStudy** is a platform designed to facilitate interaction between students and tutors. This repository contains the backend of the application, providing APIs for user management, session handling, reviews, and more.

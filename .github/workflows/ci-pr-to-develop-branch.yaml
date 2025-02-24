@@ -250,17 +250,14 @@ jobs:
 
           # 📝 Lint Report
           {
-            echo "## 🔍 Lint Report"
+            echo "### 📝 Lint Report"
             echo ""
+            
             SUMMARY_FILE="all-artifacts/lint-results/summary-lint-errors.log"
 
             if [[ -f "$SUMMARY_FILE" ]]; then
-              echo "**Lint Summary:**"
-              echo '```'
-              cat "$SUMMARY_FILE"
-              echo '```'
               if grep -q -E '^\[warn\]|^Error:' "$SUMMARY_FILE"; then
-                echo "**❌ Lint Errors Found:**"
+                echo "### ❌ Lint Errors Found"
                 echo '```'
                 cat "$SUMMARY_FILE"
                 echo '```'
@@ -268,10 +265,10 @@ jobs:
                 echo "✅ No lint issues found."
               fi
             else
-              echo "⚠️ No lint report available."
+              echo "⚠️ Lint report not found."
             fi
 
-            echo ""
+            printf "\n"
           } >> report.txt
 
           # 🧪 Test Reports

@@ -190,7 +190,7 @@ jobs:
           {
             echo "### ✅ CI Report - $(TZ="Europe/Kyiv" date +"%H:%M %d/%m/%Y")"
             echo ""
-
+      
             # Lint Results
             LINT_FILE="lint-reports/lint.log"
             if [[ -f "$LINT_FILE" ]]; then
@@ -200,34 +200,44 @@ jobs:
               echo '```'
               echo ""
             fi
-
+      
             # Test Results
             if [[ "${{ needs.check-skip-tests.outputs.skip-tests }}" == "false" ]]; then
-              for folder in test-reports/tests-results-*; do
-                NODE_VERSION=$(echo "$folder" | awk -F'-' '{print $3}')
-                MONGO_VERSION=$(echo "$folder" | awk -F'-' '{print $4}')
-                
-                SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
-                ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
-
-                echo "**🔹 Node.js Version:** $NODE_VERSION"
-                echo "**🔹 MongoDB Version:** $MONGO_VERSION"
-                echo ""
-
+              if ls test-reports/tests-results-* >/dev/null 2>&1; then
+                for folder in test-reports/tests-results-*; do
+                  NODE_VERSION=$(echo "$folder" | awk -F'-' '{print $3}')
+                  MONGO_VERSION=$(echo "$folder" | awk -F'-' '{print $4}')
+                  
+                  SUMMARY_FILE="$folder/summary-tests-results-${NODE_VERSION}-${MONGO_VERSION}.log"
+                  ERRORS_FILE="$folder/summary-tests-errors-${NODE_VERSION}-${MONGO_VERSION}.log"
+      
+                  echo "**🔹 Node.js Version:** $NODE_VERSION"
+                  echo "**🔹 MongoDB Version:** $MONGO_VERSION"
+                  echo ""
+      
+                  if [[ -f "$SUMMARY_FILE" ]]; then
+                    echo "### 🧪 Test Results"
+                    echo '```'
+                    cat "$SUMMARY_FILE"
+                    echo '```'
+                    echo ""
+                  fi
+      
+                  if [[ -s "$ERRORS_FILE" ]]; then
+                    echo "### ❌ Test Errors"
+                    echo '```'
+                    cat "$ERRORS_FILE"
+                    echo '```'
+                  fi
+                  echo ""
+                done
+              else
                 echo "### 🧪 Test Results"
                 echo '```'
-                cat "$SUMMARY_FILE"
+                echo "Test results directory not found, skipping test results."
                 echo '```'
                 echo ""
-
-                if [[ -s "$ERRORS_FILE" ]]; then
-                  echo "### ❌ Test Errors"
-                  echo '```'
-                  cat "$ERRORS_FILE"
-                  echo '```'
-                fi
-                echo ""
-              done
+              fi
             else
               echo "### 🧪 Test Results"
               echo '```'

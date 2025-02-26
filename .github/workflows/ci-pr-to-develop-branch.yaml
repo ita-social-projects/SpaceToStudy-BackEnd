@@ -28,7 +28,7 @@ jobs:
           # save exit code
           exit_code="${PIPESTATUS[0]}"
           # parsing and generate summary-lint-errors.log
-          grep -E '^\[warn\]|^Error:' "full-lint.log" > "summary-lint-errors.log" || \
+          grep -E '^\[warn\]|^Error:|^Warning:' "full-lint.log" > "summary-lint-errors.log" || \
           echo "No lint errors found." > "summary-lint-errors.log"
           # execute exit code
           exit "$exit_code"

@@ -92,8 +92,8 @@ jobs:
           echo "MongoDB did not start in time!" && exit 1
 
       - name: Install dependencies
-        run: npm install
-      #  run: npm ci # TO-DO: Install dependencies from package-lock.json
+        run: npm ci
+        # run: npm install
 
       - name: Run tests and generate logs
         run: |

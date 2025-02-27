@@ -9,7 +9,6 @@
 ## Features
 
 - **User Management**: Registration, authentication, and authorization.
-- **Session Management**: Creation, update, and deletion of study sessions.
 - **Reviews & Ratings**: Users can leave feedback and rate tutors and students.
 - **Notifications**: System for alerts about upcoming sessions and events.
 

@@ -2,7 +2,7 @@ FROM node:14-alpine
 ARG MONGODB_URL
 WORKDIR /app
 COPY package.json .
-RUN npm install
+RUN npm ci
 COPY . .
 EXPOSE 8080
 ENV MONGODB_URL=$MONGODB_URL

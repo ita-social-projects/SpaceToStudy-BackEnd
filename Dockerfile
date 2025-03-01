@@ -1,7 +1,7 @@
 FROM node:14-alpine
 ARG MONGODB_URL
 WORKDIR /app
-COPY package-lock.json .
+COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
 EXPOSE 8080

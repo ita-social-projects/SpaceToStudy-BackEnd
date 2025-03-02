@@ -18,7 +18,7 @@ jobs:
           node-version: '22'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run ESLint
         run: |
@@ -92,8 +92,7 @@ jobs:
           echo "MongoDB did not start in time!" && exit 1
 
       - name: Install dependencies
-        run: npm install
-      #  run: npm ci # TO-DO: Install dependencies from package-lock.json
+        run: npm ci
 
       - name: Run tests and generate logs
         run: |

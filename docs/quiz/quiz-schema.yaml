@@ -73,13 +73,13 @@ definitions:
       category:
         type: string
         description: _id
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
       items:
         type: array
         items:
           type: string
           description: _id
-          ref: '#/components/question'
+          $ref: '#/definitions/question'
       settings:
         type: object
         properties:

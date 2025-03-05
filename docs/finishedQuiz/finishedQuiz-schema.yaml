@@ -7,8 +7,7 @@ definitions:
         _id:
           type: string
         quiz:
-          type: string
-          ref: '#/definitions/quiz'
+          $ref: '#/definitions/quiz'
         grade:
           type: number
         results:
@@ -39,8 +38,7 @@ definitions:
     type: object
     properties:
       quiz:
-        type: string
-        ref: '#/definitions/quiz'
+        $ref: '#/definitions/quiz'
       grade:
         type: number
       results:
@@ -67,8 +65,7 @@ definitions:
       _id:
         type: string
       quiz:
-        type: string
-        ref: '#/definitions/quiz'
+        $ref: '#/definitions/quiz'
       grade:
         type: number
       results:

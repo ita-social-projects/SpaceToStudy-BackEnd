@@ -13,6 +13,8 @@ definitions:
           properties:
             _id:
               type: string
+            name:
+              type: string
             appearance:
               type: object
               properties:
@@ -41,7 +43,6 @@ definitions:
       name:
         type: string
       category:
-        type: string
         $ref: '#/components/category'
   subject:
     type: object
@@ -51,7 +52,6 @@ definitions:
       name:
         type: string
       category:
-        type: string
         $ref: '#/components/category'
       totalOffers:
         type: object

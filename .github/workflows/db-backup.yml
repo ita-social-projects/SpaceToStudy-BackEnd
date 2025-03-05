@@ -8,6 +8,7 @@ on:
 jobs:
   backup-production:
     runs-on: ubuntu-latest
+    environment: backup
     env:
       DB_SOURCE: db-production
       DB_SOURCE_URL: ${{ secrets.MONGODB_PROD_URL }}
@@ -91,6 +92,7 @@ jobs:
 
   backup-dev:
     runs-on: ubuntu-latest
+    environment: backup
     needs: backup-production
     if: success() || failure()
     env:

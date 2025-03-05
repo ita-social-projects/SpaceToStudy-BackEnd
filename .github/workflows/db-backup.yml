@@ -1,9 +1,9 @@
 name: Backup MongoDB Atlas
 
 on:
-  workflow_dispatch:	# Allow manual trigger
+  workflow_dispatch: # Allow manual trigger
   schedule:
-    - cron: '0 2 * * *'	# Run the workflow at 2:00 AM UTC every day
+    - cron: '0 2 * * *' # Run the workflow at 2:00 AM UTC every day
 
 jobs:
   backup-production:
@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-    
+
       - name: Set Date env
         id: set-date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
@@ -47,7 +47,7 @@ jobs:
           --nsInclude="$DB_SOURCE.*" \
           --nsFrom="$DB_SOURCE.*" \
           --nsTo="$DB_TEST.*" \
-          --drop 
+          --drop
 
       - name: Encrypt Dump
         env:
@@ -57,7 +57,7 @@ jobs:
           tar -czf backup-$DB_SOURCE-$TODAY.tar.gz backup-$DB_SOURCE-$TODAY
           openssl enc -aes-256-cbc -salt -in backup-$DB_SOURCE-$TODAY.tar.gz -out backup-$DB_SOURCE-$TODAY.tar.gz.enc -k "$ENCRYPTION_KEY"
           rm -rf backup-$DB_SOURCE-$TODAY backup-$DB_SOURCE-$TODAY.tar.gz
-          
+
       - name: Upload Dump to Azure Storage
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
@@ -77,7 +77,7 @@ jobs:
         run: |
           BACKUP_FILE="backup-$DB_SOURCE-$TODAY.tar.gz.enc"
           AZURE_URL="https://s2sbackups.blob.core.windows.net/db-backups/$BACKUP_FILE"
-          
+
           echo "- **Production DB Backup**: [Download Backup]($AZURE_URL)" >> $GITHUB_STEP_SUMMARY
 
       - name: Create Issue on Failure
@@ -85,7 +85,7 @@ jobs:
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DB_NAME: "db-production"
+          DB_NAME: 'db-production'
         with:
           filename: .github/db-issue-template.md
 
@@ -101,7 +101,7 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-    
+
       - name: Set Date env
         id: set-date
         run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
@@ -132,7 +132,7 @@ jobs:
           --nsInclude="$DB_SOURCE.*" \
           --nsFrom="$DB_SOURCE.*" \
           --nsTo="$DB_TEST.*" \
-          --drop 
+          --drop
 
       - name: Encrypt Dump
         env:
@@ -162,7 +162,7 @@ jobs:
         run: |
           BACKUP_FILE="backup-$DB_SOURCE-$TODAY.tar.gz.enc"
           AZURE_URL="https://s2sbackups.blob.core.windows.net/db-backups/$BACKUP_FILE"
-          
+
           echo "- **Development DB Backup**: [Download Backup]($AZURE_URL)" >> $GITHUB_STEP_SUMMARY
 
       - name: Create Issue on Failure
@@ -170,6 +170,6 @@ jobs:
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DB_NAME: "db-dev"
+          DB_NAME: 'db-dev'
         with:
           filename: .github/db-issue-template.md

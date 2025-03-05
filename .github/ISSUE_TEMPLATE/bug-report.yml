@@ -1,7 +1,7 @@
 name: 🪲 Bug Report
 description: Report a bug
-title: "fix:"
-labels: ["bug"]
+title: 'fix:'
+labels: ['bug']
 body:
   - type: markdown
     attributes:
@@ -45,40 +45,40 @@ body:
   - type: dropdown
     id: OS
     attributes:
-      label: "What OS are you seeing the problem on?"
+      label: 'What OS are you seeing the problem on?'
       multiple: true
       options:
-        - "Windows"
-        - "MacOS"
-        - "Android"
-        - "iOS"
-        - "Other (mention in the description)"
+        - 'Windows'
+        - 'MacOS'
+        - 'Android'
+        - 'iOS'
+        - 'Other (mention in the description)'
     validations:
       required: true
   - type: dropdown
     id: browser
     attributes:
-      label: "What browsers are you seeing the problem on?"
+      label: 'What browsers are you seeing the problem on?'
       multiple: true
       options:
-        - "Chrome"
-        - "Safari"
-        - "Edge"
-        - "Firefox"
-        - "Opera"
-        - "Other (mention in the description)"
+        - 'Chrome'
+        - 'Safari'
+        - 'Edge'
+        - 'Firefox'
+        - 'Opera'
+        - 'Other (mention in the description)'
     validations:
       required: true
   - type: dropdown
     id: Severity
     attributes:
-      label: "Severity"
+      label: 'Severity'
       options:
-        - "Blocker (S1)"
-        - "Critical (S2)"
-        - "Major (S3)"
-        - "Minor (S4)"
-        - "Trivial (S5)"
+        - 'Blocker (S1)'
+        - 'Critical (S2)'
+        - 'Major (S3)'
+        - 'Minor (S4)'
+        - 'Trivial (S5)'
     validations:
       required: true
   - type: markdown

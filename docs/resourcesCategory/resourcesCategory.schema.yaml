@@ -19,7 +19,6 @@ definitions:
       updatedAt:
         type: string
         format: date-time
-<<<<<<< HEAD
   resourcesCategories:
     type: object
     properties:
@@ -38,12 +37,3 @@ definitions:
           type: string
         name:
           type: string
-=======
-  resourcesCategoryAttachment:
-    type: object
-    properties:
-      _id: 
-        type: string
-      name:
-        type: string
->>>>>>> 6f046cd (changed attachments files for swagger)

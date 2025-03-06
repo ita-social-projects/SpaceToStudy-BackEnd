@@ -25,11 +25,7 @@ definitions:
           type: string
           format: date-time
       resourceType:
-        type: string
-        enum:
-          - attachment
-          - lesson
-          - quiz
+        $ref: '#/definitions/resourceType'
       isDublicate:
         type: boolean
   attachmentBody:

@@ -101,18 +101,14 @@ jobs:
             echo '```'
             echo ""
             echo "### 🛠 Restore database from dump"
-            echo "**Set environment variables:**"
-            echo '```sh'
-            echo 'MONGODB_DB="{database_name}"'
-            echo 'MONGODB_USER="{database_user}"'
-            echo 'MONGODB_PASS="{database_user_pass}"'
-            echo 'MONGODB_HOST="s2s-cluster.omfq6io.mongodb.net"'
-            echo '```'
+            echo "**Database Connection URL:**"
+            echo "🔗 **Stored in Google Sheets** – Check the shared document."
+            echo ""
             echo "**Restore command:**"
             echo '```sh'
             echo 'mongorestore \\'
-            echo '--uri=mongodb+srv://$MONGODB_USER:$MONGODB_PASS@$MONGODB_HOST/$MONGODB_DB \\'
-            echo '--dir=backup-$DB_SOURCE-$TODAY \\'
+            echo '--uri="your-mongodb-connection-url-from-google-sheets" \\'
+            echo '--dir=backup.tar.gz \\'
             echo '--drop'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
@@ -223,18 +219,14 @@ jobs:
             echo '```'
             echo ""
             echo "### 🛠 Restore database from dump"
-            echo "**Set environment variables:**"
-            echo '```sh'
-            echo 'MONGODB_DB="{database_name}"'
-            echo 'MONGODB_USER="{database_user}"'
-            echo 'MONGODB_PASS="{database_user_pass}"'
-            echo 'MONGODB_HOST="s2s-cluster.omfq6io.mongodb.net"'
-            echo '```'
+            echo "**Database Connection URL:**"
+            echo "🔗 **Stored in Google Sheets** – Check the shared document."
+            echo ""
             echo "**Restore command:**"
             echo '```sh'
             echo 'mongorestore \\'
-            echo '--uri=mongodb+srv://$MONGODB_USER:$MONGODB_PASS@$MONGODB_HOST/$MONGODB_DB \\'
-            echo '--dir=backup-$DB_SOURCE-$TODAY \\'
+            echo '--uri="your-mongodb-connection-url-from-google-sheets" \\'
+            echo '--dir=backup.tar.gz \\'
             echo '--drop'
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"

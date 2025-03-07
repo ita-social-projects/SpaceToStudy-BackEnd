@@ -78,7 +78,43 @@ jobs:
           BACKUP_FILE="backup-$DB_SOURCE-$TODAY.tar.gz.enc"
           AZURE_URL="https://s2sbackups.blob.core.windows.net/db-backups/$BACKUP_FILE"
 
-          echo "- **Production DB Backup**: [Download Backup]($AZURE_URL)" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "- **Production DB Backup**: [Download Backup]($AZURE_URL)"
+            echo ""
+            echo "### 🛠 Decrypt and Unpack"
+            echo "**Encryption Key Location:**"
+            echo "🔑 **Stored in Google Sheets** – Check the shared document."
+            echo ""
+            echo "**Linux/macOS:**"
+            echo '```sh'
+            echo 'ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "**Windows (Git Bash, WSL, PowerShell with OpenSSL support):**"
+            echo '```sh'
+            echo 'ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "### 🛠 Restore database from dump"
+            echo "**Set environment variables:**"
+            echo '```sh'
+            echo 'MONGODB_DB="{database_name}"'
+            echo 'MONGODB_USER="{database_user}"'
+            echo 'MONGODB_PASS="{database_user_pass}"'
+            echo 'MONGODB_HOST="s2s-cluster.omfq6io.mongodb.net"'
+            echo '```'
+            echo "**Restore command:**"
+            echo '```sh'
+            echo 'mongorestore \\'
+            echo '--uri=mongodb+srv://$MONGODB_USER:$MONGODB_PASS@$MONGODB_HOST/$MONGODB_DB \\'
+            echo '--dir=backup-$DB_SOURCE-$TODAY \\'
+            echo '--drop'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create Issue on Failure
         if: ${{ failure() }}
@@ -164,7 +200,43 @@ jobs:
           BACKUP_FILE="backup-$DB_SOURCE-$TODAY.tar.gz.enc"
           AZURE_URL="https://s2sbackups.blob.core.windows.net/db-backups/$BACKUP_FILE"
 
-          echo "- **Development DB Backup**: [Download Backup]($AZURE_URL)" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "- **Development DB Backup**: [Download Backup]($AZURE_URL)"
+            echo ""
+            echo "### 🛠 Decrypt and Unpack"
+            echo "**Encryption Key Location:**"
+            echo "🔑 **Stored in Google Sheets** – Check the shared document."
+            echo ""
+            echo "**Linux/macOS:**"
+            echo '```sh'
+            echo 'ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "**Windows (Git Bash, WSL, PowerShell with OpenSSL support):**"
+            echo '```sh'
+            echo '$ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "### 🛠 Restore database from dump"
+            echo "**Set environment variables:**"
+            echo '```sh'
+            echo 'MONGODB_DB="{database_name}"'
+            echo 'MONGODB_USER="{database_user}"'
+            echo 'MONGODB_PASS="{database_user_pass}"'
+            echo 'MONGODB_HOST="s2s-cluster.omfq6io.mongodb.net"'
+            echo '```'
+            echo "**Restore command:**"
+            echo '```sh'
+            echo 'mongorestore \\'
+            echo '--uri=mongodb+srv://$MONGODB_USER:$MONGODB_PASS@$MONGODB_HOST/$MONGODB_DB \\'
+            echo '--dir=backup-$DB_SOURCE-$TODAY \\'
+            echo '--drop'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create Issue on Failure
         if: ${{ failure() }}

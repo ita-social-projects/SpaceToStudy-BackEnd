@@ -1,6 +1,7 @@
 name: Backup MongoDB Atlas
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 2 * * *' # Run the workflow at 2:00 AM UTC every day
 

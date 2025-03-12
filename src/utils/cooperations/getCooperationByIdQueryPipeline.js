@@ -185,6 +185,34 @@ const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden) => {
         },
         sectionOrder: {
           $first: '$sectionOrder'
+        },
+        completedResourcesCount: {
+          $sum: {
+            $cond: [
+              {
+                $and: [
+                  { $eq: ['$sections.resources.completionStatus', 'completed'] },
+                  { $eq: ['$sections.resources.availability.status', 'open'] }
+                ]
+              },
+              1,
+              0
+            ]
+          }
+        },
+        totalResourcesCount: {
+          $sum: {
+            $cond: [
+              {
+                $and: [
+                  { $ifNull: ['$sections.resources', false] },
+                  { $eq: ['$sections.resources.availability.status', 'open'] }
+                ]
+              },
+              1,
+              0
+            ]
+          }
         }
       }
     },
@@ -222,6 +250,17 @@ const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden) => {
       }
     },
     {
+      $set: {
+        completedResourcesPercentage: {
+          $cond: {
+            if: { $gt: ['$totalResourcesCount', 0] },
+            then: { $floor: { $multiply: [{ $divide: ['$completedResourcesCount', '$totalResourcesCount'] }, 100] } },
+            else: 0
+          }
+        }
+      }
+    },
+    {
       $group: {
         ...commonGroupFields,
         _id: '$_id',
@@ -233,6 +272,9 @@ const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden) => {
         },
         updatedAt: {
           $first: '$updatedAt'
+        },
+        completedResourcesPercentage: {
+          $first: '$completedResourcesPercentage'
         }
       }
     },

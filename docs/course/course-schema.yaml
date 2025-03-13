@@ -75,16 +75,7 @@ definitions:
         type: string
         description: This ID related to subject
       proficiencyLevel:
-        type: array
-        items:
-          type: string
-          enum:
-            - Beginner
-            - Intermediate
-            - Advanced
-            - Test Preparation
-            - Professional
-            - Specialized
+        $ref: '#/definitions/offerProficiencyLevelValues'
       sections:
         type: array
         items:
@@ -107,12 +98,7 @@ definitions:
                       - $ref: '#/definitions/attachment'
                       - $ref: '#/definitions/question'
                   resourceType:
-                    type: string
-                    enum:
-                      - lesson
-                      - quiz
-                      - attachment
-                      - question
+                    $ref: '#/definitions/resourceType'
       createdAt:
         type: string
         format: date-time
@@ -251,7 +237,7 @@ definitions:
         properties:
           isDuplicate:
             type: boolean
-            description: 'Only present when the resource is a copy'
+            description: Only present when the resource is a copy
   resourcesInCourse:
     oneOf:
       - $ref: '#/definitions/lessonInCourse'

@@ -49,19 +49,23 @@ paths:
                   - _id: 63ec1cd51e9d781cdb6f4b14
                     author: 648afee884936e09a37deaaa
                     fileName: EnglishB2Level
-                    link: 'https://english-b2-test.com'
+                    link: https://english-b2-test.com
                     size: 230
-                    category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
+                    category:
+                      _id: 6477007a6fa4d05e1a800ce1
+                      name: Science
                     createdAt: 2023-02-14T23:44:21.334Z
                     updatedAt: 2023-02-14T23:44:21.334Z
                     resourceType: attachment
                   - _id: 64c9b03d7ea4d07f1b802ff3
                     author: 648afee884936e09a37deaaa
                     fileName: Guitar
-                    link: 'https://guitar-play-test.com'
+                    link: https://guitar-play-test.com
                     description: It is file to check your playing success on guitar
                     size: 187
-                    category: { _id: 64b8a20c6fa4d05e1a901de2, name: Music }
+                    category:
+                      _id: 64b8a20c6fa4d05e1a901de2
+                      name: Music
                     createdAt: 2023-01-14T23:44:21.334Z
                     updatedAt: 2023-01-14T23:44:21.334Z
                     resourceType: attachment
@@ -116,11 +120,11 @@ paths:
                 - _id: 8755bc080a00adr9243df104
                   author: 6255bc080a75adf9223df100
                   fileName: attachment1.pdf
-                  link: '154867-attachment1.pdf'
+                  link: 154867-attachment1.pdf
                   category: null
                   size: 1024
-                  createdAt: '2023-08-13T12:34:56.789Z'
-                  updatedAt: '2023-08-13T12:34:56.789Z'
+                  createdAt: 2023-08-13T12:34:56.789Z
+                  updatedAt: 2023-08-13T12:34:56.789Z
                   resourceType: attachment
         400:
           description: Bad Request

@@ -1,11 +1,60 @@
-version: '3.9'
-
 services:
-  database:
-    image: mongo
+  backend-db:
+    container_name: backend-db
+    image: mongo:8.0.3-noble
+    restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: root
-      MONGO_INITDB_DATABASE: s2s-test
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASS}
+      MONGO_INITDB_DATABASE: ${MONGODB_DB}
     ports:
-      - '27017:27017'
+      - ${MONGODB_PORT}:27017
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:${MONGODB_PORT}/${MONGODB_DB} --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend-app:
+    container_name: backend-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 8080:8080
+    # depends_on:
+    #   backend-db:
+    #     condition: service_healthy
+    environment:
+      # Database
+      MONGODB_URL: ${MONGODB_URL}
+      # URL settings
+      CLIENT_URL: ${CLIENT_URL}
+      SERVER_URL: ${SERVER_URL}
+      SERVER_PORT: ${SERVER_PORT}
+      # JWT settings
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      JWT_RESET_SECRET: ${JWT_RESET_SECRET}
+      JWT_CONFIRM_SECRET: ${JWT_CONFIRM_SECRET}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN}
+      JWT_REFRESH_LONG_TERM_EXPIRES_IN: ${JWT_REFRESH_LONG_TERM_EXPIRES_IN}
+      JWT_RESET_EXPIRES_IN: ${JWT_RESET_EXPIRES_IN}
+      JWT_CONFIRM_EXPIRES_IN: ${JWT_CONFIRM_EXPIRES_IN}
+      # Mail settings
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+      MAIL_FIRSTNAME: ${MAIL_FIRSTNAME}
+      MAIL_LASTNAME: ${MAIL_LASTNAME}
+      # Gmail settings
+      GMAIL_CLIENT_ID: ${GMAIL_CLIENT_ID}
+      GMAIL_CLIENT_SECRET: ${GMAIL_CLIENT_SECRET}
+      GMAIL_REFRESH_TOKEN: ${GMAIL_REFRESH_TOKEN}
+      GMAIL_REDIRECT_URI: ${GMAIL_REDIRECT_URI}

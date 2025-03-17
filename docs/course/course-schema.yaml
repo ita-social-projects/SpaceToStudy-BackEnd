@@ -42,31 +42,6 @@ definitions:
         type: string
       author:
         type: string
-      category:
-        type: string
-      subject:
-        type: string
-      proficiencyLevel:
-        $ref: '#/definitions/offerProficiencyLevelValues'
-      sections:
-        $ref: '#/definitions/courseSections'
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
-  courseWithCategoryId:
-    type: object
-    properties:
-      _id:
-        type: string
-      title:
-        type: string
-      description:
-        type: string
-      author:
-        type: string
         description: This ID related to user
       category:
         type: string
@@ -77,28 +52,7 @@ definitions:
       proficiencyLevel:
         $ref: '#/definitions/offerProficiencyLevelValues'
       sections:
-        type: array
-        items:
-          type: object
-          properties:
-            title:
-              type: string
-            description:
-              type: string
-            resources:
-              type: array
-              items:
-                type: object
-                properties:
-                  resource:
-                    type: object
-                    oneOf:
-                      - $ref: '#/definitions/lesson'
-                      - $ref: '#/definitions/quiz'
-                      - $ref: '#/definitions/attachment'
-                      - $ref: '#/definitions/question'
-                  resourceType:
-                    $ref: '#/definitions/resourceType'
+        $ref: '#/definitions/courseSections'
       createdAt:
         type: string
         format: date-time
@@ -193,7 +147,7 @@ definitions:
       author:
         type: string
       category:
-        $ref: '#/definitions/categoryWithName'
+        type: string
       resourceType:
         $ref: '#/definitions/resourceType'
       settings:
@@ -223,21 +177,61 @@ definitions:
         type: boolean
         description: Only present when the resource is a copy
   lessonInCourse:
-    allOf:
-      - $ref: '#/definitions/lesson'
-      - type: object
-        properties:
-          isDuplicate:
-            type: boolean
-            description: Only present when the resource is a copy
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      content:
+        type: string
+      category:
+        type: string
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      attachments:
+        type: array
+        items:
+          type: string
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      isDuplicate:
+        type: boolean
+        description: Only present when the resource is a copy
   attachmentInCourse:
-    allOf:
-      - $ref: '#/definitions/attachmentInPostLesson'
-      - type: object
-        properties:
-          isDuplicate:
-            type: boolean
-            description: Only present when the resource is a copy
+    type: object
+    properties:
+      _id:
+        type: string
+      author:
+        type: string
+      fileName:
+        type: string
+      link:
+        type: string
+      category:
+        $ref: '#/definitions/categoryWithName'
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      size:
+        type: number
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      isDuplicate:
+        type: boolean
+        description: Only present when the resource is a copy
   resourcesInCourse:
     oneOf:
       - $ref: '#/definitions/lessonInCourse'

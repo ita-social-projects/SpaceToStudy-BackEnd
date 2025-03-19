@@ -1,6 +1,6 @@
 const { MongoClient, ObjectId } = require('mongodb')
 
-const { up } = require('@root/migrations/20241216212401-remove-documents-with-non-existent-users')
+const { up } = require('@root/migrations/20250221121514-remove-documents-with-non-existent-users')
 
 require('~/initialization/envSetup')
 const {

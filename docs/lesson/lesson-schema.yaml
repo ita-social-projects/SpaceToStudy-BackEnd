@@ -13,7 +13,7 @@ definitions:
       content:
         type: string
       category:
-        $ref: '#/definitions/lessonCategory'
+        $ref: '#/definitions/categoryWithName'
       resourceType:
         $ref: '#/definitions/resourceType'
       createdAt:
@@ -68,11 +68,4 @@ definitions:
         items:
           $ref: '#/definitions/attachmentInPostLesson'
       category:
-        type: string
-  lessonCategory:
-    type: object
-    properties:
-      _id:
-        type: string
-      name:
         type: string

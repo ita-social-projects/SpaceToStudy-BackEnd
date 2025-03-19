@@ -202,7 +202,7 @@ paths:
               example:
                 status: 400
                 code: 'WRONG_CURRENT_PASSWORD or INCORRECT_CREDENTIALS'
-                message: 'Wrong current password or The password you entered is incorrect.'           
+                message: 'Wrong current password or The password you entered is incorrect.'
   /auth/reset-password/{token}:
     patch:
       tags:

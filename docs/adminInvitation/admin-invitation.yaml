@@ -10,11 +10,11 @@ paths:
       produces:
         - application/json
       parameters:
-      - in: header
-        name: Accept-Language
-        type: string
-        enum: [en, ua]
-        required: true
+        - in: header
+          name: Accept-Language
+          type: string
+          enum: [en, ua]
+          required: true
       requestBody:
         required: true
         description: Provide required data to invite admins.
@@ -24,8 +24,8 @@ paths:
               $ref: '#/definitions/send-admin-invitations'
             example:
               emails:
-              - johndoe@gmail.com
-              - vasya@gmail.com
+                - johndoe@gmail.com
+                - vasya@gmail.com
       responses:
         200:
           description: OK
@@ -39,7 +39,7 @@ paths:
                   dateOfInvitation: 2022-09-02T11:59:53.243Z
                 - _id: 6255bc080a75adf9223df101
                   email: vasya@gmail.com
-                  dateOfInvitation: 2022-09-02T11:59:53.243Z     
+                  dateOfInvitation: 2022-09-02T11:59:53.243Z
         401:
           description: Unauthorized
           content:
@@ -82,7 +82,7 @@ paths:
                   dateOfInvitation: 2022-09-02T11:59:53.243Z
                 - _id: 6255bc080a75adf9223df101
                   email: vasya@gmail.com
-                  dateOfInvitation: 2022-09-02T11:59:53.243Z 
+                  dateOfInvitation: 2022-09-02T11:59:53.243Z
         401:
           description: Unauthorized
           content:

@@ -34,7 +34,7 @@ describe('Category controller', () => {
   let app, server, testCategory, testSubject, testStudentUser
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

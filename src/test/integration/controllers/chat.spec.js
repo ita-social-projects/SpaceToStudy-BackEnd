@@ -68,7 +68,7 @@ describe('Chat controller', () => {
   let app, server, testChat, studentAccessToken
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {

@@ -1,5 +1,4 @@
 const finishedQuizService = require('~/services/finishedQuiz')
-
 const getFinishedQuizzes = async (req, res) => {
   const { skip, limit } = req.query
   const { id: author } = req.user
@@ -26,6 +25,14 @@ const getFinishedQuizById = async (req, res) => {
   res.status(200).json(quiz)
 }
 
+const getFinishedQuizByQuizId = async (req, res) => {
+  const { quizId, cooperationId } = req.params
+
+  const finishedQuizzes = await finishedQuizService.getFinishedQuizByQuizId(quizId, cooperationId)
+
+  res.status(200).json(finishedQuizzes)
+}
+
 const updateFinishedQuiz = async (req, res) => {
   const { id } = req.params
 
@@ -42,5 +49,6 @@ module.exports = {
   getFinishedQuizzes,
   createFinishedQuiz,
   getFinishedQuizById,
-  updateFinishedQuiz
+  updateFinishedQuiz,
+  getFinishedQuizByQuizId
 }

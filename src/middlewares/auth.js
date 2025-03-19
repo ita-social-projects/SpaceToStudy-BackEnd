@@ -48,9 +48,8 @@ const restrictTo = (...roles) => {
   }
 }
 
-const ownershipMiddleware =
-  (model, ownerFields, relationshipModel = null) =>
-  async (req, res, next) => {
+const ownershipMiddleware = (model, ownerFields, relationshipModel = null) => {
+  return async (req, res, next) => {
     const resourceId = req.params.id
     const userId = req.user.id
 
@@ -58,15 +57,16 @@ const ownershipMiddleware =
 
     next()
   }
+}
 
-const availabilityMiddleware =
-  (model, relationshipModel, expectedAvailability = 'open') =>
-  async (req, res, next) => {
+const availabilityMiddleware = (model, relationshipModel, expectedAvailability = 'open') => {
+  return async (req, res, next) => {
     const resourceId = req.params.id
     const userId = req.user.id
 
     await userService.checkAvailability({ model, relationshipModel, resourceId, userId, expectedAvailability })
     next()
   }
+}
 
 module.exports = { authMiddleware, authSocketMiddleware, restrictTo, ownershipMiddleware, availabilityMiddleware }

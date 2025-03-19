@@ -26,83 +26,106 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/course'
+                $ref: '#/definitions/courses'
               example:
                 - _id: 64045f98b131dd04d7896af6
                   title: Advanced English
                   description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
                   category:
-                    { _id: 64884f33fdc2d1a130c24ac2, appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' } }
-                  subject: { _id: 6488509cfdc2d1a130c24ae4, name: Languages }
-                  proficiencyLevel: [Advanced]
+                    _id: 64884f33fdc2d1a130c24ac2
+                    appearance:
+                      icon: mocked-path-to-icon
+                      color: '#66C42C'
+                  subject:
+                    _id: 6488509cfdc2d1a130c24ae4
+                    name: Languages
+                  proficiencyLevel:
+                    - Advanced
                   sections:
                     - title: Section First
                       description: some description
                       resources:
-                        [
-                          {
-                            resource:
-                              {
-                                title: Colors in English,
-                                description: With this lesson you will learn all about colors in English.,
-                                content: <h1>Title</h1>,
-                                author: 63da8767c9ad4c9a0b0eacd3,
-                                attachments: [63ed1cd25e9d781cdb6a6b15],
-                                category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
-                                _id: 63ed1cd25e9d781cdb6a6b17
-                              },
+                        - resource:
+                            title: Colors in English
+                            description: With this lesson you will learn all about colors in English.
+                            content: <h1>Title</h1>
+                            author: 63da8767c9ad4c9a0b0eacd3
+                            attachments:
+                              - 63ed1cd25e9d781cdb6a6b15
+                            category:
+                              _id: 6477007a6fa4d05e1a800ce1
+                              name: Languages
+                            _id: 63ed1cd25e9d781cdb6a6b17
                             resourceType: lesson
-                          },
-                          {
-                            resource:
-                              {
-                                _id: 64ba39c714b7bc037a29d712,
-                                title: Title,
-                                description: description,
-                                items: [6477007a6fa4d05e1a800ce4, 6477007a6fa4d05e1a800ce6],
-                                author: '6477007a6fa4d05e1a800ce5',
-                                category: '63bed9ef260f18d04ab15da',
-                                settings:
-                                  {
-                                    view: Scroll,
-                                    shuffle: true,
-                                    pointValues: false,
-                                    scoredResponses: false,
-                                    correctAnswers: true
-                                  }
-                              },
-                            resourceType: quiz
-                          },
-                          {
-                            resource:
-                              {
-                                _id: 63ed1cd25e9d781cdb6a6b15,
-                                author: 648afee884936e09a37deaaa,
-                                fileName: EnglishB2Level,
-                                link: 'https://english-b2-test.com',
-                                size: 230,
-                                category: { _id: 6477007a6fa4d05e1a800ce1, name: Science }
-                              },
+                            createdAt: 2023-12-01T13:25:36.292Z
+                            updatedAt: 2023-12-01T13:25:36.292Z
+                          resourceType: lesson
+                        - resource:
+                            _id: 64ba39c714b7bc037a29d712
+                            title: Title
+                            description: description
+                            items:
+                              - 6477007a6fa4d05e1a800ce4
+                              - 6477007a6fa4d05e1a800ce6
+                            author: 6477007a6fa4d05e1a800ce5
+                            category: 63bed9ef260f18d04ab15da
+                            settings:
+                              view: Scroll
+                              shuffle: true
+                              pointValues: false
+                              scoredResponses: false
+                              correctAnswers: true
+                          resourceType: quiz
+                        - resource:
+                            _id: 63ed1cd25e9d781cdb6a6b15
+                            author: 648afee884936e09a37deaaa
+                            fileName: EnglishB2Level
+                            link: https://english-b2-test.com
+                            size: 230
+                            category:
+                              _id: 6477007a6fa4d05e1a800ce1
+                              name: Science
                             resourceType: attachment
-                          }
-                        ]
+                            createdAt: 2023-12-01T13:25:36.292Z
+                            updatedAt: 2023-12-01T13:25:36.292Z
+                          resourceType: attachment
+                      _id: 640461e3cfdda3f3d16dcac7
                   createdAt: 2023-11-15T16:15:09.004Z
                   updatedAt: 2023-11-15T16:15:09.004Z
                 - _id: 640461e3cfdda3f3d16dcac5
                   title: Advanced Ukrainian
                   description: Advanced Ukrainian course with 5 modules and separated lessons for improving speaking, listening and reading.
                   author: 63da8767c9ad4c9a0b0eacd3
-                  category: 64884f33fdc2d1a130c24ac2
-                  subject: 6488509cfdc2d1a130c24ae4
-                  proficiencyLevel: [Advanced]
+                  category:
+                    _id: 64884f33fdc2d1a130c24ac2
+                    appearance:
+                      icon: mocked-path-to-icon
+                      color: '#66C42C'
+                  subject:
+                    _id: 6488509cfdc2d1a130c24ae4
+                    name: Languages
+                  proficiencyLevel:
+                    - Advanced
                   sections:
                     - title: Section Second
                       description: some description
                       resources:
-                        [{ resource: { fileName: Attachment1, link: '170-Attachment1.pdf' }, resourceType: attachment }]
-                  createdAt: 2023-20-01T13:25:36.292Z
-                  updatedAt: 2023-20-01T13:25:36.292Z
+                        - resource:
+                            _id: 63ed1cd25e9d781cdb6a6b16
+                            author: 648afee884936e09a37deaaa
+                            fileName: UkrainianAdvanced
+                            link: https://ukrainian-prof-test.com
+                            size: 230
+                            category:
+                              _id: 6477007a6fa4d05e1a800ce1
+                              name: Languages
+                            resourceType: attachment
+                            createdAt: 2023-12-01T13:25:36.292Z
+                            updatedAt: 2023-12-01T13:25:36.292Z
+                          resourceType: attachment
+                  createdAt: 2023-12-01T13:25:36.292Z
+                  updatedAt: 2023-12-01T13:25:36.292Z
         401:
           description: Unauthorized
           content:
@@ -137,32 +160,31 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#definitions/courseBody'
+              $ref: '#/definitions/courseBody'
             example:
               title: Advanced English
               description: Advanced english course with 5 modules and separated lessons for improving speaking, listening and reading.
               category: 64884f33fdc2d1a130c24ac2
               subject: 6488509cfdc2d1a130c24ae4
-              proficiencyLevel: [Advanced]
+              proficiencyLevel:
+                - Advanced
               sections:
                 - title: Section First
                   description: some description
                   resources:
-                    [
-                      {
-                        resource:
-                          {
-                            title: Colors in English,
-                            description: With this lesson you will learn all about colors in English.,
-                            content: <h1>Title</h1>,
-                            author: 63da8767c9ad4c9a0b0eacd3,
-                            attachments: [63ed1cd25e9d781cdb6a6b15],
-                            category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
-                            _id: 63ed1cd25e9d781cdb6a6b17
-                          },
+                    - resource:
+                        title: Colors in English
+                        description: With this lesson you will learn all about colors in English.
+                        content: <h1>Title</h1>
+                        author: 63da8767c9ad4c9a0b0eacd3
+                        attachments:
+                          - 63ed1cd25e9d781cdb6a6b15
+                        category:
+                          _id: 6477007a6fa4d05e1a800ce1
+                          name: Languages
+                        _id: 63ed1cd25e9d781cdb6a6b17
                         resourceType: lesson
-                      }
-                    ]
+                      resourceType: lesson
       responses:
         201:
           description: Created
@@ -176,18 +198,15 @@ paths:
                 author: 63da8767c9ad4c9a0b0eacd3
                 category: 64884f33fdc2d1a130c24ac2
                 subject: 6488509cfdc2d1a130c24ae4
-                proficiencyLevel: [Advanced]
+                proficiencyLevel:
+                  - Advanced
                 sections:
                   - _id: 6781349b8c7432471f221116
                     title: Section First
                     description: some description
                     resources:
-                      [
-                        {
-                          resource: 63ed1cd25e9d781cdb6a6b17,
-                          resourceType: lesson
-                        }
-                      ]
+                      - resource: 63ed1cd25e9d781cdb6a6b17
+                        resourceType: lesson
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z
@@ -301,26 +320,27 @@ paths:
                 author: 63da8767c9ad4c9a0b0eacd3
                 category: 64884f33fdc2d1a130c24ac2
                 subject: 6488509cfdc2d1a130c24ae4
-                proficiencyLevel: [Advanced]
+                proficiencyLevel:
+                  - Advanced
                 sections:
                   - title: Section First
                     description: some description
                     resources:
-                      [
-                        {
-                          resource:
-                            {
-                              title: Colors in English,
-                              description: With this lesson you will learn all about colors in English.,
-                              content: <h1>Title</h1>,
-                              author: 63da8767c9ad4c9a0b0eacd3,
-                              attachments: [63ed1cd25e9d781cdb6a6b15],
-                              category: { _id: 6477007a6fa4d05e1a800ce1, name: Languages },
-                              _id: 63ed1cd25e9d781cdb6a6b17
-                            },
+                      - resource:
+                          title: Colors in English
+                          description: With this lesson you will learn all about colors in English.
+                          content: <h1>Title</h1>
+                          author: 63da8767c9ad4c9a0b0eacd3
+                          attachments:
+                            - 63ed1cd25e9d781cdb6a6b15
+                          category:
+                            _id: 6477007a6fa4d05e1a800ce1
+                            name: Languages
+                          _id: 63ed1cd25e9d781cdb6a6b17
                           resourceType: lesson
-                        }
-                      ]
+                          createdAt: 2023-02-14T23:44:21.334Z
+                          updatedAt: 2023-02-14T23:44:21.334Z
+                        resourceType: lesson
                 _id: 63ec1cd51e9d781cdb6f4b14
                 createdAt: 2023-02-14T23:44:21.334Z
                 updatedAt: 2023-02-14T23:44:21.334Z

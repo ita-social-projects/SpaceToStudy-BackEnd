@@ -10,6 +10,10 @@ const validatePrimitiveSchemaField = (schemaFieldKey, schemaFieldValue, reqSourc
 }
 
 const validateSchemaField = (schemaFieldKey, schemaFieldValue, reqSourceField) => {
+  if (reqSourceField === null && schemaFieldValue.canBeNull) {
+    return
+  }
+
   if (
     typeof reqSourceField === 'object' &&
     isExpectedType('object', schemaFieldValue.type) &&

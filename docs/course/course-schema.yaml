@@ -1,62 +1,36 @@
 definitions:
   courses:
-    type: array
-    items:
-      type: object
-      properties:
-        _id:
-          type: string
-        title:
-          type: string
-        description:
-          type: string
-        author:
-          type: string
-          ref: '#components/user'
-        category:
-          type: string
-          ref: '#components/category'
-        subject:
-          type: string
-          ref: '#components/subject'
-        proficiencyLevel:
-          type: array
-          items:
-            type: string
-            enum:
-              - Beginner
-              - Intermediate
-              - Advanced
-              - Test Preparation
-              - Professional
-              - Specialized
-        sections:
-          type: array
-          items:
-            type: object
-            properties:
-            title: string
-            description: string
-            resources:
-              type: array
-              items:
-                type: object
-                properties:
-                  resource:
-                    type: object
-                    additionalProperties: true
-                  resourceType:
-                    type: string
-                    enum:
-                      - lesson
-                      - quiz
-                      - attachment
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+    type: object
+    properties:
+      count:
+        type: number
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            _id:
+              type: string
+            title:
+              type: string
+            description:
+              type: string
+            author:
+              type: string
+            category:
+              $ref: '#/definitions/categoryWithAppearance'
+            subject:
+              $ref: '#/definitions/subjectWithName'
+            proficiencyLevel:
+              $ref: '#/definitions/offerProficiencyLevelValues'
+            sections:
+              $ref: '#/definitions/courseSections'
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
   course:
     type: object
     properties:
@@ -68,48 +42,14 @@ definitions:
         type: string
       author:
         type: string
-        ref: '#components/user'
       category:
         type: string
-        ref: '#components/category'
       subject:
         type: string
-        ref: '#components/subject'
       proficiencyLevel:
-        type: array
-        items:
-          type: string
-          enum:
-            - Beginner
-            - Intermediate
-            - Advanced
-            - Test Preparation
-            - Professional
-            - Specialized
+        $ref: '#/definitions/offerProficiencyLevelValues'
       sections:
-        type: array
-        items:
-          type: object
-          properties:
-            _id:
-              type: string
-            title:
-              type: string
-            description: 
-              type: string
-            resources:
-              type: array
-              items:
-                type: object
-                properties:
-                  resource:
-                    type: string
-                  resourceType:
-                    type: string
-                    enum:
-                      - lesson
-                      - quiz
-                      - attachment
+        $ref: '#/definitions/courseSections'
       createdAt:
         type: string
         format: date-time
@@ -121,25 +61,19 @@ definitions:
     properties:
       title:
         type: string
+        minLength: 1
+        maxLength: 100
       description:
         type: string
+        minLength: 1
+        maxLength: 1000
       category:
         type: string
-        ref: '#components/category'
+        nullable: true
       subject:
         type: string
-        ref: '#components/subject'
       proficiencyLevel:
-        type: array
-        items:
-          type: string
-          enum:
-            - Beginner
-            - Intermediate
-            - Advanced
-            - Test Preparation
-            - Professional
-            - Specialized
+        $ref: '#/definitions/offerProficiencyLevelValues'
       sections:
         type: array
         items:
@@ -147,52 +81,24 @@ definitions:
           properties:
             title:
               type: string
+              minLength: 1
+              maxLength: 100
             description:
               type: string
+              minLength: 1
+              maxLength: 150
             resources:
               type: array
               items:
                 type: object
                 properties:
                   resource:
-                    type: object
-                    properties:
-                      title:
-                        type: string
-                      description:
-                        type: string
-                      content:
-                        type: string
-                      author:
-                        type: string
-                      attachments:
-                        type: array
-                        items:
-                          type: string
-                      category:
-                        type: object
-                        properties:
-                          _id:
-                            type: string
-                          name:
-                            type: string
-                        required:
-                          - _id
-                          - name
-                      _id:
-                        type: string
-                    required:
-                      - title
-                      - description
-                      - content
-                      - author
-                      - _id
+                    $ref: '#/definitions/resourcesInCourse'
                   resourceType:
-                    type: string
-                    enum:
-                      - lesson
-                      - quiz
-                      - attachment
+                    $ref: '#/definitions/resourceType'
+                required:
+                  - resource
+                  - resourceType
           required:
             - title
             - description
@@ -200,3 +106,92 @@ definitions:
     required:
       - title
       - description
+      - subject
+      - proficiencyLevel
+  courseSections:
+    type: array
+    items:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        resources:
+          type: array
+          items:
+            type: object
+            properties:
+              resource:
+                $ref: '#/definitions/resourcesInCourse'
+              resourceType:
+                $ref: '#/definitions/resourceType'
+        _id:
+          type: string
+  quizInCourse:
+    type: object
+    properties:
+      _id:
+        type: string
+      title:
+        type: string
+      description:
+        type: string
+      items:
+        type: array
+        items:
+          type: string
+      author:
+        type: string
+      category:
+        $ref: '#/definitions/categoryWithName'
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      settings:
+        type: object
+        properties:
+          view:
+            $ref: '#/definitions/view'
+          timeLimit:
+            $ref: '#/definitions/timeLimit'
+          attemptLimit:
+            $ref: '#/definitions/attemptLimit'
+          shuffle:
+            type: boolean
+          pointValues:
+            type: boolean
+          scoredResponses:
+            type: boolean
+          correctAnswers:
+            type: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+      isDuplicate:
+        type: boolean
+        description: Only present when the resource is a copy
+  lessonInCourse:
+    allOf:
+      - $ref: '#/definitions/lesson'
+      - type: object
+        properties:
+          isDuplicate:
+            type: boolean
+            description: Only present when the resource is a copy
+  attachmentInCourse:
+    allOf:
+      - $ref: '#/definitions/attachmentInPostLesson'
+      - type: object
+        properties:
+          isDuplicate:
+            type: boolean
+            description: 'Only present when the resource is a copy'
+  resourcesInCourse:
+    oneOf:
+      - $ref: '#/definitions/lessonInCourse'
+      - $ref: '#/definitions/quizInCourse'
+      - $ref: '#/definitions/attachmentInCourse'
+      - $ref: '#/definitions/question'

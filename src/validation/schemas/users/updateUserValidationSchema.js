@@ -71,6 +71,7 @@ const updateUserValidationSchema = {
   },
   professionalSummary: {
     type: 'string',
+    canBeNull: true,
     required: false,
     length: {
       min: MIN_PROFFESSIONAL_SUMMARY_LENGTH,
@@ -78,6 +79,7 @@ const updateUserValidationSchema = {
     }
   },
   nativeLanguage: {
+    canBeNull: true,
     enum: SPOKEN_LANG_ENUM,
     required: false
   },

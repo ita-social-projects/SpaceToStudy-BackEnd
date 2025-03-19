@@ -7,7 +7,7 @@ describe('Email controller', () => {
   let app, server
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   afterEach(async () => {

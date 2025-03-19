@@ -95,6 +95,14 @@ const messageService = {
     await Message.deleteMany({ chat })
   },
 
+  deleteAllMessagesByChatIds: async (chatIds) => {
+    await Message.deleteMany({ chat: { $in: chatIds } })
+  },
+
+  deleteAllMessagesByUser: async (userId) => {
+    await Message.deleteMany({ author: userId })
+  },
+
   clearHistory: async (match) => {
     const { user, chat } = match
 

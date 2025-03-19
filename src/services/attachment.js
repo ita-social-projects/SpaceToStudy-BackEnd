@@ -3,6 +3,12 @@ const Attachment = require('~/models/attachment')
 const { createForbiddenError, createError } = require('~/utils/errorsHelper')
 const uploadService = require('~/services/upload')
 const { ATTACHMENT } = require('~/consts/upload')
+const resourceType = require('~/consts/resourceType')
+const refs = require('~/consts/models')
+const checkIdValidity = require('~/utils/checkIdValidity')
+
+const cooperationService = require('./cooperation')
+const resourcesCategoryService = require('./resourcesCategory')
 
 const attachmentService = {
   getAttachments: async (match, sort, skip, limit) => {
@@ -43,7 +49,21 @@ const attachmentService = {
       throw createForbiddenError()
     }
 
-    attachment.category = category
+    if (category === null) {
+      attachment.category = category
+    }
+
+    if (category && typeof category === 'string') {
+      checkIdValidity(category)
+
+      const resourceCategoryEntity = await resourcesCategoryService.getResourcesCategoryById(category)
+
+      if (!resourceCategoryEntity) {
+        throw createError(404, DOCUMENT_NOT_FOUND(refs.RESOURCES_CATEGORY))
+      }
+
+      attachment.category = category
+    }
 
     if (fileName) {
       const [fileExtension] = attachment.fileName.split('.').reverse()
@@ -58,7 +78,7 @@ const attachmentService = {
       attachment.link = newLink
     }
 
-    if (description) {
+    if (description !== undefined) {
       attachment.description = description
     }
 
@@ -67,7 +87,7 @@ const attachmentService = {
     return attachment.populate({ path: 'category', select: '_id name' })
   },
 
-  deleteAttachment: async (id, currentUser) => {
+  deleteAttachmentById: async (id, currentUser) => {
     const item = await Attachment.findById(id).exec()
 
     const attachmentAuthor = item.author.toString()
@@ -76,7 +96,13 @@ const attachmentService = {
       throw createForbiddenError()
     }
 
-    await Attachment.findByIdAndRemove(id).exec()
+    await cooperationService.removeResourceFromCooperations(id, resourceType.ATTACHMENT, currentUser)
+
+    await Attachment.findByIdAndRemove(id)
+  },
+
+  deleteAttachementsByAuthor: async (author) => {
+    await Attachment.deleteMany({ author })
   }
 }
 

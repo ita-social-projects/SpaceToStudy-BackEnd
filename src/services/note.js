@@ -64,6 +64,14 @@ const noteService = {
     if (!note || note.author.toString() !== userId) throw createForbiddenError()
 
     await Note.findByIdAndRemove(noteId).exec()
+  },
+
+  deleteNotesByAuthor: async (author) => {
+    await Note.deleteMany({ author })
+  },
+
+  deleteNotesByCooperations: async (cooperations) => {
+    await Note.deleteMany({ cooperation: { $in: cooperations } })
   }
 }
 

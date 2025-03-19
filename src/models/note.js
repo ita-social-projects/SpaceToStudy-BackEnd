@@ -14,7 +14,7 @@ const notesSchema = new Schema(
     author: {
       type: Schema.Types.ObjectId,
       ref: USER,
-      required: true
+      required: [true, FIELD_CANNOT_BE_EMPTY('author')]
     },
     isPrivate: {
       type: Boolean,

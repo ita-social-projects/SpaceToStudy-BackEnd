@@ -113,6 +113,10 @@ const tokenService = {
 
   removeConfirmToken: async (confirmToken) => {
     await Token.deleteOne({ confirmToken })
+  },
+
+  deleteTokensByUser: async (user) => {
+    await Token.deleteMany({ user })
   }
 }
 

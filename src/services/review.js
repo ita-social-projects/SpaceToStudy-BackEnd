@@ -5,6 +5,9 @@ const filterAllowedFields = require('~/utils/filterAllowedFields')
 const { allowedReviewFieldsForUpdate } = require('~/validation/services/review')
 const cooperationService = require('./cooperation')
 const { CANNOT_TARGET_SELF } = require('~/consts/errors')
+const {
+  enums: { MAIN_ROLE_ENUM }
+} = require('~/consts/validation')
 const getReviewsAggregateOptions = require('~/utils/reviews/getReviewsAggregateOptions')
 
 const reviewService = {
@@ -100,6 +103,20 @@ const reviewService = {
 
     await Review.findByIdAndRemove(id).exec()
     await calculateReviewStats(targetUserId, targetUserRole)
+  },
+
+  deleteReviewsByAuthorOrTarget: async (userId) => {
+    const reviewsCreatedByUser = await Review.find({ author: userId })
+
+    await Review.deleteMany({
+      $or: [{ author: userId }, { targetUserId: userId }]
+    })
+
+    await Promise.all(MAIN_ROLE_ENUM.map((role) => calculateReviewStats(userId, role)))
+
+    await Promise.all(
+      reviewsCreatedByUser.map((review) => calculateReviewStats(review.targetUserId, review.targetUserRole))
+    )
   }
 }
 

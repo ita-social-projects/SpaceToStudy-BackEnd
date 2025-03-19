@@ -417,7 +417,7 @@ paths:
               schema:
                 $ref: '#/components/Error'
               example:
-                status: 404
+                status: 403
                 code: FORBIDDEN
                 message: You do not have permission to perform this action.
         404:

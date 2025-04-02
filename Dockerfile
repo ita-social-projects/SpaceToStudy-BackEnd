@@ -1,4 +1,4 @@
-FROM node:14-alpine
+FROM node:23-alpine
 ARG MONGODB_URL
 WORKDIR /app
 COPY package.json .

@@ -1,115 +1,115 @@
 version: 2
 updates:
   # Production npm dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Europe/Kyiv"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Europe/Kyiv'
     open-pull-requests-limit: 5
-    target-branch: "main"
+    target-branch: 'main'
     labels:
-      - "dependencies"
-      - "production"
+      - 'dependencies'
+      - 'production'
     commit-message:
-      prefix: "chore(deps)"
-      prefix-development: "chore(dev-deps)"
-      include: "scope"
+      prefix: 'chore(deps)'
+      prefix-development: 'chore(dev-deps)'
+      include: 'scope'
     versioning-strategy: auto
     groups:
       production-deps:
         patterns:
           # Core dependencies
-          - "express*"
-          - "mongoose*"
-          - "mongodb*"
+          - 'express*'
+          - 'mongoose*'
+          - 'mongodb*'
           # Security
-          - "bcrypt*"
-          - "jsonwebtoken*"
+          - 'bcrypt*'
+          - 'jsonwebtoken*'
           # Storage
-          - "@azure/storage-blob*"
-          - "multer*"
+          - '@azure/storage-blob*'
+          - 'multer*'
           # Communication
-          - "socket.io*"
-          - "nodemailer*"
+          - 'socket.io*'
+          - 'nodemailer*'
           # Logging
-          - "winston*"
-          - "winston-mongodb*"
+          - 'winston*'
+          - 'winston-mongodb*'
           # API Documentation
-          - "swagger*"
+          - 'swagger*'
         exclude-patterns:
           # Type definitions
-          - "@types/*"
+          - '@types/*'
           # Linting and formatting
-          - "eslint*"
-          - "prettier*"
+          - 'eslint*'
+          - 'prettier*'
           # Testing
-          - "jest*"
-          - "supertest*"
+          - 'jest*'
+          - 'supertest*'
           # Development tools
-          - "nodemon*"
-          - "husky*"
-          - "lint-staged*"
+          - 'nodemon*'
+          - 'husky*'
+          - 'lint-staged*'
 
   # Development npm dependencies
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "wednesday"
-      time: "06:00"
-      timezone: "Europe/Kyiv"
+      interval: 'weekly'
+      day: 'wednesday'
+      time: '06:00'
+      timezone: 'Europe/Kyiv'
     labels:
-      - "dependencies"
-      - "dev-dependencies"
+      - 'dependencies'
+      - 'dev-dependencies'
     commit-message:
-      prefix: "chore(dev-deps)"
-      include: "scope"
+      prefix: 'chore(dev-deps)'
+      include: 'scope'
     open-pull-requests-limit: 5
     groups:
       dev-deps:
         patterns:
-          - "@types/*"
-          - "eslint*"
-          - "prettier*"
-          - "jest*"
-          - "supertest*"
-          - "nodemon*"
-          - "husky*"
-          - "lint-staged*"
+          - '@types/*'
+          - 'eslint*'
+          - 'prettier*'
+          - 'jest*'
+          - 'supertest*'
+          - 'nodemon*'
+          - 'husky*'
+          - 'lint-staged*'
 
   # Docker dependencies
-  - package-ecosystem: "docker"
-    directory: "/"
+  - package-ecosystem: 'docker'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Europe/Kyiv"
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Europe/Kyiv'
     open-pull-requests-limit: 3
-    target-branch: "main"
+    target-branch: 'main'
     labels:
-      - "dependencies"
-      - "docker"
+      - 'dependencies'
+      - 'docker'
     commit-message:
-      prefix: "chore(docker)"
-      include: "scope"
+      prefix: 'chore(docker)'
+      include: 'scope'
 
   # GitHub Actions dependencies
-  - package-ecosystem: "github-actions"
-    directory: "/.github/workflows"
+  - package-ecosystem: 'github-actions'
+    directory: '/.github/workflows'
     schedule:
-      interval: "monthly"
-      day: "monday"
-      time: "06:00"
-      timezone: "Europe/Kyiv"
+      interval: 'monthly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Europe/Kyiv'
     open-pull-requests-limit: 3
-    target-branch: "main"
+    target-branch: 'main'
     labels:
-      - "dependencies"
-      - "github-actions"
+      - 'dependencies'
+      - 'github-actions'
     commit-message:
-      prefix: "chore(ci)"
-      include: "scope"
+      prefix: 'chore(ci)'
+      include: 'scope'

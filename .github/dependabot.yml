@@ -9,7 +9,7 @@ updates:
       time: '06:00'
       timezone: 'Europe/Kyiv'
     open-pull-requests-limit: 5
-    target-branch: 'main'
+    target-branch: 'develop'
     labels:
       - 'dependencies'
       - 'production'
@@ -61,6 +61,7 @@ updates:
       day: 'wednesday'
       time: '06:00'
       timezone: 'Europe/Kyiv'
+    target-branch: 'develop'
     labels:
       - 'dependencies'
       - 'dev-dependencies'
@@ -89,7 +90,7 @@ updates:
       time: '06:00'
       timezone: 'Europe/Kyiv'
     open-pull-requests-limit: 3
-    target-branch: 'main'
+    target-branch: 'develop'
     labels:
       - 'dependencies'
       - 'docker'
@@ -106,7 +107,7 @@ updates:
       time: '06:00'
       timezone: 'Europe/Kyiv'
     open-pull-requests-limit: 3
-    target-branch: 'main'
+    target-branch: 'develop'
     labels:
       - 'dependencies'
       - 'github-actions'

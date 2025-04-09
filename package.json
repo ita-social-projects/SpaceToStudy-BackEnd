@@ -51,7 +51,7 @@
     "socket.io": "^4.7.5",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0",
-    "winston": "^3.8.0",
+    "winston": "^3.17.0",
     "winston-mongodb": "^5.0.7"
   },
   "lint-staged": {

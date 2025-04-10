@@ -111,6 +111,29 @@ describe('Chat controller', () => {
     })
   })
 
+  describe(`GET ${endpointUrl}`, () => {
+    it('should return chats for current user', async () => {
+      const response = await app.get(endpointUrl).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([
+        expect.objectContaining({
+          _id: expect.any(String),
+          members: expect.any(Array),
+          deletedFor: expect.any(Array),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String)
+        })
+      ])
+    })
+
+    it('should return UNAUTHORIZED if no token', async () => {
+      const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
   describe(`DELETE ${endpointUrl}:id`, () => {
     it('should throw FORBIDDEN', async () => {
       const response = await app

@@ -15,7 +15,9 @@ const config = {
   JWT_CONFIRM_SECRET: process.env.JWT_CONFIRM_SECRET,
   JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN,
   TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
-  TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD
+  TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
+  API_URL: process.env.API_URL,
+  API_KEY: process.env.API_KEY
 }
 
 const gmailCredentials = {

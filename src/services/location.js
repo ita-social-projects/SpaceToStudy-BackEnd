@@ -1,7 +1,7 @@
 const { request } = require('gaxios')
-
-const API_URL = 'https://api.countrystatecity.in/v1/countries'
-const API_KEY = 'bW94V3phZU84YkhERVNUQmFOOFRDTVpIU3BFWFFJR1BsQUNZRXhjdg=='
+const {
+  config: { API_URL, API_KEY }
+} = require('~/configs/config')
 
 const locationService = {
   getCountries: async () => {

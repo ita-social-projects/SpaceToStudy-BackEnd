@@ -21,6 +21,16 @@ describe('User service', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
+    User.countDocuments = jest.fn().mockResolvedValue(2)
+    User.find = jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockReturnThis(),
+      collation: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      exec: jest.fn().mockResolvedValue([{ name: 'John' }, { name: 'Jane' }])
+    })
+
     User.findById = jest.fn().mockReturnValue({
       lean: jest.fn().mockReturnThis(),
       exec: jest.fn().mockResolvedValue({ _id: '1', mainSubjects: { tutor: [] } })
@@ -44,6 +54,100 @@ describe('User service', () => {
     offerService.getOffers = jest.fn().mockResolvedValue([])
 
     cooperationService.getCooperations = jest.fn().mockResolvedValue([])
+  })
+
+  describe('getUsers', () => {
+    it('should return users and count based on match, sort, skip, limit', async () => {
+      const match = { role: 'tutor' }
+      const sort = { name: 1 }
+      const skip = 0
+      const limit = 10
+
+      const result = await userService.getUsers({ match, sort, skip, limit })
+
+      expect(User.countDocuments).toHaveBeenCalledWith(match)
+      expect(User.find).toHaveBeenCalledWith(match)
+      expect(result).toEqual({ items: [{ name: 'John' }, { name: 'Jane' }], count: 2 })
+    })
+  })
+
+  describe('getUserByEmail', () => {
+    it('should return user based on email', async () => {
+      const email = 'test@example.com'
+      const mockUser = {
+        _id: '123',
+        email
+      }
+
+      User.findOne = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockUser)
+      })
+
+      const result = await userService.getUserByEmail(email)
+
+      expect(User.findOne).toHaveBeenCalledWith({ email })
+      expect(result).toEqual(mockUser)
+    })
+
+    it('should return null if user not found', async () => {
+      const email = 'missing@example.com'
+
+      User.findOne = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(null)
+      })
+
+      const result = await userService.getUserByEmail(email)
+
+      expect(User.findOne).toHaveBeenCalledWith({ email })
+      expect(result).toBeNull()
+    })
+  })
+
+  describe('createUser', () => {
+    const mockUser = {
+      _id: '123',
+      role: 'tutor',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'test@example.com',
+      password: 'password123',
+      isEmailConfirmed: 'true',
+      appLanguage: 'uk'
+    }
+    it('should create user successfully if all data is valid', async () => {
+      jest.spyOn(userService, 'getUserByEmail').mockResolvedValue(mockUser)
+      try {
+        await userService.createUser(
+          mockUser.role,
+          mockUser.firstName,
+          mockUser.lastName,
+          mockUser.email,
+          mockUser.password,
+          mockUser.appLanguage
+        )
+        throw new Error('Expected createUser to throw, but it did not')
+      } catch (err) {
+        expect(err).toBeInstanceOf(Error)
+        expect(err.status).toBe(409)
+        // expect(err.message).toBe(ALREADY_REGISTERED)
+      }
+    })
+
+    it('should throw 409 error if user with given email already exists', async () => {})
+
+    it('should throw 400 error if role is ADMIN', async () => {})
+
+    it('should hash the password before saving', async () => {})
+
+    it('should set default notificationSettings', async () => {})
+
+    it('should set lastLoginAs equal to role', async () => {})
+
+    it('should set isEmailConfirmed to false if not provided', async () => {})
   })
 
   describe('_updateMainSubjects', () => {

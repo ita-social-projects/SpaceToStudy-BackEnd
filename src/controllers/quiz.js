@@ -4,6 +4,7 @@ const getMatchOptions = require('~/utils/getMatchOptions')
 const getRegex = require('~/utils/getRegex')
 const getSortOptions = require('~/utils/getSortOptions')
 const parseBoolean = require('~/utils/parseBoolean')
+const sanitizeHtml = require('sanitize-html')
 
 const getQuizzes = async (req, res) => {
   const { id: author } = req.user
@@ -35,7 +36,14 @@ const createQuiz = async (req, res) => {
   const { id: author } = req.user
   const data = req.body
 
-  const newQuiz = await quizService.createQuiz(author, data)
+  const sanitizedData = {
+    title: sanitizeHtml(data.title),
+    description: sanitizeHtml(data.description),
+    resourceType: sanitizeHtml(data.resourceType),
+    settings: data.settings,
+    items: data.items
+  }
+  const newQuiz = await quizService.createQuiz(author, sanitizedData)
 
   res.status(201).send(newQuiz)
 }

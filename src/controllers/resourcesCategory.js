@@ -2,12 +2,16 @@ const resourcesCategoryService = require('~/services/resourcesCategory')
 const getMatchOptions = require('~/utils/getMatchOptions')
 const getSortOptions = require('~/utils/getSortOptions')
 const getRegex = require('~/utils/getRegex')
+const sanitizeHtml = require('sanitize-html')
 
 const createResourcesCategory = async (req, res) => {
   const { id: author } = req.user
   const data = req.body
 
-  const newResourcesCategory = await resourcesCategoryService.createResourcesCategory(author, data)
+  const sanitizedData = {
+    name: sanitizeHtml(data.name)
+  }
+  const newResourcesCategory = await resourcesCategoryService.createResourcesCategory(author, sanitizedData)
 
   res.status(201).send(newResourcesCategory)
 }

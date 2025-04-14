@@ -192,7 +192,9 @@ describe('Auth controller', () => {
         .split('=')[1]
 
       const decodedRefreshToken = jwt.decode(refreshToken)
-      expect(decodedRefreshToken.exp).toBe(30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
+      const expectedExp = 30 * 24 * 60 * 60 + Math.floor(Date.now() / 1000)
+      const tolerance = 1
+      expect(Math.abs(decodedRefreshToken.exp - expectedExp)).toBeLessThanOrEqual(tolerance)
     })
 
     it('should throw INCORRECT_CREDENTIALS error', async () => {

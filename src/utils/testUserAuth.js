@@ -13,8 +13,8 @@ const testUserAuthentication = async (app, testUser = {}) => {
       role: testUser.role ? testUser.role : 'student',
       firstName: 'Tart',
       lastName: 'Drilling',
-      email: 'tartdrilling@gmail.com',
-      password: process.env.DEFAULT_PASSWORD || 'Qwerty123@',
+      email: process.env.TEST_USER_EMAIL,
+      password: process.env.TEST_USER_PASSWORD,
       FAQ: { student: [{ question: 'question1', answer: 'answer1' }] },
       isEmailConfirmed: true,
       lastLoginAs: testUser.lastLoginAs

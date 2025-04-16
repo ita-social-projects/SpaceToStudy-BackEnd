@@ -2,7 +2,7 @@ const User = require('~/models/user')
 const { hashPassword } = require('~/utils/passwordHelper')
 const dotenv = require('dotenv')
 
-dotenv.config({ path: '.env.test.local' })
+dotenv.config({ path: '.env' })
 const testUserAuthentication = async (app, testUser = {}) => {
   const qtyOfMandatorySignupFields = 5
   if (Object.keys(testUser).length < qtyOfMandatorySignupFields) {

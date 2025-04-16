@@ -13,7 +13,6 @@ test-report.xml
 .DS_Store
 .env
 .env.local
-.env.test
 .env.development.local
 .env.test.local
 .env.production.local

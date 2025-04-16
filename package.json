@@ -44,7 +44,7 @@
     "migrate-mongo": "^11.0.0",
     "module-alias": "^2.2.2",
     "mongodb": "^4.2.2",
-    "mongoose": "^6.13.8",
+    "mongoose": "^8.13.2",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.7.7",
     "pug": "^3.0.2",

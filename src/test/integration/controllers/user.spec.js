@@ -13,6 +13,7 @@ const {
   enums: { STATUS_ENUM }
 } = require('~/consts/validation')
 const { default: mongoose } = require('mongoose')
+require('dotenv').config({ path: '.env.test.local' })
 
 const testUserAuthentication = require('~/utils/testUserAuth')
 const createAggregateOptions = require('~/utils/users/createAggregateOptions')

@@ -1,8 +1,6 @@
 const User = require('~/models/user')
 const { hashPassword } = require('~/utils/passwordHelper')
-const dotenv = require('dotenv')
 
-dotenv.config({ path: '.env' })
 const testUserAuthentication = async (app, testUser = {}) => {
   const qtyOfMandatorySignupFields = 5
   if (Object.keys(testUser).length < qtyOfMandatorySignupFields) {
@@ -15,8 +13,8 @@ const testUserAuthentication = async (app, testUser = {}) => {
       role: testUser.role ? testUser.role : 'student',
       firstName: 'Tart',
       lastName: 'Drilling',
-      email: process.env.TEST_USER_EMAIL,
-      password: process.env.TEST_USER_PASSWORD,
+      email: 'tartdrilling@gmail.com',
+      password: process.env.DEFAULT_PASSWORD || 'Qwerty123@',
       FAQ: { student: [{ question: 'question1', answer: 'answer1' }] },
       isEmailConfirmed: true,
       lastLoginAs: testUser.lastLoginAs

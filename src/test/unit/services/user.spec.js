@@ -853,8 +853,6 @@ describe('User service', () => {
       const removeSpy = jest.spyOn(User, 'findByIdAndRemove').mockResolvedValue()
 
       await expect(userService.deleteUser(id)).resolves.toBeUndefined()
-
-      await expect(userService.deleteUser(id)).resolves.toBeUndefined()
       expect(removeSpy).toHaveBeenCalledWith(id)
     })
   })

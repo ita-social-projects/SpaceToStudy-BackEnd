@@ -124,6 +124,8 @@ jobs:
           JWT_CONFIRM_EXPIRES_IN: ${{ secrets.JWT_CONFIRM_EXPIRES_IN }}
           CLIENT_URL: ${{ secrets.CLIENT_URL }}
           SERVER_URL: ${{ secrets.SERVER_URL }}
+          HTTPS_SERVER_URL: ${{ secrets.HTTPS_SERVER_URL }}
+          HTTP_SERVER_URL: ${{ secrets.HTTP_SERVER_URL }}
           SERVER_PORT: ${{ secrets.SERVER_PORT }}
           MAIL_USER: ${{ secrets.MAIL_USER }}
           MAIL_PASS: ${{ secrets.MAIL_PASS }}
@@ -192,6 +194,8 @@ jobs:
             -e JWT_CONFIRM_EXPIRES_IN=${{ secrets.JWT_CONFIRM_EXPIRES_IN }} \
             -e CLIENT_URL=${{ secrets.CLIENT_URL }} \
             -e SERVER_URL=${{ secrets.SERVER_URL }} \
+            -e HTTP_SERVER_URL=${{ secrets.HTTP_SERVER_URL }} \
+            -e HTTPS_SERVER_URL=${{ secrets.HTTPS_SERVER_URL }} \
             -e SERVER_PORT=${{ secrets.SERVER_PORT }} \
             -e MAIL_USER=${{ secrets.MAIL_USER }} \
             -e MAIL_PASS=${{ secrets.MAIL_PASS }} \

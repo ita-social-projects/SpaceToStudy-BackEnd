@@ -1,6 +1,8 @@
 const {
-  config: { SERVER_URL }
+  config: { HTTP_SERVER_URL, HTTPS_SERVER_URL, USE_SSL }
 } = require('~/configs/config')
+
+const SERVER_URL = USE_SSL === 'true' ? HTTPS_SERVER_URL : HTTP_SERVER_URL
 
 const swagger = {
   definition: {

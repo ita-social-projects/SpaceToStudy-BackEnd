@@ -28,6 +28,22 @@ stages:
             inputs:
               targetType: 'inline'
               script: 'mv $(envStage.secureFilePath) .env'
+          - task: DownloadSecureFile@1
+            name: sslCert
+            inputs:
+              secureFile: 'ssl-cert.pem'
+          - task: DownloadSecureFile@1
+            name: sslKey
+            inputs:
+              secureFile: 'ssl-key.pem'
+          - task: Bash@3
+            name: placeSSL
+            inputs:
+              targetType: 'inline'
+              script: |
+                mkdir -p ./ssl
+                cp $(sslCert.secureFilePath) ./ssl/cert.pem
+                cp $(sslKey.secureFilePath) ./ssl/key.pem
 
   - stage: Build
     displayName: Build and push docker image

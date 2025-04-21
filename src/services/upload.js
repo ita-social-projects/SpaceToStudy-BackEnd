@@ -23,7 +23,7 @@ const uploadService = {
     blockBlobClient = containerClient.getBlockBlobClient(blobName)
     try {
       await blockBlobClient.uploadData(buffer)
-      return blobName
+      return blockBlobClient.url
     } catch (error) {
       throw new Error(`Failed to upload file: ${error.message}`)
     }

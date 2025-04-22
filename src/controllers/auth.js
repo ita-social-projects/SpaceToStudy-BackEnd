@@ -31,7 +31,10 @@ const login = async (req, res) => {
   const tokens = await authService.login(email, password, { rememberMe })
 
   const refreshTokenCookieOptions = {
-    ...COOKIE_OPTIONS,
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    domain: COOKIE_DOMAIN,
     maxAge: rememberMe ? thirtyDaysInMs : oneDayInMs
   }
 

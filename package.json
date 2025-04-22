@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "cert": "node generate-cert.js",
     "test": "jest --maxWorkers=1",
     "test:models": "jest --maxWorkers=1 src/test/integration/models",
     "start": "nodemon src/app.js --legacy-watch",

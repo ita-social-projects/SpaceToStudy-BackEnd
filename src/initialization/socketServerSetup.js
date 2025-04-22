@@ -46,10 +46,18 @@ const httpServerSetup = (app) => {
 }
 
 const httpsServerSetup = (app) => {
-  const cert = fs.readFileSync(path.resolve(__dirname, SSL_CERT_PATH))
-  const key = fs.readFileSync(path.resolve(__dirname, SSL_KEY_PATH))
+  let server
 
-  return createHttpsServer({ key, cert }, app)
+  if (process.env.NODE_ENV === 'production') {
+    server = createHttpsServer(app)
+  } else {
+    const cert = fs.readFileSync(path.resolve(__dirname, SSL_CERT_PATH))
+    const key = fs.readFileSync(path.resolve(__dirname, SSL_KEY_PATH))
+
+    server = createHttpsServer({ key, cert }, app)
+  }
+
+  return server
 }
 
 const onConnection = (socket, io) => {

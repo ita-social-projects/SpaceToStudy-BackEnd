@@ -18,7 +18,8 @@ const config = {
   JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN,
   USE_SSL: process.env.USE_SSL,
   SSL_CERT_PATH: process.env.SSL_CERT_PATH,
-  SSL_KEY_PATH: process.env.SSL_KEY_PATH
+  SSL_KEY_PATH: process.env.SSL_KEY_PATH,
+  NODE_ENV: process.env.NODE_ENV
 }
 
 const gmailCredentials = {

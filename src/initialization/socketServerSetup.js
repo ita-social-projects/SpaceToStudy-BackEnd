@@ -1,10 +1,6 @@
-const fs = require('fs')
-const path = require('path')
-const { createServer: createHttpServer } = require('http')
-const { createServer: createHttpsServer } = require('https')
 const { Server } = require('socket.io')
 const {
-  config: { COOKIE_DOMAIN, CLIENT_URL, USE_SSL, SSL_CERT_PATH, SSL_KEY_PATH }
+  config: { COOKIE_DOMAIN, CLIENT_URL, USE_SSL }
 } = require('~/configs/config')
 
 const { oneDayInMs } = require('~/consts/auth')
@@ -14,9 +10,8 @@ const registerMessageHandlers = require('~/event-handlers/messageHandler')
 
 let usersOnline = new Set()
 
-const socketServerSetup = (app) => {
+const socketServerSetup = (server) => {
   const useSsl = USE_SSL === 'true'
-  const server = useSsl ? httpsServerSetup(app) : httpServerSetup(app)
 
   const io = new Server(server, {
     cors: {
@@ -35,27 +30,7 @@ const socketServerSetup = (app) => {
   })
 
   io.use(authSocketMiddleware)
-
   io.on('connection', (socket) => onConnection(socket, io))
-
-  return server
-}
-
-const httpServerSetup = (app) => {
-  return createHttpServer(app)
-}
-
-const httpsServerSetup = (app) => {
-  let server
-
-  if (process.env.NODE_ENV === 'production') {
-    server = createHttpsServer(app)
-  } else {
-    const cert = fs.readFileSync(path.resolve(__dirname, SSL_CERT_PATH))
-    const key = fs.readFileSync(path.resolve(__dirname, SSL_KEY_PATH))
-
-    server = createHttpsServer({ key, cert }, app)
-  }
 
   return server
 }

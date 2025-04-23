@@ -46,6 +46,14 @@ const testFile = {
   size: 1524
 }
 
+const duplicateTestFile = {
+  originalname: 'duplicate.pdf',
+  description: 'Here is everything you need to study this subject.',
+  buffer: '65bed8ef260f18d04ab22da3',
+  size: 1524,
+  isDuplicate: true
+}
+
 const updateData = {
   fileName: 'newFileName.pdf'
 }
@@ -165,6 +173,20 @@ describe('Attachments controller', () => {
         ],
         count: 1
       })
+    })
+    it('should return attachments without filtering duplicates when includeDuplicates is true', async () => {
+      await app
+        .post(endpointUrl)
+        .set('Cookie', [`accessToken=${accessToken}`])
+        .send({ duplicateTestFile })
+
+      const response = await app
+        .get(endpointUrl + '?includeDuplicates=true')
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(Array.isArray(response.body.items)).toBeTruthy()
+      expect(response.body.count).toBeGreaterThanOrEqual(2)
     })
 
     it('should throw UNAUTHORIZED', async () => {

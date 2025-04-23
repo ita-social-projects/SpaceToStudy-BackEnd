@@ -18,7 +18,6 @@ test-report.xml
 .env.production.local
 .idea
 .vscode/
-/src/initialization/ssl
 
 npm-debug.log*
 yarn-debug.log*

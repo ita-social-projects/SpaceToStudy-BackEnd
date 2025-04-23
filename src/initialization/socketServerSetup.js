@@ -1,6 +1,6 @@
 const { Server } = require('socket.io')
 const {
-  config: { COOKIE_DOMAIN, CLIENT_URL, USE_SSL }
+  config: { COOKIE_DOMAIN, CLIENT_URL }
 } = require('~/configs/config')
 
 const { oneDayInMs } = require('~/consts/auth')
@@ -11,8 +11,6 @@ const registerMessageHandlers = require('~/event-handlers/messageHandler')
 let usersOnline = new Set()
 
 const socketServerSetup = (server) => {
-  const useSsl = USE_SSL === 'true'
-
   const io = new Server(server, {
     cors: {
       origin: CLIENT_URL,
@@ -23,7 +21,7 @@ const socketServerSetup = (server) => {
     cookie: {
       maxAge: oneDayInMs,
       httpOnly: true,
-      secure: useSsl,
+      secure: true,
       sameSite: 'none',
       domain: COOKIE_DOMAIN
     }

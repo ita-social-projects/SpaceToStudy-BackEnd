@@ -5,10 +5,9 @@ const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const initialization = require('~/initialization/initialization')
 const logger = require('~/logger/logger')
 const {
-  config: { SERVER_PORT, USE_SSL }
+  config: { SERVER_PORT }
 } = require('~/configs/config')
 const scheduledCronJobs = require('~/cron-jobs/scheduledCronJobs')
-const httpsServerSetup = require('~/initialization/httpsServerSetup')
 
 const serverSetup = async (app) => {
   await databaseInitialization()
@@ -16,8 +15,7 @@ const serverSetup = async (app) => {
   await checkCategoryExistence()
   initialization(app)
 
-  const useSsl = USE_SSL === 'true'
-  const server = useSsl ? httpsServerSetup(app) : app.listen(SERVER_PORT)
+  const server = app.listen(SERVER_PORT)
 
   socketServerSetup(server)
 

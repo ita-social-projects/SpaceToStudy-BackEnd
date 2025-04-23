@@ -17,7 +17,8 @@ const config = {
   TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
   TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
   TEST_ADMIN_EMAIL: process.env.TEST_ADMIN_EMAIL,
-  TEST_ADMIN_PASSWORD: process.env.TEST_ADMIN_PASSWORD
+  TEST_ADMIN_PASSWORD: process.env.TEST_ADMIN_PASSWORD,
+  TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD
 }
 
 const gmailCredentials = {

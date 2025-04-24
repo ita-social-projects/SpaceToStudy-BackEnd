@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const { DEFAULT_AGGREGATION_UNSELECTABLE_USER_FIELDS } = require('~/consts/user')
 
-const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden) => {
+const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden, userId) => {
   const filterOnlyOpenResources = {
     sections: {
       $map: {
@@ -383,13 +383,40 @@ const getCooperationByIdQueryPipeline = (id, isClosedResourcesHidden) => {
       }
     },
     {
+      $lookup: {
+        from: 'reviews',
+        let: {
+          offerId: '$offer._id',
+          userId: mongoose.Types.ObjectId(userId)
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [{ $eq: ['$offer', '$$offerId'] }, { $eq: ['$author', '$$userId'] }]
+              }
+            }
+          }
+        ],
+        as: 'currentUserReviews'
+      }
+    },
+    {
+      $set: {
+        isAbleToSendReview: {
+          $eq: [{ $size: '$currentUserReviews' }, 0]
+        }
+      }
+    },
+    {
       $project: {
         initiator: DEFAULT_AGGREGATION_UNSELECTABLE_USER_FIELDS,
         receiver: DEFAULT_AGGREGATION_UNSELECTABLE_USER_FIELDS,
         'sections.resources.resource': {
           createdAt: false,
           updatedAt: false
-        }
+        },
+        currentUserReviews: false
       }
     }
   ]

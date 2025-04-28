@@ -39,6 +39,13 @@ jest.mock('@azure/storage-blob', () => {
   }
 })
 
+jest.mock('~/services/upload', () => {
+  return {
+    uploadFile: jest.fn(() => Promise.resolve('mocked-link')),
+    updateFile: jest.fn(() => {})
+  }
+})
+
 const testFile = {
   originalname: 'example.pdf',
   description: 'Here is everything you need to study this subject.',

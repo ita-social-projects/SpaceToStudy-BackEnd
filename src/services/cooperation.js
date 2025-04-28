@@ -28,10 +28,10 @@ const cooperationService = {
     return result
   },
 
-  getCooperationById: async (id, userRole) => {
+  getCooperationById: async (id, userRole, userId) => {
     const isClosedResourcesHidden = userRole === roles.STUDENT
 
-    const pipeline = getCooperationByIdQueryPipeline(id, isClosedResourcesHidden)
+    const pipeline = getCooperationByIdQueryPipeline(id, isClosedResourcesHidden, userId)
 
     const [cooperationById] = await Cooperation.aggregate(pipeline)
 

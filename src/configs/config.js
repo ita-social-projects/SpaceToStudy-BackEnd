@@ -1,19 +1,27 @@
+const azureAccess = {
+  ACCESS_KEY: process.env.ACCESS_KEY,
+  AZURE_HOST: process.env.AZURE_HOST,
+  STORAGE_ACCOUNT: process.env.STORAGE_ACCOUNT
+}
+
 const config = {
-  MONGODB_URL: process.env.MONGODB_URL,
-  MONGODB_URL_READONLY_TEST: process.env.MONGODB_URL_READONLY_TEST,
   CLIENT_URL: process.env.CLIENT_URL,
   COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,
-  SERVER_URL: process.env.SERVER_URL,
-  SERVER_PORT: process.env.SERVER_PORT,
-  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
   JWT_ACCESS_EXPIRES_IN: process.env.JWT_ACCESS_EXPIRES_IN,
-  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
+  JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET,
+  JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN,
+  JWT_CONFIRM_SECRET: process.env.JWT_CONFIRM_SECRET,
   JWT_REFRESH_EXPIRES_IN: process.env.JWT_REFRESH_EXPIRES_IN,
   JWT_REFRESH_LONG_TERM_EXPIRES_IN: process.env.JWT_REFRESH_LONG_TERM_EXPIRES_IN,
-  JWT_RESET_SECRET: process.env.JWT_RESET_SECRET,
+  JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET,
   JWT_RESET_EXPIRES_IN: process.env.JWT_RESET_EXPIRES_IN,
-  JWT_CONFIRM_SECRET: process.env.JWT_CONFIRM_SECRET,
-  JWT_CONFIRM_EXPIRES_IN: process.env.JWT_CONFIRM_EXPIRES_IN,
+  JWT_RESET_SECRET: process.env.JWT_RESET_SECRET,
+  LOCATION_API_KEY: process.env.LOCATION_API_KEY,
+  LOCATION_API_URL: process.env.LOCATION_API_URL,
+  MONGODB_URL: process.env.MONGODB_URL,
+  MONGODB_URL_READONLY_TEST: process.env.MONGODB_URL_READONLY_TEST,
+  SERVER_PORT: process.env.SERVER_PORT,
+  SERVER_URL: process.env.SERVER_URL,
   TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
   TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
   TEST_ADMIN_EMAIL: process.env.TEST_ADMIN_EMAIL,
@@ -21,24 +29,18 @@ const config = {
 }
 
 const gmailCredentials = {
-  user: process.env.MAIL_USER,
   clientId: process.env.GMAIL_CLIENT_ID,
   clientSecret: process.env.GMAIL_CLIENT_SECRET,
+  redirectUri: process.env.GMAIL_REDIRECT_URI,
   refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-  redirectUri: process.env.GMAIL_REDIRECT_URI
+  user: process.env.MAIL_USER
 }
 
 const superAdmin = {
+  email: process.env.MAIL_USER,
   firstName: process.env.MAIL_FIRSTNAME,
   lastName: process.env.MAIL_LASTNAME,
-  email: process.env.MAIL_USER,
   password: process.env.MAIL_PASS
 }
 
-const azureAccess = {
-  STORAGE_ACCOUNT: process.env.STORAGE_ACCOUNT,
-  ACCESS_KEY: process.env.ACCESS_KEY,
-  AZURE_HOST: process.env.AZURE_HOST
-}
-
-module.exports = { config, gmailCredentials, superAdmin, azureAccess }
+module.exports = { azureAccess, config, gmailCredentials, superAdmin }

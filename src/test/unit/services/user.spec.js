@@ -3,6 +3,20 @@ const offerService = require('~/services/offer')
 const cooperationService = require('~/services/cooperation')
 const User = require('~/models/user')
 const Offer = require('~/models/offer')
+const uploadService = require('~/services/upload')
+const notificationService = require('~/services/notification')
+const attachmentService = require('~/services/attachment')
+const lessonService = require('~/services/lesson')
+const quizService = require('~/services/quiz')
+const questionService = require('~/services/question')
+const resourcesCategoryService = require('~/services/resourcesCategory')
+const noteService = require('~/services/note')
+const courseService = require('~/services/course')
+const tokenService = require('~/services/token')
+const reviewService = require('~/services/review')
+const chatService = require('~/services/chat')
+const messageService = require('~/services/message')
+const { hashPassword } = require('~/utils/passwordHelper')
 const { FORBIDDEN, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
 const { createError } = require('~/utils/errorsHelper')
 const {
@@ -12,6 +26,7 @@ const {
 jest.mock('~/models/offer')
 jest.mock('~/services/offer')
 jest.mock('~/services/cooperation')
+jest.mock('~/utils/passwordHelper')
 
 describe('User service', () => {
   afterEach(() => {
@@ -20,6 +35,16 @@ describe('User service', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+
+    User.countDocuments = jest.fn().mockResolvedValue(2)
+    User.find = jest.fn().mockReturnValue({
+      select: jest.fn().mockReturnThis(),
+      sort: jest.fn().mockReturnThis(),
+      collation: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      exec: jest.fn().mockResolvedValue([{ name: 'John' }, { name: 'Jane' }])
+    })
 
     User.findById = jest.fn().mockReturnValue({
       lean: jest.fn().mockReturnThis(),
@@ -44,6 +69,173 @@ describe('User service', () => {
     offerService.getOffers = jest.fn().mockResolvedValue([])
 
     cooperationService.getCooperations = jest.fn().mockResolvedValue([])
+  })
+
+  describe('getUsers', () => {
+    it('should return users and count based on match, sort, skip, limit', async () => {
+      const match = { role: 'tutor' }
+      const sort = { name: 1 }
+      const skip = 0
+      const limit = 10
+
+      const result = await userService.getUsers({ match, sort, skip, limit })
+
+      expect(User.countDocuments).toHaveBeenCalledWith(match)
+      expect(User.find).toHaveBeenCalledWith(match)
+      expect(result).toEqual({ items: [{ name: 'John' }, { name: 'Jane' }], count: 2 })
+    })
+  })
+
+  describe('getUserByEmail', () => {
+    it('should return user based on email', async () => {
+      const email = 'test@example.com'
+      const mockUser = {
+        _id: '123',
+        email
+      }
+
+      User.findOne = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(mockUser)
+      })
+
+      const result = await userService.getUserByEmail(email)
+
+      expect(User.findOne).toHaveBeenCalledWith({ email })
+      expect(result).toEqual(mockUser)
+    })
+
+    it('should return null if user not found', async () => {
+      const email = 'missing@example.com'
+
+      User.findOne = jest.fn().mockReturnValue({
+        select: jest.fn().mockReturnThis(),
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(null)
+      })
+
+      const result = await userService.getUserByEmail(email)
+
+      expect(User.findOne).toHaveBeenCalledWith({ email })
+      expect(result).toBeNull()
+    })
+  })
+
+  describe('createUser', () => {
+    const mockUser = {
+      _id: '123',
+      role: 'tutor',
+      firstName: 'John',
+      lastName: 'Doe',
+      email: 'test@example.com',
+      password: 'password123',
+      isEmailConfirmed: 'true',
+      appLanguage: 'uk'
+    }
+
+    it('should throw 409 error if user with given email already exists', async () => {
+      jest.spyOn(userService, 'getUserByEmail').mockResolvedValue(mockUser)
+      try {
+        await userService.createUser(
+          mockUser.role,
+          mockUser.firstName,
+          mockUser.lastName,
+          mockUser.email,
+          mockUser.password,
+          mockUser.appLanguage
+        )
+      } catch (err) {
+        expect(err).toBeInstanceOf(Error)
+        expect(err.status).toBe(409)
+      }
+    })
+
+    it('should throw 400 error if role is ADMIN', async () => {
+      const mockAdminUser = {
+        role: 'admin',
+        firstName: 'Admin',
+        lastName: 'User',
+        email: 'admin@example.com',
+        password: 'adminPass123',
+        appLanguage: 'en'
+      }
+
+      try {
+        await userService.createUser(
+          mockAdminUser.role,
+          mockAdminUser.firstName,
+          mockAdminUser.lastName,
+          mockAdminUser.email,
+          mockAdminUser.password,
+          mockAdminUser.appLanguage
+        )
+      } catch (err) {
+        expect(err).toBeInstanceOf(Error)
+        expect(err.status).toBe(400)
+      }
+    })
+
+    it('should hash the password before saving the user', async () => {
+      const mockPassword = 'plainPassword123'
+      const mockHashedPassword = 'hashedPassword123'
+      const mockUser = {
+        role: 'tutor',
+        firstName: 'John',
+        lastName: 'Doe',
+        email: 'john@example.com',
+        password: mockPassword,
+        appLanguage: 'uk'
+      }
+
+      hashPassword.mockResolvedValue(mockHashedPassword)
+      jest.spyOn(User, 'create').mockResolvedValue({ _id: '1' })
+
+      await userService.createUser(
+        mockUser.role,
+        mockUser.firstName,
+        mockUser.lastName,
+        mockUser.email,
+        mockUser.password,
+        mockUser.appLanguage
+      )
+
+      expect(hashPassword).toHaveBeenCalledWith(mockPassword)
+      expect(User.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          password: mockHashedPassword
+        })
+      )
+    })
+  })
+
+  describe('privateUpdateUser', () => {
+    it('should update user if user exists', async () => {
+      const id = '123'
+      const updateData = { firstName: 'Mike' }
+      const mockUpdatedUser = { _id: id, ...updateData }
+
+      jest.spyOn(User, 'findByIdAndUpdate').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mockUpdatedUser)
+      })
+
+      await expect(userService.privateUpdateUser(id, updateData)).resolves.toBeUndefined()
+
+      expect(User.findByIdAndUpdate).toHaveBeenCalledWith(id, updateData, { new: true })
+    })
+
+    it('should throw 404 if user not found', async () => {
+      const id = 'nonexistent'
+      const updateData = { lastName: 'Night' }
+
+      jest.spyOn(User, 'findByIdAndUpdate').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null)
+      })
+
+      await expect(userService.privateUpdateUser(id, updateData)).rejects.toThrow(
+        createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
+      )
+    })
   })
 
   describe('_updateMainSubjects', () => {
@@ -176,7 +368,25 @@ describe('User service', () => {
       expect(result.tutor[0].category.name).toBe('Math')
       expect(result.tutor[0].subjects).toEqual([{ _id: '2', name: 'Algebra' }])
     })
+
+    it('should skip subject update if either subject or dbSubject has no _id', async () => {
+      const mainSubject = {
+        tutor: [{ category: { _id: '1', name: 'Math' } }]
+      }
+
+      const userSubjects = {
+        tutor: [{ _id: '2', category: { _id: '2', name: 'Physics' } }]
+      }
+
+      const role = 'tutor'
+      const userId = '123'
+
+      const result = await userService._updateMainSubjects(mainSubject, userSubjects, role, userId)
+
+      expect(result.tutor).toEqual(expect.arrayContaining([]))
+    })
   })
+
   describe('_calculateDeletionMainSubject', () => {
     it('should return false if user has no offers and no cooperations', async () => {
       const aggregateOptions = [{ $match: { category: 'cat1', author: '123', status: OFFER_STATUS_ENUM[0] } }]
@@ -190,6 +400,7 @@ describe('User service', () => {
       expect(result).toBe(false)
     })
   })
+
   describe('updateUser', () => {
     it('should call _updateMainSubjects if mainSubjects is in updateData', async () => {
       const id = '123'
@@ -328,7 +539,61 @@ describe('User service', () => {
 
       await expect(userService.updateStatus(id, updateStatus)).rejects.toThrow(DOCUMENT_NOT_FOUND([User.modelName]))
     })
+
+    it('should delete previous photo if shouldDeletePreviousPhoto returns true', async () => {
+      const id = '123'
+      const role = 'tutor'
+      const userMock = {
+        _id: id,
+        photo: 'oldPhotoUrl'
+      }
+
+      const updateData = {
+        photo: {
+          src: 'data:image/png;base64,ZmFrZUJhc2U2NA==',
+          name: 'new-photo.png'
+        }
+      }
+
+      jest.spyOn(User, 'findById').mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(userMock)
+      })
+
+      jest.spyOn(userService, '_updateMainSubjects').mockResolvedValue([])
+      jest.spyOn(User, 'findByIdAndUpdate').mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue({})
+      })
+
+      const deleteSpy = jest.spyOn(uploadService, 'deleteFile').mockResolvedValue()
+      jest.mock('~/utils/users/photoCheck', () => ({
+        shouldDeletePreviousPhoto: jest.fn().mockReturnValue(true)
+      }))
+
+      jest.spyOn(uploadService, 'uploadFile').mockResolvedValue('newPhotoUrl')
+
+      await userService.updateUser(id, role, updateData)
+
+      expect(deleteSpy).toHaveBeenCalledWith('oldPhotoUrl', 'user')
+    })
+
+    it('should throw DOCUMENT_NOT_FOUND error if user is not found', async () => {
+      const id = 'non-existent-id'
+      const role = 'tutor'
+      const updateData = { firstName: 'NewName' }
+
+      jest.spyOn(User, 'findById').mockReturnValue({
+        lean: jest.fn().mockReturnThis(),
+        exec: jest.fn().mockResolvedValue(null)
+      })
+
+      await expect(userService.updateUser(id, role, updateData)).rejects.toThrow(
+        createError(404, DOCUMENT_NOT_FOUND([User.modelName]))
+      )
+    })
   })
+
   describe('updateLastSeen', () => {
     it('should update lastSeen field', async () => {
       const id = '123'
@@ -563,6 +828,142 @@ describe('User service', () => {
           })
         ).rejects.toThrowError(createError(403, FORBIDDEN))
       })
+    })
+  })
+
+  describe('deleteUser', () => {
+    it('should call one deletion service and remove the user', async () => {
+      jest.spyOn(notificationService, 'clearNotifications').mockResolvedValue()
+      jest.spyOn(attachmentService, 'deleteAttachementsByAuthor').mockResolvedValue()
+      jest.spyOn(lessonService, 'deleteLessonsByAuthor').mockResolvedValue()
+      jest.spyOn(quizService, 'deleteQuizzesByAuthor').mockResolvedValue()
+      jest.spyOn(questionService, 'deleteQuestionsByAuthor').mockResolvedValue()
+      jest.spyOn(resourcesCategoryService, 'deleteResourceCategoriesByAuthor').mockResolvedValue()
+      jest.spyOn(noteService, 'deleteNotesByAuthor').mockResolvedValue()
+      jest.spyOn(courseService, 'deleteCoursesByAuthor').mockResolvedValue()
+      jest.spyOn(reviewService, 'deleteReviewsByAuthorOrTarget').mockResolvedValue()
+      jest.spyOn(cooperationService, 'deleteCooperationsByUser').mockResolvedValue()
+      jest.spyOn(offerService, 'deleteOffersByAuthor').mockResolvedValue()
+      jest.spyOn(chatService, 'deleteChatsbyUser').mockResolvedValue()
+      jest.spyOn(messageService, 'deleteAllMessagesByUser').mockResolvedValue()
+      jest.spyOn(tokenService, 'deleteTokensByUser').mockResolvedValue()
+
+      const id = '123'
+
+      const removeSpy = jest.spyOn(User, 'findByIdAndRemove').mockResolvedValue()
+
+      await expect(userService.deleteUser(id)).resolves.toBeUndefined()
+      expect(removeSpy).toHaveBeenCalledWith(id)
+    })
+  })
+
+  describe('toggleOfferBookmark', () => {
+    const offerId = '64c0d2a4e937a8d19b2f3c1b'
+    const userId = '64c0d2a4e937a8d19b2f3c1a'
+
+    it('should throw 404 if offer does not exist', async () => {
+      jest.spyOn(Offer, 'findById').mockResolvedValue(null)
+
+      await expect(userService.toggleOfferBookmark(offerId, userId)).rejects.toThrow(
+        createError(404, DOCUMENT_NOT_FOUND([Offer.modelName]))
+      )
+    })
+
+    it('should add offerId to bookmarkedOffers if not present', async () => {
+      const mockOffer = { _id: offerId }
+
+      const updatedUserMock = {
+        _id: userId,
+        bookmarkedOffers: [offerId]
+      }
+
+      jest.spyOn(Offer, 'findById').mockResolvedValue(mockOffer)
+
+      jest.spyOn(User, 'findByIdAndUpdate').mockReturnValue({
+        select: jest.fn().mockResolvedValue(updatedUserMock)
+      })
+
+      const result = await userService.toggleOfferBookmark(offerId, userId)
+
+      expect(result).toEqual([offerId])
+      expect(User.findByIdAndUpdate).toHaveBeenCalledWith(userId, expect.any(Array), { new: true })
+    })
+
+    it('should remove offerId from bookmarkedOffers if already present', async () => {
+      const mockOffer = { _id: offerId }
+
+      const updatedUserMock = {
+        _id: userId,
+        bookmarkedOffers: []
+      }
+
+      jest.spyOn(Offer, 'findById').mockResolvedValue(mockOffer)
+
+      jest.spyOn(User, 'findByIdAndUpdate').mockReturnValue({
+        select: jest.fn().mockResolvedValue(updatedUserMock)
+      })
+
+      const result = await userService.toggleOfferBookmark(offerId, userId)
+
+      expect(result).toEqual([])
+      expect(User.findByIdAndUpdate).toHaveBeenCalledWith(userId, expect.any(Array), { new: true })
+    })
+  })
+
+  describe('getBookmarkedOffers', () => {
+    const userId = '64c0d2a4e937a8d19b2f3c1a'
+
+    it('should call aggregate with correct pipeline without title', async () => {
+      const aggregateMock = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue([{ offers: { items: ['offer1'], count: 1 } }])
+      })
+
+      jest.spyOn(User, 'aggregate').mockImplementation(aggregateMock)
+
+      const result = await userService.getBookmarkedOffers(userId, {})
+
+      expect(User.aggregate).toHaveBeenCalledWith(expect.any(Array))
+      expect(result).toEqual({ items: ['offer1'], count: 1 })
+    })
+
+    it('should call aggregate with title filter in the pipeline', async () => {
+      const queryParams = { title: 'math' }
+
+      const aggregateMock = jest.fn().mockReturnValue({
+        exec: jest.fn().mockResolvedValue([{ offers: { items: ['offer1', 'offer2'], count: 2 } }])
+      })
+
+      jest.spyOn(User, 'aggregate').mockImplementation(aggregateMock)
+
+      const result = await userService.getBookmarkedOffers(userId, queryParams)
+
+      expect(User.aggregate).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({
+            $lookup: expect.objectContaining({
+              pipeline: expect.arrayContaining([
+                expect.objectContaining({
+                  $match: expect.objectContaining({
+                    title: expect.objectContaining({ $regex: queryParams.title })
+                  })
+                })
+              ])
+            })
+          })
+        ])
+      )
+
+      expect(result).toEqual({ items: ['offer1', 'offer2'], count: 2 })
+    })
+
+    it('should return empty offers and zero count if no results', async () => {
+      jest.spyOn(User, 'aggregate').mockReturnValue({
+        exec: jest.fn().mockResolvedValue([{ offers: { items: [], count: 0 } }])
+      })
+
+      const result = await userService.getBookmarkedOffers(userId, {})
+
+      expect(result).toEqual({ items: [], count: 0 })
     })
   })
 })

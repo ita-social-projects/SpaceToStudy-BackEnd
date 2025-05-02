@@ -1,14 +1,14 @@
 const { request } = require('gaxios')
-
-const API_URL = 'https://api.countrystatecity.in/v1/countries'
-const API_KEY = 'bW94V3phZU84YkhERVNUQmFOOFRDTVpIU3BFWFFJR1BsQUNZRXhjdg=='
+const {
+  config: { LOCATION_API_URL, LOCATION_API_KEY }
+} = require('~/configs/config')
 
 const locationService = {
   getCountries: async () => {
     const res = await request({
-      url: API_URL,
+      url: LOCATION_API_URL,
       headers: {
-        'X-CSCAPI-KEY': API_KEY
+        'X-CSCAPI-KEY': LOCATION_API_KEY
       }
     })
     const countries = res.data.map(({ name, iso2 }) => ({ name, iso2 }))
@@ -18,9 +18,9 @@ const locationService = {
 
   getCities: async (countryCode) => {
     const res = await request({
-      url: `${API_URL}/${countryCode}/cities`,
+      url: `${LOCATION_API_URL}/${countryCode}/cities`,
       headers: {
-        'X-CSCAPI-KEY': API_KEY
+        'X-CSCAPI-KEY': LOCATION_API_KEY
       }
     })
     const cities = res.data.map((city) => city.name)

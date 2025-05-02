@@ -11,9 +11,9 @@ const getCooperations = async (req, res) => {
 
 const getCooperationById = async (req, res) => {
   const { id } = req.params
-  const { role: userRole } = req.user
+  const { role: userRole, id: userId } = req.user
 
-  const cooperation = await cooperationService.getCooperationById(id, userRole)
+  const cooperation = await cooperationService.getCooperationById(id, userRole, userId)
 
   res.status(200).json(cooperation)
 }

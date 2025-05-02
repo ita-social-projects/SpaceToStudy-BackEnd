@@ -294,7 +294,7 @@ const userService = {
   deleteUser: async (id) => {
     await Promise.all([
       notificationService.clearNotifications(id),
-      attachmentService.deleteAttachementsByAuthor(id),
+      attachmentService.deleteAttachmentsByAuthor(id),
       lessonService.deleteLessonsByAuthor(id),
       quizService.deleteQuizzesByAuthor(id),
       questionService.deleteQuestionsByAuthor(id),

@@ -18,8 +18,8 @@ function getBlobServiceClient() {
 }
 
 const uploadService = {
-  uploadFile: async (name, buffer, containerName) => {
-    const hashedFileName = murmurhash.v2(name)
+  uploadFile: async (originalName, buffer, containerName) => {
+    const hashedFileName = murmurhash.v2(originalName)
     const blobName = `${Date.now()}-${hashedFileName}`
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
@@ -38,8 +38,7 @@ const uploadService = {
     const fileName = parseURLByTwo(name, containerName)
     blockBlobClient = containerClient.getBlockBlobClient(fileName)
     const blobUrl = blockBlobClient.url
-    const newBlobName = `${Date.now()}-${newName}`
-    newBlockBlobClient = containerClient.getBlockBlobClient(newBlobName)
+    newBlockBlobClient = containerClient.getBlockBlobClient(newName)
 
     let properties
 
@@ -61,7 +60,8 @@ const uploadService = {
     return blobUrl
   },
 
-  deleteFile: async (blobName, containerName) => {
+  deleteFile: async (originalName, containerName) => {
+    const blobName = blobNameToHash(originalName)
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
     blockBlobClient = containerClient.getBlockBlobClient(blobName)
@@ -73,11 +73,11 @@ const uploadService = {
     }
   },
 
-  downloadFile: async (blobName, containerName, res) => {
+  downloadFile: async (originalName, containerName, res) => {
     const blobServiceClient = getBlobServiceClient()
     const containerClient = blobServiceClient.getContainerClient(containerName)
-    const name = blobName.replace(`${AZURE_HOST}/${containerName}/`, '')
-    const blockBlobClient = containerClient.getBlockBlobClient(name)
+    const blobName = originalName.replace(`${AZURE_HOST}/${containerName}/`, '')
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName)
     try {
       const downloadBlockBlobResponse = await blockBlobClient.download()
       downloadBlockBlobResponse.readableStreamBody.pipe(res)

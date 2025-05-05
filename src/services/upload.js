@@ -61,13 +61,12 @@ const uploadService = {
   },
 
   deleteFile: async (originalName, containerName) => {
-    const blobName = blobNameToHash(originalName)
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
-    blockBlobClient = containerClient.getBlockBlobClient(blobName)
+    blockBlobClient = containerClient.getBlockBlobClient(originalName)
     try {
       await blockBlobClient.deleteIfExists()
-      return blobName
+      return originalName
     } catch (error) {
       throw new Error(`Failed to delete file: ${error.message}`)
     }

@@ -73,11 +73,11 @@ const uploadService = {
     }
   },
 
-
   downloadFile: async (blobName, containerName, res) => {
     const blobServiceClient = getBlobServiceClient()
     const containerClient = blobServiceClient.getContainerClient(containerName)
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName)
+    const name = blobName.replace(`${AZURE_HOST}/${containerName}/`, '')
+    const blockBlobClient = containerClient.getBlockBlobClient(name)
     try {
       const downloadBlockBlobResponse = await blockBlobClient.download()
       downloadBlockBlobResponse.readableStreamBody.pipe(res)

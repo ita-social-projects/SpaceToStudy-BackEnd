@@ -111,10 +111,10 @@ const attachmentService = {
       throw createError(404, DOCUMENT_NOT_FOUND('Attachment'))
     }
 
-    res.setHeader('Content-Disposition', `attachment; filename="${attachment.fileName}"`)
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(attachment._doc.fileName)}`)
     res.setHeader('Content-Type', 'application/octet-stream')
 
-    return await uploadService.downloadFile(attachment.link, ATTACHMENT, res)
+    return await uploadService.downloadFile(attachment._doc.link, ATTACHMENT, res)
   }
 }
 

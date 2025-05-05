@@ -163,49 +163,66 @@ describe('uploadService', () => {
 })
 
 describe('downloadFile', () => {
-  jest.mock('azure-storage', () => ({
-    createBlobService: jest.fn()
-  }))
+  const fileName = 'test-file.pdf'
+  const containerName = 'test-container'
+  const mockedLink = `mocked-link/${fileName}`
 
-  let blobServiceMock
+  it('Should download a file from Azure Blob Storage', async () => {
+    const mockPipe = jest.fn()
+    const downloadMock = jest.fn().mockResolvedValue({
+      readableStreamBody: {
+        pipe: mockPipe
+      }
+    })
+    const getBlockBlobClientMock = jest.fn(() => ({
+      download: downloadMock
+    }))
+    const getContainerClientMock = jest.fn(() => ({
+      getBlockBlobClient: getBlockBlobClientMock
+    }))
 
-  beforeEach(() => {
-    blobServiceMock = {
-      getBlobToStream: jest.fn()
+    StorageSharedKeyCredential.mockImplementationOnce(() => ({}))
+    BlobServiceClient.mockImplementationOnce(() => ({
+      getContainerClient: getContainerClientMock
+    }))
+
+    const res = {
+      setHeader: jest.fn(),
+      send: jest.fn()
     }
-    azureStorage.createBlobService.mockReturnValue(blobServiceMock)
+
+    await uploadService.downloadFile(mockedLink, containerName, res)
+
+    expect(getContainerClientMock).toHaveBeenCalledWith(containerName)
+    expect(getBlockBlobClientMock).toHaveBeenCalledWith(mockedLink)
+    expect(mockPipe).toHaveBeenCalledWith(res)
+    expect(downloadMock).toHaveBeenCalled()
   })
 
-  afterEach(() => {
-    jest.clearAllMocks()
-  })
+  it('Should throw error if file download fails', async () => {
+    const errorMessage = 'Failed to download file'
+    const downloadMock = jest.fn().mockRejectedValue(new Error(errorMessage))
 
-  it('should resolve if the blob is downloaded successfully', async () => {
-    const fileName = 'testFile.txt'
-    const containerName = 'test-container'
-    const responseMock = jest.fn()
+    const getBlockBlobClientMock = jest.fn(() => ({
+      download: downloadMock
+    }))
+    const getContainerClientMock = jest.fn(() => ({
+      getBlockBlobClient: getBlockBlobClientMock
+    }))
 
-    blobServiceMock.getBlobToStream.mockImplementation((container, file, res, callback) => {
-      callback(null)
-    })
+    StorageSharedKeyCredential.mockImplementationOnce(() => ({}))
+    BlobServiceClient.mockImplementationOnce(() => ({
+      getContainerClient: getContainerClientMock
+    }))
 
-    await expect(uploadService.downloadFile(fileName, containerName, responseMock)).resolves.toBeUndefined()
-    expect(azureStorage.createBlobService).toHaveBeenCalled()
-    expect(blobServiceMock.getBlobToStream).toHaveBeenCalled()
-  })
+    const res = {
+      setHeader: jest.fn(),
+      send: jest.fn()
+    }
 
-  it('should reject if there is an error downloading the blob', async () => {
-    const fileName = 'testFile.txt'
-    const containerName = 'test-container'
-    const responseMock = jest.fn()
-    const error = new Error('Download error')
-
-    blobServiceMock.getBlobToStream.mockImplementation((container, file, res, callback) => {
-      callback(error)
-    })
-
-    await expect(uploadService.downloadFile(fileName, containerName, responseMock)).rejects.toThrow('Download error')
-    expect(azureStorage.createBlobService).toHaveBeenCalled()
-    expect(blobServiceMock.getBlobToStream).toHaveBeenCalled()
+    await expect(uploadService.downloadFile('invalid-link', containerName, res)).rejects.toThrow(
+      'Failed to download file: Failed to download file'
+    )
+    expect(downloadMock).toHaveBeenCalled()
   })
 })

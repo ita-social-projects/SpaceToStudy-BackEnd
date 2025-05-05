@@ -834,7 +834,7 @@ describe('User service', () => {
   describe('deleteUser', () => {
     it('should call one deletion service and remove the user', async () => {
       jest.spyOn(notificationService, 'clearNotifications').mockResolvedValue()
-      jest.spyOn(attachmentService, 'deleteAttachementsByAuthor').mockResolvedValue()
+      jest.spyOn(attachmentService, 'deleteAttachmentsByAuthor').mockResolvedValue()
       jest.spyOn(lessonService, 'deleteLessonsByAuthor').mockResolvedValue()
       jest.spyOn(quizService, 'deleteQuizzesByAuthor').mockResolvedValue()
       jest.spyOn(questionService, 'deleteQuestionsByAuthor').mockResolvedValue()

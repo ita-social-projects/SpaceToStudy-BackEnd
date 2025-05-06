@@ -2,6 +2,7 @@ const { BlobServiceClient, StorageSharedKeyCredential } = require('@azure/storag
 const {
   azureAccess: { STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST }
 } = require('~/configs/config')
+const crypto = require('crypto')
 
 let blobServiceClient
 let containerClient
@@ -17,7 +18,8 @@ function getBlobServiceClient() {
 
 const uploadService = {
   uploadFile: async (name, buffer, containerName) => {
-    const blobName = `${Date.now()}-${name}`
+    const hashedFileName = crypto.createHash('sha256').update(name).digest('hex')
+    const blobName = `${Date.now()}-${hashedFileName}`
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
     blockBlobClient = containerClient.getBlockBlobClient(blobName)
@@ -32,8 +34,8 @@ const uploadService = {
   updateFile: async (name, newName, containerName) => {
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
-    blockBlobClient = containerClient.getBlockBlobClient(name)
-
+    const fileName = name.split('/attachment/')[1]
+    blockBlobClient = containerClient.getBlockBlobClient(fileName)
     const blobUrl = blockBlobClient.url
     const newBlobName = `${Date.now()}-${newName}`
     newBlockBlobClient = containerClient.getBlockBlobClient(newBlobName)

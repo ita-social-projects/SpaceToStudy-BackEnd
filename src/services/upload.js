@@ -72,14 +72,14 @@ const uploadService = {
     }
   },
 
-  downloadFile: async (originalName, containerName, res) => {
+  downloadFile: async (originalName, containerName) => {
     const blobServiceClient = getBlobServiceClient()
     const containerClient = blobServiceClient.getContainerClient(containerName)
     const blobName = originalName.replace(`${AZURE_HOST}/${containerName}/`, '')
     const blockBlobClient = containerClient.getBlockBlobClient(blobName)
     try {
       const downloadBlockBlobResponse = await blockBlobClient.download()
-      downloadBlockBlobResponse.readableStreamBody.pipe(res)
+      return downloadBlockBlobResponse.readableStreamBody
     } catch (error) {
       throw new Error(`Failed to download file: ${error.message}`)
     }

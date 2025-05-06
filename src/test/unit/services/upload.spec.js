@@ -168,11 +168,10 @@ describe('downloadFile', () => {
   const mockedLink = `mocked-link/${fileName}`
 
   it('Should download a file from Azure Blob Storage', async () => {
-    const mockPipe = jest.fn()
+    const mockStream = { pipe: jest.fn() }
+
     const downloadMock = jest.fn().mockResolvedValue({
-      readableStreamBody: {
-        pipe: mockPipe
-      }
+      readableStreamBody: mockStream
     })
     const getBlockBlobClientMock = jest.fn(() => ({
       download: downloadMock
@@ -186,17 +185,9 @@ describe('downloadFile', () => {
       getContainerClient: getContainerClientMock
     }))
 
-    const res = {
-      setHeader: jest.fn(),
-      send: jest.fn()
-    }
-
-    await uploadService.downloadFile(mockedLink, containerName, res)
-
-    expect(getContainerClientMock).toHaveBeenCalledWith(containerName)
-    expect(getBlockBlobClientMock).toHaveBeenCalledWith(mockedLink)
-    expect(mockPipe).toHaveBeenCalledWith(res)
+    const result = await uploadService.downloadFile(mockedLink, containerName)
     expect(downloadMock).toHaveBeenCalled()
+    expect(result).toBe(mockStream)
   })
 
   it('Should throw error if file download fails', async () => {

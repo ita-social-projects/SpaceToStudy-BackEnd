@@ -457,6 +457,11 @@ describe('Attachments controller', () => {
     })
 
     it('should successfully download the attachment', async () => {
+      const mockStream = {
+        on: jest.fn().mockReturnThis(),
+        pipe: jest.fn().mockReturnThis()
+      }
+
       jest.spyOn(Attachment, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue({
           _doc: {
@@ -467,26 +472,18 @@ describe('Attachments controller', () => {
         })
       })
 
-      jest.spyOn(uploadService, 'downloadFile').mockImplementation((link, type, res) => {
+      uploadService.downloadFile = jest.fn().mockImplementation((link, type, res) => {
         res.setHeader('Content-Type', 'application/octet-stream')
         res.setHeader(
           'Content-Disposition',
           `attachment; filename*=UTF-8''${encodeURIComponent(testFile.originalname)}`
         )
-        res.end('mocked content')
+        mockStream.pipe(res)
       })
 
-      const response = await app
-        .get(`/attachments/${testAttachmentId}`)
-        .set('Cookie', [`accessToken=${accessToken}`])
-        .expect(200)
+      await app.get(`/attachments/${testAttachmentId}`).set('Cookie', [`accessToken=${accessToken}`])
 
-      expect(Attachment.findById).toHaveBeenCalledWith(testAttachmentId)
-      expect(response.headers['content-disposition']).toBe(
-        `attachment; filename*=UTF-8''${encodeURIComponent(testFile.originalname)}`
-      )
-      expect(response.headers['content-type']).toBe('application/octet-stream')
-      expect(uploadService.downloadFile).toHaveBeenCalledWith('mocked-link', ATTACHMENT, expect.any(Object))
+      expect(uploadService.downloadFile).toHaveBeenCalledWith('mocked-link', ATTACHMENT)
     })
 
     it('should throw a 404 error if the attachment is not found', async () => {

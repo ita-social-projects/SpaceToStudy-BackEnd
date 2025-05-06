@@ -104,17 +104,15 @@ const attachmentService = {
     await Attachment.deleteMany({ author })
   },
 
-  downloadAttachment: async (id, res) => {
+  downloadAttachment: async (id) => {
     const attachment = await Attachment.findById(id).exec()
 
     if (!attachment) {
       throw createError(404, DOCUMENT_NOT_FOUND('Attachment'))
     }
 
-    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(attachment._doc.fileName)}`)
-    res.setHeader('Content-Type', 'application/octet-stream')
-
-    return await uploadService.downloadFile(attachment._doc.link, ATTACHMENT, res)
+    const stream = await uploadService.downloadFile(attachment._doc.link, ATTACHMENT)
+    return { stream, fileName: attachment._doc.fileName }
   }
 }
 

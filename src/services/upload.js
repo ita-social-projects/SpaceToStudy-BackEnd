@@ -57,7 +57,7 @@ const uploadService = {
     if (properties.copyStatus !== 'success') throw new Error(`Blob copy did not succeed for: ${name}`)
 
     uploadService.deleteFile(name, containerName)
-    return newName
+    return blobUrl
   },
 
   deleteFile: async (blobName, containerName) => {

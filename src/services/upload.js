@@ -2,7 +2,7 @@ const { BlobServiceClient, StorageSharedKeyCredential } = require('@azure/storag
 const {
   azureAccess: { STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST }
 } = require('~/configs/config')
-const crypto = require('crypto')
+const murmurhash = require('murmurhash')
 
 let blobServiceClient
 let containerClient
@@ -18,7 +18,7 @@ function getBlobServiceClient() {
 
 const uploadService = {
   uploadFile: async (name, buffer, containerName) => {
-    const hashedFileName = crypto.createHash('sha256').update(name).digest('hex')
+    const hashedFileName = murmurhash.v2(name)
     const blobName = `${Date.now()}-${hashedFileName}`
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)

@@ -3,6 +3,7 @@ const {
   azureAccess: { STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST }
 } = require('~/configs/config')
 const murmurhash = require('murmurhash')
+const { parseURLByTwo } = require('~/utils/urlParser')
 
 let blobServiceClient
 let containerClient
@@ -34,7 +35,7 @@ const uploadService = {
   updateFile: async (name, newName, containerName) => {
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
-    const fileName = name.split('/attachment/')[1]
+    const fileName = parseURLByTwo(name, containerName)
     blockBlobClient = containerClient.getBlockBlobClient(fileName)
     const blobUrl = blockBlobClient.url
     const newBlobName = `${Date.now()}-${newName}`

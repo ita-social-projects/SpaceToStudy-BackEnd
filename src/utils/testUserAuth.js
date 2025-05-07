@@ -10,7 +10,6 @@ const testUserAuthentication = async (app, testUser = {}) => {
     if (!testUser.role) testUser.lastLoginAs = 'student'
     else if (Array.isArray(testUser.role)) testUser.lastLoginAs = testUser.role[0] || 'student'
     else testUser.lastLoginAs = testUser.role
-
     testUser = {
       role: testUser.role ? testUser.role : 'student',
       firstName: 'Tart',

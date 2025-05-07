@@ -23,7 +23,9 @@ const config = {
   SERVER_PORT: process.env.SERVER_PORT,
   SERVER_URL: process.env.SERVER_URL,
   TEST_USER_EMAIL: process.env.TEST_USER_EMAIL,
-  TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD
+  TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD,
+  TEST_ADMIN_EMAIL: process.env.TEST_ADMIN_EMAIL,
+  TEST_ADMIN_PASSWORD: process.env.TEST_ADMIN_PASSWORD
 }
 
 const gmailCredentials = {

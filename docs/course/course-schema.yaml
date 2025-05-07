@@ -148,6 +148,7 @@ definitions:
         type: string
       category:
         type: string
+        nullable: true
       resourceType:
         $ref: '#/definitions/resourceType'
       settings:
@@ -167,12 +168,6 @@ definitions:
             type: boolean
           correctAnswers:
             type: boolean
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
       isDuplicate:
         type: boolean
         description: Only present when the resource is a copy
@@ -191,18 +186,13 @@ definitions:
         type: string
       category:
         type: string
+        nullable: true
       resourceType:
         $ref: '#/definitions/resourceType'
       attachments:
         type: array
         items:
           type: string
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
       isDuplicate:
         type: boolean
         description: Only present when the resource is a copy
@@ -218,17 +208,12 @@ definitions:
       link:
         type: string
       category:
-        $ref: '#/definitions/categoryWithName'
+        type: string
+        nullable: true
       resourceType:
         $ref: '#/definitions/resourceType'
       size:
         type: number
-      createdAt:
-        type: string
-        format: date-time
-      updatedAt:
-        type: string
-        format: date-time
       isDuplicate:
         type: boolean
         description: Only present when the resource is a copy

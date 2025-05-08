@@ -257,4 +257,42 @@ describe('20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones', ()
 
     expect(updatedCooperation.sections).toEqual([])
   })
+  test('down should restore the cooperation collection from backup if it exists', async () => {
+    const backupDoc = {
+      _id: new ObjectId(),
+      initiator: validCooperation.initiator,
+      receiver: validCooperation.receiver,
+      title: 'Restored from Backup',
+      proficiencyLevel: 'Advanced',
+      sections: [],
+      additionalInfo: 'Restored info'
+    }
+    await database.collection('cooperation_backup').insertOne(backupDoc)
+
+    await database.collection(cooperationCollection).drop()
+
+    await require('@root/migrations/20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones').down(database)
+
+    const restoredDoc = await database.collection(cooperationCollection).findOne({ _id: backupDoc._id })
+    expect(restoredDoc).toBeDefined()
+    expect(restoredDoc.title).toBe('Restored from Backup')
+
+    const backupStillExists = await database.listCollections({ name: 'cooperation_backup' }).hasNext()
+    expect(backupStillExists).toBe(false)
+  })
+
+  test('down should not fail and log an error if the backup does not exist', async () => {
+    const backupExists = await database.listCollections({ name: 'cooperation_backup' }).hasNext()
+    if (backupExists) {
+      await database.collection('cooperation_backup').drop()
+    }
+
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    await require('@root/migrations/20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones').down(database)
+
+    expect(consoleSpy).toHaveBeenCalledWith("Резервная копия 'cooperation_backup' не найдена. Откат невозможен.")
+
+    consoleSpy.mockRestore()
+  })
 })

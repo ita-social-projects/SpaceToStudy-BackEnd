@@ -15,17 +15,14 @@ function transformSection(section) {
     }
 
     if (activity.resourceType) transformedResource.resourceType = activity.resourceType
-    if (activity.resource.availability) {
+    if (activity.resource?.availability) {
       transformedResource.availability = {
         status: activity.resource.availability.status,
         date: activity.resource.availability.date
       }
     }
 
-    if (activity.completionStatus) transformedResource.completionStatus = activity.completionStatus
-    else {
-      transformedResource.completionStatus = 'active'
-    }
+    transformedResource.completionStatus = activity.completionStatus || 'active'
 
     return transformedResource
   })
@@ -56,6 +53,11 @@ async function processSections(db, cooperation) {
 
 module.exports = {
   async up(db) {
+    await db
+      .collection('cooperation')
+      .aggregate([{ $match: {} }, { $out: 'cooperation_backup' }])
+      .toArray()
+
     const allUserIds = new Set(
       (
         await db
@@ -71,14 +73,12 @@ module.exports = {
         await db.collection('cooperation').deleteOne({ _id: cooperation._id })
       }
 
-      if (Array.isArray(cooperation.proficiencyLevel)) {
-        if (cooperation.proficiencyLevel.length > 0) {
-          const averageProficiencyLevelIndex = cooperation.proficiencyLevel.length / 2
-          const averageProficiencyLevel = cooperation.proficiencyLevel[Math.ceil(averageProficiencyLevelIndex)]
-          await db
-            .collection('cooperation')
-            .updateOne({ _id: cooperation._id }, { $set: { proficiencyLevel: averageProficiencyLevel } })
-        }
+      if (Array.isArray(cooperation.proficiencyLevel) && cooperation.proficiencyLevel.length > 0) {
+        const averageProficiencyLevelIndex = cooperation.proficiencyLevel.length / 2
+        const averageProficiencyLevel = cooperation.proficiencyLevel[Math.ceil(averageProficiencyLevelIndex)]
+        await db
+          .collection('cooperation')
+          .updateOne({ _id: cooperation._id }, { $set: { proficiencyLevel: averageProficiencyLevel } })
       }
 
       if (!cooperation.title) {
@@ -93,6 +93,7 @@ module.exports = {
       }
       await processSections(db, cooperation)
     }
+
     await db.collection('cooperation').updateMany(
       {
         $or: [{ category: { $exists: true } }, { subject: { $exists: true } }, { languages: { $exists: true } }]
@@ -117,6 +118,23 @@ module.exports = {
       }
     )
   },
-  down() {},
+
+  async down(db) {
+    const backupExists = await db.listCollections({ name: 'cooperation_backup' }).hasNext()
+    if (!backupExists) {
+      console.error("Резервная копия 'cooperation_backup' не найдена. Откат невозможен.")
+      return
+    }
+
+    await db.collection('cooperation').drop()
+
+    await db
+      .collection('cooperation_backup')
+      .aggregate([{ $match: {} }, { $out: 'cooperation' }])
+      .toArray()
+
+    await db.collection('cooperation_backup').drop()
+  },
+
   transformSection
 }

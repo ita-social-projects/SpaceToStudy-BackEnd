@@ -15,7 +15,8 @@ describe('uploadService', () => {
   it('Should upload a file to Azure Blob Storage', async () => {
     const uploadDataMock = jest.fn().mockResolvedValue({})
     const getBlockBlobClientMock = jest.fn(() => ({
-      uploadData: uploadDataMock
+      uploadData: uploadDataMock,
+      url: `mock-url/${fileName}`
     }))
     const getContainerClientMock = jest.fn(() => ({
       getBlockBlobClient: getBlockBlobClientMock
@@ -26,10 +27,8 @@ describe('uploadService', () => {
       getContainerClient: getContainerClientMock
     }))
 
-    const blobName = `${file.name}`
-
     const result = await uploadService.uploadFile(file.name, file.buffer, 'container')
-    expect(result).toContain(blobName)
+    expect(result).toMatch(new RegExp(`.*${fileName}$`))
   })
 
   it('Should show an err during the upload', async () => {

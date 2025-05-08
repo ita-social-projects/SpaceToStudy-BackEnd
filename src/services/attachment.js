@@ -101,7 +101,7 @@ const attachmentService = {
     await Attachment.findByIdAndRemove(id)
   },
 
-  deleteAttachementsByAuthor: async (author) => {
+  deleteAttachmentsByAuthor: async (author) => {
     await Attachment.deleteMany({ author })
   }
 }

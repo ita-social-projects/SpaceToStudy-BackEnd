@@ -1,69 +1,76 @@
-# How to Contribute 🛠️
+# Contributing Guidelines 🛠️
 
 ## Step 1: Find an Issue
 
-Browse the open issues in the main repository and pick one you want to work on.
-Or create one if you have found a bug or have a feature request.
+Browse the [open issues](../../issues) in the main repository and pick one to work on.  
+You can also create a new issue if you've found a bug or have a feature request.
 
-## Step 2: Fork the Project 🍴
+## Step 2: Fork the Repository 🍴
 
-Click the "Fork" button on the main page of the repository to make a copy in your own account.
+Click the **"Fork"** button on the top-right corner of the repository page to create a copy in your GitHub account.
 
-## Step 3: Clone the Project 🌿
+## Step 3: Clone the Repository 🌿
 
-Clone the Project by HTTPS or SSH and open this localy.
-
-## Step 4: Environment 🌿
+Use HTTPS or SSH to clone the repository locally:
 
 ```bash
-$ git checkout develop
+git clone https://github.com/your-username/your-fork.git
+cd your-fork
 ```
 
-- Set up your project by adding your .env variables
+## Step 4: Set Up the Environment
+
+Checkout the development branch:
 
 ```bash
-$ npm ci
+git checkout develop
 ```
 
+Install dependencies:
+
 ```bash
-$ git checkout -b your_branch_name
+npm ci
 ```
+
+Create a new branch:
+
+```bash
+git checkout -b your-branch-name
+```
+
+> 💡 Use meaningful branch names like `fix/header-alignment` or `feature/add-auth`.
+
+Set up your environment variables in a `.env` file.
 
 ## Step 5: Work on the Task 👨‍💻👩‍💻
 
-Make the necessary changes in the code or documentation.
+Make the necessary changes to the codebase or documentation.
 
-## Step 6: Test your code
+## Step 6: Test Your Changes
 
-Make sure that the changes you've made work locally before creating a Pull Request
+Ensure everything works correctly in your local environment before proceeding.
 
-## Step 7: Commit ✅
+## Step 7: Commit Your Changes ✅
 
-Add your changes through Git and create a commit with a descriptive message.
-
-```bash
-$ git add .
-```
-
-Create a Commit
+Stage and commit your changes:
 
 ```bash
-$ git commit -m 'Your descriptive message'
+git add .
+git commit -m "feat: meaningful commit message"
 ```
 
-NOTE: Each pull request (PR) should contain only one commit. If you have multiple commits, they need to be squashed.
+> ✏️ Use [conventional commits](https://www.conventionalcommits.org/) when possible.
 
-## Step 8: Work Remotely 🌍
+If you have multiple commits, squash them into one before opening a pull request.
 
-When your work is ready and complies with project conventions, upload your changes to your fork:
+## Step 8: Push to Your Fork 🌍
 
 ```bash
-# Push your work to your remote repository
-$ git push -u origin Branch_Name
+git push -u origin your-branch-name
 ```
 
-## Step 9: Create a Pull Request ➡️
+## Step 9: Open a Pull Request ➡️
 
-- Go to the page of your fork on GitHub and click "New Pull Request".
-- You should create pull request to base develop branch.
-- Verify that the changes are displayed correctly, and then submit your pull request.
+- Go to your fork on GitHub and click **"New Pull Request"**
+- Target the `develop` branch of the main repository
+- Double-check the changes and submit the PR

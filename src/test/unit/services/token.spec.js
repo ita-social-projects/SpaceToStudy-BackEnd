@@ -7,6 +7,9 @@ const {
   tokenNames: { RESET_TOKEN }
 } = require('~/consts/auth')
 const { INVALID_TOKEN_NAME } = require('~/consts/errors')
+const {
+  config: { JWT_REFRESH_SECRET }
+} = require('~/configs/config')
 
 jest.mock('~/configs/config', () => ({
   config: {
@@ -163,7 +166,7 @@ describe('Token service', () => {
 
     const { refreshToken } = tokenService.generateTokens(payload)
 
-    const decoded = jwt.decode(refreshToken)
+    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET)
 
     expect(decoded.exp).toBe(10 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
   })
@@ -172,7 +175,7 @@ describe('Token service', () => {
     const payload = { id: 'testExample', rememberMe: false }
     const { refreshToken } = tokenService.generateTokens(payload)
 
-    const decoded = jwt.decode(refreshToken)
+    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET)
 
     expect(decoded.exp).toBe(7 * 24 * 60 * 60 + Math.floor(Date.now() / 1000))
   })

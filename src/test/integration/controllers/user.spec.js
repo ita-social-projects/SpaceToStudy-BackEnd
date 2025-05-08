@@ -242,10 +242,21 @@ describe('User controller', () => {
       })
 
       it('should return FORBIDDEN when one account tries to deactivate another account', async () => {
-        const user = await User.create(testUser)
+        const anotherUser = await User.create(testUser)
 
         const response = await app
-          .patch(`${endpointUrl}/${user._id}/deactivate`)
+          .patch(`${endpointUrl}/deactivate/${anotherUser._id}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expectError(403, FORBIDDEN, response)
+      })
+
+      it('should return FORBIDDEN when one account tries to activate another account', async () => {
+        const anotherUser = await User.create(testUser)
+
+        const response = await app
+          .patch(`${endpointUrl}/activate/${anotherUser._id}`)
           .set('Cookie', [`accessToken=${accessToken}`])
           .send()
 
@@ -676,6 +687,17 @@ describe('User controller', () => {
         const response = await app.delete(endpointUrl + testUser._id)
 
         expectError(401, UNAUTHORIZED, response)
+      })
+
+      it('should return FORBIDDEN when one account tries to block another account', async () => {
+        const anotherUser = await User.create(testUser)
+
+        const response = await app
+          .delete(`${endpointUrl}${anotherUser._id}`)
+          .set('Cookie', [`accessToken=${accessToken}`])
+          .send()
+
+        expectError(403, FORBIDDEN, response)
       })
     })
 

@@ -4,6 +4,8 @@ definitions:
     items:
       type: object
       properties:
+        author:
+          type: string
         _id:
           type: string
         fileName:
@@ -15,28 +17,27 @@ definitions:
         size:
           type: number
         category:
-          type: string
-          ref: '#/definitions/resourcesCategory'
+          $ref: '#/definitions/resourcesCategoryAttachment'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      isDublicate:
+        type: boolean
   attachmentBody:
     type: object
     properties:
       fileName:
         type: string
-      link:
-        type: string
       description:
         type: string
-      size:
-        type: number
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        description: This id related to resourcesCategory
   attachment:
     type: object
     properties:
@@ -51,8 +52,7 @@ definitions:
       size:
         type: number
       category:
-        type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategoryAttachment'
       createdAt:
         type: string
         format: date-time

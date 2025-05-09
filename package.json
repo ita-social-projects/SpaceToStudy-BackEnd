@@ -37,7 +37,7 @@
     "country-state-city": "^3.2.1",
     "cron": "^2.1.0",
     "dotenv": "^10.0.0",
-    "email-templates": "^10.0.0",
+    "email-templates": "^12.0.1",
     "express": "^4.21.2",
     "googleapis": "^105.0.0",
     "iconv-lite": "^0.6.3",

@@ -81,10 +81,12 @@ describe('uploadService', () => {
     const getPropertiesMock = jest.fn().mockResolvedValue({ copyStatus: 'success' })
     const pollUntilDoneMock = jest.fn().mockResolvedValue({})
     const beginCopyFromURLMock = jest.fn().mockReturnValue({ pollUntilDone: pollUntilDoneMock })
+
     const getBlockBlobClientMock = jest.fn().mockReturnValue({
       beginCopyFromURL: beginCopyFromURLMock,
       deleteIfExists: deleteIfExistsMock,
-      getProperties: getPropertiesMock
+      getProperties: getPropertiesMock,
+      url: `mock-url/${file.newName}`
     })
     const getContainerClientMock = jest.fn().mockReturnValue({ getBlockBlobClient: getBlockBlobClientMock })
 

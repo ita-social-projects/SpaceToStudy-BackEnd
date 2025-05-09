@@ -1,6 +1,7 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 
+const Cooperation = require('~/models/cooperation')
 const Quiz = require('~/models/quiz')
 
 const testUserAuthentication = require('~/utils/testUserAuth')
@@ -44,8 +45,58 @@ const testQuizData = {
   }
 }
 
+const testInitiator = {
+  _id: '66b346570182fc9e49b09647',
+  averageRating: {
+    student: 0,
+    tutor: 0
+  },
+  createdAt: '2024-08-07T10:03:03.488Z',
+  email: 'potter@gmail.com',
+  firstName: 'harry',
+  lastLogin: '2024-08-07T10:03:03.587Z',
+  lastName: 'potter',
+  mainSubjects: {
+    student: [],
+    tutor: []
+  },
+  nativeLanguage: null,
+  professionalBlock: {
+    awards: '',
+    education: '',
+    scientificActivities: '',
+    workExperience: ''
+  },
+  role: ['tutor'],
+  status: {
+    admin: 'active',
+    student: 'active',
+    tutor: 'active'
+  },
+  totalReviews: {
+    student: 0,
+    tutor: 0
+  },
+  updatedAt: '2024-08-07T10:03:03.587Z'
+}
+
+const cooperationMockData = {
+  title: 'Violin lessons',
+  proficiencyLevel: 'Test Preparation',
+  offer: '63ebc6fbd2f34037d0aba791',
+  receiver: '6255bc080a75adf9223df100',
+  receiverRole: 'student',
+  price: 300,
+  needAction: {
+    role: 'student',
+    message: 'some need action message',
+    type: 'price'
+  },
+  initiator: testInitiator
+}
+
 describe('Quiz controller', () => {
-  let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz
+  let app, server, accessToken, currentUser, testFinishedQuiz, testQuiz, testCooperation
 
   beforeAll(async () => {
     ;({ app, server } = await serverInit())
@@ -61,9 +112,13 @@ describe('Quiz controller', () => {
       ...testQuizData
     })
 
+    testCooperation = await Cooperation.create({
+      ...cooperationMockData
+    })
+
     testFinishedQuiz = await app
       .post(endpointUrl)
-      .send({ quiz: testQuiz._id, ...testFinishedQuizData })
+      .send({ quiz: testQuiz._id, cooperation: testCooperation._id, ...testFinishedQuizData })
       .set('Cookie', [`accessToken=${accessToken}`])
   })
 
@@ -128,6 +183,32 @@ describe('Quiz controller', () => {
 
     it('should throw UNAUTHORIZED', async () => {
       const response = await app.get(endpointUrl)
+
+      expectError(401, UNAUTHORIZED, response)
+    })
+  })
+
+  describe(`GET ${endpointUrl}:cooperationId/:quizId`, () => {
+    it('should get finished quiz', async () => {
+      const quiz = testQuiz._id
+      const cooperation = testCooperation._id
+      const fullUrl = `${endpointUrl}${cooperation}/${quiz}`
+      const response = await app.get(fullUrl).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body[0]).toEqual({
+        _id: expect.any(String),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        quiz: String(testQuiz._id),
+        ...testFinishedQuizData
+      })
+    })
+
+    it('should throw UNAUTHORIZED', async () => {
+      const finishedQuizId = testFinishedQuiz._body._id
+
+      const response = await app.get(endpointUrl + finishedQuizId)
 
       expectError(401, UNAUTHORIZED, response)
     })

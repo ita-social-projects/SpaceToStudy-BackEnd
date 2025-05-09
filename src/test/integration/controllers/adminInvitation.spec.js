@@ -1,14 +1,16 @@
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const testUserAuthentication = require('~/utils/testUserAuth')
-
+const {
+  config: { TEST_ADMIN_EMAIL, TEST_ADMIN_PASSWORD }
+} = require('~/configs/config')
 const emails = ['test1@gmail.com', 'test2@gmail.com']
 
 let studentUser = {
   role: ['student'],
   firstName: 'TestStudent',
   lastName: 'StudentTest',
-  email: 'teststudent@gmail.com',
-  password: 'studentpassword123',
+  email: TEST_ADMIN_EMAIL,
+  password: TEST_ADMIN_PASSWORD,
   appLanguage: 'en',
   isEmailConfirmed: true,
   isFirstLogin: false,
@@ -19,8 +21,8 @@ let superadminUser = {
   role: ['superadmin'],
   firstName: 'TestAdmin',
   lastName: 'AdminTest',
-  email: 'testadmin@gmail.com',
-  password: 'supersecretpass123',
+  email: TEST_ADMIN_EMAIL,
+  password: TEST_ADMIN_PASSWORD,
   appLanguage: 'en',
   isEmailConfirmed: true,
   isFirstLogin: false,

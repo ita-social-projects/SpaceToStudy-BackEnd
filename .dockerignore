@@ -1,4 +1,38 @@
-node_modules
+# Ignore version control files
+.git/
+.github/
+.husky/
+.gitattributes
+.gitignore
+
+# Ignore IDE/editor configs and temporary files
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Ignore dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignore sensitive environment files
+.env*
+!env.example  # Keep an example env file if needed
+
+# Ignore CI/CD and dev tools configurations
+.editorconfig
+.eslintrc.json
+.prettierrc
+jsconfig.json
+sonar-project.properties
+azure-pipeline.yaml
+CONTRIBUTING*
+LICENSE
+README.md
+
+# Ignore Docker-related files that shouldn't be in the final container
+.dockerignore
+docker-compose.yaml
 Dockerfile
-.git
-.env.local

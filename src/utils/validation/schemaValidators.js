@@ -33,7 +33,6 @@ const validateSchema = (schema, data) => {
   Object.entries(schema).forEach(([schemaFieldKey, schemaFieldValue]) => {
     const requestSourceField = data[schemaFieldKey]
     validateRequired(schemaFieldKey, schemaFieldValue.required, requestSourceField)
-
     if (requestSourceField === undefined) {
       return
     }

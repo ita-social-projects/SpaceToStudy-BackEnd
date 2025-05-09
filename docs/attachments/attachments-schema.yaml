@@ -4,6 +4,8 @@ definitions:
     items:
       type: object
       properties:
+        author:
+          type: string
         _id:
           type: string
         fileName:
@@ -22,17 +24,17 @@ definitions:
         updatedAt:
           type: string
           format: date-time
+      resourceType:
+        $ref: '#/definitions/resourceType'
+      isDublicate:
+        type: boolean
   attachmentBody:
     type: object
     properties:
       fileName:
         type: string
-      link:
-        type: string
       description:
         type: string
-      size:
-        type: number
       category:
         $ref: '#/definitions/resourcesCategory'
   attachment:

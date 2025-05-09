@@ -2,6 +2,8 @@ const { BlobServiceClient, StorageSharedKeyCredential } = require('@azure/storag
 const {
   azureAccess: { STORAGE_ACCOUNT, ACCESS_KEY, AZURE_HOST }
 } = require('~/configs/config')
+const murmurhash = require('murmurhash')
+const { parseURLByTwo } = require('~/utils/urlParser')
 
 let blobServiceClient
 let containerClient
@@ -17,13 +19,14 @@ function getBlobServiceClient() {
 
 const uploadService = {
   uploadFile: async (name, buffer, containerName) => {
-    const blobName = `${Date.now()}-${name}`
+    const hashedFileName = murmurhash.v2(name)
+    const blobName = `${Date.now()}-${hashedFileName}`
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
     blockBlobClient = containerClient.getBlockBlobClient(blobName)
     try {
       await blockBlobClient.uploadData(buffer)
-      return blobName
+      return blockBlobClient.url
     } catch (error) {
       throw new Error(`Failed to upload file: ${error.message}`)
     }
@@ -32,8 +35,8 @@ const uploadService = {
   updateFile: async (name, newName, containerName) => {
     blobServiceClient = getBlobServiceClient()
     containerClient = blobServiceClient.getContainerClient(containerName)
-    blockBlobClient = containerClient.getBlockBlobClient(name)
-
+    const fileName = parseURLByTwo(name, containerName)
+    blockBlobClient = containerClient.getBlockBlobClient(fileName)
     const blobUrl = blockBlobClient.url
     const newBlobName = `${Date.now()}-${newName}`
     newBlockBlobClient = containerClient.getBlockBlobClient(newBlobName)
@@ -55,7 +58,7 @@ const uploadService = {
     if (properties.copyStatus !== 'success') throw new Error(`Blob copy did not succeed for: ${name}`)
 
     uploadService.deleteFile(name, containerName)
-    return newName
+    return blobUrl
   },
 
   deleteFile: async (blobName, containerName) => {

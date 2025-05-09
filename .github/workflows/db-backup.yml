@@ -1,0 +1,240 @@
+name: Backup MongoDB Atlas
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Run the workflow at 2:00 AM UTC every day
+
+jobs:
+  backup-production:
+    runs-on: ubuntu-latest
+    environment: backup
+    env:
+      DB_SOURCE: db-production
+      DB_SOURCE_URL: ${{ secrets.MONGODB_PROD_URL }}
+      DB_TEST: db-test
+      DB_TEST_URL: ${{ secrets.MONGODB_TEST_URL }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Date env
+        id: set-date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update         
+          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.10.0.deb -O mongodb-mongotools.deb
+          sudo dpkg -i mongodb-mongotools.deb || sudo apt install -f -y openssl
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Create MongoDB Dump
+        env:
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          mongodump \
+          --out=backup-$DB_SOURCE-$TODAY \
+          --uri="$DB_SOURCE_URL" \
+          -d $DB_SOURCE
+
+      - name: Restore Dump to MongoDB Atlas Test Cluster
+        env:
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          mongorestore \
+          backup-$DB_SOURCE-$TODAY \
+          --uri="$DB_TEST_URL" \
+          --nsInclude="$DB_SOURCE.*" \
+          --nsFrom="$DB_SOURCE.*" \
+          --nsTo="$DB_TEST.*" \
+          --drop
+
+      - name: Encrypt Dump
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          tar -czf backup-$DB_SOURCE-$TODAY.tar.gz backup-$DB_SOURCE-$TODAY
+          openssl enc -aes-256-cbc -salt -in backup-$DB_SOURCE-$TODAY.tar.gz -out backup-$DB_SOURCE-$TODAY.tar.gz.enc -k "$ENCRYPTION_KEY"
+          rm -rf backup-$DB_SOURCE-$TODAY backup-$DB_SOURCE-$TODAY.tar.gz
+
+      - name: Upload Dump to Azure Storage
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          az storage blob upload \
+            --container-name db-backups \
+            --file backup-$DB_SOURCE-$TODAY.tar.gz.enc \
+            --name backup-$DB_SOURCE-$TODAY.tar.gz.enc \
+            --overwrite \
+            --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+
+      - name: Generate Download Link
+        id: prod-backup
+        env:
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          BACKUP_FILE="backup-$DB_SOURCE-$TODAY.tar.gz.enc"
+          AZURE_URL="https://s2sbackups.blob.core.windows.net/db-backups/$BACKUP_FILE"
+
+          {
+            echo "- **Production DB Backup**: [Download Backup]($AZURE_URL)"
+            echo ""
+            echo "### 🛠 Decrypt and Unpack"
+            echo "**Encryption Key Location:**"
+            echo "🔑 **Stored in Google Sheets** – Check the shared document."
+            echo ""
+            echo "**Linux/macOS:**"
+            echo '```sh'
+            echo 'ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "**Windows (Git Bash, WSL, PowerShell with OpenSSL support):**"
+            echo '```sh'
+            echo 'ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "### 🛠 Restore database from dump"
+            echo "**Database Connection URL:**"
+            echo "🔗 **Stored in Google Sheets** – Check the shared document."
+            echo ""
+            echo "**Restore command:**"
+            echo '```sh'
+            echo 'mongorestore \\'
+            echo '--uri="your-mongodb-connection-url-from-google-sheets" \\'
+            echo '--dir=backup.tar.gz \\'
+            echo '--drop'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create Issue on Failure
+        if: ${{ failure() }}
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DB_NAME: 'db-production'
+        with:
+          filename: .github/db-issue-template.md
+
+  backup-dev:
+    runs-on: ubuntu-latest
+    environment: backup
+    needs: backup-production
+    if: success() || failure()
+    env:
+      DB_SOURCE: db-dev
+      DB_SOURCE_URL: ${{ secrets.MONGODB_DEV_URL }}
+      DB_TEST: db-test
+      DB_TEST_URL: ${{ secrets.MONGODB_TEST_URL }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Date env
+        id: set-date
+        run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update         
+          wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2404-x86_64-100.10.0.deb -O mongodb-mongotools.deb
+          sudo dpkg -i mongodb-mongotools.deb || sudo apt install -f -y openssl
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Create MongoDB Dump
+        env:
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          mongodump \
+          --out=backup-$DB_SOURCE-$TODAY \
+          --uri="$DB_SOURCE_URL" \
+          -d $DB_SOURCE
+
+      - name: Restore Dump to MongoDB Atlas Test Cluster
+        env:
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          mongorestore \
+          backup-$DB_SOURCE-$TODAY \
+          --uri="$DB_TEST_URL" \
+          --nsInclude="$DB_SOURCE.*" \
+          --nsFrom="$DB_SOURCE.*" \
+          --nsTo="$DB_TEST.*" \
+          --drop
+
+      - name: Encrypt Dump
+        env:
+          ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          tar -czf backup-$DB_SOURCE-$TODAY.tar.gz backup-$DB_SOURCE-$TODAY
+          openssl enc -aes-256-cbc -salt -in backup-$DB_SOURCE-$TODAY.tar.gz -out backup-$DB_SOURCE-$TODAY.tar.gz.enc -k "$ENCRYPTION_KEY"
+          rm -rf backup-$DB_SOURCE-$TODAY backup-$DB_SOURCE-$TODAY.tar.gz
+
+      - name: Upload Dump to Azure Storage
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          az storage blob upload \
+            --container-name db-backups \
+            --file backup-$DB_SOURCE-$TODAY.tar.gz.enc \
+            --name backup-$DB_SOURCE-$TODAY.tar.gz.enc \
+            --overwrite \
+            --connection-string "$AZURE_STORAGE_CONNECTION_STRING"
+
+      - name: Generate Download Link
+        id: dev-backup
+        env:
+          TODAY: ${{ steps.set-date.outputs.date }}
+        run: |
+          BACKUP_FILE="backup-$DB_SOURCE-$TODAY.tar.gz.enc"
+          AZURE_URL="https://s2sbackups.blob.core.windows.net/db-backups/$BACKUP_FILE"
+
+          {
+            echo "- **Development DB Backup**: [Download Backup]($AZURE_URL)"
+            echo ""
+            echo "### 🛠 Decrypt and Unpack"
+            echo "**Encryption Key Location:**"
+            echo "🔑 **Stored in Google Sheets** – Check the shared document."
+            echo ""
+            echo "**Linux/macOS:**"
+            echo '```sh'
+            echo 'ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "**Windows (Git Bash, WSL, PowerShell with OpenSSL support):**"
+            echo '```sh'
+            echo '$ENCRYPTION_KEY="your-encryption-key-from-google-sheets"'
+            echo 'openssl enc -aes-256-cbc -d -in '"$BACKUP_FILE"' -out backup.tar.gz -k "$ENCRYPTION_KEY"'
+            echo 'tar -xzf backup.tar.gz'
+            echo '```'
+            echo ""
+            echo "### 🛠 Restore database from dump"
+            echo "**Database Connection URL:**"
+            echo "🔗 **Stored in Google Sheets** – Check the shared document."
+            echo ""
+            echo "**Restore command:**"
+            echo '```sh'
+            echo 'mongorestore \\'
+            echo '--uri="your-mongodb-connection-url-from-google-sheets" \\'
+            echo '--dir=backup.tar.gz \\'
+            echo '--drop'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create Issue on Failure
+        if: ${{ failure() }}
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DB_NAME: 'db-dev'
+        with:
+          filename: .github/db-issue-template.md

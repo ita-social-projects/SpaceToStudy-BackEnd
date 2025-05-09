@@ -122,8 +122,7 @@ module.exports = {
   async down(db) {
     const backupExists = await db.listCollections({ name: 'cooperation_backup' }).hasNext()
     if (!backupExists) {
-      console.error("Резервная копия 'cooperation_backup' не найдена. Откат невозможен.")
-      return
+      throw new Error("Backup 'cooperation_backup' not found. Rollback is not possible.")
     }
 
     await db.collection('cooperation').drop()
@@ -135,6 +134,5 @@ module.exports = {
 
     await db.collection('cooperation_backup').drop()
   },
-
   transformSection
 }

@@ -281,18 +281,14 @@ describe('20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones', ()
     expect(backupStillExists).toBe(false)
   })
 
-  test('down should not fail and log an error if the backup does not exist', async () => {
+  test('down should throw an error if the backup does not exist', async () => {
     const backupExists = await database.listCollections({ name: 'cooperation_backup' }).hasNext()
     if (backupExists) {
       await database.collection('cooperation_backup').drop()
     }
 
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {})
-
-    await require('@root/migrations/20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones').down(database)
-
-    expect(consoleSpy).toHaveBeenCalledWith("Резервная копия 'cooperation_backup' не найдена. Откат невозможен.")
-
-    consoleSpy.mockRestore()
+    await expect(
+      require('@root/migrations/20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones').down(database)
+    ).rejects.toThrow("Backup 'cooperation_backup' not found. Rollback is not possible.")
   })
 })

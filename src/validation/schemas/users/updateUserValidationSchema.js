@@ -119,11 +119,13 @@ const updateUserValidationSchema = {
     properties: {
       country: {
         type: 'string',
-        required: false
+        required: false,
+        validCountry: true
       },
       city: {
         type: 'string',
-        required: false
+        required: false,
+        validCity: true
       }
     }
   },

@@ -5,10 +5,13 @@ const {
   FIELD_IS_NOT_IN_RANGE,
   FIELD_IS_NOT_OF_PROPER_FORMAT,
   FIELD_IS_NOT_OF_PROPER_ENUM_VALUE,
-  OBJECT_MUST_HAVE_PROPERTY
+  OBJECT_MUST_HAVE_PROPERTY,
+  BAD_REQUEST
 } = require('~/consts/errors')
 const { createError } = require('../errorsHelper')
 const { checkAreTypesValid } = require('./typeHelpers')
+let Country = require('country-state-city').Country
+let City = require('country-state-city').City
 
 const validateRequired = (schemaFieldKey, required, field) => {
   if (required && !field) {
@@ -55,12 +58,28 @@ const validateEnum = (schemaFieldKey, enumSet, field) => {
   }
 }
 
+const validateCountry = (schemaFieldKey, country, field) => {
+  const countries = Country.getAllCountries()
+  if (!countries.some((country) => country.name.includes(field))) {
+    throw createError(400, BAD_REQUEST)
+  }
+}
+
+const validateCity = (schemaFieldKey, country, field) => {
+  const cities = City.getAllCities()
+  if (!cities.some((city) => city.name.includes(field))) {
+    throw createError(400, BAD_REQUEST)
+  }
+}
+
 const fieldValidator = {
   type: validateTypes,
   length: validateLength,
   range: validateRange,
   regex: validateRegex,
-  enum: validateEnum
+  enum: validateEnum,
+  validCountry: validateCountry,
+  validCity: validateCity
 }
 
 module.exports = {
@@ -69,5 +88,6 @@ module.exports = {
   validateLength,
   validateNonEmptyObject,
   validateRange,
-  fieldValidator
+  fieldValidator,
+  validateCountry
 }

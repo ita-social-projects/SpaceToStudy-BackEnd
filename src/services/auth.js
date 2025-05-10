@@ -119,6 +119,7 @@ const authService = {
     }
 
     await privateUpdateUser(_id, { isEmailConfirmed: true })
+    await tokenService.removeConfirmToken(confirmToken)
   },
 
   refreshAccessToken: async (refreshToken) => {

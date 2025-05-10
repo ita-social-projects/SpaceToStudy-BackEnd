@@ -7,7 +7,6 @@ const { createError } = require('~/utils/errorsHelper')
 const {
   EMAIL_ALREADY_CONFIRMED,
   EMAIL_NOT_CONFIRMED,
-  BAD_CONFIRM_TOKEN,
   INCORRECT_CREDENTIALS,
   BAD_RESET_TOKEN,
   BAD_REFRESH_TOKEN,
@@ -109,14 +108,10 @@ const authService = {
     const tokenFromDB = await tokenService.findToken(confirmToken, CONFIRM_TOKEN)
 
     if (!tokenFromDB || !tokenData) {
-      throw createError(400, BAD_CONFIRM_TOKEN)
-    }
-
-    const { _id, isEmailConfirmed } = await getUserById(tokenData.id)
-
-    if (isEmailConfirmed) {
       throw createError(400, EMAIL_ALREADY_CONFIRMED)
     }
+
+    const _id = await getUserById(tokenData.id)
 
     await privateUpdateUser(_id, { isEmailConfirmed: true })
     await tokenService.removeConfirmToken(confirmToken)

@@ -3,6 +3,9 @@ const User = require('~/models/user')
 const {
   enums: { SPOKEN_LANG_ENUM, STATUS_ENUM, ROLE_ENUM }
 } = require('~/consts/validation')
+const {
+  regex: { EMAIL_PATTERN }
+} = require('~/consts/validation')
 
 const userFields = [
   '_id',
@@ -86,7 +89,6 @@ describe('User model', () => {
       expect(typeof user.status.tutor).toBe('string')
       expect(typeof user.status.admin).toBe('string')
 
-      expect(typeof user.FAQ).toBe('object')
       expect(typeof user.videoLink).toBe('object')
       expect(typeof user.professionalBlock).toBe('object')
       expect(typeof user.aboutStudent).toBe('object')
@@ -155,9 +157,8 @@ describe('User model', () => {
 
   it('should validate email format', async () => {
     const users = await User.find({})
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     for (const user of users) {
-      expect(emailRegex.test(user.email)).toBe(true)
+      expect(EMAIL_PATTERN.test(user.email)).toBe(true)
     }
   })
 

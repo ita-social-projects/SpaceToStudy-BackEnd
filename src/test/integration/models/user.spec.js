@@ -33,11 +33,12 @@ const userFields = [
 ]
 
 describe('User model', () => {
-  let server
+  let server, users
 
   beforeAll(async () => {
     const setup = await setupTestServer()
     server = setup.server
+    users = await User.find({})
   })
 
   afterAll(async () => {
@@ -45,7 +46,6 @@ describe('User model', () => {
   })
 
   it('should have all required fields', async () => {
-    const users = await User.find({})
     for (const user of users) {
       userFields.forEach((field) => {
         expect(user).toHaveProperty(field)
@@ -54,7 +54,6 @@ describe('User model', () => {
   })
 
   it('should have valid fields data types', async () => {
-    const users = await User.find({})
     for (const user of users) {
       expect(Array.isArray(user.role)).toBe(true)
       expect(typeof user.firstName).toBe('string')
@@ -100,7 +99,6 @@ describe('User model', () => {
   })
 
   it('should have unique email', async () => {
-    const users = await User.find({})
     const emails = users.map((user) => user.email)
     const uniqueEmails = new Set(emails)
 
@@ -108,7 +106,6 @@ describe('User model', () => {
   })
 
   it('should have valid role values', async () => {
-    const users = await User.find({})
     for (const user of users) {
       user.role.forEach((role) => {
         expect(ROLE_ENUM).toContain(role)
@@ -117,7 +114,6 @@ describe('User model', () => {
   })
 
   it('should have valid status values', async () => {
-    const users = await User.find({})
     for (const user of users) {
       expect(STATUS_ENUM).toContain(user.status.student)
       expect(STATUS_ENUM).toContain(user.status.tutor)
@@ -126,7 +122,6 @@ describe('User model', () => {
   })
 
   it('should have valid native language if set', async () => {
-    const users = await User.find({})
     for (const user of users) {
       if (user.nativeLanguage !== null) {
         expect([...SPOKEN_LANG_ENUM, null]).toContain(user.nativeLanguage)
@@ -135,7 +130,6 @@ describe('User model', () => {
   })
 
   it('should have ratings between 0 and 5', async () => {
-    const users = await User.find({})
     for (const user of users) {
       expect(user.averageRating.student).toBeGreaterThanOrEqual(0)
       expect(user.averageRating.student).toBeLessThanOrEqual(5)
@@ -145,7 +139,6 @@ describe('User model', () => {
   })
 
   it('should have non-null required fields', async () => {
-    const users = await User.find({})
     for (const user of users) {
       expect(user.role).not.toBeNull()
       expect(user.firstName).not.toBeNull()
@@ -156,14 +149,12 @@ describe('User model', () => {
   })
 
   it('should validate email format', async () => {
-    const users = await User.find({})
     for (const user of users) {
       expect(EMAIL_PATTERN.test(user.email)).toBe(true)
     }
   })
 
   it('should validate first name and last name length', async () => {
-    const users = await User.find({})
     for (const user of users) {
       expect(user.firstName.length).toBeGreaterThanOrEqual(1)
       expect(user.firstName.length).toBeLessThanOrEqual(30)
@@ -173,7 +164,6 @@ describe('User model', () => {
   })
 
   it('should validate professional block field lengths if present', async () => {
-    const users = await User.find({})
     for (const user of users) {
       if (user.professionalBlock) {
         if (user.professionalBlock.awards) {
@@ -193,7 +183,6 @@ describe('User model', () => {
   })
 
   it('should validate about student field lengths if present', async () => {
-    const users = await User.find({})
     for (const user of users) {
       if (user.aboutStudent) {
         if (user.aboutStudent.personalIntroduction) {
@@ -210,7 +199,6 @@ describe('User model', () => {
   })
 
   it('should validate FAQ question and answer content if present', async () => {
-    const users = await User.find({})
     for (const user of users) {
       if (user.FAQ) {
         if (user.FAQ.student && user.FAQ.student.length > 0) {
@@ -234,7 +222,6 @@ describe('User model', () => {
   })
 
   it('should validate timestamps exist and are correct', async () => {
-    const users = await User.find({})
     for (const user of users) {
       expect(user).toHaveProperty('createdAt')
       expect(user).toHaveProperty('updatedAt')

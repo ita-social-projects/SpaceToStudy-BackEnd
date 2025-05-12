@@ -10,8 +10,9 @@ const getFinishedQuizzes = async (req, res) => {
 
 const createFinishedQuiz = async (req, res) => {
   const data = req.body
+  const currentUser = req.user
 
-  const newFinishedQuiz = await finishedQuizService.createFinishedQuiz(data)
+  const newFinishedQuiz = await finishedQuizService.createFinishedQuiz(data, currentUser)
 
   res.status(201).json(newFinishedQuiz)
 }

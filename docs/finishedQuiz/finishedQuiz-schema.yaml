@@ -9,6 +9,9 @@ definitions:
         quiz:
           type: string
           ref: '#/definitions/quiz'
+        cooperation:
+          type: string
+          ref: '#/definitions/cooperation'
         grade:
           type: number
         results:
@@ -41,6 +44,9 @@ definitions:
       quiz:
         type: string
         ref: '#/definitions/quiz'
+      cooperation:
+        type: string
+        ref: '#/definitions/cooperation'
       grade:
         type: number
       results:
@@ -69,6 +75,10 @@ definitions:
       quiz:
         type: string
         ref: '#/definitions/quiz'
+      cooperation:
+        type: string
+        ref: '#/definitions/cooperation'
+
       grade:
         type: number
       results:

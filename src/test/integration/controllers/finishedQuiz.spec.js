@@ -11,7 +11,7 @@ const {
 } = require('~/consts/auth')
 const TokenService = require('~/services/token')
 
-const endpointUrl = '/finished-quizzes/'
+const endpointUrl = '/quizzes/finished-quizzes/'
 const nonExistingQuiz = '64cf8a3d40135fba5a0c8fa2'
 
 const testFinishedQuizData = {

@@ -17,7 +17,7 @@ definitions:
         size:
           type: number
         category:
-          $ref: '#/definitions/resourcesCategoryAttachment'
+          $ref: '#/definitions/resourcesCategory'
         createdAt:
           type: string
           format: date-time
@@ -37,7 +37,7 @@ definitions:
         type: string
       category:
         type: string
-        description: This id related to resourcesCategory
+        description: This id related to resources-category
   attachment:
     type: object
     properties:
@@ -52,7 +52,7 @@ definitions:
       size:
         type: number
       category:
-        $ref: '#/definitions/resourcesCategoryAttachment'
+        $ref: '#/definitions/resourcesCategory'
       createdAt:
         type: string
         format: date-time

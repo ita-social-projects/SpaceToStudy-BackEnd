@@ -24,7 +24,7 @@ definitions:
           ref: '#/components/user'
         category:
           type: string
-          ref: '#/definitions/resourcesCategory'
+          ref: '#/definitions/resources-category'
         createdAt:
           type: string
           format: date-time
@@ -51,7 +51,7 @@ definitions:
         type: string
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        ref: '#/definitions/resources-category'
   question:
     type: object
     properties:
@@ -75,7 +75,7 @@ definitions:
         ref: '#/components/user'
       category:
         type: string
-        ref: '#/definitions/resourcesCategory'
+        ref: '#/definitions/resources-category'
       createdAt:
         type: string
         format: date-time

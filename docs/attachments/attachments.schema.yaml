@@ -17,7 +17,7 @@ definitions:
         size:
           type: number
         category:
-          $ref: '#/definitions/resourcesCategory'
+          $ref: '#/definitions/resourcesCategoryAttachment'
         createdAt:
           type: string
           format: date-time
@@ -52,7 +52,7 @@ definitions:
       size:
         type: number
       category:
-        $ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategoryAttachment'
       createdAt:
         type: string
         format: date-time

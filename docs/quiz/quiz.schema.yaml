@@ -39,7 +39,7 @@ definitions:
         author:
           $ref: '#/definitions/user'
         category:
-          $ref: '#/definitions/resources-category'
+          $ref: '#/definitions/resourcesCategory'
         settings:
           type: object
           properties:
@@ -73,7 +73,7 @@ definitions:
       category:
         type: string
         description: _id
-        ref: '#/definitions/resources-category'
+        ref: '#/definitions/resourcesCategory'
       items:
         type: array
         items:
@@ -113,7 +113,7 @@ definitions:
       author:
         $ref: '#/definitions/user'
       category:
-        $ref: '#/definitions/resources-category'
+        $ref: '#/definitions/resourcesCategory'
       settings:
         type: object
         properties:

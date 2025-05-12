@@ -27,7 +27,7 @@ definitions:
       items:
         type: array
         items:
-          $ref: '#/definitions/resources-category'
+          $ref: '#/definitions/resourcesCategory'
   resourcesCategoriesNames:
     type: array
     items:

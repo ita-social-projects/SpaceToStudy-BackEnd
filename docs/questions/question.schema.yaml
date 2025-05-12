@@ -20,11 +20,9 @@ definitions:
               isCorrect:
                 type: boolean
         author:
-          type: string
-          ref: '#/components/user'
+          $ref: '#/definitions/user'
         category:
-          type: string
-          ref: '#/definitions/resourcesCategory'
+          $ref: '#/definitions/resourcesCategory'
         createdAt:
           type: string
           format: date-time
@@ -50,8 +48,7 @@ definitions:
       type:
         type: string
       category:
-        type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
   question:
     type: object
     properties:
@@ -71,11 +68,9 @@ definitions:
             isCorrect:
               type: boolean
       author:
-        type: string
-        ref: '#/components/user'
+        $ref: '#/definitions/user'
       category:
-        type: string
-        ref: '#/definitions/resourcesCategory'
+        $ref: '#/definitions/resourcesCategory'
       createdAt:
         type: string
         format: date-time

@@ -7,8 +7,7 @@ definitions:
         _id:
           type: string
         lesson:
-          type: string
-          ref: '#/definitions/lesson'
+          $ref: '#/definitions/lesson'
         createdAt:
           type: string
           format: date-time
@@ -19,16 +18,14 @@ definitions:
     type: object
     properties:
       lesson:
-        type: string
-        ref: '#/definitions/lesson'
+        $ref: '#/definitions/lesson'
   finishedLesson:
     type: object
     properties:
       _id:
         type: string
       lesson:
-        type: string
-        ref: '#/definitions/lesson'
+        $ref: '#/definitions/lesson'
       createdAt:
         type: string
         format: date-time

@@ -1,5 +1,5 @@
 paths:
-  /finished-quizzes:
+  /quizzes/finished-quizzes:
     get:
       security:
         - cookieAuth: []
@@ -157,7 +157,7 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Quiz with the specified id was not found.
-  /finished-quizzes/{id}:
+  /quizzes/finished-quizzes/{id}:
     get:
       security:
         - cookieAuth: []
@@ -272,7 +272,7 @@ paths:
                 status: 404
                 code: NOT_FOUND
                 message: Quiz with the specified id was not found.
-  /finished-quizzes/{cooperationId}/{quizId}:
+  /quizzes/finished-quizzes/{cooperationId}/{quizId}:
     get:
       security:
         - cookieAuth: []

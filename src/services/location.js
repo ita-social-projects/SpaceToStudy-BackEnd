@@ -3,6 +3,13 @@ const {
   config: { LOCATION_API_URL, LOCATION_API_KEY }
 } = require('~/configs/config')
 
+class ApiError extends Error {
+  constructor(status, message) {
+    super(message)
+    this.status = status
+  }
+}
+
 const locationService = {
   getCountries: async () => {
     const res = await request({
@@ -18,10 +25,7 @@ const locationService = {
 
   getCities: async (countryCode) => {
     if (typeof countryCode !== 'string' || countryCode.length !== 2) {
-      throw {
-        status: 400,
-        message: 'Invalid countryCode. It must be a 2-character string.'
-      }
+      throw new ApiError(400, 'Invalid countryCode. It must be a 2-character string.')
     }
 
     try {
@@ -35,10 +39,7 @@ const locationService = {
 
       return [...new Set(cities)]
     } catch (error) {
-      throw {
-        status: error.response?.status || 500,
-        message: error.response?.data?.message || 'Internal Server Error'
-      }
+      throw new ApiError(error.response?.status || 500, error.response?.data?.message || 'Internal Server Error')
     }
   }
 }

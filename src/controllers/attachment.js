@@ -1,11 +1,11 @@
 const iconv = require('iconv-lite')
 const attachmentService = require('~/services/attachment')
-
 const getMatchOptions = require('~/utils/getMatchOptions')
 const getSortOptions = require('~/utils/getSortOptions')
 const getRegex = require('~/utils/getRegex')
 const getCategoriesOptions = require('~/utils/getCategoriesOption')
 const parseBoolean = require('~/utils/parseBoolean')
+const pipeDownloadStream = require('~/utils/pipeDownloadStream')
 
 const getAttachments = async (req, res) => {
   const { id: author } = req.user
@@ -56,9 +56,20 @@ const deleteAttachment = async (req, res) => {
   res.status(204).end()
 }
 
+const downloadAttachment = async (req, res) => {
+  const { id } = req.params
+  try {
+    const { stream, fileName } = await attachmentService.downloadAttachment(id)
+    pipeDownloadStream(res, stream, fileName)
+  } catch (error) {
+    res.status(error.status || 500).json({ message: error.message || 'Unexpected error' })
+  }
+}
+
 module.exports = {
   getAttachments,
   createAttachments,
   updateAttachment,
-  deleteAttachment
+  deleteAttachment,
+  downloadAttachment
 }

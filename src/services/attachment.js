@@ -97,12 +97,22 @@ const attachmentService = {
     }
 
     await cooperationService.removeResourceFromCooperations(id, resourceType.ATTACHMENT, currentUser)
-
     await Attachment.findByIdAndRemove(id)
   },
 
   deleteAttachmentsByAuthor: async (author) => {
     await Attachment.deleteMany({ author })
+  },
+
+  downloadAttachment: async (id) => {
+    const attachment = await Attachment.findById(id).exec()
+
+    if (!attachment) {
+      throw createError(404, DOCUMENT_NOT_FOUND('Attachment'))
+    }
+
+    const stream = await uploadService.downloadFile(attachment._doc.link, ATTACHMENT)
+    return { stream, fileName: attachment._doc.fileName }
   }
 }
 

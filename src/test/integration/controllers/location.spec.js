@@ -67,5 +67,22 @@ describe('Location controller', () => {
 
       expectError(401, UNAUTHORIZED, response)
     })
+
+    it('should handle API errors and return 500', async () => {
+      request.mockRejectedValueOnce({
+        response: {
+          status: 500,
+          data: { message: 'API Error' }
+        }
+      })
+
+      const response = await app.get(`/location/cities/${countryCode}`).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(500)
+      expect(response._body).toEqual({
+        status: 500,
+        message: 'API Error'
+      })
+    })
   })
 })

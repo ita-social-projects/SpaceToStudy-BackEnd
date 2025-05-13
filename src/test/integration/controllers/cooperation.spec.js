@@ -376,12 +376,12 @@ describe('Cooperation controller', () => {
       expect(response.body.count).toBe(1)
       expect(Array.isArray(response.body.items)).toBe(true)
       expect(response.body.items[0]).toMatchObject({
-        _id: testCooperation._body._id,
+        _id: testCooperation._body._id.toString(),
         offer: {
-          _id: testOffer._id
+          _id: testOffer._id.toString()
         },
-        initiator: testStudentUser.id,
-        receiver: testTutorUser.id,
+        initiator: testStudentUser.id.toString(),
+        receiver: testTutorUser.id.toString(),
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,
         title: testCooperationData.title,
@@ -407,10 +407,10 @@ describe('Cooperation controller', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
-        _id: testCooperation._body._id,
+        _id: testCooperation._body._id.toString(),
         offer: {
-          _id: testOffer._id,
-          author: testOffer.author
+          _id: testOffer._id.toString(),
+          author: { _id: testOffer.author.toString() }
         },
         initiator: {
           ...testInitiator,
@@ -469,10 +469,10 @@ describe('Cooperation controller', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
-        _id: testCooperation._body._id,
+        _id: testCooperation._body._id.toString(),
         offer: {
-          _id: testOffer._id,
-          author: testOffer.author
+          _id: testOffer._id.toString(),
+          author: { _id: testOffer.author.toString() }
         },
         initiator: {
           ...testInitiator,
@@ -531,10 +531,10 @@ describe('Cooperation controller', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
-        _id: testCooperation._body._id,
+        _id: testCooperation._body._id.toString(),
         offer: {
-          _id: testOffer._id,
-          author: testOffer.author
+          _id: testOffer._id.toString(),
+          author: { _id: testOffer.author.toString() }
         },
         initiator: {
           ...testInitiator,
@@ -605,10 +605,10 @@ describe('Cooperation controller', () => {
     it('should create new cooperation', () => {
       expect(testCooperation.status).toBe(201)
       expect(testCooperation.body).toMatchObject({
-        _id: testCooperation._body._id,
-        offer: testOffer._id,
-        initiator: testStudentUser.id,
-        receiver: testTutorUser.id,
+        _id: testCooperation._body._id.toString(),
+        offer: testOffer._id.toString(),
+        initiator: testStudentUser.id.toString(),
+        receiver: testTutorUser.id.toString(),
         receiverRole: tutorUserData.role[0],
         proficiencyLevel: testCooperationData.proficiencyLevel,
         price: testCooperationData.price,

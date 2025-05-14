@@ -48,7 +48,7 @@ const tokenService = {
   validateToken: (token, secret) => {
     try {
       return jwt.verify(token, secret)
-    } catch (e) {
+    } catch {
       return null
     }
   },
@@ -81,7 +81,7 @@ const tokenService = {
       tokenData[tokenName] = tokenValue
 
       return tokenData.save()
-    } catch (error) {
+    } catch {
       return await Token.create({ user: userId, [tokenName]: tokenValue })
     }
   },
@@ -94,7 +94,7 @@ const tokenService = {
     try {
       const token = await Token.find({ [tokenName]: tokenValue }).exec()
       return token[0]
-    } catch (error) {
+    } catch {
       return null
     }
   },

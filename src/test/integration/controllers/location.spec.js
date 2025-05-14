@@ -67,22 +67,15 @@ describe('Location controller', () => {
 
       expectError(401, UNAUTHORIZED, response)
     })
+  })
 
-    it('should handle API errors and return 500', async () => {
-      request.mockRejectedValueOnce({
-        response: {
-          status: 500,
-          data: { message: 'API Error' }
-        }
-      })
+  it('should throw 400 for invalid countryCode', async () => {
+    const invalidCountryCode = '1' // Визначте неправильний код країни
 
-      const response = await app.get(`/location/cities/${countryCode}`).set('Cookie', [`accessToken=${accessToken}`])
+    const response = await app
+      .get(`/location/cities/${invalidCountryCode}`)
+      .set('Cookie', [`accessToken=${accessToken}`])
 
-      expect(response.statusCode).toBe(500)
-      expect(response._body).toEqual({
-        status: 500,
-        message: 'API Error'
-      })
-    })
+    expectError(400, { message: 'Invalid countryCode. It must be a 2-character string.' }, response)
   })
 })

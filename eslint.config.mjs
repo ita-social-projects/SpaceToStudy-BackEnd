@@ -28,7 +28,7 @@ export default [
 
     rules: {
       indent: ['error', 2],
-      quotes: ['error', 'single'],
+      quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'never'],
       'eol-last': ['error', 'always'],
 

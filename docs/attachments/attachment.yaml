@@ -147,6 +147,33 @@ paths:
                 code: UNAUTHORIZED
                 message: The requested URL requires user authorization.
   /attachments/{id}:
+    get:
+      security:
+        - cookieAuth: []
+      tags:
+        - Attachments
+      summary: Get attachment blob by ID
+      description: Creates a blob for attachment with the specified ID.
+      produces:
+        - application/octet-stream
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the attachment
+          type: string
+      responses:
+        '200':
+          description: Successfully downloaded the blob file.
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Blob not found for the given ID.
+        '500':
+          description: Error occurred during blob download.
     patch:
       security:
         - cookieAuth: []

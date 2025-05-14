@@ -6,7 +6,7 @@ const Offer = require('~/models/offer')
 const Category = require('~/models/category')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 const {
-  roles: { TUTOR, STUDENT }
+  roles: { TUTOR, STUDENT, ADMIN }
 } = require('~/consts/auth')
 const {
   enums: { STATUS_ENUM }
@@ -14,6 +14,18 @@ const {
 
 const endpointUrl = '/offers/'
 const nonExistingOfferId = '6329a45601bd35b5fff1cf8c'
+
+let adminUser = {
+  role: [ADMIN],
+  firstName: 'TestAdmin',
+  lastName: 'AdminTest',
+  email: 'testadmin@gmail.com',
+  password: 'supersecretpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  isFirstLogin: false,
+  lastLoginAs: ADMIN
+}
 
 let testOffer = {
   price: 330,
@@ -81,9 +93,11 @@ describe('Offer controller', () => {
     const { _id, appearance } = categoryResponse[0]
     const category = { _id: _id.toString(), appearance }
 
+    const addminAccessToken = await testUserAuthentication(app, adminUser)
+
     const subjectResponse = await app
       .post('/subjects/')
-      .set('Cookie', [`accessToken=${accessToken}`])
+      .set('Cookie', [`accessToken=${addminAccessToken}`])
       .send({
         name: 'testSubject',
         category: category

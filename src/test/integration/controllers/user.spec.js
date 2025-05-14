@@ -114,10 +114,11 @@ describe('User controller', () => {
   })
 
   describe('Allowed endpoints', () => {
-    let accessToken
+    let accessToken, adminAccessToken
 
     beforeEach(async () => {
       accessToken = await testUserAuthentication(app)
+      adminAccessToken = await testUserAuthentication(app, adminUser)
     })
 
     afterEach(async () => {
@@ -299,7 +300,7 @@ describe('User controller', () => {
 
         const subjectResponse = await app
           .post('/subjects/')
-          .set('Cookie', [`accessToken=${accessToken}`])
+          .set('Cookie', [`accessToken=${adminAccessToken}`])
           .send({
             name: 'testSubject',
             category: category
@@ -406,7 +407,7 @@ describe('User controller', () => {
 
         const subjectResponse = await app
           .post('/subjects/')
-          .set('Cookie', [`accessToken=${accessToken}`])
+          .set('Cookie', [`accessToken=${adminAccessToken}`])
           .send({
             name: subjectName,
             category: category

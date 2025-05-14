@@ -16,7 +16,8 @@ module.exports = {
     '!<rootDir>/src/emails/*',
     '!<rootDir>/*.json',
     '!<rootDir>/*.yaml',
-    '!<rootDir>/*.mjs'
+    '!<rootDir>/*.mjs',
+    '!<rootDir>/*.cjs'
   ],
   coverageThreshold: {
     global: {

@@ -10,7 +10,7 @@ const {
   config: { JWT_ACCESS_SECRET }
 } = require('~/configs/config')
 const {
-  roles: { TUTOR }
+  roles: { TUTOR, ADMIN }
 } = require('~/consts/auth')
 
 const endpointUrl = '/reviews/'
@@ -24,6 +24,18 @@ let reviewBody = {
   comment: 'Good mentor and learning program',
   rating: 5,
   targetUserRole: 'student'
+}
+
+let adminUser = {
+  role: [ADMIN],
+  firstName: 'TestAdmin',
+  lastName: 'AdminTest',
+  email: 'testadmin@gmail.com',
+  password: 'supersecretpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  isFirstLogin: false,
+  lastLoginAs: ADMIN
 }
 
 let offerBody = {
@@ -93,9 +105,10 @@ describe('Review controller', () => {
     offerBody.category = category
     subjectBody.category = category
 
+    const adminAccessToken = await testUserAuthentication(app, adminUser)
     testSubject = await app
       .post(subjectEndpointUrl)
-      .set('Cookie', [`accessToken=${accessToken}`])
+      .set('Cookie', [`accessToken=${adminAccessToken}`])
       .send(subjectBody)
     subjectBody = testSubject.body
 

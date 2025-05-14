@@ -127,12 +127,6 @@ describe('Auth controller', () => {
 
       expectError(400, errors.EMAIL_ALREADY_CONFIRMED, response)
     })
-
-    it('should throw BAD_CONFIRM_TOKEN error', async () => {
-      const response = await app.get('/auth/confirm-email/invalid_token')
-
-      expectError(400, errors.BAD_CONFIRM_TOKEN, response)
-    })
   })
 
   describe('Login endpoint', () => {

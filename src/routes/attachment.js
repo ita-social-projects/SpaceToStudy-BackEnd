@@ -17,6 +17,7 @@ const {
 const params = [{ model: Attachment, idName: 'id' }]
 
 router.use(authMiddleware)
+router.get('/:id', asyncWrapper(attachmentController.downloadAttachment))
 router.use(restrictTo(TUTOR))
 router.param('id', idValidation)
 

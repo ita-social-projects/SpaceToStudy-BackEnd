@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "jest --maxWorkers=1",
     "test:models": "jest --maxWorkers=1 src/test/integration/models",

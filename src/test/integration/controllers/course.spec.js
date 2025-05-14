@@ -8,7 +8,7 @@ const testUserAuthentication = require('~/utils/testUserAuth')
 
 const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FORBIDDEN } = require('~/consts/errors')
 const {
-  roles: { STUDENT, TUTOR }
+  roles: { STUDENT, TUTOR, ADMIN }
 } = require('~/consts/auth')
 const {
   enums: { RESOURCES_TYPES_ENUM }
@@ -29,6 +29,18 @@ const tutorUser = {
   isEmailConfirmed: true,
   lastLogin: new Date().toJSON(),
   lastLoginAs: TUTOR
+}
+
+let adminUser = {
+  role: [ADMIN],
+  firstName: 'TestAdmin',
+  lastName: 'AdminTest',
+  email: 'testadmin@gmail.com',
+  password: 'supersecretpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  isFirstLogin: false,
+  lastLoginAs: ADMIN
 }
 
 const studentUser = {
@@ -87,6 +99,7 @@ describe('Course controller', () => {
   let app,
     server,
     accessToken,
+    adminAccessToken,
     tutorAccessToken,
     studentAccessToken,
     testCourseResponse,
@@ -104,6 +117,7 @@ describe('Course controller', () => {
     accessToken = await testUserAuthentication(app, tutorUser)
     tutorAccessToken = await testUserAuthentication(app, { role: TUTOR })
     studentAccessToken = await testUserAuthentication(app, studentUser)
+    adminAccessToken = await testUserAuthentication(app, adminUser)
 
     uploadService.uploadFile = mockUploadFile
 
@@ -117,7 +131,7 @@ describe('Course controller', () => {
 
     testSubject = await app
       .post('/subjects/')
-      .set('Cookie', [`accessToken=${accessToken}`])
+      .set('Cookie', [`accessToken=${adminAccessToken}`])
       .send(subjectBody)
 
     testCourseData.subject = testSubject.body._id

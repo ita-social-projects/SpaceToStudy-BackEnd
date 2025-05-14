@@ -21,10 +21,11 @@ router.param('id', idValidation)
 router.get('/names', asyncWrapper(subjectController.getNamesByCategoryId))
 
 router.get('/', asyncWrapper(subjectController.getSubjects))
-router.post('/', isEntityValid({ body }), asyncWrapper(subjectController.addSubject))
 router.get('/:id', isEntityValid({ params }), asyncWrapper(subjectController.getSubjectById))
 
 router.use(restrictTo(ADMIN))
 router.delete('/:id', isEntityValid({ params }), asyncWrapper(subjectController.deleteSubject))
 router.patch('/:id', isEntityValid({ params }), asyncWrapper(subjectController.updateSubject))
+router.post('/', isEntityValid({ body }), asyncWrapper(subjectController.addSubject))
+
 module.exports = router

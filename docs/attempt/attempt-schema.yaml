@@ -1,5 +1,5 @@
 definitions:
-  finishedQuizzes:
+  attempts:
     type: array
     items:
       type: object
@@ -35,7 +35,7 @@ definitions:
         updatedAt:
           type: string
           format: date-time
-  finishedQuizBody:
+  attemptBody:
     type: object
     properties:
       quiz:
@@ -61,7 +61,7 @@ definitions:
                     type: boolean
                   isChosen:
                     type: boolean
-  finishedQuiz:
+  attempt:
     type: object
     properties:
       _id:

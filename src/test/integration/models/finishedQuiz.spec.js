@@ -22,28 +22,28 @@ describe('Course model', () => {
   })
 
   it('should include all required fields', async () => {
-    const finishedQuizzes = await FinishedQuiz.find({})
+    const attempts = await FinishedQuiz.find({})
 
-    for (const finishedQuiz of finishedQuizzes) {
-      expect(finishedQuiz).toHaveProperty('quiz')
-      expect(finishedQuiz).toHaveProperty('grade')
-      expect(finishedQuiz).toHaveProperty('results')
-      expect(finishedQuiz).toHaveProperty('createdAt')
-      expect(finishedQuiz).toHaveProperty('updatedAt')
+    for (const attempt of attempts) {
+      expect(attempt).toHaveProperty('quiz')
+      expect(attempt).toHaveProperty('grade')
+      expect(attempt).toHaveProperty('results')
+      expect(attempt).toHaveProperty('createdAt')
+      expect(attempt).toHaveProperty('updatedAt')
     }
   })
 
   it('should have valid fields data types', async () => {
-    const finishedQuizzes = await FinishedQuiz.find({})
+    const attempts = await FinishedQuiz.find({})
 
-    for (const finishedQuiz of finishedQuizzes) {
-      expect(typeof finishedQuiz.quiz).toBe('object')
-      expect(typeof finishedQuiz.grade).toBe('number')
-      expect(Array.isArray(finishedQuiz.results)).toBe(true)
-      expect(finishedQuiz.createdAt).toBeInstanceOf(Date)
-      expect(finishedQuiz.updatedAt).toBeInstanceOf(Date)
+    for (const attempt of attempts) {
+      expect(typeof attempt.quiz).toBe('object')
+      expect(typeof attempt.grade).toBe('number')
+      expect(Array.isArray(attempt.results)).toBe(true)
+      expect(attempt.createdAt).toBeInstanceOf(Date)
+      expect(attempt.updatedAt).toBeInstanceOf(Date)
 
-      for (const result of finishedQuiz.results) {
+      for (const result of attempt.results) {
         expect(typeof result.question).toBe('string')
         expect(Array.isArray(result.answers)).toBe(true)
 
@@ -57,55 +57,55 @@ describe('Course model', () => {
   })
 
   it('should have valid quiz field references', async () => {
-    const finishedQuizzes = await FinishedQuiz.find({}).populate('quiz')
+    const attempts = await FinishedQuiz.find({}).populate('quiz')
 
-    for (const finishedQuiz of finishedQuizzes) {
-      if (finishedQuiz.quiz) {
-        expect(finishedQuiz.quiz).not.toBeNull()
-        expect(finishedQuiz.quiz).toBeInstanceOf(Quiz)
+    for (const attempt of attempts) {
+      if (attempt.quiz) {
+        expect(attempt.quiz).not.toBeNull()
+        expect(attempt.quiz).toBeInstanceOf(Quiz)
       }
     }
   })
 
   it('should not allow empty quiz field', async () => {
-    const finishedQuizzes = await FinishedQuiz.find({})
+    const attempts = await FinishedQuiz.find({})
 
-    for (const finishedQuiz of finishedQuizzes) {
-      expect(finishedQuiz.quiz).not.toBeNull()
+    for (const attempt of attempts) {
+      expect(attempt.quiz).not.toBeNull()
     }
   })
 
   it('should return FIELD_CANNOT_BE_EMPTY error for missing required data in quiz field', async () => {
     const emptyField = await FinishedQuiz.find({ quiz: null })
 
-    for (const finishedQuiz of emptyField) {
-      expect(finishedQuiz.validateSync().errors.quiz.message).toBe(FIELD_CANNOT_BE_EMPTY('quiz'))
+    for (const attempt of emptyField) {
+      expect(attempt.validateSync().errors.quiz.message).toBe(FIELD_CANNOT_BE_EMPTY('quiz'))
     }
   })
 
   it('should not allow empty grade field', async () => {
-    const finishedQuizzes = await FinishedQuiz.find({})
+    const attempts = await FinishedQuiz.find({})
 
-    for (const finishedQuiz of finishedQuizzes) {
-      expect(finishedQuiz.grade).not.toBeNull()
+    for (const attempt of attempts) {
+      expect(attempt.grade).not.toBeNull()
     }
   })
 
   it('should return FIELD_CANNOT_BE_EMPTY error for missing required data in grade field', async () => {
     const emptyField = await FinishedQuiz.find({ grade: null })
 
-    for (const finishedQuiz of emptyField) {
-      expect(finishedQuiz.validateSync().errors.grade.message).toBe(FIELD_CANNOT_BE_EMPTY('grade'))
+    for (const attempt of emptyField) {
+      expect(attempt.validateSync().errors.grade.message).toBe(FIELD_CANNOT_BE_EMPTY('grade'))
     }
   })
 
   it('should validate that grade is within the allowed range', async () => {
-    const finishedQuizzes = await FinishedQuiz.find({})
+    const attempts = await FinishedQuiz.find({})
 
-    for (const finishedQuiz of finishedQuizzes) {
-      if (finishedQuiz.grade !== undefined && finishedQuiz.grade !== null) {
-        expect(finishedQuiz.grade).toBeGreaterThanOrEqual(0)
-        expect(finishedQuiz.grade).toBeLessThanOrEqual(100)
+    for (const attempt of attempts) {
+      if (attempt.grade !== undefined && attempt.grade !== null) {
+        expect(attempt.grade).toBeGreaterThanOrEqual(0)
+        expect(attempt.grade).toBeLessThanOrEqual(100)
       }
     }
   })
@@ -114,12 +114,12 @@ describe('Course model', () => {
     const belowRange = await FinishedQuiz.find({ grade: { $lt: 0 } })
     const aboveRange = await FinishedQuiz.find({ grade: { $gt: 100 } })
 
-    for (const finishedQuiz of belowRange) {
-      expect(finishedQuiz.validateSync().errors.grade.message).toBe(VALUE_MUST_BE_ABOVE('grade', 0))
+    for (const attempt of belowRange) {
+      expect(attempt.validateSync().errors.grade.message).toBe(VALUE_MUST_BE_ABOVE('grade', 0))
     }
 
-    for (const finishedQuiz of aboveRange) {
-      expect(finishedQuiz.validateSync().errors.grade.message).toBe(VALUE_MUST_BE_BELOW('grade', 100))
+    for (const attempt of aboveRange) {
+      expect(attempt.validateSync().errors.grade.message).toBe(VALUE_MUST_BE_BELOW('grade', 100))
     }
   })
 
@@ -128,8 +128,8 @@ describe('Course model', () => {
       'results.question': { $exists: true, $regex: '^.{0}$' }
     })
 
-    for (const finishedQuiz of emptyAnswers) {
-      const error = finishedQuiz.validateSync().errors['results.0.question']
+    for (const attempt of emptyAnswers) {
+      const error = attempt.validateSync().errors['results.0.question']
       expect(error.message).toBe(FIELD_CANNOT_BE_EMPTY('question'))
     }
   })
@@ -142,13 +142,13 @@ describe('Course model', () => {
       'results.question': { $exists: true, $regex: '^.{151,}$' }
     })
 
-    for (const finishedQuiz of tooShortQuestions) {
-      const error = finishedQuiz.validateSync().errors['results.0.question']
+    for (const attempt of tooShortQuestions) {
+      const error = attempt.validateSync().errors['results.0.question']
       expect(error.message).toBe(FIELD_CANNOT_BE_SHORTER('question', 1))
     }
 
-    for (const finishedQuiz of tooLongQuestions) {
-      const error = finishedQuiz.validateSync().errors['results.0.question']
+    for (const attempt of tooLongQuestions) {
+      const error = attempt.validateSync().errors['results.0.question']
       expect(error.message).toBe(FIELD_CANNOT_BE_LONGER('question', 150))
     }
   })
@@ -158,8 +158,8 @@ describe('Course model', () => {
       'results.answers.text': { $exists: true, $regex: '^.{0}$' }
     })
 
-    for (const finishedQuiz of emptyAnswers) {
-      const error = finishedQuiz.validateSync().errors['results.0.answers.0.text']
+    for (const attempt of emptyAnswers) {
+      const error = attempt.validateSync().errors['results.0.answers.0.text']
       expect(error.message).toBe(FIELD_CANNOT_BE_EMPTY('answer'))
     }
   })
@@ -172,13 +172,13 @@ describe('Course model', () => {
       'results.answers.text': { $exists: true, $regex: '^.{151,}$' }
     })
 
-    for (const finishedQuiz of tooShortAnswers) {
-      const error = finishedQuiz.validateSync().errors['results.0.answers.0.text']
+    for (const attempt of tooShortAnswers) {
+      const error = attempt.validateSync().errors['results.0.answers.0.text']
       expect(error.message).toBe(FIELD_CANNOT_BE_SHORTER('answer', 1))
     }
 
-    for (const finishedQuiz of tooLongAnswers) {
-      const error = finishedQuiz.validateSync().errors['results.0.answers.0.text']
+    for (const attempt of tooLongAnswers) {
+      const error = attempt.validateSync().errors['results.0.answers.0.text']
       expect(error.message).toBe(FIELD_CANNOT_BE_LONGER('answer', 150))
     }
   })

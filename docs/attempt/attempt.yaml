@@ -1,12 +1,12 @@
 paths:
-  /quizzes/finished-quizzes:
+  /quizzes/attempts:
     get:
       security:
         - cookieAuth: []
       tags:
-        - Finished quizzes
-      summary: Find all finished quizzes.
-      description: Finds and returns an array with a list of all user finishedQuizzes.
+        - Attempts
+      summary: Find all attempts.
+      description: Finds and returns an array with a list of all user attempts.
       produces:
         - application/json
       parameters:
@@ -26,7 +26,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/finishedQuizzes'
+                $ref: '#/definitions/attempts'
               example:
                 items:
                   - _id: 64ca5914b57f2442403394a5
@@ -82,9 +82,9 @@ paths:
       security:
         - cookieAuth: []
       tags:
-        - Finished quizzes
-      summary: Creates a new finished quiz.
-      description: Creates a new finished quiz with results of the user and saves it to database.
+        - Attempts
+      summary: Creates a new attempt.
+      description: Creates a new attempt with results of the user and saves it to database.
       produces:
         - application/json
       requestBody:
@@ -92,7 +92,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/definitions/finishedQuizBody'
+              $ref: '#/definitions/attemptBody'
             example:
               quiz: 64cf82cb290732a7973f1e09
               grade: 30
@@ -111,7 +111,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#definitions/finishedQuiz'
+                $ref: '#definitions/attempt'
               example:
                 quiz: 64cf82cb290732a7973f1e09
                 grade: 30
@@ -157,21 +157,21 @@ paths:
                 status: 404
                 code: DOCUMENT_NOT_FOUND
                 message: Quiz with the specified id was not found.
-  /quizzes/finished-quizzes/{id}:
+  /quizzes/attempts/{id}:
     get:
       security:
         - cookieAuth: []
       tags:
-        - Finished quizzes
-      summary: Find finished quiz by id.
-      description: Finds and returns a single finished quiz.
+        - Attempts
+      summary: Find attempt by id.
+      description: Finds and returns a single attempt.
       produces:
         - application/json
       parameters:
         - in: path
           name: id
           required: true
-          description: ID of the finished quiz that needs to be fetched
+          description: ID of the attempt that needs to be fetched
           type: string
       responses:
         200:
@@ -179,7 +179,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/finishedQuiz'
+                $ref: '#/definitions/attempt'
               example:
                 _id: 64ca5914b57f2442403394a5
                 quiz: 64cf82cb290732a7973f1e09
@@ -219,24 +219,24 @@ paths:
       security:
         - cookieAuth: []
       tags:
-        - Finished quizzes
-      summary: Update finished quiz by id.
-      description: Updates finished quiz by id.
+        - Attempts
+      summary: Update attempt by id.
+      description: Updates attempt by id.
       produces:
         - application/json
       parameters:
         - in: path
           name: id
           required: true
-          description: ID of the finished quiz that needs to be updated
+          description: ID of the attempt that needs to be updated
           schema:
             type: string
       requestBody:
-        description: Data to update a finished quiz
+        description: Data to update an attempt
         content:
           application/json:
             schema:
-              $ref: '#/definitions/finishedQuizBody'
+              $ref: '#/definitions/attemptBody'
             example:
               grade: 75
       responses:
@@ -272,14 +272,14 @@ paths:
                 status: 404
                 code: NOT_FOUND
                 message: Quiz with the specified id was not found.
-  /quizzes/finished-quizzes/{cooperationId}/{quizId}:
+  /quizzes/attempts/{cooperationId}/{quizId}:
     get:
       security:
         - cookieAuth: []
       tags:
-        - Finished quizzes
-      summary: Find finished quiz by quiz and cooperation ID.
-      description: Finds and returns a single finished quiz.
+        - Attempts
+      summary: Find attempt by quiz and cooperation ID.
+      description: Finds and returns a single attempt.
       produces:
         - application/json
       parameters:
@@ -301,7 +301,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/definitions/finishedQuiz'
+                $ref: '#/definitions/attempt'
               example:
                 _id: 64ca5914b57f2442403394a5
                 quiz: 64cf82cb290732a7973f1e09

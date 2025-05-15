@@ -1,0 +1,97 @@
+definitions:
+  attempts:
+    type: array
+    items:
+      type: object
+      properties:
+        _id:
+          type: string
+        quiz:
+          type: string
+          ref: '#/definitions/quiz'
+        grade:
+          type: number
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              question:
+                type: string
+              answers:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    text:
+                      type: string
+                    isCorrect:
+                      type: boolean
+                    isChosen:
+                      type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+  attemptBody:
+    type: object
+    properties:
+      quiz:
+        type: string
+        ref: '#/definitions/quiz'
+      grade:
+        type: number
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            question:
+              type: string
+            answers:
+              type: array
+              items:
+                type: object
+                properties:
+                  text:
+                    type: string
+                  isCorrect:
+                    type: boolean
+                  isChosen:
+                    type: boolean
+  attempt:
+    type: object
+    properties:
+      _id:
+        type: string
+      quiz:
+        type: string
+        ref: '#/definitions/quiz'
+      grade:
+        type: number
+      results:
+        type: array
+        items:
+          type: object
+          properties:
+            question:
+              type: string
+            answers:
+              type: array
+              items:
+                type: object
+                properties:
+                  text:
+                    type: string
+                  isCorrect:
+                    type: boolean
+                  isChosen:
+                    type: boolean
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time

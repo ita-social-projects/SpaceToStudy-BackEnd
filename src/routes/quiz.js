@@ -1,5 +1,6 @@
 const router = require('express').Router({ mergeParams: true })
 const Quiz = require('~/models/quiz')
+const attemptRouter = require('~/routes/attempt')
 const quizController = require('~/controllers/quiz')
 const asyncWrapper = require('~/middlewares/asyncWrapper')
 const isEntityValid = require('~/middlewares/entityValidation')
@@ -16,6 +17,7 @@ const params = [{ model: Quiz, idName: 'id' }]
 
 router.use(authMiddleware)
 
+router.use('/attempts', attemptRouter)
 router.use('/:id', isEntityValid({ params }), asyncWrapper(ownershipMiddleware(Quiz, ownerFields, CooperationModel)))
 router.get(
   '/:id',

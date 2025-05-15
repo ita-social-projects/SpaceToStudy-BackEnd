@@ -183,7 +183,11 @@ const errors = {
   RESTRICTED_PATH: (functionName, path) => ({
     code: 'RESTRICTED_PATH_ERROR',
     message: `The function ${functionName} is restricted in files under the ${path} path!`
-  })
+  }),
+  FETCH_CITIES_FAILED: {
+    code: 'FETCH_CITIES_FAILED',
+    message: 'Invalid countryCode. It must be a 2-character string.'
+  }
 }
 
 const validationErrors = {

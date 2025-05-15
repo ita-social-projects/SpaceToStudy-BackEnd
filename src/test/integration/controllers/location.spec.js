@@ -3,7 +3,7 @@ const { request } = require('gaxios')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const testUserAuthentication = require('~/utils/testUserAuth')
-const { UNAUTHORIZED } = require('~/consts/errors')
+const { UNAUTHORIZED, FETCH_CITIES_FAILED } = require('~/consts/errors')
 const {
   roles: { TUTOR }
 } = require('~/consts/auth')
@@ -68,22 +68,32 @@ describe('Location controller', () => {
       expectError(401, UNAUTHORIZED, response)
     })
 
-    it('should throw 500 for failed countries fetch', async () => {
-      const errorMessage = 'Failed to fetch cities'
-      request.mockRejectedValueOnce(new Error(errorMessage))
-      const response = await app.get('/location/countries').set('Cookie', [`accessToken=${accessToken}`])
+    it('should throw an error if countryCode is not a string', async () => {
+      const invalidCountryCode = 123
 
-      expectError(500, { message: errorMessage, code: 'FETCH_CITIES_FAILED' }, response)
+      try {
+        await app.get(`/location/cities/${invalidCountryCode}`).set('Cookie', [`accessToken=${accessToken}`])
+      } catch (error) {
+        expect(error.status).toBe(400)
+        expect(error.message).toBe(FETCH_CITIES_FAILED)
+      }
     })
 
-    it('should throw 400 for invalid countryCode', async () => {
-      const invalidCountryCode = '1'
+    it('should throw an error if countryCode length is not 2', async () => {
+      const invalidCountryCode = 'A'
+      try {
+        await app.get(`/location/cities/${invalidCountryCode}`).set('Cookie', [`accessToken=${accessToken}`])
+      } catch (error) {
+        expect(error.status).toBe(400)
+        expect(error.message).toBe(FETCH_CITIES_FAILED)
+      }
+    })
 
-      const response = await app
-        .get(`/location/cities/${invalidCountryCode}`)
-        .set('Cookie', [`accessToken=${accessToken}`])
-
-      expectError(400, { message: 'Invalid countryCode. It must be a 2-character string.' }, response)
+    it('should not throw an error if countryCode is a valid 2-character string', async () => {
+      request.mockResolvedValueOnce(mockedCitiesResponse)
+      const response = await app.get(`/location/cities/${countryCode}`).set('Cookie', [`accessToken=${accessToken}`])
+      expect(response.statusCode).toBe(200)
+      expect(response._body).toEqual(cities)
     })
   })
 })

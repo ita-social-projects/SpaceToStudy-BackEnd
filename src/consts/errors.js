@@ -23,6 +23,10 @@ const errors = {
     code: 'QUIZ_TIME_LIMIT_EXCEEDED',
     message: 'The time limit for the quiz has been exceeded.'
   },
+  FINISHED_QUIZ_NOT_FOUND: {
+    code: 'FINISHED_QUIZ_NOT_FOUND',
+    message: 'Quiz not found to update.'
+  },
   FIELD_CAN_BE_ONE_OF: (field, enums) => ({
     code: 'FIELD_IS_NOT_OF_PROPER_TYPE',
     message: `${field[0].toUpperCase() + field.slice(1)} can be either of these: ${enums.toString()}.`

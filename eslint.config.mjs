@@ -31,6 +31,7 @@ export default [
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'never'],
       'eol-last': ['error', 'always'],
+      'no-console': 'warn',
 
       'no-multiple-empty-lines': [
         'error',

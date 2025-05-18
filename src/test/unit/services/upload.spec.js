@@ -4,7 +4,7 @@ const uploadService = require('~/services/upload')
 jest.mock('@azure/storage-blob')
 
 const file = {
-  buffer: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
+  buffer: 'data:image/jpegbase64,/9j/4AAQSkZJRgABAgAAAQABAAD...',
   name: 'example.jpg',
   newName: 'exampleName.jpg'
 }
@@ -159,5 +159,61 @@ describe('uploadService', () => {
     await expect(uploadService.updateFile(file.name, file.newName, 'container')).rejects.toThrow(
       'Blob copy did not succeed for: example.jpg'
     )
+  })
+})
+
+describe('downloadFile', () => {
+  const fileName = 'test-file.pdf'
+  const containerName = 'test-container'
+  const mockedLink = `mocked-link/${fileName}`
+
+  it('Should download a file from Azure Blob Storage', async () => {
+    const mockStream = { pipe: jest.fn() }
+
+    const downloadMock = jest.fn().mockResolvedValue({
+      readableStreamBody: mockStream
+    })
+    const getBlockBlobClientMock = jest.fn(() => ({
+      download: downloadMock
+    }))
+    const getContainerClientMock = jest.fn(() => ({
+      getBlockBlobClient: getBlockBlobClientMock
+    }))
+
+    StorageSharedKeyCredential.mockImplementationOnce(() => ({}))
+    BlobServiceClient.mockImplementationOnce(() => ({
+      getContainerClient: getContainerClientMock
+    }))
+
+    const result = await uploadService.downloadFile(mockedLink, containerName)
+    expect(downloadMock).toHaveBeenCalled()
+    expect(result).toBe(mockStream)
+  })
+
+  it('Should throw error if file download fails', async () => {
+    const errorMessage = 'Failed to download file'
+    const downloadMock = jest.fn().mockRejectedValue(new Error(errorMessage))
+
+    const getBlockBlobClientMock = jest.fn(() => ({
+      download: downloadMock
+    }))
+    const getContainerClientMock = jest.fn(() => ({
+      getBlockBlobClient: getBlockBlobClientMock
+    }))
+
+    StorageSharedKeyCredential.mockImplementationOnce(() => ({}))
+    BlobServiceClient.mockImplementationOnce(() => ({
+      getContainerClient: getContainerClientMock
+    }))
+
+    const res = {
+      setHeader: jest.fn(),
+      send: jest.fn()
+    }
+
+    await expect(uploadService.downloadFile('invalid-link', containerName, res)).rejects.toThrow(
+      'Failed to download file: Failed to download file'
+    )
+    expect(downloadMock).toHaveBeenCalled()
   })
 })

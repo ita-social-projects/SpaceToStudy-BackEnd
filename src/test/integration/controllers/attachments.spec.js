@@ -8,6 +8,8 @@ const TokenService = require('~/services/token')
 const Attachment = require('~/models/attachment')
 const cooperationService = require('~/services/cooperation')
 const uploadService = require('~/services/upload')
+const attachmentService = require('~/services/attachment')
+
 const {
   enums: { RESOURCES_TYPES_ENUM }
 } = require('~/consts/validation')
@@ -434,6 +436,72 @@ describe('Attachments controller', () => {
       updatedCooperation.sections.forEach((section) => {
         expect(section.resources).toHaveLength(0)
       })
+    })
+  })
+
+  describe(`DOWNLOAD ${endpointUrl}:id`, () => {
+    const ATTACHMENT = 'attachment'
+    const testFile = {
+      originalname: 'example.pdf',
+      description: 'Here is everything you need to study this subject.',
+      buffer: '65bed8ef260f18d04ab22da3',
+      size: 1524
+    }
+
+    afterEach(() => {
+      jest.clearAllMocks()
+    })
+
+    beforeAll(() => {
+      uploadService.downloadFile = jest.fn()
+    })
+
+    it('should successfully download the attachment', async () => {
+      const mockStream = {
+        on: jest.fn().mockReturnThis(),
+        pipe: jest.fn().mockReturnThis()
+      }
+
+      jest.spyOn(Attachment, 'findById').mockReturnValue({
+        exec: jest.fn().mockResolvedValue({
+          _doc: {
+            _id: testAttachmentId,
+            fileName: testFile.originalname,
+            link: 'mocked-link'
+          }
+        })
+      })
+
+      uploadService.downloadFile = jest.fn().mockImplementation((link, type, res) => {
+        res.setHeader('Content-Type', 'application/octet-stream')
+        res.setHeader(
+          'Content-Disposition',
+          `attachment; filename*=UTF-8''${encodeURIComponent(testFile.originalname)}`
+        )
+        mockStream.pipe(res)
+      })
+
+      await app.get(`/attachments/${testAttachmentId}`).set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(uploadService.downloadFile).toHaveBeenCalledWith('mocked-link', ATTACHMENT)
+    })
+
+    it('should throw a 404 error if the attachment is not found', async () => {
+      const attachmentId = 'nonExistentId'
+      const responseMock = {
+        setHeader: jest.fn()
+      }
+
+      jest.spyOn(Attachment, 'findById').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null)
+      })
+
+      await expect(attachmentService.downloadAttachment(attachmentId, responseMock)).rejects.toThrow(
+        'Attachment with the specified IDs were not found.'
+      )
+      expect(Attachment.findById).toHaveBeenCalledWith(attachmentId)
+      expect(responseMock.setHeader).not.toHaveBeenCalled()
+      expect(uploadService.downloadFile).not.toHaveBeenCalled()
     })
   })
 })

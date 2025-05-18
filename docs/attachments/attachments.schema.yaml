@@ -37,7 +37,7 @@ definitions:
         type: string
       category:
         type: string
-        description: This id related to resourcesCategory
+        description: This id related to resources-category
   attachment:
     type: object
     properties:

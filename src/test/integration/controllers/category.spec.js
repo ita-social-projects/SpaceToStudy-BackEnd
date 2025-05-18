@@ -7,6 +7,10 @@ const Offer = require('~/models/offer')
 const TokenService = require('~/services/token')
 const checkCategoryExistence = require('~/seed/checkCategoryExistence')
 
+const {
+  roles: { ADMIN }
+} = require('~/consts/auth')
+
 const endpointUrl = '/categories/'
 const nonExistingCategoryId = '63bed9ef260f18d04ab15da2'
 
@@ -15,6 +19,18 @@ let accessToken
 let categoryBody = {
   name: 'Languages',
   appearance: { icon: 'mocked-path-to-icon', color: '#66C42C' }
+}
+
+let adminUser = {
+  role: [ADMIN],
+  firstName: 'TestAdmin',
+  lastName: 'AdminTest',
+  email: 'testadmin@gmail.com',
+  password: 'supersecretpass123',
+  appLanguage: 'en',
+  isEmailConfirmed: true,
+  isFirstLogin: false,
+  lastLoginAs: ADMIN
 }
 
 const testOfferData = {
@@ -49,9 +65,10 @@ describe('Category controller', () => {
       .set('Cookie', [`accessToken=${accessToken}`])
       .send(categoryBody)
 
+    const adminAccessToken = await testUserAuthentication(app, adminUser)
     testSubject = await app
       .post('/subjects/')
-      .set('Cookie', [`accessToken=${accessToken}`])
+      .set('Cookie', [`accessToken=${adminAccessToken}`])
       .send({ ...subjectBody, category: testCategory.body._id })
   })
 

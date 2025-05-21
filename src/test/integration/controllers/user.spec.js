@@ -442,8 +442,9 @@ describe('User controller', () => {
           .send()
 
         const expectedOffer = JSON.parse(JSON.stringify(offer))
+        expectedOffer._id = String(expectedOffer._id)
         const expectedAuthor = {
-          _id: userAuthor._id,
+          _id: userAuthor._id.toString(),
           firstName: userAuthor.firstName,
           lastName: userAuthor.lastName,
           averageRating: userAuthor.averageRating,
@@ -454,12 +455,13 @@ describe('User controller', () => {
           status: userAuthor.status
         }
         expectedOffer.author = expectedAuthor
-        expectedOffer.subject = { name: subjectName, _id: subjectId }
+        expectedOffer.subject = { name: subjectName, _id: subjectId.toString() }
         expectedOffer.category = category
         expectedOffer.chatId = null
 
         expect(response.statusCode).toBe(200)
-        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
+        expect(response.body).toEqual(expect.objectContaining({ count: 1 }))
+        expect(response.body.items[0]).toEqual(expect.objectContaining(expectedOffer))
       })
 
       it('should find a bookmarked offer with a specified title', async () => {
@@ -482,8 +484,9 @@ describe('User controller', () => {
           .send()
 
         const expectedOffer = JSON.parse(JSON.stringify(offer1))
+        expectedOffer._id = String(expectedOffer._id)
         const expectedAuthor = {
-          _id: userAuthor._id,
+          _id: userAuthor._id.toString(),
           firstName: userAuthor.firstName,
           lastName: userAuthor.lastName,
           averageRating: userAuthor.averageRating,
@@ -494,12 +497,13 @@ describe('User controller', () => {
           status: userAuthor.status
         }
         expectedOffer.author = expectedAuthor
-        expectedOffer.subject = { name: subjectName, _id: subjectId }
+        expectedOffer.subject = { name: subjectName, _id: subjectId.toString() }
         expectedOffer.category = category
         expectedOffer.chatId = null
 
         expect(response.statusCode).toBe(200)
-        expect(response.body).toMatchObject({ count: 1, items: [expectedOffer] })
+        expect(response.body).toEqual(expect.objectContaining({ count: 1 }))
+        expect(response.body.items[0]).toEqual(expect.objectContaining(expectedOffer))
       })
     })
   })

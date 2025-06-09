@@ -5,7 +5,7 @@ const Cooperation = require('~/models/cooperation')
 const Quiz = require('~/models/quiz')
 
 const testUserAuthentication = require('~/utils/testUserAuth')
-const { UNAUTHORIZED, DOCUMENT_NOT_FOUND } = require('~/consts/errors')
+const { UNAUTHORIZED, DOCUMENT_NOT_FOUND, FINISHED_QUIZ_NOT_FOUND } = require('~/consts/errors')
 const {
   roles: { TUTOR, STUDENT }
 } = require('~/consts/auth')
@@ -254,6 +254,37 @@ describe('Quiz controller', () => {
 
       expect(response.statusCode).toBe(204)
       expect(updatedFinishedQuiz._body.grade).toEqual(88)
+    })
+    it('should apply manual correction to a question', async () => {
+      const finishedQuizId = testFinishedQuiz._body._id
+
+      const questionText = testFinishedQuizData.results[0].question
+
+      const response = await app
+        .patch(endpointUrl + finishedQuizId)
+        .send({
+          questionText,
+          newIsCorrect: true
+        })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expect(response.statusCode).toBe(204)
+
+      const updated = await app.get(endpointUrl + finishedQuizId).set('Cookie', [`accessToken=${accessToken}`])
+
+      const updatedResult = updated._body.results.find((result) => result.question === questionText)
+
+      expect(updatedResult).toBeDefined()
+      expect(updatedResult.answers[0].isCorrect).toBe(true)
+      expect(updated._body.grade).toBeGreaterThan(0)
+    })
+    it('should throw FINISHED_QUIZ_NOT_FOUND for non-existing finished quiz', async () => {
+      const response = await app
+        .patch(endpointUrl + nonExistingQuiz)
+        .send({ grade: 88 })
+        .set('Cookie', [`accessToken=${accessToken}`])
+
+      expectError(404, FINISHED_QUIZ_NOT_FOUND, response)
     })
 
     it('should throw UNAUTHORIZED', async () => {

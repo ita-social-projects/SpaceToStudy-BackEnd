@@ -3,7 +3,9 @@ const Quiz = require('~/models/quiz')
 
 const { createError } = require('~/utils/errorsHelper')
 
-const { QUIZ_TIME_LIMIT_EXCEEDED } = require('~/consts/errors')
+const applyManualCorrection = require('~/utils/updateManualCorrection')
+
+const { QUIZ_TIME_LIMIT_EXCEEDED, FINISHED_QUIZ_NOT_FOUND } = require('~/consts/errors')
 const {
   roles: { STUDENT }
 } = require('~/consts/auth')
@@ -41,6 +43,10 @@ const finishedQuizService = {
 
   updateFinishedQuiz: async (id, updateData, role) => {
     const finishedQuiz = await FinishedQuiz.findById(id).exec()
+    if (!finishedQuiz) {
+      throw createError(404, FINISHED_QUIZ_NOT_FOUND)
+    }
+
     const quiz = await Quiz.findById(finishedQuiz.quiz).exec()
 
     const timeLimitRaw = quiz.settings.timeLimit
@@ -55,8 +61,13 @@ const finishedQuizService = {
       throw createError(403, QUIZ_TIME_LIMIT_EXCEEDED)
     }
 
-    for (let field in updateData) {
-      finishedQuiz[field] = updateData[field]
+    if (updateData.questionText !== undefined && updateData.newIsCorrect !== undefined) {
+      const { questionText, newIsCorrect } = updateData
+      applyManualCorrection(finishedQuiz, questionText, newIsCorrect)
+    } else {
+      for (let field in updateData) {
+        finishedQuiz[field] = updateData[field]
+      }
     }
 
     await finishedQuiz.save()

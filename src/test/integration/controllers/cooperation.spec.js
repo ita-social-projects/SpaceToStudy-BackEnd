@@ -9,6 +9,7 @@ const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { expectError } = require('~/test/helpers')
 const testUserAuthentication = require('~/utils/testUserAuth')
 const TokenService = require('~/services/token')
+const { testCooperationData } = require('~/test/test-constants')
 
 const { DOCUMENT_NOT_FOUND, UNAUTHORIZED, VALIDATION_ERROR, FORBIDDEN } = require('~/consts/errors')
 const {
@@ -54,11 +55,14 @@ const anotherStudentUserData = {
   lastLoginAs: 'student'
 }
 
-const testCooperationData = {
+const cooperationDataMock = {
+  ...testCooperationData,
   price: 99,
   receiverRole: 'tutor',
-  proficiencyLevel: 'Beginner',
+  proficiencyLevel: ['Beginner'],
   title: 'First-class teacher. Director of the Hogwarts school of magic',
+  description: 'I will teach you how to protect yourself and your family from dark arts',
+  languages: ['English'],
   sections: [
     {
       title: 'Solving Quadratic Equations Using the Quadratic Formula',
@@ -274,16 +278,16 @@ describe('Cooperation controller', () => {
     })
 
     testOffer = await Offer.create({
+      ...testOfferData,
       author: testTutorUser.id,
       subject: subject._id,
-      category: category._id,
-      ...testOfferData
+      category: category._id
     })
 
     testActiveQuiz = await Quiz.create({
+      ...testActiveQuizData,
       author: testTutorUser.id,
-      category: category._id,
-      ...testActiveQuizData
+      category: category._id
     })
 
     const testLessonOpenResource = await Lesson.create({
@@ -313,11 +317,16 @@ describe('Cooperation controller', () => {
       resourceType: RESOURCES_TYPES_ENUM[0]
     })
 
-    const updatedTestCooperationData = {
-      ...testCooperationData,
+    const cedTestCooperationDataMock = {
+      ...cooperationDataMock,
+      subject: subject._id,
+      category: category._id,
+      receiver: testTutorUser.id,
+      receiverRole: tutorUserData.role[0],
+      offer: testOffer._id,
       sections: [
         {
-          ...testCooperationData.sections[0],
+          ...cooperationDataMock.sections[0],
           resources: [
             {
               resource: testLessonOpenResource._id,
@@ -342,13 +351,7 @@ describe('Cooperation controller', () => {
     testCooperation = await app
       .post(endpointUrl)
       .set('Cookie', [`accessToken=${studentAccessToken}`])
-      .send({
-        receiver: testTutorUser.id,
-        receiverRole: tutorUserData.role[0],
-        offer: testOffer._id,
-        sections: updatedTestCooperationData.sections,
-        ...updatedTestCooperationData
-      })
+      .send(cedTestCooperationDataMock)
   })
 
   afterEach(async () => {
@@ -376,20 +379,19 @@ describe('Cooperation controller', () => {
       expect(response.body.count).toBe(1)
       expect(Array.isArray(response.body.items)).toBe(true)
       expect(response.body.items[0]).toMatchObject({
-        _id: testCooperation._body._id.toString(),
-        offer: {
-          _id: testOffer._id.toString()
-        },
-        initiator: testStudentUser.id.toString(),
-        receiver: testTutorUser.id.toString(),
-        proficiencyLevel: testCooperationData.proficiencyLevel,
-        price: testCooperationData.price,
-        title: testCooperationData.title,
+        _id: testCooperation._body._id,
+        offer: expect.any(String),
+        initiator: testStudentUser.id,
+        receiver: testTutorUser.id,
+        proficiencyLevel: cooperationDataMock.proficiencyLevel,
+        price: cooperationDataMock.price,
+        title: cooperationDataMock.title,
         status: 'pending',
         needAction: testNeedAction,
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
+      expect(response.body.items[0].offer.toString()).toBe(testOffer._id.toString())
     })
 
     it('should throw UNAUTHORIZED', async () => {
@@ -407,11 +409,8 @@ describe('Cooperation controller', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
-        _id: testCooperation._body._id.toString(),
-        offer: {
-          _id: testOffer._id.toString(),
-          author: { _id: testOffer.author.toString() }
-        },
+        _id: testCooperation._body._id,
+        offer: expect.any(String),
         initiator: {
           ...testInitiator,
           createdAt: expect.any(String),
@@ -427,16 +426,16 @@ describe('Cooperation controller', () => {
           _id: expect.any(String)
         },
         receiverRole: tutorUserData.role[0],
-        proficiencyLevel: testCooperationData.proficiencyLevel,
-        price: testCooperationData.price,
-        title: testCooperationData.title,
+        proficiencyLevel: cooperationDataMock.proficiencyLevel,
+        price: cooperationDataMock.price,
+        title: cooperationDataMock.title,
         status: 'pending',
         needAction: testNeedAction,
         sections: [
           {
             _id: expect.any(String),
-            title: testCooperationData.sections[0].title,
-            description: testCooperationData.sections[0].description,
+            title: cooperationDataMock.sections[0].title,
+            description: cooperationDataMock.sections[0].description,
             resources: [
               {
                 resource: expect.objectContaining({
@@ -448,10 +447,10 @@ describe('Cooperation controller', () => {
                   category: expect.any(String),
                   resourceType: expect.any(String)
                 }),
-                resourceType: testCooperationData.sections[0].resources[0].resourceType,
+                resourceType: cooperationDataMock.sections[0].resources[0].resourceType,
                 availability: {
-                  status: testCooperationData.sections[0].resources[0].availability.status,
-                  date: testCooperationData.sections[0].resources[0].availability.date
+                  status: cooperationDataMock.sections[0].resources[0].availability.status,
+                  date: cooperationDataMock.sections[0].resources[0].availability.date
                 }
               }
             ]
@@ -460,6 +459,7 @@ describe('Cooperation controller', () => {
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
+      expect(response.body.offer.toString()).toBe(testOffer._id.toString())
     })
 
     it('should not send closed resources for student', async () => {
@@ -469,11 +469,8 @@ describe('Cooperation controller', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
-        _id: testCooperation._body._id.toString(),
-        offer: {
-          _id: testOffer._id.toString(),
-          author: { _id: testOffer.author.toString() }
-        },
+        _id: testCooperation._body._id,
+        offer: expect.any(String),
         initiator: {
           ...testInitiator,
           createdAt: expect.any(String),
@@ -489,16 +486,16 @@ describe('Cooperation controller', () => {
           _id: expect.any(String)
         },
         receiverRole: tutorUserData.role[0],
-        proficiencyLevel: testCooperationData.proficiencyLevel,
-        price: testCooperationData.price,
-        title: testCooperationData.title,
+        proficiencyLevel: cooperationDataMock.proficiencyLevel,
+        price: cooperationDataMock.price,
+        title: cooperationDataMock.title,
         status: 'pending',
         needAction: testNeedAction,
         sections: [
           {
             _id: expect.any(String),
-            title: testCooperationData.sections[0].title,
-            description: testCooperationData.sections[0].description,
+            title: cooperationDataMock.sections[0].title,
+            description: cooperationDataMock.sections[0].description,
             resources: [
               {
                 resource: expect.objectContaining({
@@ -510,10 +507,10 @@ describe('Cooperation controller', () => {
                   category: expect.any(String),
                   resourceType: expect.any(String)
                 }),
-                resourceType: testCooperationData.sections[0].resources[0].resourceType,
+                resourceType: cooperationDataMock.sections[0].resources[0].resourceType,
                 availability: {
-                  status: testCooperationData.sections[0].resources[0].availability.status,
-                  date: testCooperationData.sections[0].resources[0].availability.date
+                  status: cooperationDataMock.sections[0].resources[0].availability.status,
+                  date: cooperationDataMock.sections[0].resources[0].availability.date
                 }
               }
             ]
@@ -522,6 +519,7 @@ describe('Cooperation controller', () => {
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
+      expect(response.body.offer.toString()).toBe(testOffer._id.toString())
     })
 
     it('should send closed resources for tutor', async () => {
@@ -531,11 +529,8 @@ describe('Cooperation controller', () => {
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
-        _id: testCooperation._body._id.toString(),
-        offer: {
-          _id: testOffer._id.toString(),
-          author: { _id: testOffer.author.toString() }
-        },
+        _id: testCooperation._body._id,
+        offer: expect.any(String),
         initiator: {
           ...testInitiator,
           createdAt: expect.any(String),
@@ -551,12 +546,12 @@ describe('Cooperation controller', () => {
           _id: expect.any(String)
         },
         receiverRole: tutorUserData.role[0],
-        proficiencyLevel: testCooperationData.proficiencyLevel,
-        price: testCooperationData.price,
-        title: testCooperationData.title,
+        proficiencyLevel: cooperationDataMock.proficiencyLevel,
+        price: cooperationDataMock.price,
+        title: cooperationDataMock.title,
         status: 'pending',
         needAction: testNeedAction,
-        sections: testCooperationData.sections.map((section) => {
+        sections: cooperationDataMock.sections.map((section) => {
           return {
             _id: expect.any(String),
             title: section.title,
@@ -584,6 +579,7 @@ describe('Cooperation controller', () => {
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
+      expect(response.body.offer.toString()).toBe(testOffer._id.toString())
     })
 
     it('should throw DOCUMENT_NOT_FOUND', async () => {
@@ -605,17 +601,17 @@ describe('Cooperation controller', () => {
     it('should create new cooperation', () => {
       expect(testCooperation.status).toBe(201)
       expect(testCooperation.body).toMatchObject({
-        _id: testCooperation._body._id.toString(),
-        offer: testOffer._id.toString(),
-        initiator: testStudentUser.id.toString(),
-        receiver: testTutorUser.id.toString(),
+        _id: testCooperation._body._id,
+        offer: expect.any(String),
+        initiator: testStudentUser.id,
+        receiver: testTutorUser.id,
         receiverRole: tutorUserData.role[0],
-        proficiencyLevel: testCooperationData.proficiencyLevel,
-        price: testCooperationData.price,
-        title: testCooperationData.title,
+        proficiencyLevel: cooperationDataMock.proficiencyLevel,
+        price: cooperationDataMock.price,
+        title: cooperationDataMock.title,
         status: 'pending',
         needAction: testNeedAction,
-        sections: testCooperationData.sections.map((section) => ({
+        sections: cooperationDataMock.sections.map((section) => ({
           _id: expect.any(String),
           title: section.title,
           description: section.description,
@@ -628,6 +624,7 @@ describe('Cooperation controller', () => {
         createdAt: testCooperation._body.createdAt,
         updatedAt: testCooperation._body.updatedAt
       })
+      expect(testCooperation.body.offer.toString()).toBe(testOffer._id.toString())
     })
 
     it('should throw DOCUMENT_NOT_FOUND for offer entity', async () => {
@@ -635,10 +632,10 @@ describe('Cooperation controller', () => {
         .post(endpointUrl)
         .set('Cookie', [`accessToken=${studentAccessToken}`])
         .send({
+          ...cooperationDataMock,
           initiator: testStudentUser.id,
           receiver: testTutorUser.id,
-          offer: nonExistingOfferId,
-          ...testCooperationData
+          offer: nonExistingOfferId
         })
 
       expectError(404, DOCUMENT_NOT_FOUND([Offer.modelName]), response)

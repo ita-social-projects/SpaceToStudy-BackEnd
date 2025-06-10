@@ -34,5 +34,6 @@ module.exports = {
     '<rootDir>/src/test/migrations/*.spec.js',
     '!<rootDir>/src/test/integration/models/**/*.spec.js'
   ],
-  testResultsProcessor: 'jest-sonar-reporter'
+  testResultsProcessor: 'jest-sonar-reporter',
+  workerIdleMemoryLimit: '512MB'
 }

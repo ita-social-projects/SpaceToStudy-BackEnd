@@ -6,8 +6,48 @@ definitions:
       properties:
         _id:
           type: string
+        proficiencyLevel:
+          type: array
+          $ref: '#/definitions/proficiencyLevelEnum'
+          items:
+            type: string
+        subject:
+          type: object
+          properties:
+            name:
+              type: string
+        category:
+          type: object
+          properties:
+            appearance:
+              type: object
+              properties:
+                color:
+                  type: string
+                icon:
+                  type: string
+        user:
+          type: object
+          $ref: '#/definitions/userInCooperations'
+          properties:
+            _id:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            photo:
+              type: string
+            role:
+              type: string
+        description:
+          type: string
+        languages:
+          type: array
+          items:
+            type: string
         offer:
-          $ref: '#/definitions/offerInCooperations'
+          type: string
         initiator:
           type: string
         initiatorRole:
@@ -20,8 +60,6 @@ definitions:
           type: string
         additionalInfo:
           type: string
-        proficiencyLevel:
-          $ref: '#/definitions/proficiencyLevelEnum'
         price:
           type: number
         status:
@@ -42,47 +80,204 @@ definitions:
         updatedAt:
           type: string
           format: date-time
-        user:
-          $ref: '#/definitions/userInCooperations'
   cooperation:
     type: object
     properties:
       _id:
         type: string
       offer:
-        $ref: '#/definitions/offerInCooperationExtended'
+        type: string
+        ref: '#components/offer'
       initiator:
-        $ref: '#/definitions/userInCooperationsExtended'
+        type: string
+        ref: '#/components/user'
       initiatorRole:
-        $ref: '#/definitions/baseUserRoleEnum'
+        type: string
       receiver:
-        $ref: '#/definitions/userInCooperationsExtended'
+        type: string
+        ref: '#components/user'
       receiverRole:
         $ref: '#/definitions/baseUserRoleEnum'
       title:
         type: string
-      additionalInfo:
-        type: string
-      proficiencyLevel:
-        $ref: '#/definitions/proficiencyLevelEnum'
-      price:
-        type: number
       status:
-        $ref: '#/definitions/cooperationStatusEnum'
-      needAction:
-        $ref: '#/definitions/baseUserRoleEnum'
-      availableQuizzes:
-        type: array
-        items:
-          type: string
-      finishedQuizzes:
-        type: array
-        items:
-          type: string
+        type: string
+        enum:
+          - pending
+          - active
+          - declined
+          - closed
       sections:
         type: array
         items:
-          $ref: '#/definitions/section'
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - lesson
+                      - quiz
+                      - attachment
+                  availability:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - open
+                          - closed
+                          - openFrom
+                        default: open
+                      date:
+                        type: string
+                        format: date-time
+                        default: null
+      needAction:
+        type: string
+        enum:
+          - student
+          - tutor
+      createdAt:
+        type: string
+        format: date-time
+      updatedAt:
+        type: string
+        format: date-time
+  cooperationResponse:
+    type: object
+    properties:
+      _id:
+        type: string
+      offer:
+        type: object
+        properties:
+          _id:
+            type: string
+          author:
+            type: object
+            properties:
+              _id:
+                type: string
+              averageRating:
+                type: object
+                properties:
+                  student:
+                    type: number
+                  tutor:
+                    type: number
+              firstName:
+                type: string
+              lastName:
+                type: string
+              photo:
+                type: string
+              professionalSummary:
+                type: string
+              totalReviews:
+                type: object
+                properties:
+                  student:
+                    type: number
+                  tutor:
+                    type: number
+      initiator:
+        type: string
+      initiatorRole:
+        type: string
+      proficiencyLevel:
+        type: array
+        items:
+          type: string
+      subject:
+        type: object
+        properties:
+          name:
+            type: string
+      category:
+        type: object
+        properties:
+          appearance:
+            type: object
+            properties:
+              color:
+                type: string
+              icon:
+                type: string
+      description:
+        type: string
+      languages:
+        type: array
+        items:
+          type: string
+      receiver:
+        type: string
+      receiverRole:
+        type: string
+      price:
+        type: number
+      title:
+        type: string
+      status:
+        type: string
+        enum:
+          - pending
+          - active
+          - declined
+          - closed
+      sections:
+        type: array
+        items:
+          type: object
+          properties:
+            title:
+              type: string
+            description:
+              type: string
+            resources:
+              type: array
+              items:
+                type: object
+                properties:
+                  resource:
+                    type: object
+                    additionalProperties: true
+                  resourceType:
+                    type: string
+                    enum:
+                      - lesson
+                      - quiz
+                      - attachment
+                  availability:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                        enum:
+                          - open
+                          - closed
+                          - openFrom
+                        default: open
+                      date:
+                        type: string
+                        format: date-time
+                        default: null
+      needAction:
+        type: string
+        enum:
+          - student
+          - tutor
       createdAt:
         type: string
         format: date-time

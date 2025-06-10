@@ -10,6 +10,7 @@ const {
   roles: { TUTOR, STUDENT }
 } = require('~/consts/auth')
 const TokenService = require('~/services/token')
+const { testCooperationData } = require('~/test/test-constants')
 
 const endpointUrl = '/finished-quizzes/'
 const nonExistingQuiz = '64cf8a3d40135fba5a0c8fa2'
@@ -81,6 +82,7 @@ const testInitiator = {
 }
 
 const cooperationMockData = {
+  ...testCooperationData,
   title: 'Violin lessons',
   proficiencyLevel: 'Test Preparation',
   offer: '63ebc6fbd2f34037d0aba791',

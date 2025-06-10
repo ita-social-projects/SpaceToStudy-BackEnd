@@ -1,27 +1,9 @@
 const mongoose = require('mongoose')
 const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const Cooperation = require('~/models/cooperation')
+const { testCooperationData: cooperationData } = require('~/test/test-constants')
 
 const migration = require('@root/migrations/20250125172611-update-cooperations-additional-info-length')
-
-const cooperationData = {
-  offer: '6739b6993decba1e46b66a26',
-  initiator: '5f5f5f5f5f5f5f5f5f5f5f5f',
-  initiatorRole: 'student',
-  receiver: '673615d36b214652201af558',
-  receiverRole: 'tutor',
-  proficiencyLevel: 'Beginner',
-  price: 500,
-  status: 'active',
-  needAction: {
-    role: 'student',
-    type: 'price',
-    messages: []
-  },
-  availableQuizzes: [],
-  finishedQuizzes: [],
-  sections: []
-}
 
 const validCooperation = {
   ...cooperationData,

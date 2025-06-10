@@ -1,5 +1,6 @@
 const { serverCleanup, serverInit, stopServer } = require('~/test/setup')
 const { createUser, getCategory } = require('~/test/test-utils')
+const { testCooperationData } = require('~/test/test-constants')
 const subjectService = require('~/services/subject')
 const Cooperation = require('~/models/cooperation')
 const {
@@ -62,25 +63,14 @@ const testOffer = {
   }
 }
 
-const testCooperation = {
-  offer: 'offerId',
-  initiatorRole: 'student',
-  receiver: 'tutorId',
-  receiverRole: 'tutor',
-  title: 'Cooperation title',
-  proficiencyLevel: 'Beginner',
-  price: 500,
-  status: 'active',
-  availableQuizzes: [],
-  finishedQuizzes: [],
-  sections: [
-    {
-      title: 'Section 1',
-      description: 'description',
-      resources: []
-    }
-  ]
-}
+const testCooperation = { ...testCooperationData }
+testCooperation.sections = [
+  {
+    title: 'Section 1',
+    description: 'description',
+    resources: []
+  }
+]
 
 describe('User controller', () => {
   let app, server, accessToken, userId, testLessonResponse, testLessonId, category, categoryId, testSubject, offerId
@@ -122,6 +112,8 @@ describe('User controller', () => {
 
     testCooperation.receiver = userId
     testCooperation.offer = offerId
+    testCooperation.subject = testSubject._id
+    testCooperation.category = categoryId
   })
 
   afterEach(async () => {

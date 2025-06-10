@@ -18,6 +18,14 @@ const {
 
 jest.mock('google-auth-library')
 
+const user = {
+  role: 'student',
+  firstName: 'test',
+  lastName: 'test',
+  email: 'test@gmail.com',
+  password: 'testpass_135'
+}
+
 describe('Auth controller', () => {
   let app, server, signupResponse
 
@@ -36,14 +44,6 @@ describe('Auth controller', () => {
   afterAll(async () => {
     await stopServer(server)
   })
-
-  const user = {
-    role: 'student',
-    firstName: 'test',
-    lastName: 'test',
-    email: 'test@gmail.com',
-    password: 'testpass_135'
-  }
 
   describe('Signup endpoint', () => {
     it('should register a user', async () => {
@@ -135,6 +135,7 @@ describe('Auth controller', () => {
       const findConfirmTokenResponse = await tokenService.findTokensWithUsersByParams({
         user: signupResponse.body.userId
       })
+
       confirmToken = findConfirmTokenResponse[0].confirmToken
     })
 

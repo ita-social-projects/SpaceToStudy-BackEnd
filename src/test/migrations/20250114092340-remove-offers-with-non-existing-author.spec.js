@@ -4,6 +4,7 @@ const { serverInit, serverCleanup, stopServer } = require('~/test/setup')
 const Offer = require('~/models/offer')
 const Cooperation = require('~/models/cooperation')
 const migration = require('@root/migrations/20250114092340-remove-offers-with-non-existing-author')
+const { testCooperationData: cooperationData } = require('~/test/test-constants')
 
 const offerData = {
   price: 500,
@@ -19,30 +20,12 @@ const offerData = {
   status: 'active'
 }
 
-const cooperationData = {
-  offer: '6739b6993decba1e46b66a26',
-  initiator: '5f5f5f5f5f5f5f5f5f5f5f5f',
-  initiatorRole: 'student',
-  receiver: '673615d36b214652201af558',
-  receiverRole: 'tutor',
-  title: 'The 12 Principles of Animation',
-  proficiencyLevel: 'Beginner',
-  price: 500,
-  status: 'active',
-  needAction: {
-    role: 'tutor',
-    type: 'price',
-    messages: []
-  },
-  availableQuizzes: [],
-  finishedQuizzes: [],
-  sections: []
-}
-
 const userData = {
   email: 'john_doe@example.com',
   password: 'password'
 }
+
+console.log('cooperationData', cooperationData)
 
 const notValidAuthorId = '5f5f5f5f5f5f5f5f5f5f5f5f'
 

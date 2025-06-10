@@ -65,31 +65,32 @@ const coopsAggregateOptions = (query, params = {}) => {
     },
     {
       $lookup: {
-        from: 'offers',
-        localField: 'offer',
+        from: 'subjects',
+        localField: 'subject',
         foreignField: '_id',
         pipeline: [
-          { $project: { title: 1, subject: 1, category: 1, price: 1 } },
           {
-            $lookup: {
-              from: 'subjects',
-              let: { subjectId: '$subject' },
-              pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$subjectId'] } } }, { $project: { name: 1 } }],
-              as: 'subject'
+            $project: {
+              name: 1
             }
-          },
-          {
-            $lookup: {
-              from: 'categories',
-              let: { categoryId: '$category' },
-              pipeline: [{ $match: { $expr: { $eq: ['$_id', '$$categoryId'] } } }, { $project: { appearance: 1 } }],
-              as: 'category'
-            }
-          },
-          { $unwind: '$subject' },
-          { $unwind: '$category' }
+          }
         ],
-        as: 'offer'
+        as: 'subject'
+      }
+    },
+    {
+      $lookup: {
+        from: 'categories',
+        localField: 'category',
+        foreignField: '_id',
+        pipeline: [
+          {
+            $project: {
+              appearance: 1
+            }
+          }
+        ],
+        as: 'category'
       }
     },
     {
@@ -97,11 +98,8 @@ const coopsAggregateOptions = (query, params = {}) => {
         path: '$user'
       }
     },
-    {
-      $unwind: {
-        path: '$offer'
-      }
-    },
+    { $unwind: '$category' },
+    { $unwind: '$subject' },
     {
       $unset: 'sections'
     },

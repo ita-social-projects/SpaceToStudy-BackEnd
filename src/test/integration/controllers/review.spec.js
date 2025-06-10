@@ -12,6 +12,7 @@ const {
 const {
   roles: { TUTOR, ADMIN }
 } = require('~/consts/auth')
+const { testCooperationData } = require('~/test/test-constants')
 
 const endpointUrl = '/reviews/'
 const offerEndpointUrl = '/offers/'
@@ -50,10 +51,10 @@ let offerBody = {
 }
 
 let cooperationBody = {
+  ...testCooperationData,
   title: 'Test title',
   price: 99,
-  receiverRole: 'tutor',
-  proficiencyLevel: 'Intermediate'
+  receiverRole: 'tutor'
 }
 
 let subjectBody = {
@@ -210,7 +211,7 @@ describe('Review controller', () => {
                 name: 'English'
               }
             },
-            proficiencyLevel: 'Intermediate',
+            proficiencyLevel: ['Beginner'],
             createdAt: expect.any(String),
             updatedAt: expect.any(String)
           }
@@ -252,7 +253,7 @@ describe('Review controller', () => {
             name: 'English'
           }
         },
-        proficiencyLevel: 'Intermediate',
+        proficiencyLevel: ['Beginner'],
         createdAt: expect.any(String),
         updatedAt: expect.any(String)
       })

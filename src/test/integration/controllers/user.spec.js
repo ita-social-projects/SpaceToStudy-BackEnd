@@ -28,6 +28,7 @@ const cooperationService = require('~/services/cooperation')
 
 const userService = require('~/services/user')
 const { deleteUser } = require('~/controllers/user')
+const { testCooperationData } = require('~/test/test-constants')
 
 const endpointUrl = '/users/'
 const logoutEndpoint = '/auth/logout'
@@ -1055,6 +1056,7 @@ describe('User controller', () => {
       const offer = await offerService.createOffer(offerAuthorId, offerAuthorRole, offerData)
 
       const cooperationData = {
+        ...testCooperationData,
         user: currentUser.id,
         offer: offer._id,
         status: 'active',

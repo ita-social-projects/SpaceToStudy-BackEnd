@@ -7,6 +7,7 @@ const cooperationService = require('~/services/cooperation')
 const TokenService = require('~/services/token')
 const { roles } = require('~/consts/auth')
 const resourceType = require('~/consts/resourceType')
+const { testCooperationData } = require('~/test/test-constants')
 
 const endpointUrl = '/lessons/'
 const nonExistingLessonId = '64a51e41de4debbccf0b39b0'
@@ -163,6 +164,7 @@ describe('Lesson controller', () => {
 
     it('should delete lesson and remove references from all cooperation sections', async () => {
       const cooperationData = {
+        ...testCooperationData,
         offer: '82a51e41de4debbccf0b3111',
         initiator: currentUser.id,
         initiatorRole: 'tutor',

@@ -88,6 +88,7 @@ const updateUserValidationSchema = {
     required: false
   },
   videoLink: {
+    canBeNull: true,
     regex: VIDEOLINK_PATTERN,
     required: false
   },

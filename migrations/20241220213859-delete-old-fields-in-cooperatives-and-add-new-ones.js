@@ -122,7 +122,7 @@ module.exports = {
   async down(db) {
     const backupExists = await db.listCollections({ name: 'cooperation_backup' }).hasNext()
     if (!backupExists) {
-      throw new Error("Backup 'cooperation_backup' not found. Rollback is not possible.")
+      throw new Error('Backup "cooperation_backup" not found. Rollback is not possible.')
     }
 
     await db.collection('cooperation').drop()

@@ -289,6 +289,6 @@ describe('20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones', ()
 
     await expect(
       require('@root/migrations/20241220213859-delete-old-fields-in-cooperatives-and-add-new-ones').down(database)
-    ).rejects.toThrow("Backup 'cooperation_backup' not found. Rollback is not possible.")
+    ).rejects.toThrow('Backup "cooperation_backup" not found. Rollback is not possible.')
   })
 })

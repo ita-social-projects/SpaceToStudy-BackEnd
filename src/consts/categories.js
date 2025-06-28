@@ -7,12 +7,12 @@ const categories = {
   MATHEMATICS: {
     _id: '64884f33fdc2d1a130c24ac2',
     name: 'Mathematics',
-    appearance: { icon: 'mocked-path-to-icon', color: '#866606' }
+    appearance: { icon: 'mocked-path-to-icon', color: '#f5c024' }
   },
   COMPUTER_SCIENCE: {
     _id: '64884fedfdc2d1a130c24ade',
     name: 'Computer science',
-    appearance: { icon: 'mocked-path-to-icon', color: '#462027' }
+    appearance: { icon: 'mocked-path-to-icon', color: '#b76271' }
   },
   MUSIC: {
     _id: '64884f4dfdc2d1a130c24ac6',
@@ -22,12 +22,12 @@ const categories = {
   DESIGN: {
     _id: '64884f59fdc2d1a130c24ac8',
     name: 'Design',
-    appearance: { icon: 'mocked-path-to-icon', color: '#866606' }
+    appearance: { icon: 'mocked-path-to-icon', color: '#f8d56d' }
   },
   HISTORY: {
     _id: '64884f66fdc2d1a130c24aca',
     name: 'History',
-    appearance: { icon: 'mocked-path-to-icon', color: '#462027' }
+    appearance: { icon: 'mocked-path-to-icon', color: '#b76271' }
   },
   BIOLOGY: {
     _id: '64884f70fdc2d1a130c24acc',
@@ -62,12 +62,12 @@ const categories = {
   ASTRONOMY: {
     _id: '64884fb0fdc2d1a130c24ad8',
     name: 'Astronomy',
-    appearance: { icon: 'mocked-path-to-icon', color: '#866606' }
+    appearance: { icon: 'mocked-path-to-icon', color: '#f8d56d' }
   },
   PHYSICS: {
     _id: '64884fc3fdc2d1a130c24ada',
     name: 'Physics',
-    appearance: { icon: 'mocked-path-to-icon', color: '#462027' }
+    appearance: { icon: 'mocked-path-to-icon', color: '#b76271' }
   },
   PSYCHOLOGY: {
     _id: '64884fe3fdc2d1a130c24adc',
